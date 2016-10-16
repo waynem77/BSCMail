@@ -1,0 +1,27 @@
+<volunteer-list>
+  <volunteer>
+    <name>Halva Ticket</name>
+    <email>halva@ticket</email>
+    <canAngel>false</canAngel>
+  </volunteer>
+  <volunteer>
+    <name>Pasha Brum</name>
+    <email>pasha@brum</email>
+    <canAngel>false</canAngel>
+  </volunteer>
+  <volunteer>
+    <name>Sarah Fimm</name>
+    <email>sarah@fimm</email>
+    <canAngel>true</canAngel>
+  </volunteer>
+  <volunteer>
+    <name>Seth Upp</name>
+    <email>seth@upp</email>
+    <canAngel>false</canAngel>
+  </volunteer>
+  <volunteer>
+    <name>Val Unteer</name>
+    <email>val@unteer</email>
+    <canAngel>true</canAngel>
+  </volunteer>
+</volunteer-list>

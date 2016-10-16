@@ -1,0 +1,12 @@
+<manager-list>
+  <manager>
+    <name>Foo</name>
+    <email>foo</email>
+    <phone>555-FOO</phone>
+  </manager>
+  <manager>
+    <name>Bar</name>
+    <email>bar</email>
+    <phone>555-BAR</phone>
+  </manager>
+</manager-list>

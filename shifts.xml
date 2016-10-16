@@ -1,0 +1,50 @@
+<shift-list>
+  <shift>
+    <description>Setup/Door 7:15-8:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Setup/Door 7:15-8:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Door 8:15-9:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Door 8:15-9:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Door 9:15-10:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Door 9:15-10:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Door 10:15-11:15</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Cleanup 11:30-12:30</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>Angel 8:00-9:30</description>
+    <isAngelShift>true</isAngelShift>
+  </shift>
+  <shift>
+    <description>Angel 8:00-9:30</description>
+    <isAngelShift>true</isAngelShift>
+  </shift>
+  <shift>
+    <description>Angel 8:00-9:30</description>
+    <isAngelShift>true</isAngelShift>
+  </shift>
+  <shift>
+    <description>Angel 8:00-9:30</description>
+    <isAngelShift>true</isAngelShift>
+  </shift>
+</shift-list>
