@@ -1,5 +1,7 @@
 /*
- * Copyright © 2014 Wayne Miller
+ * This code is protected by copyright and licensed under the GNU
+ * General Public License version 3.  For details, see the file
+ * "LICENSE" or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 package bscmail.gui;
