@@ -202,6 +202,19 @@ public class MainFrame extends JFrame {
      * Event fired when the help about button is clicked.
      */
     private void helpAboutButtonClicked() {
+        String versionString = Application.getApplicationName() + " v" + Application.getVersion();
+        String aboutText = Application.getCopyright() + "\n\n";
+        aboutText += Application.getApplicationName() + " is free software: you can redistribute it and/or modify\n";
+        aboutText += "it under the terms of the GNU General Public License as published by\n";
+        aboutText += "the Free Software Foundation, either version 3 of the License, or\n";
+        aboutText += "(at your option) any later version.\n\n";
+        aboutText += Application.getApplicationName() + " is distributed in the hope that it will be useful,\n";
+        aboutText += "but WITHOUT ANY WARRANTY; without even the implied warranty of\n";
+        aboutText += "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n";
+        aboutText += "GNU General Public License for more details.\n\n";
+        aboutText += "You should have received a copy of the GNU General Public License\n";
+        aboutText += "along with " + Application.getApplicationName() + ".  If not, see <http://www.gnu.org/licenses/>.";
+
         final int MARGIN = 10;
         final int INTERNAL_MARGIN = MARGIN / 2;
         JFrame frame = new JFrame();
@@ -210,11 +223,13 @@ public class MainFrame extends JFrame {
         contentPane.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
         frame.setContentPane(contentPane);
         JPanel panel = new JPanel();
-        panel.add(new JLabel(Application.getApplicationName() + " v" + Application.getVersion()));
+        panel.add(new JLabel(versionString));
         frame.add(panel);
         frame.add(Box.createVerticalStrut(INTERNAL_MARGIN));
         panel = new JPanel();
-        panel.add(new JLabel(Application.getCopyright()));
+        JTextArea aboutTextArea = new JTextArea(aboutText);
+        aboutTextArea.setEditable(false);
+        panel.add(aboutTextArea);
         frame.add(panel);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
