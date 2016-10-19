@@ -952,10 +952,9 @@ public class EventTest {
         System.out.println("addShift");
         
         String description = "foo";
-        boolean isAngelShift = false;
-        Shift shift = new Shift(description, isAngelShift);
+        Shift shift = new Shift(description);
         event.addShift(shift);
-    }    // testAddShift()
+    }
     
     /**
      * Tests that {@link Event#getShifts()} does not throw an exception when no
@@ -991,8 +990,7 @@ public class EventTest {
         
         
         String description = "foo";
-        boolean isAngelShift = false;
-        Shift shift = new Shift(description, isAngelShift);
+        Shift shift = new Shift(description);
         event.addShift(shift);
         event.getShifts();
     }    // testGetShiftsNoException()

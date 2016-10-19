@@ -2,11 +2,9 @@
   <volunteer>
     <name>Foo</name>
     <email>foo</email>
-    <canAngel>false</canAngel>
   </volunteer>
   <volunteer>
     <name>Bar</name>
     <email>bar</email>
-    <canAngel>true</canAngel>
   </volunteer>
 </volunteer-list>

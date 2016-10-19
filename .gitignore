@@ -8,6 +8,13 @@
 *.war
 *.ear
 
+# intellij files
+*.idea
+*.iml
+bscmail.properties
+bscmail.xml
+module_bscmail.xml
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 

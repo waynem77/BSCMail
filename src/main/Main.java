@@ -115,25 +115,23 @@ public class Main {
         for (int i = 0; i < shiftNodes.getLength(); ++i) {
             Element element = (Element) shiftNodes.item(i);
             String description = element.getTextContent();
-            String isAngelShiftString = element.getAttribute("angel");
-            boolean isAngelShift = Boolean.valueOf(isAngelShiftString);
-            shifts.add(new Shift(description, isAngelShift));
-        }    // for
+            shifts.add(new Shift(description));
+        }
         return shifts;
-    }    // getShifts()
+    }
 
     private List<Shift> readShiftsS(String filename) throws IOException, ClassNotFoundException {
         assert (filename != null);
         ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename));
         return (List<Shift>)input.readObject();
-    }    // readShiftsS()
+    }
     
     private void writeShiftsS(List<Shift> shifts, String filename) throws IOException {
         assert (shifts != null);
         assert (filename != null);
         ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename));
         output.writeObject(shifts);
-    }    // writeShiftsS
+    }
     
     /**
      * Returns a list of managers read from an XML file.
@@ -162,22 +160,22 @@ public class Main {
             String email = getChildText(element, "email");
             String phone = getChildText(element, "phone");
             managers.add(new Manager(name, email, phone));
-        }    // for
+        }
         return managers;
-    }    // getManagers()
+    }
 
     private List<Manager> readManagersS(String filename) throws IOException, ClassNotFoundException {
         assert (filename != null);
         ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename));
         return (List<Manager>)input.readObject();
-    }    // readManagersS()
+    }
     
     private void writeManagersS(List<Manager> managers, String filename) throws IOException {
         assert (managers != null);
         assert (filename != null);
         ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename));
         output.writeObject(managers);
-    }    // writeManagersS
+    }
 
     /**
      * Returns a list of volunteers read from an XML file.
@@ -205,9 +203,7 @@ public class Main {
             Element element = (Element) volunteerNodes.item(i);
             String name = getChildText(element, "name");
             String email = getChildText(element, "email");
-            String canAngelString = element.getAttribute("angel");
-            boolean canAngel = Boolean.valueOf(canAngelString);
-            volunteers.add(new Volunteer(name, email, canAngel));
+            volunteers.add(new Volunteer(name, email));
         }    // for
         return volunteers;
     }    // getVolunteers()
@@ -216,14 +212,14 @@ public class Main {
         assert (filename != null);
         ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename));
         return (List<Volunteer>)input.readObject();
-    }    // readVolunteersS()
+    }
     
     private void writeVolunteersS(List<Volunteer> volunteers, String filename) throws IOException {
         assert (volunteers != null);
         assert (filename != null);
         ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename));
         output.writeObject(volunteers);
-    }    // writeVolunteersS
+    }
 
     /**
      * Returns the text content of a named child node of an XML node.
@@ -242,8 +238,8 @@ public class Main {
         NodeList children = element.getElementsByTagName(tagName);
         if (children.getLength() < 1) {
             throw new MalformedInputException("<" + tagName + "> tag not found");
-        }    // if
+        }
         Node child = children.item(0);
         return child.getTextContent();
-    }    // getChildText
-}    // Main
+    }
+}
