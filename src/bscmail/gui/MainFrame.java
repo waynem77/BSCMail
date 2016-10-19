@@ -49,7 +49,12 @@ public class MainFrame extends JFrame {
      * A frame to manage volunteers.
      */
     private final ManageVolunteersFrame manageVolunteersFrame;
-    
+
+    /**
+     * A frame to manage volunteers.
+     */
+    private final ManageRolesFrame manageRolesFrame;
+
     /**
      * A frame to create an event.
      */
@@ -64,7 +69,7 @@ public class MainFrame extends JFrame {
         
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Manage"));
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(5, 1));
         JButton button = new JButton("Shifts");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -83,6 +88,13 @@ public class MainFrame extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageVolunteersButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListever()
+        panel.add(button);
+        button = new JButton("Roles");
+        button.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                manageRolesButtonClicked();
             }    // actionPerformed()
         });    // addActionListever()
         panel.add(button);
@@ -138,6 +150,8 @@ public class MainFrame extends JFrame {
         manageManagersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         manageVolunteersFrame = new ManageVolunteersFrame();
         manageVolunteersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        manageRolesFrame = new ManageRolesFrame();
+        manageRolesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         eventFrame = new EventFrame();
         eventFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }    // MainFrame()
@@ -161,6 +175,13 @@ public class MainFrame extends JFrame {
      */
     private void manageVolunteersButtonClicked() {
         manageVolunteersFrame.setVisible(true);
+    }    // manageVolunteersButtonClicked()
+
+    /**
+     * Event fired when the manage roles button is clicked.
+     */
+    private void manageRolesButtonClicked() {
+        manageRolesFrame.setVisible(true);
     }    // manageVolunteersButtonClicked()
 
     /**

@@ -80,6 +80,11 @@ public class Application {
          * The name of the defined volunteers file.
          */
         VOLUNTEERS_FILE            (true),
+
+        /**
+         * The name of the defined roles file.
+         */
+        ROLES_FILE                 (true),
         
         /**
          * The name of the email template file.
@@ -193,7 +198,12 @@ public class Application {
      * The list of defined volunteers.
      */
     private List<Volunteer> volunteers;
-    
+
+    /**
+     * The list of defined roles.
+     */
+    private List<Role> roles;
+
     /**
      * The defined text transformer.
      */
@@ -213,6 +223,11 @@ public class Application {
      * The list of volunteers observers.
      */
     private final List<VolunteersObserver> volunteersObservers;
+
+    /**
+     * The list of volunteers observers.
+     */
+    private final List<RolesObserver> rolesObservers;
     
     /**
      * The list of email template observers.
@@ -237,17 +252,20 @@ public class Application {
             properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
             properties.put(PropertyKey.MANAGERS_FILE, "managers.xml");
             properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
+            properties.put(PropertyKey.ROLES_FILE, "roles.xml");
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "template.txt");
             
             shifts = readShifts(properties.get(PropertyKey.SHIFTS_FILE));
             managers = readManagers(properties.get(PropertyKey.MANAGERS_FILE));
             volunteers = readVolunteers(properties.get(PropertyKey.VOLUNTEERS_FILE));
+            roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
             
             transformer = createTransformer();
             
             shiftsObservers = new LinkedList<>();
             managersObservers = new LinkedList<>();
             volunteersObservers = new LinkedList<>();
+            rolesObservers = new LinkedList<>();
             emailTemplateObservers = new LinkedList<>();
             
             testDialogs = new LinkedList<>();
@@ -442,6 +460,51 @@ public class Application {
     }    // setVolunteers()
 
     /**
+     * Returns the list of defined roles. The list returned is a copy of
+     * the master, so changes to it do not affect the master and vice-versa.
+     *
+     * @return the list of defined roles
+     */
+    public static List<Role> getRoles() {
+        theApplication.assertInvariant();
+        List<Role> clone = new ArrayList<>();
+        for (Role role : theApplication.roles) {
+            clone.add(role.clone());
+        }    // for
+        return clone;
+    }    // getRoles()
+
+    /**
+     * Sets the list of defined roles. The argument is copied to the
+     * master, so that changes to the master do not affect the original list and
+     * vice-versa.
+     *
+     * @param roles the new list of roles; may not be null, nor
+     * contain any null elements
+     * @throws NullPointerException if {@code roles} is null or contains a
+     * null element
+     * @throws IOException if an I/O error occurs
+     */
+    public static void setRoles(List<Role> roles) throws IOException {
+        theApplication.assertInvariant();
+        if (roles == null) {
+            throw new NullPointerException("roles may not be null");
+        }    // if
+        if (roles.contains(null)) {
+            throw new NullPointerException("roles may not contain null");
+        }    // if
+        theApplication.roles = new LinkedList<>();
+        for (Role role : roles) {
+            theApplication.roles.add(role.clone());
+        }    // for
+        for (RolesObserver observer : theApplication.rolesObservers) {
+            observer.rolesChanged();
+        }    // for
+        theApplication.assertInvariant();
+        theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+    }    // setRoles()
+
+    /**
      * Returns a reader that streams the defined email template.
      * 
      * @return a reader that streams the defined email template
@@ -529,6 +592,22 @@ public class Application {
         theApplication.volunteersObservers.add(observer);
         theApplication.assertInvariant();
     }    // registerObserver()
+
+    /**
+     * Registers a roles observer with this application.
+     *
+     * @param observer the observer to register; may not be null
+     * @throws NullPointerException if observer is null
+     */
+    public static void registerObserver(RolesObserver observer) {
+        theApplication.assertInvariant();
+        if (observer == null) {
+            throw new NullPointerException("observer may not be null");
+        }    // if
+        theApplication.rolesObservers.add(observer);
+        theApplication.assertInvariant();
+    }    // registerObserver()
+
 
     /**
      * Registers an email template observer with this application.
@@ -633,6 +712,20 @@ public class Application {
     }    // readVolunteers()
 
     /**
+     * Reads and returns a list of roles from a binary file.
+     *
+     * @param filename the name of the file; may not be null
+     * @return a list containing all the roles contained in {@code filename}
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if a serialization failure occurs
+     */
+    private List<Role> readRoles(String filename) throws IOException, ClassNotFoundException {
+        assert (filename != null);
+        IOLayer ioLayer = getIOLayer();
+        return ioLayer.readAll(new FileInputStream(filename), Role.getRoleFactory());
+    }    // readRoles()
+
+    /**
      * Writes a list of objects to a binary file.
      *
      * @param list the list to write; may not be null
@@ -691,6 +784,8 @@ public class Application {
         assert (! managersObservers.contains(null));
         assert (volunteersObservers != null);
         assert (! volunteersObservers.contains(null));
+        assert (rolesObservers != null);
+        assert (! rolesObservers.contains(null));
         assert (emailTemplateObservers != null);
         assert (! emailTemplateObservers.contains(null));
         assert (testDialogs != null);

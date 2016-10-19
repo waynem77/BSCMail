@@ -351,7 +351,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     private void addButtonClicked(ActionEvent event) {
         assertInvariant();
         E element = managerPanel.createElement();
-        listData.add(element);
+        if (element != null)
+            listData.add(element);
         try {
             setListData(listData);
         } catch (IOException e) {    // try
