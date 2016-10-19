@@ -31,9 +31,9 @@ import main.Application;
 public class ManageRolePanel extends ManageElementPanel<Role> {
 
     /**
-     * The text field displaying the role's title.
+     * The text field displaying the role's name.
      */
-    private final JTextField titleTextField;
+    private final JTextField nameTextField;
 
     /**
      * Indicates whether the implicit role is valid.
@@ -46,13 +46,13 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
     public ManageRolePanel() {
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
-        titleTextField = new JTextField();
-        titleTextField.getDocument().addDocumentListener(new DocumentListener(){
-            @Override public void insertUpdate(DocumentEvent e) { titleTextFieldChanged(); }
-            @Override public void removeUpdate(DocumentEvent e) { titleTextFieldChanged(); }
-            @Override public void changedUpdate(DocumentEvent e) { titleTextFieldChanged(); }
+        nameTextField = new JTextField();
+        nameTextField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override public void insertUpdate(DocumentEvent e) { nameTextFieldChanged(); }
+            @Override public void removeUpdate(DocumentEvent e) { nameTextFieldChanged(); }
+            @Override public void changedUpdate(DocumentEvent e) { nameTextFieldChanged(); }
         });    // addDocumentListener()
-        layoutHelper.addComponent("Title: ", titleTextField);
+        layoutHelper.addComponent("Name: ", nameTextField);
         roleIsValid = elementIsValid();
     }    // ManageShiftPanel()
 
@@ -63,7 +63,7 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public void loadElement(Role role) {
-        titleTextField.setText((role == null) ? "" : role.getTitle());
+        nameTextField.setText((role == null) ? "" : role.getName());
     }    // loadElement()
 
     /**
@@ -76,18 +76,18 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
     @Override
     public Role createElement() {
 
-        String roleTitle = titleTextField.getText();
+        String roleName = nameTextField.getText();
 
         //check to see if role name is unique
 
 
         List<Role> myRoles = Application.getRoles();
         for (Role role : myRoles) {
-            if (role.getTitle().equals(roleTitle))
+            if (role.getName().equals(roleName))
                 return null;
         }
 
-        return new Role(titleTextField.getText());
+        return new Role(nameTextField.getText());
     }    // createElement()
 
     /**
@@ -100,13 +100,13 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public final boolean elementIsValid() {
-        return ! titleTextField.getText().isEmpty();
+        return ! nameTextField.getText().isEmpty();
     }    // elementIsValid()
 
     /**
-     * Event that fires when the text in {@link #titleTextField} changes.
+     * Event that fires when the text in {@link #nameTextField} changes.
      */
-    private void titleTextFieldChanged() {
+    private void nameTextFieldChanged() {
         boolean newValidity = elementIsValid();
         if (newValidity != roleIsValid) {
             notifyObservers();

@@ -316,7 +316,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assertInvariant();
         E element = managerPanel.createElement();
         assert ((index >= 0) && (index < listData.size()));
-        listData.set(index, element);
+        if (element != null)
+            listData.set(index, element);
         try {
             setListData(listData);
         } catch (IOException e) {    // try
@@ -324,7 +325,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // saveButtonClicked()
-    
+
     /**
      * Event that fires when the delete button is clicked.
      * 

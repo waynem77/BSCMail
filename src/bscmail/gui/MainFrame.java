@@ -75,35 +75,35 @@ public class MainFrame extends JFrame {
             @Override public void actionPerformed(ActionEvent e) {
                 manageShiftsButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("Managers");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageManagersButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("Volunteers");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageVolunteersButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("Roles");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageRolesButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("Email");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageEmailButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         add(panel);
         
@@ -115,14 +115,14 @@ public class MainFrame extends JFrame {
             @Override public void actionPerformed(ActionEvent e) {
                 createEventButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("Email");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 createEmailButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         add(panel);
         
@@ -137,7 +137,7 @@ public class MainFrame extends JFrame {
             @Override public void actionPerformed(ActionEvent e) {
                 helpAboutButtonClicked();
             }    // actionPerformed()
-        });    // addActionListever()
+        });    // addActionListener()
         panel.add(button);
         panel.add(button);
         add(panel);

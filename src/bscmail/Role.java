@@ -65,9 +65,9 @@ public class Role implements Cloneable, Serializable, ReadWritable {
          * The role factory constructs a role using the following
          * information from the given properties.
          * <ul>
-         *   <li>The role's title is given by the string value of the value
-         * corresponding to "title".  If such a value does not exist or is null,
-         * the role's title is empty.</li>
+         *   <li>The role's name is given by the string value of the value
+         * corresponding to "name".  If such a value does not exist or is null,
+         * the role's name is empty.</li>
          * </ul>
          * This method effectively acts as the reverse of
          * {@link Role#getReadWritableProperties()}.
@@ -85,9 +85,9 @@ public class Role implements Cloneable, Serializable, ReadWritable {
 
             Role role = null;
             try {
-                Object titleObject = properties.get("title");
-                String title = (titleObject != null) ? titleObject.toString() : "";
-                role = new Role(title);
+                Object nameObject = properties.get("name");
+                String name = (nameObject != null) ? nameObject.toString() : "";
+                role = new Role(name);
             } catch (ClassCastException e) {    // try
                 // if anything goes wrong,
                 // we will simply return null.
@@ -114,46 +114,46 @@ public class Role implements Cloneable, Serializable, ReadWritable {
      */
 
     /**
-     * The role's title.
+     * The role's name.
      */
-    private final String title;
+    private final String name;
 
 
     /**
      * Constructs a new role.
      *
-     * @param title the role's title
+     * @param name the role's name
      * @throws NullPointerException if {@code name} or {@code email} are null
      */
-    public Role(String title) {
-        if (title == null) {
-            throw new NullPointerException("title may not be null");
+    public Role(String name) {
+        if (name == null) {
+            throw new NullPointerException("name may not be null");
         }    // if
 
-        this.title = title;
+        this.name = name;
         assertInvariant();
     }    // Role()
 
     /**
-     * Returns the role's title.
+     * Returns the role's name.
      *
-     * @return the role's title
+     * @return the role's name
      */
     //@Override
-    public String getTitle() {
+    public String getName() {
         assertInvariant();
-        return title;
-    }    // getTitle()
+        return name;
+    }    // getName()
 
     /**
      * Returns a map containing the read-writable properties of the role.
      * The map returned by this method is guaranteed to have the following
      * properties.
      * <ul>
-     *   <li>The map has exactly one key, namely "title".</li>
+     *   <li>The map has exactly one key, namely "name".</li>
      *   <li>No value is null.
-     *   <li>The value of "title" is a non-null {@link String} equal to the value
-     * of {@link #getTitle()}.</li>
+     *   <li>The value of "name" is a non-null {@link String} equal to the value
+     * of {@link #getName()}.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
@@ -164,7 +164,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
     @Override
     public Map<String, Object> getReadWritableProperties() {
         Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put("title", title);
+        properties.put("name", name);
         return properties;
     }    // getReadWritableProperties()
 
@@ -181,7 +181,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
      * equal to this role only if all the following conditions hold:
      * <ol>
      *   <li>the object is another role,</li>
-     *   <li>both roles have the same title.</li>
+     *   <li>both roles have the same name.</li>
      * </ol>
      *
      * @param obj the object with which to compare
@@ -197,7 +197,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
         }    // if
 
         Role rhs = (Role)obj;
-        return title.equals(rhs.title);
+        return name.equals(rhs.name);
     }    // equals()
 
     @Override
@@ -205,7 +205,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
         final int SEED = 5;
         final int MULTIPLIER = 37;
         int code = SEED;
-        code = code * MULTIPLIER + title.hashCode();
+        code = code * MULTIPLIER + name.hashCode();
         return code;
     }    // hashCode()
 
@@ -230,21 +230,21 @@ public class Role implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Returns a string representation of the role. This method is
-     * equivalent to {@link #getTitle()}.
+     * equivalent to {@link #getName()}.
      *
      * @return a string representation of the role
      */
     @Override
     public String toString() {
         assertInvariant();
-        return title;
+        return name;
     }    // toString()
 
     /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
-        assert (title != null);
+        assert (name != null);
     }    // assertInvariant()
 
 }  //Role

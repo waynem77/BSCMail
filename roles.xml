@@ -1,8 +1,8 @@
 <role-list>
   <role>
-    <title>Manager</title>
+    <name>Manager</name>
   </role>
   <role>
-    <title>Angel</title>
+    <name>Angel</name>
   </role>
 </role-list>

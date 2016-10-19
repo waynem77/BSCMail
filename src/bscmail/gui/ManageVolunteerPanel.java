@@ -42,6 +42,11 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JTextField emailTextField;
 
     /**
+     * The dropdown list displaying a volunteer's roles.
+     */
+    //private final JComboBox roleDropList;
+
+    /**
      * The check box displaying whether a volunteer may fill angel shifts.
      */
     private final JCheckBox angelCheckBox;
@@ -66,6 +71,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         layoutHelper.addComponent("Name: ", nameTextField);
         emailTextField = new JTextField();
         layoutHelper.addComponent("Email: ", emailTextField);
+        //roleDropList = new JComboBox();
+        //layoutHelper.addComponent("Roles: ", roleDropList);
         angelCheckBox = new JCheckBox();
         layoutHelper.addComponent("Angel? ", angelCheckBox);
         volunteerIsValid = elementIsValid();
