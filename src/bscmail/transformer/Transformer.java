@@ -28,7 +28,7 @@ import java.util.regex.*;
  * from an {@link Event}.
  *
  * Transformers work by applying named rules to strings. Rules are defined by a
- * name and an event property. The {@link #transform(String)} method transforms
+ * name and an event property. The {@link #transform(Event, String)} method transforms
  * a string by replacing all instances of the property name (enclosed in angle
  * brackets) with the value of the event property. For example, if the name is
  * "manager" and the event property returns the name of the event manager, then
