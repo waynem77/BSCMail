@@ -36,11 +36,6 @@ public class ShiftFactoryTest {
     private String description;
 
     /**
-     * Variable used to hold the shift "is angel shift" status used in testing.
-     */
-    private boolean isAngelShift;
-
-    /**
      * Variable used to hold the volunteer used in testing.
      */
     private Volunteer volunteer;
@@ -78,8 +73,7 @@ public class ShiftFactoryTest {
     @Before
     public void beforeTest() {
         description = "Foo";
-        isAngelShift = false;
-        volunteer = new Volunteer("Foo Bar", "foo@bar", true);
+        volunteer = new Volunteer("Foo Bar", "foo@bar");
         properties = null;
         factory = null;
     }    // beforeTest()
@@ -141,20 +135,6 @@ public class ShiftFactoryTest {
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
-     * throw an exception when properties has only the "is angel shift" status.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftOnlyNoException() {
-        System.out.println("constructReadWritable - properties has isAngelShift only, no exception");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("isAngelShift", isAngelShift);
-        factory.constructReadWritable(properties);
-    }    // testConstructReadWritableIsAngelShiftOnlyNoException()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
      * throw an exception when description is null.
      */
     @Test
@@ -164,26 +144,9 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", null);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         factory.constructReadWritable(properties);
-    }    // testConstructReadWritableDescriptionIsNullNoException()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
-     * throw an exception when isAngelShift is null.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftIsNullNoException() {
-        System.out.println("constructReadWritable - isAngelShift is null, no exception");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", description);
-        properties.put("isAngelShift", null);
-        properties.put("volunteer", volunteer);
-        factory.constructReadWritable(properties);
-    }    // testConstructReadWritableIsAngelShiftIsNullNoException()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
@@ -196,10 +159,9 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", null);
         factory.constructReadWritable(properties);
-    }    // testConstructReadWritableIsAngelShiftIsNullNoException()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
@@ -213,10 +175,9 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         factory.constructReadWritable(properties);
-    }    // testConstructReadWritableNoException()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
@@ -230,11 +191,10 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         properties.put("foo", "bar");
         factory.constructReadWritable(properties);
-    }    // testConstructReadWritablePropertiesExtraneousNoException()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
@@ -247,27 +207,10 @@ public class ShiftFactoryTest {
 
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
-        properties.put("description", new Volunteer("description", "", false));
-        properties.put("isAngelShift", isAngelShift);
+        properties.put("description", new Volunteer("description", ""));
         properties.put("volunteer", "foo");
         factory.constructReadWritable(properties);
     }    // testConstructReadWritableDescriptionVolunteerWrongObjectsNoException()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
-     * throw an exception when the isAngelShift value is not a Boolean.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftWrongObjectNoException() {
-        System.out.println("constructReadWritable - isAngelShift value is not Boolean, no exception");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", description);
-        properties.put("isAngelShift", "true");
-        properties.put("volunteer", volunteer);
-        factory.constructReadWritable(properties);
-    }    // testConstructReadWritableIsAngelShiftWrongObjectNoException()
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
@@ -279,11 +222,10 @@ public class ShiftFactoryTest {
 
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
-        
         Shift expected = null;
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
-    }    // testConstructReadWritablePropertiesEmptyNoException()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
@@ -296,28 +238,10 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        
         Shift expected = null;
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
-    }    // testConstructReadWritableDescriptionOnly()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
-     * correct value when properties has only the "is angel shift" status.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftOnly() {
-        System.out.println("constructReadWritable - properties has isAngelShift only");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("isAngelShift", isAngelShift);
-        
-        Shift expected = new Shift("", isAngelShift);
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableIsAngelShiftOnly()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
@@ -330,33 +254,13 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", null);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         
-        Shift expected = new Shift("", isAngelShift);
+        Shift expected = new Shift("");
         expected.setVolunteer(volunteer);
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritableDescriptionIsNull()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
-     * when isAngelShift is null.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftIsNull() {
-        System.out.println("constructReadWritable - isAngelShift is null");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", description);
-        properties.put("isAngelShift", null);
-        properties.put("volunteer", volunteer);
-        
-        Shift expected = null;
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableIsAngelShiftIsNull()
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
@@ -369,13 +273,12 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", null);
         
-        Shift expected = new Shift(description, isAngelShift);
+        Shift expected = new Shift(description);
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
-    }    // testConstructReadWritableIsAngelShiftIsNull()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
@@ -388,10 +291,9 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         
-        Shift expected = new Shift(description, isAngelShift);
+        Shift expected = new Shift(description);
         expected.setVolunteer(volunteer);
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
@@ -409,11 +311,10 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", volunteer);
         properties.put("foo", "bar");
         
-        Shift expected = new Shift(description, isAngelShift);
+        Shift expected = new Shift(description);
         expected.setVolunteer(volunteer);
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
@@ -431,32 +332,12 @@ public class ShiftFactoryTest {
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", new Volunteer(description, "", false));
-        properties.put("isAngelShift", isAngelShift);
         properties.put("volunteer", "foo");
         
-        Shift expected = new Shift(description, isAngelShift);
+        Shift expected = new Shift(description);
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
-    }    // testConstructReadWritableDescriptionVolunteerWrongObjects()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
-     * when the isAngelShift value is not a Boolean.
-     */
-    @Test
-    public void testConstructReadWritableIsAngelShiftWrongObject() {
-        System.out.println("constructReadWritable - isAngelShift value is not Boolean");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", description);
-        properties.put("isAngelShift", 1);
-        properties.put("volunteer", volunteer);
-        
-        Shift expected = null;
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableIsAngelShiftWrongObject()
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns
@@ -468,14 +349,13 @@ public class ShiftFactoryTest {
         System.out.println("constructReadWritable - reflexivity");
 
         factory = Shift.getShiftFactory();
-        isAngelShift = !isAngelShift;
-        Shift shift = new Shift(description, isAngelShift);
+        Shift shift = new Shift(description);
         shift.setVolunteer(volunteer);
         properties = shift.getReadWritableProperties();
 
         Shift expected = shift;
         Shift received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
-    }    // testConstructReadWritableReflexive()
+    }
 
-}    // ShiftFactoryTest
+}

@@ -1,10 +1,8 @@
 <shift-list>
   <shift>
     <description>Foo</description>
-    <isAngelShift>false</isAngelShift>
   </shift>
   <shift>
     <description>Bar</description>
-    <isAngelShift>false</isAngelShift>
   </shift>
 </shift-list>

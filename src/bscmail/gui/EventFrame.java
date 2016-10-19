@@ -179,9 +179,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
             addItem(new PersonContainer<Volunteer>(null));
             if (volunteers != null) {
                 for (Volunteer volunteer : volunteers) {
-                    if (shift.isAngelShift() && !volunteer.canAngel()) {
-                        continue;
-                    }    // if
                     addItem(new PersonContainer<>(volunteer));
                 }    // for
             }    // if
@@ -390,13 +387,11 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     
     /**
      * Sets the list of shifts displayed in the frame to the given list. The
-     * volunteers selected in the comboboxes remain selected, unless the
-     * volunteer is unable to work the shift due to angel status, in which case
-     * the selection is cleared. If the new list of shifts is smaller than the
-     * existing list, the "extra" comboboxes are simply removed. If the new list
-     * of shifts is longer than the existing list, then new comboboxes are
-     * created, with no selections. If the given list is null, it is treated as
-     * an empty list.
+     * volunteers selected in the comboboxes remain selected. If the new list
+     * of shifts is smaller than the existing list, the "extra" comboboxes
+     * are simply removed. If the new list of shifts is longer than the
+     * existing list, then new comboboxes are created, with no selections.
+     * If the given list is null, it is treated as an empty list.
      *
      * The list of shifts may not contain any null elements.
      *

@@ -37,11 +37,6 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     private final JTextField descriptionTextField;
 
     /**
-     * The check box displaying whether a shift is an angel shift.
-     */
-    private final JCheckBox angelCheckBox;
-    
-    /**
      * Indicates whether the implicit shift is valid.
      */
     private boolean shiftIsValid;
@@ -53,16 +48,25 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
         descriptionTextField = new JTextField();
-        descriptionTextField.getDocument().addDocumentListener(new DocumentListener(){
-            @Override public void insertUpdate(DocumentEvent e) { descriptionTextFieldChanged(); }
-            @Override public void removeUpdate(DocumentEvent e) { descriptionTextFieldChanged(); }
-            @Override public void changedUpdate(DocumentEvent e) { descriptionTextFieldChanged(); }
-        });    // addDocumentListener()
+        descriptionTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                descriptionTextFieldChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                descriptionTextFieldChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                descriptionTextFieldChanged();
+            }
+        });
         layoutHelper.addComponent("Description: ", descriptionTextField);
-        angelCheckBox = new JCheckBox();
-        layoutHelper.addComponent("Angel? ", angelCheckBox);
         shiftIsValid = elementIsValid();
-    }    // ManageShiftPanel()
+    }
 
     /**
      * Loads the details of a shift into the panel.
@@ -72,8 +76,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     @Override
     public void loadElement(Shift shift) {
         descriptionTextField.setText((shift == null) ? "" : shift.getDescription());
-        angelCheckBox.setSelected((shift == null) ? false : shift.isAngelShift());
-    }    // loadElement()
+    }
 
     /**
      * Creates and returns a new shift from the values of the components in the
@@ -84,9 +87,9 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      */
     @Override
     public Shift createElement() {
-        return new Shift(descriptionTextField.getText(), angelCheckBox.isSelected());
-    }    // createElement()
-    
+        return new Shift(descriptionTextField.getText());
+    }
+
     /**
      * Returns true if the panel's shift is valid for the frame containing it,
      * or false otherwise.
@@ -97,8 +100,8 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      */
     @Override
     public final boolean elementIsValid() {
-        return ! descriptionTextField.getText().isEmpty();
-    }    // elementIsValid()
+        return !descriptionTextField.getText().isEmpty();
+    }
 
     /**
      * Event that fires when the text in {@link #descriptionTextField} changes.
@@ -109,6 +112,6 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
             notifyObservers();
         }    // if
         shiftIsValid = newValidity;
-    }    // descriptionTextFieldChanged()
+    }
 
-}    // ManageShiftPanel
+}
