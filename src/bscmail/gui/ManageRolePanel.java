@@ -75,24 +75,11 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public Role createElement() {
-
-        String roleName = nameTextField.getText();
-
-        //check to see if role name is unique
-
-
-        List<Role> myRoles = Application.getRoles();
-        for (Role role : myRoles) {
-            if (role.getName().equals(roleName))
-                return null;
-        }
-
         return new Role(nameTextField.getText());
     }    // createElement()
 
     /**
-     * Returns true if the panel's role is valid for the frame containing
-     * it, or false otherwise.
+     * Checks validity of a potential new role
      *
      * @return true if the panel's role is valid for the frame containing
      * it; false otherwise
@@ -100,8 +87,20 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public final boolean elementIsValid() {
-        return ! nameTextField.getText().isEmpty();
-    }    // elementIsValid()
+        // check empty
+        if (nameTextField.getText().isEmpty()) {
+            return false;
+        }
+
+        // check for uniqueness
+        List<Role> myRoles = Application.getRoles();
+        for (Role role : myRoles) {
+            if (role.getName().equals(nameTextField.getText())) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Event that fires when the text in {@link #nameTextField} changes.
