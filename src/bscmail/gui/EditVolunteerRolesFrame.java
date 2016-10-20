@@ -57,6 +57,7 @@ public class EditVolunteerRolesFrame extends JFrame {
         setLayout(new GridLayout(1, 3));
 
         JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(300,200));
         panel.setBorder(BorderFactory.createTitledBorder("Existing Roles"));
         Vector<Role> roleList = new Vector<Role>(Application.getRoles()); //read all roles from XML file
         existingRoles = new JList<Role>(roleList);
@@ -86,10 +87,12 @@ public class EditVolunteerRolesFrame extends JFrame {
         add(panel);
 
         panel = new JPanel();
+        panel.setPreferredSize(new Dimension(300,200));
         panel.setBorder(BorderFactory.createTitledBorder("Assigned Roles"));
         Vector<Role> assignedRoles = new Vector<Role>(volunteer.getRoles()); //get roles from Volunteer object
         volunteerRoles = new JList<Role>(assignedRoles);
         volunteerRoles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        volunteerRoles.setPreferredSize(existingRoles.getPreferredScrollableViewportSize());
         panel.add(new JScrollPane(volunteerRoles));
         add(panel);
 
