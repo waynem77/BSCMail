@@ -19,9 +19,13 @@
 
 package bscmail.gui;
 
+import bscmail.EmailTemplate;
 import bscmail.Event;
+import bscmail.Shift;
+import bscmail.Volunteer;
 import bscmail.transformer.Transformer;
-import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 import main.Application;
 
 /**
@@ -35,21 +39,15 @@ public class DisplayEmailFrame extends ManageTextFrame {
     
     /**
      * Constructs a new display email frame displaying an email constructed from
-     * the template in the given reader, and transformed via the given
-     * transformer with values filled in from the given event.
+     * the given template and list of shifts.
      * 
-     * @param reader the template text stream; may not be null
-     * @param transformer the transformer that transforms the template text; may not be null
-     * @param event the event that supplies the transformation values; may not be null
-     * @throws NullPointerException if any parameter is null
-     * @throws IOException if an I/O error occurs
+     * @param emailTemplate the email template; may not be null
+     * @param event the event; may not be null
+     * @throws NullPointerException if either parameter is null
      */
-    public DisplayEmailFrame(Reader reader, Transformer transformer, Event event) throws IOException {
-        if (reader == null) {
-            throw new NullPointerException("reader may not be null");
-        }    // if
-        if (transformer == null) {
-            throw new NullPointerException("transformer may not be null");
+    public DisplayEmailFrame(EmailTemplate emailTemplate, Event event) {
+        if (emailTemplate == null) {
+            throw new NullPointerException("emailTemplate may not be null");
         }    // if
         if (event == null) {
             throw new NullPointerException("event may not be null");
@@ -57,14 +55,35 @@ public class DisplayEmailFrame extends ManageTextFrame {
         
         setTitle(Application.getApplicationName() + " - Event Email Text");
 
-        // We aren't interested in catching any exceptions.  However, we do want
-        // the resources to close automatically in case of problems.
-        try (BufferedReader input = new BufferedReader(reader)) {
-            String line;
-            while ((line = input.readLine()) != null) {
-                appendText(transformer.transform(event, line));
-            }    // while
-        }    // try
+        Set<String> emails = new HashSet<>();
+        for (Shift shift : event.getShifts()) {
+            Volunteer volunteer = shift.getVolunteer();
+            if (volunteer != null) {
+                emails.add(volunteer.getEmail());
+            }    // if
+        }    // for
+        String toLine = "";
+        for (String email : emails) {
+            if (! toLine.isEmpty()) {
+                toLine = email;
+            } else {    // if
+                toLine += ", " + email;
+            }    // else
+        }    // for
+        appendText("To: " + toLine);
+        appendText("");
+        appendText(emailTemplate.getPreScheduleText());
+        appendText("");
+        for (Shift shift : event.getShifts()) {
+            String shiftLine = shift.getDescription() + ": ";
+            Volunteer volunteer = shift.getVolunteer();
+            if (volunteer != null) {
+                shiftLine += volunteer;
+            }    // if
+            appendText(shiftLine);
+        }    // for
+        appendText("");
+        appendText(emailTemplate.getPostScheduleText());
         scrollToTop();
     }    // DisplayEmailFrame()
     

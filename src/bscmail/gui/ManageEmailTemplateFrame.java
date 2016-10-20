@@ -18,12 +18,16 @@
  */
 package bscmail.gui;
 
+import bscmail.EmailTemplate;
+import java.io.IOException;
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import main.Application;
 
 /**
@@ -36,6 +40,16 @@ import main.Application;
 public class ManageEmailTemplateFrame extends JFrame {
 
     /**
+     * The pre-schedule text text area.
+     */
+    final JTextArea preScheduleTextArea;
+
+    /**
+     * The post-schedule text text area.
+     */
+    final JTextArea postScheduleTextArea;
+
+    /**
      * Constructs a new manage email template frame.
      */
     public ManageEmailTemplateFrame() {
@@ -45,14 +59,14 @@ public class ManageEmailTemplateFrame extends JFrame {
         setTitle(Application.getApplicationName() + " - Manage Email");
 
         JLabel preScheduleLabel = new JLabel("Pre-schedule text:");
-        JTextArea preScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
+        preScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
         preScheduleTextArea.setLineWrap(true);
         preScheduleTextArea.setWrapStyleWord(true);
         JScrollPane preScheduleScrollPane = new JScrollPane(preScheduleTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JLabel postScheduleLabel = new JLabel("Post-schedule text:");
-        JTextArea postScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
+        postScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
         postScheduleTextArea.setLineWrap(true);
         postScheduleTextArea.setWrapStyleWord(true);
         JScrollPane postScheduleScrollPane = new JScrollPane(postScheduleTextArea,
@@ -82,6 +96,45 @@ public class ManageEmailTemplateFrame extends JFrame {
                     .addComponent(postScheduleScrollPane))
         );
         pack();
+
+        EmailTemplate emailTemplate = Application.getEmailTemplate();
+        preScheduleTextArea.setText(emailTemplate.getPreScheduleText());
+        postScheduleTextArea.setText(emailTemplate.getPostScheduleText());
+
+        preScheduleTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // insertUpdate()
+            @Override public void removeUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // removeUpdate()
+            @Override public void changedUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // changedUpdate()
+        });    // addDocumentListener()
+        postScheduleTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // insertUpdate()
+            @Override public void removeUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // removeUpdate()
+            @Override public void changedUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // changedUpdate()
+        });    // addDocumentListener()
     }    // ManageEmailTemplateFrame()
+
+    /**
+     * Event fired when either of the text areas change.  All changes are passed
+     * back to the {@link Application}.
+     */
+    private void textAreasChanged() {
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleTextArea.getText(), postScheduleTextArea.getText());
+        try {
+            Application.setEmailTemplate(emailTemplate);
+        } catch (IOException e) {
+        }
+    }    // textAreasChanged()
 
 }    // ManageEmailTemplateFrame

@@ -205,6 +205,11 @@ public class Application {
     private List<Role> roles;
 
     /**
+     * The email template.
+     */
+    private EmailTemplate emailTemplate;
+
+    /**
      * The defined text transformer.
      */
     private final Transformer transformer;
@@ -253,13 +258,13 @@ public class Application {
             properties.put(PropertyKey.MANAGERS_FILE, "managers.xml");
             properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
             properties.put(PropertyKey.ROLES_FILE, "roles.xml");
-            properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "template.txt");
+            properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
             
             shifts = readShifts(properties.get(PropertyKey.SHIFTS_FILE));
             managers = readManagers(properties.get(PropertyKey.MANAGERS_FILE));
             volunteers = readVolunteers(properties.get(PropertyKey.VOLUNTEERS_FILE));
             roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
-            
+            emailTemplate = readEmailTemplate(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
             transformer = createTransformer();
             
             shiftsObservers = new LinkedList<>();
@@ -505,39 +510,34 @@ public class Application {
     }    // setRoles()
 
     /**
-     * Returns a reader that streams the defined email template.
+     * Returns the defined email template.
      * 
-     * @return a reader that streams the defined email template
-     * @throws IOException if an I/O error occurs
+     * @return the defined email template
      */
-    public static Reader getEmailTemplate() throws IOException {
+    public static EmailTemplate getEmailTemplate() {
         theApplication.assertInvariant();
-        return new FileReader(theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
+        return theApplication.emailTemplate;
     }    // getEmailTemplate()
 
     /**
-     * Sets the defined email template using a stream.
+     * Sets the defined email template.
      * 
-     * @param templateReader the character stream of the new email template; may
-     * not be null
-     * @throws NullPointerException if {@code templateReader} is null
+     * @param emailTemplate the email template to set; may not be null
+     * @throws NullPointerException if {@code managers} is null or contains a
+     * null element
      * @throws IOException if an I/O error occurs
      */
-    public static void setEmailTemplate(Reader templateReader) throws IOException {
+    public static void setEmailTemplate(EmailTemplate emailTemplate) throws IOException {
         theApplication.assertInvariant();
-        if (templateReader == null) {
-            throw new NullPointerException("templateReader may not be null");
+        if (emailTemplate == null) {
+            throw new NullPointerException("emailTemplate may not be null");
         }    // if
-        try (Writer writer = new FileWriter(theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE))) {
-            for (int character = templateReader.read(); character != -1; character = templateReader.read()) {
-                writer.write(character);
-            }    // for
-        }    // try
-        for (EmailTemplateObserver observer : theApplication.emailTemplateObservers) {
-            observer.emailTemplateChanged();
-        }    // for
+        theApplication.emailTemplate = emailTemplate.clone();
+        List<EmailTemplate> wrapper = new LinkedList<>();
+        wrapper.add(emailTemplate);
         theApplication.assertInvariant();
-    }    // setEmailTemplate()
+        theApplication.writeList(wrapper, theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
+    }    // setManagers()
     
     /**
      * Returns the defined email transformer.
@@ -726,6 +726,21 @@ public class Application {
     }    // readRoles()
 
     /**
+     * Reads and returns an email template from a binary file.
+     *
+     * @param filename the name of the file; may not be null
+     * @return the email template contained in {@code filename}
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if a serialization failure occurs
+     */
+    private EmailTemplate readEmailTemplate(String filename) throws IOException, ClassNotFoundException {
+        assert (filename != null);
+        IOLayer ioLayer = getIOLayer();
+        List<EmailTemplate> emailTemplates = ioLayer.readAll(new FileInputStream(filename), EmailTemplate.getEmailTemplateFactory());
+        return emailTemplates.get(0);
+    }    // readManagers()
+
+    /**
      * Writes a list of objects to a binary file.
      *
      * @param list the list to write; may not be null
@@ -786,6 +801,7 @@ public class Application {
         assert (! volunteersObservers.contains(null));
         assert (rolesObservers != null);
         assert (! rolesObservers.contains(null));
+        assert (emailTemplate != null);
         assert (emailTemplateObservers != null);
         assert (! emailTemplateObservers.contains(null));
         assert (testDialogs != null);

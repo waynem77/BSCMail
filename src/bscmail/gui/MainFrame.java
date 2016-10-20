@@ -210,14 +210,9 @@ public class MainFrame extends JFrame {
      */
     private void createEmailButtonClicked() {
         Event event = eventFrame.getEvent();
-        Transformer transformer = Application.getTransformer();
-        try (Reader infile = Application.getEmailTemplate()) {
-            DisplayEmailFrame displayFrame = new DisplayEmailFrame(infile, transformer, event);
-            displayFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            displayFrame.setVisible(true);
-        } catch (IOException e) {    // try
-            Application.showErrorDialog(this, "Unable to create email.", e);
-        }    // catch
+        DisplayEmailFrame displayFrame = new DisplayEmailFrame(Application.getEmailTemplate(), event);
+        displayFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        displayFrame.setVisible(true);
     }    // createEmailButtonClicked()
     
     /**
