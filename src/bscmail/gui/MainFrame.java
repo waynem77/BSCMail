@@ -221,7 +221,7 @@ public class MainFrame extends JFrame {
      */
     private void manageRolesButtonClicked() {
         manageRolesFrame.setVisible(true);
-    }    // manageVolunteersButtonClicked()
+    }    // manageRolesButtonClicked()
 
     /**
      * Event fired when the manage email button is clicked.

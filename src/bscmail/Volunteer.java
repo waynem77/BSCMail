@@ -52,7 +52,7 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
      * @since 2.1
      */
     public static class Factory implements ReadWritableFactory<Volunteer> {
-  
+
         /**
          * Constructs a new volunteer factory.
          */
@@ -64,14 +64,14 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
          * Constructs a volunteer from the given read-writable properties. If
          * the factory is unable to create a volunteer from the given
          * properties, this method returns null.
-         *
+         * <p>
          * The volunteer factory constructs a volunteer using the following
          * information from the given properties.
          * <ul>
-         *   <li>The volunteer's name is given by the string value of the value
+         * <li>The volunteer's name is given by the string value of the value
          * corresponding to "name".  If such a value does not exist or is null,
          * the volunteer's name is empty.</li>
-         *   <li>The volunteer's email address is given by the string value of
+         * <li>The volunteer's email address is given by the string value of
          * the value corresponding to "email".  If such a value does not exist
          * or is null, the volunteer's email address is empty.</li>
          * </ul>
@@ -96,11 +96,22 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
                 String name = (nameObject != null) ? nameObject.toString() : "";
                 String email = (emailObject != null) ? emailObject.toString() : "";
                 volunteer = new Volunteer(name, email);
-            } catch (ClassCastException e) {
 
-            }
+                Object roleObject = properties.get("role");
+                if (roleObject != null) {
+                    String roles = roleObject.toString();
+                    String[] roleNames = roles.split(",");
+                    for (String roleName : roleNames) {
+                        Role role = new Role(roleName);
+                        volunteer.addRole(role);
+                    }
+                }
+            } catch (ClassCastException e) {    // try
+                // The canAngel property was not a Boolean, so we will simply
+                // return null.
+            }    // catch
             return volunteer;
-        }
+        }    // constructReadWritable()
     }
 
     /**
@@ -122,12 +133,17 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
     /**
      * The volunteer's name.
      */
-    private final String name;
+    private String name;
 
     /**
      * The volunteer's email address;
      */
-    private final String email;
+    private String email;
+
+    /**
+     * The volunteer's list of roles
+     */
+    private List<Role> roles;
 
     /**
      * Constructs a new volunteer.
@@ -146,6 +162,7 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
 
         this.name = name;
         this.email = email;
+        this.roles = new LinkedList<Role>();
         assertInvariant();
     }    // Volunteer()
 
@@ -160,6 +177,10 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         return name;
     }    // getName()
 
+    public void setName(String newName) {
+        name = newName;
+    }
+
     /**
      * Returns the volunteer's email address.
      *
@@ -171,6 +192,35 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         return email;
     }    // getEmail()
 
+    public void setEmail(String newEmail) {
+        email = newEmail;
+    }
+
+    public void addRole(Role newRole){
+        //ensure new role is unique
+        for (Role role : roles){
+            if (role.equals(newRole))
+                return;
+        }
+        roles.add(newRole);
+    }
+
+    public void removeRole(Role oldRole){
+        roles.remove(oldRole);
+    }
+
+    public List<Role> getRoles(){
+        //ensure that Volunteer's current roles are still kosher
+        List<Role> validRoles = Application.getRoles();
+        for (Role role : roles){
+            if (!validRoles.contains(role))
+                removeRole(role);
+        }
+
+        return roles;
+    }
+
+    
     /**
      * Returns a map containing the read-writable properties of the volunteer.
      * The map returned by this method is guaranteed to have the following
@@ -182,6 +232,8 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
      * of {@link #getName()}.</li>
      *   <li>The value of "email" is a non-null {@link String} equal to the
      * value of {@link #getName()}.</li>
+     *   <li>The value of each "role" is a non-null {@link Role} found in the list
+     * of {@link #getRoles()}.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
@@ -194,6 +246,13 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("name", name);
         properties.put("email", email);
+        String roleNames = "";
+        for (Role role : roles){
+            roleNames += role.getName() +",";
+        }
+        if (roleNames.length() > 0)
+            roleNames = roleNames.substring(0, roleNames.length() - 1);
+        properties.put("role", roleNames);
         return properties;
     }    // getReadWritableProperties()
     
@@ -260,7 +319,7 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         }    // catch
         return clone;
     }    // clone()
-    
+
     /**
      * Returns a string representation of the volunteer. This method is
      * equivalent to {@link #getName()}.

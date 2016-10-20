@@ -22,6 +22,7 @@ package bscmail.gui;
 import bscmail.Volunteer;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.awt.event.*;
 
 /**
  * A panel that displays and manages a {@link Volunteer}.
@@ -42,9 +43,23 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JTextField emailTextField;
 
     /**
+     * Button to pop-up new screen to manage roles of a volunteer.
+     */
+    private final JButton editRoles;
+
+
+    /**
      * Indicates whether the implicit volunteer is valid.
      */
     private boolean volunteerIsValid;
+
+    /**
+     * Tracks the current volunteer selected.
+     */
+    private Volunteer currentVolunteer;
+
+    private boolean editRolesWindowIsOpen;
+
 
     /**
      * Constructs a new volunteer panel.
@@ -72,8 +87,20 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         layoutHelper.addComponent("Name: ", nameTextField);
         emailTextField = new JTextField();
         layoutHelper.addComponent("Email: ", emailTextField);
+
+        editRoles = new JButton("Edit Roles");
+        editRoles.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                editRolesButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListener()
+        editRoles.setEnabled(false);
+        layoutHelper.addComponent("", editRoles);
+
         volunteerIsValid = elementIsValid();
-    }
+        currentVolunteer = null;
+        editRolesWindowIsOpen = false;
+    }    // ManageShiftPanel()
 
     /**
      * Loads the details of a volunteer into the panel.
@@ -82,9 +109,12 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     @Override
     public void loadElement(Volunteer volunteer) {
+        currentVolunteer = volunteer;
         nameTextField.setText((volunteer == null) ? "" : volunteer.getName());
         emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
-    }
+        if (!editRolesWindowIsOpen)
+            editRoles.setEnabled((volunteer == null) ? false : true);
+    }    // loadElement()
 
     /**
      * Creates and returns a new volunteer from the values of the components in
@@ -95,9 +125,11 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     @Override
     public Volunteer createElement() {
-        return new Volunteer(nameTextField.getText(), emailTextField.getText());
-    }
-
+        currentVolunteer.setName(nameTextField.getText());
+        currentVolunteer.setEmail(emailTextField.getText());
+        return currentVolunteer;
+    }    // createElement()
+    
     /**
      * Returns true if the panel's volunteer is valid for the frame containing
      * it, or false otherwise.
@@ -120,5 +152,30 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
             notifyObservers();
         }
         volunteerIsValid = newValidity;
-    }
-}
+    }    // nameTextFieldChanged()
+
+    /**
+     * Event fired when the edit roles button is clicked.
+     */
+    private void editRolesButtonClicked() {
+        editRoles.setEnabled(false); //disable button while edit window is open
+        editRolesWindowIsOpen = true;
+        EditVolunteerRolesFrame frame = new EditVolunteerRolesFrame(currentVolunteer);
+        frame.setAlwaysOnTop(true);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                editRoles.setEnabled(true);
+                editRolesWindowIsOpen = false;
+            }
+        });
+
+
+        //manageRolesFrame.setVisible(true);
+    }    // manageRolesButtonClicked()
+
+    
+}    // ManageVolunteerPanel
+
