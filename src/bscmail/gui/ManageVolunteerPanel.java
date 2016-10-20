@@ -42,16 +42,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JTextField emailTextField;
 
     /**
-     * The dropdown list displaying a volunteer's roles.
-     */
-    //private final JComboBox roleDropList;
-
-    /**
-     * The check box displaying whether a volunteer may fill angel shifts.
-     */
-    private final JCheckBox angelCheckBox;
-    
-    /**
      * Indicates whether the implicit volunteer is valid.
      */
     private boolean volunteerIsValid;
@@ -63,20 +53,27 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
         nameTextField = new JTextField();
-        nameTextField.getDocument().addDocumentListener(new DocumentListener(){
-            @Override public void insertUpdate(DocumentEvent e) { nameTextFieldChanged(); }
-            @Override public void removeUpdate(DocumentEvent e) { nameTextFieldChanged(); }
-            @Override public void changedUpdate(DocumentEvent e) { nameTextFieldChanged(); }
-        });    // addDocumentListener()
+        nameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                nameTextFieldChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                nameTextFieldChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                nameTextFieldChanged();
+            }
+        });
         layoutHelper.addComponent("Name: ", nameTextField);
         emailTextField = new JTextField();
         layoutHelper.addComponent("Email: ", emailTextField);
-        //roleDropList = new JComboBox();
-        //layoutHelper.addComponent("Roles: ", roleDropList);
-        angelCheckBox = new JCheckBox();
-        layoutHelper.addComponent("Angel? ", angelCheckBox);
         volunteerIsValid = elementIsValid();
-    }    // ManageShiftPanel()
+    }
 
     /**
      * Loads the details of a volunteer into the panel.
@@ -87,8 +84,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     public void loadElement(Volunteer volunteer) {
         nameTextField.setText((volunteer == null) ? "" : volunteer.getName());
         emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
-        angelCheckBox.setSelected((volunteer == null) ? false : volunteer.canAngel());
-    }    // loadElement()
+    }
 
     /**
      * Creates and returns a new volunteer from the values of the components in
@@ -99,9 +95,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     @Override
     public Volunteer createElement() {
-        return new Volunteer(nameTextField.getText(), emailTextField.getText(), angelCheckBox.isSelected());
-    }    // createElement()
-    
+        return new Volunteer(nameTextField.getText(), emailTextField.getText());
+    }
+
     /**
      * Returns true if the panel's volunteer is valid for the frame containing
      * it, or false otherwise.
@@ -112,8 +108,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     @Override
     public final boolean elementIsValid() {
-        return ! nameTextField.getText().isEmpty();
-    }    // elementIsValid()
+        return !nameTextField.getText().isEmpty();
+    }
 
     /**
      * Event that fires when the text in {@link #nameTextField} changes.
@@ -122,8 +118,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         boolean newValidity = elementIsValid();
         if (newValidity != volunteerIsValid) {
             notifyObservers();
-        }    // if
+        }
         volunteerIsValid = newValidity;
-    }    // nameTextFieldChanged()
-    
-}    // ManageVolunteerPanel
+    }
+}

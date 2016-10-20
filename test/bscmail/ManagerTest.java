@@ -367,25 +367,8 @@ public class ManagerTest extends ReadWritableTest {
         boolean expected = false;
         boolean received = manager.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsDifferentEmail()
-    
-    /**
-     * Tests that {@link Manager#equals(Object)} returns false when the
-     * argument has a different phone number than the caller.
-     */
-    @Test
-    public void testEqualsDifferentCanAngel() {
-        System.out.println("equals - manager, different phone");
-        
-        phone = "Foo";
-        manager = new Manager(name, email, phone);
-        phone = "Bar";
-        Object obj = new Manager(name, email, phone);
-        boolean expected = false;
-        boolean received = manager.equals(obj);
-        assertEquals(expected, received);
-    }    // testEqualsDifferentCanAngel()
-    
+    }
+
     /**
      * Tests that {@link Manager#equals(Object)} returns true when the
      * argument has the same name, email address, and "can angel" status as the
