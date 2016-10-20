@@ -51,6 +51,11 @@ public class MainFrame extends JFrame {
     private final ManageVolunteersFrame manageVolunteersFrame;
 
     /**
+     * A frame to manage the email template.
+     */
+    private final ManageEmailTemplateFrame manageEmailTemplateFrame;
+
+    /**
      * A frame to manage volunteers.
      */
     private final ManageRolesFrame manageRolesFrame;
@@ -150,6 +155,8 @@ public class MainFrame extends JFrame {
         manageManagersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         manageVolunteersFrame = new ManageVolunteersFrame();
         manageVolunteersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        manageEmailTemplateFrame = new ManageEmailTemplateFrame();
+        manageEmailTemplateFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         manageRolesFrame = new ManageRolesFrame();
         manageRolesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         eventFrame = new EventFrame();
@@ -188,13 +195,7 @@ public class MainFrame extends JFrame {
      * Event fired when the manage email button is clicked.
      */
     private void manageEmailButtonClicked() {
-        try (Reader infile = Application.getEmailTemplate()) {
-            ManageTemplateFrame manageTemplateFrame = new ManageTemplateFrame(infile);
-            manageTemplateFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            manageTemplateFrame.setVisible(true);
-        } catch (IOException e) {    // try
-            Application.showErrorDialog(this, "Unable to read email template.", e);
-        }    // catch
+        manageEmailTemplateFrame.setVisible(true);
     }    // manageVolunteersButtonClicked()
     
     /**
