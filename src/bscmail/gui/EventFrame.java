@@ -31,7 +31,8 @@ import main.*;
  * A graphical interface for an {@link Event}.  
  * @author Wayne Miller
  */
-public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserver, VolunteersObserver {
+public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserver, VolunteersObserver,
+                                                  EventPropertyObserver {
 
     /* Private Classes */
     
@@ -268,6 +269,11 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      */
     
     private final List<Volunteer> volunteers;
+
+    /**
+     * Event Property textField controls.
+     */
+    private final List<LabeledComponent<JTextField>> eventPropertyControls;
     
     /*
      * Public API
@@ -278,6 +284,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      * 
      */
     public EventFrame() {
+        List<EventPropertyList> eventProperties = Application.getEventProperties();
         List<Shift> shifts = Application.getShifts();
         List<Manager> managers = Application.getManagers();
         volunteers = Application.getVolunteers();
@@ -310,18 +317,22 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         add(new JLabel("Discount price:"));
         discountPriceControl = new JTextField("$");
         add(discountPriceControl);
+
+        eventPropertyControls = new LinkedList<>();
+        setEventProperties(eventProperties);
         
         add(new JLabel("Manger:"));
         managerControl = new ManagerComboBox(managers);
         add(managerControl);
-        
+
         add(new JLabel("Assistant manger:"));
         assistantManagerControl = new ManagerComboBox(managers);
         add(assistantManagerControl);
         
         shiftControls = new LinkedList<>();
         setShifts(shifts);
-        
+
+        Application.registerObserver((EventPropertyObserver)this);
         Application.registerObserver((ManagersObserver)this);
         Application.registerObserver((ShiftsObserver)this);
         Application.registerObserver((VolunteersObserver)this);
@@ -346,6 +357,11 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         event.setDiscountPrice(discountPriceControl.getText());
         event.setManager(managerControl.getManager());
         event.setAssistantManager(assistantManagerControl.getManager());
+        //event.setEventProperties(eventPropertyControls.component.);
+//        for (LabeledComponent<JTextField> eventPropertyControl : eventPropertyControls) {
+//            EventPropertyList eventProperty = eventPropertyControls.component.getShift();
+//            //event.addShift(eventProperty);
+//        }    // for
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
             Shift shift = shiftControl.component.getShift();
             shift.setVolunteer(shiftControl.component.getVolunteer());
@@ -380,6 +396,14 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         setVolunteers(Application.getVolunteers());
     }    // volunteersChanged()
 
+    /**
+     * This method is called whenever the list of defined event properties
+     * changes.
+     */
+    @Override
+    public void eventPropertiesChanged() {
+        setEventProperties(Application.getEventProperties());
+    }    // eventPropertiesChanged()
     
     /*
      * Private methods
@@ -575,6 +599,45 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
             shiftControl.setSelectedIndex(newIndex);
         }    // for
     }    // setVolunteers()
+
+    /**
+     * Sets the list of event properties displayed in the frame to the given list.
+     * If the new list of event properties is smaller than the
+     * existing list, the "extra" comboboxes are simply removed. If the new list
+     * of event properties is longer than the existing list, then new comboboxes are
+     * created, with no selections. If the given list is null, it is treated as
+     * an empty list.
+     *
+     * The list of event properties may not contain any null elements.
+     *
+     * @since 3.0
+     * @param eventProperties the new list of event properties; may not contain any null elements
+     * @throws NullPointerException if {@code eventProperties} contains any null elements
+     */
+    final void setEventProperties(List<EventPropertyList> eventProperties) {
+        if (eventProperties == null) {
+            eventProperties = new ArrayList<>();
+        }    // if
+        if (eventProperties.contains(null)) {
+            throw new NullPointerException("event properties may not contain null");
+        }    // if
+
+        List<String> selections = new LinkedList<>();
+        for (LabeledComponent<JTextField> eventPropertyControl : eventPropertyControls) {
+            remove(eventPropertyControl.label);
+            remove(eventPropertyControl.component);
+        }    // component
+        eventPropertyControls.clear();
+        for (EventPropertyList eventProperty : eventProperties) {
+            LabeledComponent<JTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
+                .getPropertyName() + ":",
+                new JTextField(eventProperty.getDefaultValue()));
+            add(eventPropertyControl.label);
+            add(eventPropertyControl.component);
+            eventPropertyControls.add(eventPropertyControl);
+        }    // for
+        pack();
+    }    // setEventProperties()
     
     /**
      * Asserts the correctness of the object's internal state.
@@ -604,6 +667,8 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         assert (! anyComboBoxContainsNull(shiftControls));
         assert (volunteers != null);
         assert (! volunteers.contains(null));
+        assert (eventPropertyControls != null);
+        assert (! eventPropertyControls.contains(null));
     }    // assertInvariant()
     
     /**

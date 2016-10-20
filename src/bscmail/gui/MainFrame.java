@@ -61,6 +61,11 @@ public class MainFrame extends JFrame {
     private final ManageRolesFrame manageRolesFrame;
 
     /**
+     * A frame to manage event properties.
+     */
+    private final ManageEventPropertiesFrame manageEventPropertiesFrame;
+    
+    /**
      * A frame to create an event.
      */
     private final EventFrame eventFrame;
@@ -82,6 +87,7 @@ public class MainFrame extends JFrame {
             }    // actionPerformed()
         });    // addActionListener()
         panel.add(button);
+
         button = new JButton("Managers");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -89,6 +95,7 @@ public class MainFrame extends JFrame {
             }    // actionPerformed()
         });    // addActionListener()
         panel.add(button);
+
         button = new JButton("Volunteers");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -103,12 +110,21 @@ public class MainFrame extends JFrame {
             }    // actionPerformed()
         });    // addActionListener()
         panel.add(button);
+
         button = new JButton("Email");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageEmailButtonClicked();
             }    // actionPerformed()
         });    // addActionListener()
+        panel.add(button);
+
+        button = new JButton("Event Properties");
+        button.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                manageEventPropertiesButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListever()
         panel.add(button);
         add(panel);
         
@@ -151,14 +167,21 @@ public class MainFrame extends JFrame {
         
         manageShiftsFrame = new ManageShiftsFrame();
         manageShiftsFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         manageManagersFrame = new ManageManagersFrame();
         manageManagersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         manageVolunteersFrame = new ManageVolunteersFrame();
         manageVolunteersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         manageEmailTemplateFrame = new ManageEmailTemplateFrame();
         manageEmailTemplateFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         manageRolesFrame = new ManageRolesFrame();
         manageRolesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        manageEventPropertiesFrame = new ManageEventPropertiesFrame();
+        manageEventPropertiesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         eventFrame = new EventFrame();
         eventFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }    // MainFrame()
@@ -197,7 +220,14 @@ public class MainFrame extends JFrame {
     private void manageEmailButtonClicked() {
         manageEmailTemplateFrame.setVisible(true);
     }    // manageVolunteersButtonClicked()
-    
+
+    /**
+     * Event fired when the manage volunteers button is clicked.
+     */
+    private void manageEventPropertiesButtonClicked() {
+        manageEventPropertiesFrame.setVisible(true);
+    }    // manageEventPropertiesButtonClicked()
+
     /**
      * Event fired when the create event button is clicked.
      */

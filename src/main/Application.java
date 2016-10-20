@@ -89,8 +89,13 @@ public class Application {
         /**
          * The name of the email template file.
          */
-        EMAIL_TEMPLATE_FILE        (true);
-        
+        EMAIL_TEMPLATE_FILE        (true),
+
+        /**
+         * The name of the defined event prtoperties file.
+         */
+        EVENT_PROPERTY_FILE        (true);
+
         /*
          * Class methods and properties
          */
@@ -213,6 +218,11 @@ public class Application {
      * The defined text transformer.
      */
     private final Transformer transformer;
+
+    /**
+     * The list of defined event properties.
+     */
+    private List<EventPropertyList> eventProperties;
     
     /**
      * The list of shifts observers.
@@ -238,6 +248,11 @@ public class Application {
      * The list of email template observers.
      */
     private final List<EmailTemplateObserver> emailTemplateObservers;
+
+    /**
+     * The list of event property observers.
+     */
+    private final List<EventPropertyObserver> eventPropertyObservers;
     
     /**
      * The list of test dialogs.
@@ -259,12 +274,16 @@ public class Application {
             properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
             properties.put(PropertyKey.ROLES_FILE, "roles.xml");
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
-            
+            properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "template.txt");
+            properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperty.xml");
+
             shifts = readShifts(properties.get(PropertyKey.SHIFTS_FILE));
             managers = readManagers(properties.get(PropertyKey.MANAGERS_FILE));
             volunteers = readVolunteers(properties.get(PropertyKey.VOLUNTEERS_FILE));
             roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
             emailTemplate = readEmailTemplate(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
+            eventProperties = readEventProperties(properties.get(PropertyKey.EVENT_PROPERTY_FILE));
+
             transformer = createTransformer();
             
             shiftsObservers = new LinkedList<>();
@@ -272,6 +291,7 @@ public class Application {
             volunteersObservers = new LinkedList<>();
             rolesObservers = new LinkedList<>();
             emailTemplateObservers = new LinkedList<>();
+            eventPropertyObservers = new LinkedList<>();
             
             testDialogs = new LinkedList<>();
         } catch (IOException | ClassNotFoundException e) {    // try
@@ -547,7 +567,56 @@ public class Application {
         theApplication.assertInvariant();
         return theApplication.transformer;
     }    // getTransformer()
-    
+
+    /**
+     * Returns the list of defined event properties. The list returned is a copy
+     * of the master, so changes to it do not affect the master and vice-versa.
+     *
+     * @return the list of defined event properties
+     */
+    public static List<EventPropertyList> getEventProperties() {
+        theApplication.assertInvariant();
+        List<EventPropertyList> clone = new ArrayList<>();
+        for (EventPropertyList eventProperty : theApplication.eventProperties) {
+            clone.add(eventProperty.clone());
+        }    // for
+        return clone;
+    }    // getEventProperties()
+
+    /**
+     * Sets the list of defined event properties. Event properties are copied into the
+     * application if any. The original event properties are unchanged.
+     * The argument is copied to the master, so that changes to the
+     * master do not affect the original list and vice-versa.
+     *
+     * @param new list of event properties; may not be null, nor
+     * contain any null elements
+     * @throws NullPointerException if {@code eventProperties} is null or contains a null
+     * element
+     * @throws IOException if an I/O error occurs
+     */
+
+    public static void setEventProperties(List<EventPropertyList> eventProperties) throws IOException {
+        theApplication.assertInvariant();
+        if (eventProperties == null) {
+            throw new NullPointerException("Event Properties may not be null");
+        }    // if
+        if (eventProperties.contains(null)) {
+            throw new NullPointerException("Event Properties may not contain null");
+        }    // if
+        theApplication.eventProperties = new LinkedList<>();
+        for (EventPropertyList eventProperty : eventProperties) {
+            EventPropertyList clone = eventProperty.clone();
+            theApplication.eventProperties.add(clone);
+        }    // for
+        for (EventPropertyObserver observer : theApplication.eventPropertyObservers) {
+            observer.eventPropertiesChanged();
+        }    // for
+        theApplication.assertInvariant();
+        theApplication.writeList(theApplication.eventProperties, theApplication.properties.get(PropertyKey.EVENT_PROPERTY_FILE));
+    }    // setEventProperties()
+
+
     /**
      * Registers a shifts observer with this application.
      * 
@@ -621,6 +690,21 @@ public class Application {
             throw new NullPointerException("observer may not be null");
         }    // if
         theApplication.emailTemplateObservers.add(observer);
+        theApplication.assertInvariant();
+    }    // registerObserver()
+
+    /**
+     * Registers a event property observer with this application.
+     *
+     * @param observer the observer to register; may not be null
+     * @throws NullPointerException if observer is null
+     */
+    public static void registerObserver(EventPropertyObserver observer) {
+        theApplication.assertInvariant();
+        if (observer == null) {
+            throw new NullPointerException("observer may not be null");
+        }    // if
+        theApplication.eventPropertyObservers.add(observer);
         theApplication.assertInvariant();
     }    // registerObserver()
     
@@ -741,6 +825,25 @@ public class Application {
     }    // readManagers()
 
     /**
+     * Reads and returns a list of event properties from a binary file.
+     *
+     * @param filename the name of the file; may not be null
+     * @return a list containing all the event properties contained in {@code filename}
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if a serialization failure occurs
+     */
+    private List<EventPropertyList> readEventProperties(String filename) throws IOException, ClassNotFoundException {
+        assert (filename != null);
+        IOLayer ioLayer = getIOLayer();
+        List<EventPropertyList> eventProperties = ioLayer.readAll(new FileInputStream(filename), EventPropertyList
+            .getEventPropertyFactory());
+        while (eventProperties.contains(null)) {
+            eventProperties.remove(null);
+        }    // while
+        return eventProperties;
+    }    // readEventProperties()
+
+    /**
      * Writes a list of objects to a binary file.
      *
      * @param list the list to write; may not be null
@@ -793,6 +896,8 @@ public class Application {
         assert (volunteers != null);
         assert (! volunteers.contains(null));
         assert (transformer != null);
+        assert (eventProperties != null);
+        assert (! eventProperties.contains(null));
         assert (shiftsObservers != null);
         assert (! shiftsObservers.contains(null));
         assert (managersObservers != null);
@@ -804,6 +909,8 @@ public class Application {
         assert (emailTemplate != null);
         assert (emailTemplateObservers != null);
         assert (! emailTemplateObservers.contains(null));
+        assert (eventPropertyObservers != null);
+        assert (! eventPropertyObservers.contains(null));
         assert (testDialogs != null);
         assert (! testDialogs.contains(null));
         assert (properties.getTestMode() ? true : testDialogs.isEmpty());
@@ -823,5 +930,4 @@ public class Application {
         }    // for
         return true;
     }    // shiftsHasNoVolunteers()
-    
 }    // Application
