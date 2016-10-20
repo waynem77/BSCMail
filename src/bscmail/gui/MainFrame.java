@@ -20,10 +20,8 @@
 package bscmail.gui;
 
 import bscmail.Event;
-import bscmail.transformer.*;
 import java.awt.GridLayout;
 import java.awt.event.*;
-import java.io.*;
 import javax.swing.*;
 import main.Application;
 
@@ -69,17 +67,28 @@ public class MainFrame extends JFrame {
      * A frame to create an event.
      */
     private final EventFrame eventFrame;
-    
+
+    /**
+     * The number of rows in the layout.  This should be equal to the maximum
+     * number of buttons in an individual column.
+     */
+    private final int LAYOUT_ROWS = 6;
+
+    /**
+     * The number of columns in the layout.
+     */
+    private final int LAYOUT_COLUMNS = 3;
+
     /**
      * Constructs a new main frame.
      */
     public MainFrame() {
         setTitle(Application.getApplicationName());
-        setLayout(new GridLayout(1, 3));
+        setLayout(new GridLayout(1, LAYOUT_COLUMNS));
         
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Manage"));
-        panel.setLayout(new GridLayout(5, 1));
+        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
         JButton button = new JButton("Shifts");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -130,7 +139,7 @@ public class MainFrame extends JFrame {
         
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Create"));
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
         button = new JButton("Event");
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -149,7 +158,7 @@ public class MainFrame extends JFrame {
         
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Help"));
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
         button = new JButton("Help");
         button.setEnabled(false);
         panel.add(button);
