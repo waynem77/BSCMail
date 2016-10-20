@@ -11,16 +11,4 @@
     <name>Price</name>
     <value>123</value>
   </eventpropertylist>
-  <eventpropertylist>
-    <name>new one</name>
-    <value>007</value>
-  </eventpropertylist>
-  <eventpropertylist>
-    <name>yet another one</name>
-    <value>something</value>
-  </eventpropertylist>
-  <eventpropertylist>
-    <name>test</name>
-    <value>test</value>
-  </eventpropertylist>
 </eventpropertylist-list>

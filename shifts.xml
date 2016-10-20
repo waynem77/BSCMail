@@ -11,4 +11,16 @@
   <shift>
     <description>Cleanup 10:00-11:00</description>
   </shift>
+  <shift>
+    <description>hhm</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>lklkl</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
+  <shift>
+    <description>kkkm</description>
+    <isAngelShift>false</isAngelShift>
+  </shift>
 </shift-list>
