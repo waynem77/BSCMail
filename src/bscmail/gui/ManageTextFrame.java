@@ -42,7 +42,7 @@ public abstract class ManageTextFrame extends JFrame {
     public ManageTextFrame() {
         final int COLUMNS = 24;
         final int ROWS = 80;
-        
+
         setContentPane(Box.createVerticalBox());
         textArea = new JTextArea(COLUMNS, ROWS);
         textArea.setLineWrap(true);

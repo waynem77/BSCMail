@@ -56,6 +56,7 @@ public class EditVolunteerRolesFrame extends JFrame {
         setTitle(Application.getApplicationName() + " - Edit Roles for " + volunteer.getName());
         setLayout(new GridLayout(1, 3));
 
+        //Left-hand column
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(300,200));
         panel.setBorder(BorderFactory.createTitledBorder("Existing Roles"));
@@ -65,6 +66,7 @@ public class EditVolunteerRolesFrame extends JFrame {
         panel.add(new JScrollPane(existingRoles));
         add(panel);
 
+        //Center column
         panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1));
         panel.add(new JLabel(""));
@@ -86,6 +88,7 @@ public class EditVolunteerRolesFrame extends JFrame {
         panel.add(new JLabel(""));
         add(panel);
 
+        //Right hand column
         panel = new JPanel();
         panel.setPreferredSize(new Dimension(300,200));
         panel.setBorder(BorderFactory.createTitledBorder("Assigned Roles"));
