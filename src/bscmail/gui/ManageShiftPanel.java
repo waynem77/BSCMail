@@ -37,6 +37,24 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     private final JTextField descriptionTextField;
 
     /**
+     * The check box displaying whether the volunteer's email address should be
+     * displayed in the email.
+     */
+    private final JCheckBox displayVolunteerEmailCheckBox;
+
+    /**
+     * The check box displaying whether the volunteer's phone number should be
+     * displayed in the email.
+     */
+    private final JCheckBox displayVolunteerPhoneCheckBox;
+
+    /**
+     * The check box displaying whether the volunteer notes should be displayed
+     * in the email.
+     */
+    private final JCheckBox displayVolunteerNotesCheckBox;
+
+    /**
      * Indicates whether the implicit shift is valid.
      */
     private boolean shiftIsValid;
@@ -45,9 +63,11 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      * Constructs a new shift panel.
      */
     public ManageShiftPanel() {
+        final int TEXT_COLS = 15;
+
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
-        descriptionTextField = new JTextField();
+        descriptionTextField = new JTextField(TEXT_COLS);
         descriptionTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -65,6 +85,16 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
             }
         });
         layoutHelper.addComponent("Description: ", descriptionTextField);
+
+        displayVolunteerEmailCheckBox = new JCheckBox();
+        layoutHelper.addComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);
+
+        displayVolunteerPhoneCheckBox = new JCheckBox();
+        layoutHelper.addComponent("Display volunteer phone: ", displayVolunteerPhoneCheckBox);
+
+        displayVolunteerNotesCheckBox = new JCheckBox();
+        layoutHelper.addComponent("Display volunteer notes: ", displayVolunteerNotesCheckBox);
+
         shiftIsValid = elementIsValid();
     }
 
@@ -76,6 +106,9 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     @Override
     public void loadElement(Shift shift) {
         descriptionTextField.setText((shift == null) ? "" : shift.getDescription());
+        displayVolunteerEmailCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerEmail());
+        displayVolunteerPhoneCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerPhone());
+        displayVolunteerNotesCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerNotes());
     }
 
     /**
@@ -87,7 +120,10 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      */
     @Override
     public Shift createElement() {
-        return new Shift(descriptionTextField.getText());
+        return new Shift(descriptionTextField.getText(),
+                displayVolunteerEmailCheckBox.isSelected(),
+                displayVolunteerPhoneCheckBox.isSelected(),
+                displayVolunteerNotesCheckBox.isSelected());
     }
 
     /**

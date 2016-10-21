@@ -1,14 +1,32 @@
 <shift-list>
   <shift>
+    <description>Manager</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>true</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
+  </shift>
+  <shift>
     <description>Setup 8:00-9:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
     <description>Door 9:00-10:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
     <description>Door 9:00-10:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
     <description>Cleanup 10:00-11:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
 </shift-list>
