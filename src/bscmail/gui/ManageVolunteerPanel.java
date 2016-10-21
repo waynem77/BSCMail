@@ -43,6 +43,16 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JTextField emailTextField;
 
     /**
+     * The text field displaying a volunteer's phone number.
+     */
+    private final JTextField phoneTextField;
+
+    /**
+     * The text field displaying the volunteer notes.
+     */
+    private final JTextArea notesTextArea;
+
+    /**
      * Button to pop-up new screen to manage roles of a volunteer.
      */
     private final JButton editRoles;
@@ -65,6 +75,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      * Constructs a new volunteer panel.
      */
     public ManageVolunteerPanel() {
+        final int NOTES_ROWS = 4;
+        final int NOTES_COLS = 20;
+
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
         nameTextField = new JTextField();
@@ -87,7 +100,14 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         layoutHelper.addComponent("Name: ", nameTextField);
         emailTextField = new JTextField();
         layoutHelper.addComponent("Email: ", emailTextField);
-
+        phoneTextField = new JTextField();
+        layoutHelper.addComponent("Phone: ", phoneTextField);
+        notesTextArea = new JTextArea(NOTES_ROWS, NOTES_COLS);
+        notesTextArea.setLineWrap(true);
+        notesTextArea.setWrapStyleWord(true);
+        layoutHelper.addComponent("Notes: ", new JScrollPane(notesTextArea,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         editRoles = new JButton("Edit Roles");
         editRoles.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -96,7 +116,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         });    // addActionListener()
         editRoles.setEnabled(false);
         layoutHelper.addComponent("", editRoles);
-
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
         editRolesWindowIsOpen = false;
@@ -112,6 +131,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         currentVolunteer = volunteer;
         nameTextField.setText((volunteer == null) ? "" : volunteer.getName());
         emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
+        phoneTextField.setText((volunteer == null) ? "" : volunteer.getPhone());
+        notesTextArea.setText((volunteer == null) ? "" : volunteer.getNotes());
         if (!editRolesWindowIsOpen)
             editRoles.setEnabled((volunteer == null) ? false : true);
     }    // loadElement()
@@ -127,9 +148,11 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     public Volunteer createElement() {
         currentVolunteer.setName(nameTextField.getText());
         currentVolunteer.setEmail(emailTextField.getText());
+        currentVolunteer.setPhone(phoneTextField.getText());
+        currentVolunteer.setNotes(notesTextArea.getText());
         return currentVolunteer;
     }    // createElement()
-    
+
     /**
      * Returns true if the panel's volunteer is valid for the frame containing
      * it, or false otherwise.

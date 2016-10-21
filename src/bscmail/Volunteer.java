@@ -24,7 +24,7 @@ import java.util.*;
 import main.*;
 
 /**
- * Represents a BSC volunteer.
+ * Represents an event volunteer.
  *
  * @author Wayne Miller, github.com/acadams
  */
@@ -74,6 +74,12 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
          * <li>The volunteer's email address is given by the string value of
          * the value corresponding to "email".  If such a value does not exist
          * or is null, the volunteer's email address is empty.</li>
+         *   <li>The volunteer's phone number is given by the string value of
+         * the value corresponding to "phone".  If such a value does not exist
+         * or is null, the volunteer's phone number is empty.</li>
+         *   <li>The volunteer's notes are given by the string value of
+         * the value corresponding to "notes".  If such a value does not exist
+         * or is null, the volunteer's notes are empty.</li>
          * </ul>
          * This method effectively acts as the reverse of
          * {@link Volunteer#getReadWritableProperties()}.
@@ -93,10 +99,13 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
             try {
                 Object nameObject = properties.get("name");
                 Object emailObject = properties.get("email");
+                Object phoneObject = properties.get("phone");
+                Object notesObject = properties.get("notes");
                 String name = (nameObject != null) ? nameObject.toString() : "";
                 String email = (emailObject != null) ? emailObject.toString() : "";
-                volunteer = new Volunteer(name, email);
-
+                String phone = (phoneObject != null) ? phoneObject.toString() : "";
+                String notes = (notesObject != null) ? notesObject.toString() : "";
+                volunteer = new Volunteer(name, email, phone, notes);
                 Object roleObject = properties.get("role");
                 if (roleObject != null) {
                     String roles = roleObject.toString();
@@ -136,7 +145,7 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
     private String name;
 
     /**
-     * The volunteer's email address;
+     * The volunteer's email address.
      */
     private String email;
 
@@ -146,22 +155,42 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
     private List<Role> roles;
 
     /**
+     * The volunteer's phone number.
+     */
+    private String phone;
+
+    /**
+     * Notes about the volunteer.
+     */
+    private String notes;
+
+    /**
      * Constructs a new volunteer.
      *
      * @param name the volunteer's name
      * @param email the volunteer's email address
-     * @throws NullPointerException if {@code name} or {@code email} are null
+     * @param phone the volunteer's phone number
+     * @param notes the volunteer's notes
+     * @throws NullPointerException if any parameter is null
      */
-    public Volunteer(String name, String email) {
+    public Volunteer(String name, String email, String phone, String notes) {
         if (name == null) {
             throw new NullPointerException("name may not be null");
         }    // if
         if (email == null) {
             throw new NullPointerException("email may not be null");
         }    // if
+        if (phone == null) {
+            throw new NullPointerException("phone may not be null");
+        }    // if
+        if (notes == null) {
+            throw new NullPointerException("notes may not be null");
+        }    // if
 
         this.name = name;
         this.email = email;
+        this.phone = phone;
+        this.notes = notes;
         this.roles = new LinkedList<Role>();
         assertInvariant();
     }    // Volunteer()
@@ -196,6 +225,54 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         email = newEmail;
     }
 
+    /**
+     * Returns the volunteer's phone number.
+     *
+     * @return the volunteer's phone number
+     */
+    public String getPhone() {
+        assertInvariant();
+        return phone;
+    }    // getPhone()
+
+    /**
+     * Sets the volunteer's phone number.
+     *
+     * @param phone the new phone number; may not be null
+     * @throws NullPointerException if {@code phone} is null
+     */
+    public void setPhone(String phone) {
+        if (phone == null) {
+            throw new NullPointerException("phone may not be null");
+        }    // if
+        this.phone = phone;
+        assertInvariant();
+    }
+
+    /**
+     * Returns the volunteer notes.
+     *
+     * @return the volunteer notes
+     */
+    public String getNotes() {
+        assertInvariant();
+        return notes;
+    }    // getNotes()
+
+    /**
+     * Sets the volunteer notes.
+     *
+     * @param notes the new notes; may not be null
+     * @throws NullPointerException if {@code phone} is null
+     */
+    public void setNotes(String notes) {
+        if (notes == null) {
+            throw new NullPointerException("notes may not be null");
+        }    // if
+        this.notes = notes;
+        assertInvariant();
+    }
+
     public void addRole(Role newRole){
         //ensure new role is unique
         for (Role role : roles){
@@ -220,18 +297,21 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         return roles;
     }
 
-    
     /**
      * Returns a map containing the read-writable properties of the volunteer.
      * The map returned by this method is guaranteed to have the following
      * properties.
      * <ul>
-     *   <li>The map has two keys: "name" and "email"</li>
+     *   <li>The map has four keys: "name", "email", "phone", and "notes".</li>
      *   <li>No value is null.
      *   <li>The value of "name" is a non-null {@link String} equal to the value
      * of {@link #getName()}.</li>
      *   <li>The value of "email" is a non-null {@link String} equal to the
      * value of {@link #getName()}.</li>
+     *   <li>The value of "phone" is a non-null {@link String} equal to the
+     * value of {@link #getPhone()}.</li>
+     *   <li>The value of "notes" is a non-null {@link String} equal to the
+     * value of {@link #getNotes()}.</li>
      *   <li>The value of each "role" is a non-null {@link Role} found in the list
      * of {@link #getRoles()}.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
@@ -246,6 +326,8 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("name", name);
         properties.put("email", email);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
         String roleNames = "";
         for (Role role : roles){
             roleNames += role.getName() +",";
@@ -272,7 +354,9 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
      * <ol>
      *   <li>the object is another volunteer,</li>
      *   <li>both volunteers have the same name,</li>
-     *   <li>both volunteers have the same email address, and</li>
+     *   <li>both volunteers have the same email address</li>
+     *   <li>both volunteers have the same phone number, and</li>
+     *   <li>both volunteers have the same notes.</li>
      * </ol>
      * 
      * @param obj the object with which to compare
@@ -288,7 +372,7 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         }    // if
         
         Volunteer rhs = (Volunteer)obj;
-        return name.equals(rhs.name) && email.equals(rhs.email);
+        return name.equals(rhs.name) && email.equals(rhs.email) && phone.equals(rhs.phone) && notes.equals(rhs.notes);
     }    // equals()
     
     @Override
@@ -298,6 +382,8 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
         int code = SEED;
         code = code * MULTIPLIER + name.hashCode();
         code = code * MULTIPLIER + email.hashCode();
+        code = code * MULTIPLIER + phone.hashCode();
+        code = code * MULTIPLIER + notes.hashCode();
         return code;
     }    // hashCode()
     
