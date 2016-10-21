@@ -78,7 +78,22 @@ public class DisplayEmailFrame extends ManageTextFrame {
             String shiftLine = shift.getDescription() + ": ";
             Volunteer volunteer = shift.getVolunteer();
             if (volunteer != null) {
-                shiftLine += volunteer;
+                shiftLine += volunteer.getName();
+                
+                String extraInfo = null;
+                if (shift.getDisplayVolunteerEmail()) {
+                    extraInfo = (extraInfo == null) ? volunteer.getEmail() : (extraInfo + ", " + volunteer.getEmail());
+                }    // if
+                if (shift.getDisplayVolunteerPhone()) {
+                    extraInfo = (extraInfo == null) ? volunteer.getPhone() : (extraInfo + ", " + volunteer.getPhone());
+                }    // if
+                if (shift.getDisplayVolunteerNotes()) {
+                    extraInfo = (extraInfo == null) ? volunteer.getNotes() : (extraInfo + ", " + volunteer.getNotes());
+                }    // if
+                
+                if (extraInfo != null) {
+                    shiftLine += " (" + extraInfo + ")";
+                }    // if
             }    // if
             appendText(shiftLine);
         }    // for
