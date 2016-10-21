@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.*;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.text.*;
 import java.util.*;
@@ -254,7 +255,22 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     }    // LabeledComponent
     
     /* Swing controls */
-    
+
+    /**
+     * The panel that contains the "standard" event controls.
+     */
+    private final JPanel standardPanel;
+
+    /**
+     * The panel that contains the dynamic event properties.
+     */
+    private final JPanel eventPropertiesPanel;
+
+    /**
+     * The panel that contains the shifts.
+     */
+    private final JPanel shiftsPanel;
+
     /**
      * Date selector control.
      */
@@ -301,25 +317,33 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         volunteers = Application.getVolunteers();
         
         setTitle(Application.getApplicationName() + " - Event Setup");
-        setLayout(new GridLayout(0, 2));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        add(new JLabel("Date:"));
+        standardPanel = new JPanel();
+        add(standardPanel);
+        eventPropertiesPanel = new JPanel();
+        add(eventPropertiesPanel);
+        shiftsPanel = new JPanel();
+        add(shiftsPanel);
+
+        standardPanel.setLayout(new GridLayout(0, 2));
+        standardPanel.add(new JLabel("Date:"));
         dateControl = new JSpinner(new SpinnerDateModel());
         SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
-        add(dateControl);
+        standardPanel.add(dateControl);
+        standardPanel.add(new JLabel("Manger:"));
+        managerControl = new ManagerComboBox(managers);
+        standardPanel.add(managerControl);
+        standardPanel.add(new JLabel("Assistant manger:"));
+        assistantManagerControl = new ManagerComboBox(managers);
+        standardPanel.add(assistantManagerControl);
 
+        eventPropertiesPanel.setLayout(new GridLayout(0, 2));
         eventPropertyControls = new LinkedList<>();
         setEventProperties(eventProperties);
-        
-        add(new JLabel("Manger:"));
-        managerControl = new ManagerComboBox(managers);
-        add(managerControl);
 
-        add(new JLabel("Assistant manger:"));
-        assistantManagerControl = new ManagerComboBox(managers);
-        add(assistantManagerControl);
-        
+        shiftsPanel.setLayout(new GridLayout(0, 2));
         shiftControls = new LinkedList<>();
         setShifts(shifts);
 
@@ -414,6 +438,8 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      * @throws NullPointerException if {@code shifts} contains any null elements
      */
     final void setShifts(List<Shift> shifts) {
+        final Container container = shiftsPanel;
+
         if (shifts == null) {
             shifts = new ArrayList<>();
         }    // if
@@ -425,8 +451,8 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
             Volunteer volunteer = shiftControl.component.getVolunteer();
             selections.add((volunteer == null) ? null : volunteer.getName());
-            remove(shiftControl.label);
-            remove(shiftControl.component);
+            container.remove(shiftControl.label);
+            container.remove(shiftControl.component);
         }    // component
         shiftControls.clear();
         for (Shift shift : shifts) {
@@ -623,6 +649,8 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      * @throws NullPointerException if {@code eventProperties} contains any null elements
      */
     final void setEventProperties(List<EventPropertyList> eventProperties) {
+        final Container container = eventPropertiesPanel;
+
         if (eventProperties == null) {
             eventProperties = new ArrayList<>();
         }    // if
@@ -632,18 +660,18 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
 
         List<String> selections = new LinkedList<>();
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            remove(eventPropertyControl.label);
-            remove(eventPropertyControl.component);
+            container.remove(eventPropertyControl.label);
+            container.remove(eventPropertyControl.component);
         }    // component
         eventPropertyControls.clear();
         for (EventPropertyList eventProperty : eventProperties) {
             LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
                 .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
-            add(eventPropertyControl.label);
-            add(eventPropertyControl.component);
+            container.add(eventPropertyControl.label);
+            container.add(eventPropertyControl.component);
             eventPropertyControls.add(eventPropertyControl);
         }    // for
-        //pack();
+        pack();
     }    // setEventProperties()
     
     /**
