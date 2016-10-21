@@ -81,6 +81,42 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     }    // PersonContainer
 
     /**
+     * A text field that allows the user to select event properties. This class extends
+     * {@code JTextField}.
+     */
+    private class EventPropertiesTextField extends JTextField {
+        /**
+         * The event property corresponding to this text field.
+         */
+        private final EventPropertyList eventProperty;
+
+        /**
+         * Constructs a new event Property text field.
+         *
+         * @param eventProperty the event property corresponding to this text field; may not be
+         * null
+         */
+        public EventPropertiesTextField(EventPropertyList eventProperty) {
+            super(eventProperty.getDefaultValue());
+            assert (eventProperty != null);
+            this.eventProperty = eventProperty;
+            //new JTextField(eventProperty.getDefaultValue());
+            //add();
+
+        }    // EventPropertiesTextField()
+
+        /**
+         * Returns the event property corresponding to this text field.
+         *
+         * @return the event porperty corresponding to this text field
+         */
+        public EventPropertyList getEventProperty() {
+            return eventProperty;
+        }    // getEventProperty()
+
+    }    // EventPropertiesTextField
+
+    /**
      * A combo box that allows the user to select managers.  This class extends
      * {@code JComboBox} to easily convert person containers to managers.
      */
@@ -103,7 +139,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         public Manager getManager() {
             PersonContainer<Manager> container = (PersonContainer<Manager>)getSelectedItem();
             return container.getPerson();
-        }    // getVolunteer()
+        }    // getManager()
         
         /**
          * Sets the list of managers.
@@ -223,32 +259,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      * Date selector control.
      */
     private final JSpinner dateControl;
-    
-    /**
-     * Band edit control.
-     */
-    private final JTextField bandControl;
 
-    /**
-     * Instructors edit control.
-     */
-    private final JTextField instructorsControl;
-    
-    /**
-     * General price edit control.
-     */
-    private final JTextField generalPriceControl;
-    
-    /**
-     * Student/senior price edit control.
-     */
-    private final JTextField studentPriceControl;
-    
-    /**
-     * Discount price edit control.
-     */
-    private final JTextField discountPriceControl;
-    
     /**
      * Manager dropdown control.
      */
@@ -273,7 +284,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     /**
      * Event Property textField controls.
      */
-    private final List<LabeledComponent<JTextField>> eventPropertyControls;
+    private final List<LabeledComponent<EventPropertiesTextField>> eventPropertyControls;
     
     /*
      * Public API
@@ -297,26 +308,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
         add(dateControl);
-
-        add(new JLabel("Band:"));
-        bandControl = new JTextField();
-        add(bandControl);
-
-        add(new JLabel("Instructors:"));
-        instructorsControl = new JTextField();
-        add(instructorsControl);
-        
-        add(new JLabel("General price:"));
-        generalPriceControl = new JTextField("$");
-        add(generalPriceControl);
-        
-        add(new JLabel("Student/senior price:"));
-        studentPriceControl = new JTextField("$");
-        add(studentPriceControl);
-        
-        add(new JLabel("Discount price:"));
-        discountPriceControl = new JTextField("$");
-        add(discountPriceControl);
 
         eventPropertyControls = new LinkedList<>();
         setEventProperties(eventProperties);
@@ -347,21 +338,14 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
      */
     public Event getEvent() {
         assertInvariant();
-        
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
-        event.setBand(bandControl.getText());
-        event.setInstructors(instructorsControl.getText());
-        event.setGeneralPrice(generalPriceControl.getText());
-        event.setStudentPrice(studentPriceControl.getText());
-        event.setDiscountPrice(discountPriceControl.getText());
         event.setManager(managerControl.getManager());
         event.setAssistantManager(assistantManagerControl.getManager());
-        //event.setEventProperties(eventPropertyControls.component.);
-//        for (LabeledComponent<JTextField> eventPropertyControl : eventPropertyControls) {
-//            EventPropertyList eventProperty = eventPropertyControls.component.getShift();
-//            //event.addShift(eventProperty);
-//        }    // for
+        for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
+            EventPropertyList eventProperty = eventPropertyControl.component.getEventProperty();
+            event.addEventProperty(eventProperty);
+        }    // for
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
             Shift shift = shiftControl.component.getShift();
             shift.setVolunteer(shiftControl.component.getVolunteer());
@@ -623,20 +607,19 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         }    // if
 
         List<String> selections = new LinkedList<>();
-        for (LabeledComponent<JTextField> eventPropertyControl : eventPropertyControls) {
+        for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
             remove(eventPropertyControl.label);
             remove(eventPropertyControl.component);
         }    // component
         eventPropertyControls.clear();
         for (EventPropertyList eventProperty : eventProperties) {
-            LabeledComponent<JTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
-                .getPropertyName() + ":",
-                new JTextField(eventProperty.getDefaultValue()));
+            LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
+                .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
             add(eventPropertyControl.label);
             add(eventPropertyControl.component);
             eventPropertyControls.add(eventPropertyControl);
         }    // for
-        pack();
+        //pack();
     }    // setEventProperties()
     
     /**
@@ -645,16 +628,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     private void assertInvariant() {
         assert (dateControl != null);
         assert (isAncestorOf(dateControl));
-        assert (bandControl != null);
-        assert (isAncestorOf(bandControl));
-        assert (instructorsControl != null);
-        assert (isAncestorOf(instructorsControl));
-        assert (generalPriceControl != null);
-        assert (isAncestorOf(generalPriceControl));
-        assert (studentPriceControl != null);
-        assert (isAncestorOf(studentPriceControl));
-        assert (discountPriceControl != null);
-        assert (isAncestorOf(discountPriceControl));
         assert (managerControl != null);
         assert (isAncestorOf(managerControl));
         assert (! comboBoxContainsNull(managerControl));

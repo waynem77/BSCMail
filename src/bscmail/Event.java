@@ -26,10 +26,7 @@ import java.util.*;
  * following properties and components;
  * <ul>
  *   <li>a date,</li>
- *   <li>a location,</li>
- *   <li>a band,</li>
- *   <li>instructors,</li>
- *   <li>prices,</li>
+ *   <li>a list of event properties that may or may not be filled,</li>
  *   <li>a house manager</li>
  *   <li>an assistant house manager, and</li>
  *   <li>a list of volunteer shifts that may or may not be filled.</li>
@@ -38,28 +35,17 @@ import java.util.*;
  * @author Wayne Miller
  */
 public class Event {
-
-    /**
-     * Used to denote various string properties of an event.
-     */
-    private enum EventProperty {
-        BAND,
-        INSTRUCTORS,
-        GENERAL_PRICE,
-        STUDENT_PRICE,
-        DISCOUNT_PRICE
-    }    // EventProperty
-
-    /**
-     * The string properties of the event.
-     */
-    private final Map<EventProperty, String> stringProperties;
     
     /**
      * The date of the event.  If no date is set for the event, this property is
      * null.
      */
     private Date date;
+
+    /**
+     * The event properties assigned to the event.
+     */
+    private final List<EventPropertyList> eventProperties;
     
     /**
      * The manager assigned to the event.  If no manager is assigned to the
@@ -82,8 +68,8 @@ public class Event {
      * Constructs a new event.
      */
     public Event() {
-        stringProperties = new EnumMap<>(EventProperty.class);
         shifts = new ArrayList<>();
+        eventProperties = new ArrayList<>();
         assertInvariant();
     }    // Event()
 
@@ -121,119 +107,32 @@ public class Event {
     }    // setDate()
 
     /**
-     * Returns the band for the event. If the event has no band, this method
-     * returns an empty string.
+     * Adds a Event Properties to the event.
      *
-     * @return the band for the event
+     * @param eventProperty the event property to add to the event; may not be null
+     * @throws NullPointerException if {@code eventProperty} is null
      */
-    public String getBand() {
+    public void addEventProperty(EventPropertyList eventProperty) {
         assertInvariant();
-        return getProperty(EventProperty.BAND);
-    }    // getBand()
+        if (eventProperty == null) {
+            throw new NullPointerException();
+        }    // if
+        eventProperties.add(eventProperty);
+        assertInvariant();
+    }    // addEventProperty()
 
     /**
-     * Sets the band for the event. If the parameter is empty or null, the band
-     * will be unset.
+     * Returns an unmodifiable list of the event properties associated with the
+     * event. The event properties are ordered sequentially in the order they
+     * were added.
      *
-     * @param band the band for the event
+     * @return an unmodifiable list of the event porperties associated with the
+     * event
      */
-    public void setBand(String band) {
+    public List<EventPropertyList> getEventProperties() {
         assertInvariant();
-        stringProperties.put(EventProperty.BAND, band);
-        assertInvariant();
-    }    // setBand()
-
-    /**
-     * Returns the instructors for the event. If the event has no instructors,
-     * this method returns an empty string.
-     *
-     * @return the instructors for the event
-     */
-    public String getInstructors() {
-        assertInvariant();
-        return getProperty(EventProperty.INSTRUCTORS);
-    }    // getInstructors()
-
-    /**
-     * Sets the instructors for the event. If the parameter is empty or null,
-     * the instructors will be unset.
-     *
-     * @param instructors the instructors for the event
-     */
-    public void setInstructors(String instructors) {
-        assertInvariant();
-        stringProperties.put(EventProperty.INSTRUCTORS, instructors);
-        assertInvariant();
-    }    // setInstructors()
-
-    /**
-     * Returns the general admission price of the event. If the event has no
-     * general admission price, this method returns an empty string.
-     *
-     * @return the general admission price of the event
-     */
-    public String getGeneralPrice() {
-        assertInvariant();
-        return getProperty(EventProperty.GENERAL_PRICE);
-    }    // getGeneralPrice()
-
-    /**
-     * Sets the general admission price of the event. If the parameter is empty
-     * or null, the general admission price will be unset.
-     *
-     * @param price the general admission price of the event
-     */
-    public void setGeneralPrice(String price) {
-        assertInvariant();
-        stringProperties.put(EventProperty.GENERAL_PRICE, price);
-        assertInvariant();
-    }    // setGeneralPrice()
-
-    /**
-     * Returns the student/senior price of the event. If the event has no
-     * student/senior price, this method returns an empty string.
-     *
-     * @return the student/senior price of the event
-     */
-    public String getStudentPrice() {
-        assertInvariant();
-        return getProperty(EventProperty.STUDENT_PRICE);
-    }    // getStudentPrice()
-
-    /**
-     * Sets the student/senior price of the event. If the parameter is empty or
-     * null, the student/senior price will be unset.
-     *
-     * @param price the student/senior price of the event
-     */
-    public void setStudentPrice(String price) {
-        assertInvariant();
-        stringProperties.put(EventProperty.STUDENT_PRICE, price);
-        assertInvariant();
-    }    // setStudentPrice()
-
-    /**
-     * Returns the discount price of the event. If the event has no discount
-     * price, this method returns an empty string.
-     *
-     * @return the discount price of the event
-     */
-    public String getDiscountPrice() {
-        assertInvariant();
-        return getProperty(EventProperty.DISCOUNT_PRICE);
-    }    // getDiscountPrice()
-
-    /**
-     * Sets the discount price of the event. If the parameter is empty or null,
-     * the discount price will be unset.
-     *
-     * @param price the discount price of the event
-     */
-    public void setDiscountPrice(String price) {
-        assertInvariant();
-        stringProperties.put(EventProperty.DISCOUNT_PRICE, price);
-        assertInvariant();
-    }    // setDiscountPrice()
+        return Collections.unmodifiableList(eventProperties);
+    }    // getEventProperties()
 
     /**
      * Returns true if the event has a house manager scheduled.
@@ -336,26 +235,13 @@ public class Event {
         assertInvariant();
         return Collections.unmodifiableList(shifts);
     }    // getShifts()
-    
-    /**
-     * Returns a string property of the event corresponding to the given key.
-     * If the property is null, this method returns an empty string.
-     * 
-     * @param key the string property to return; may not be null
-     * @return the string property, or an empty string if the string property is
-     * null
-     */
-    private String getProperty(EventProperty key) {
-        assert(key != null);
-        String property = stringProperties.get(key);
-        return (property == null) ? "" : property;
-    }    // getProperty()
 
     /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
-        assert (stringProperties != null);
+        assert (eventProperties != null);
+        assert (! eventProperties.contains(null));
         assert (shifts != null);
         assert (! shifts.contains(null));
     }    // assertInvariant()
