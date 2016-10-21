@@ -21,7 +21,6 @@ package main;
 
 import bscmail.*;
 import bscmail.gui.error.ErrorDialog;
-import bscmail.transformer.*;
 import iolayer.*;
 import java.awt.Frame;
 import java.io.*;
@@ -215,11 +214,6 @@ public class Application {
     private EmailTemplate emailTemplate;
 
     /**
-     * The defined text transformer.
-     */
-    private final Transformer transformer;
-
-    /**
      * The list of defined event properties.
      */
     private List<EventPropertyList> eventProperties;
@@ -282,8 +276,6 @@ public class Application {
             roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
             emailTemplate = readEmailTemplate(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
             eventProperties = readEventProperties(properties.get(PropertyKey.EVENT_PROPERTY_FILE));
-
-            transformer = createTransformer();
             
             shiftsObservers = new LinkedList<>();
             managersObservers = new LinkedList<>();
@@ -557,15 +549,6 @@ public class Application {
         theApplication.assertInvariant();
         theApplication.writeList(wrapper, theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
     }    // setManagers()
-    
-    /**
-     * Returns the defined email transformer.
-     * @return the defined email transformer
-     */
-    public static Transformer getTransformer() {
-        theApplication.assertInvariant();
-        return theApplication.transformer;
-    }    // getTransformer()
 
     /**
      * Returns the list of defined event properties. The list returned is a copy
@@ -854,31 +837,6 @@ public class Application {
         IOLayer ioLayer = getIOLayer();
         ioLayer.writeAll(new FileOutputStream(filename), list);
     }    // writeShifts()
-
-    /**
-     * Creates and returns a transformer used to generate an email from an
-     * event.
-     * 
-     * @return a transformer used to generate an email from an event
-     */
-    private Transformer createTransformer() {
-        Transformer transformer = new Transformer();
-        transformer.addRule("email-addresses", new EmailAddressesProperty());
-        transformer.addRule("subject", new SubjectLineWithDateProperty());
-        transformer.addRule("managers-are", new ManagersAreProperty());
-        transformer.addRule("both-manager-names-allcaps", new BothManagerNamesAllCapsProperty());
-        transformer.addRule("manager-first", new ManagerFirstNameProperty());
-        transformer.addRule("manager-phone", new ManagerPhoneProperty());
-        transformer.addRule("band", new BandProperty());
-        transformer.addRule("instructors", new InstructorsProperty());
-        transformer.addRule("general-price", new GeneralPriceProperty());
-        transformer.addRule("student-price", new StudentPriceProperty());
-        transformer.addRule("discount-price", new DiscountPriceProperty());
-        transformer.addRule("shifts-sequential", new VolunteerShiftsSequentialProperty());
-        transformer.addRule("shifts-compact", new VolunteerShiftsCompactProperty());
-        transformer.addRule("long-date", new FullDateProperty());
-        return transformer;
-    }    // createTransformer()
     
     /**
      * Asserts the correctness of the object's internal state.
@@ -894,7 +852,6 @@ public class Application {
         assert (! managers.contains(null));
         assert (volunteers != null);
         assert (! volunteers.contains(null));
-        assert (transformer != null);
         assert (eventProperties != null);
         assert (! eventProperties.contains(null));
         assert (shiftsObservers != null);

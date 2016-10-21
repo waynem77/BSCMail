@@ -23,7 +23,6 @@ import bscmail.EmailTemplate;
 import bscmail.Event;
 import bscmail.Shift;
 import bscmail.Volunteer;
-import bscmail.transformer.Transformer;
 import java.util.HashSet;
 import java.util.Set;
 import main.Application;
