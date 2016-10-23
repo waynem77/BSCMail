@@ -20,6 +20,12 @@
 package bscmail.gui;
 
 import bscmail.Shift;
+import bscmail.Role;
+import main.Application;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -35,6 +41,11 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      * The text field displaying a shift's description.
      */
     private final JTextField descriptionTextField;
+
+    /**
+     * The selection panel for displaying a shift's roles
+     */
+    private final JList rolesSelectList;
 
     /**
      * The check box displaying whether the volunteer's email address should be
@@ -84,7 +95,12 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
                 descriptionTextFieldChanged();
             }
         });
+        rolesSelectList = new JList();
+        rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
         layoutHelper.addComponent("Description: ", descriptionTextField);
+
+        layoutHelper.addComponent("Roles Required: ", rolesSelectList);
 
         displayVolunteerEmailCheckBox = new JCheckBox();
         layoutHelper.addComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);
@@ -106,6 +122,8 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     @Override
     public void loadElement(Shift shift) {
         descriptionTextField.setText((shift == null) ? "" : shift.getDescription());
+        rolesSelectList.setListData(Application.getRoleNames());
+        loadSelectedRoles(shift);
         displayVolunteerEmailCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerEmail());
         displayVolunteerPhoneCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerPhone());
         displayVolunteerNotesCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerNotes());
@@ -121,6 +139,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     @Override
     public Shift createElement() {
         return new Shift(descriptionTextField.getText(),
+                getSelectedRoles(),
                 displayVolunteerEmailCheckBox.isSelected(),
                 displayVolunteerPhoneCheckBox.isSelected(),
                 displayVolunteerNotesCheckBox.isSelected());
@@ -136,7 +155,10 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      */
     @Override
     public final boolean elementIsValid() {
-        return !descriptionTextField.getText().isEmpty();
+        if (descriptionTextField.getText().isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -150,4 +172,38 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         shiftIsValid = newValidity;
     }
 
+    /**
+     * Selects the current roles of the shift
+     * This method assumes that each role on a shift
+     * is a valid role (exists in the roles list)
+     *
+     * @param shift current shift
+     */
+    private void loadSelectedRoles(Shift shift) {
+        List<Role> allRoles = Application.getRoles();
+        List<Role> shiftRoles = shift.getRoles();
+        int[] selectedIndices = new int[shiftRoles.size()];
+        int selectIndex = 0;
+        for (Role role : allRoles) {
+            if (shiftRoles.contains(role)) {
+                selectedIndices[selectIndex] = allRoles.indexOf(role);
+                selectIndex++;
+            }
+        }
+        rolesSelectList.setSelectedIndices(selectedIndices);
+    }
+
+    /**
+     * Obtains the list of roles selected for the shift
+     * @return a list of Roles
+     */
+    private List<Role> getSelectedRoles() {
+        int[] selectedIndices = rolesSelectList.getSelectedIndices();
+        ArrayList<Role> selectedRoles = new ArrayList<>();
+        List<Role> allRoles = Application.getRoles();
+        for (int ind : selectedIndices) {
+            selectedRoles.add(allRoles.get(ind));
+        }
+        return selectedRoles;
+    }
 }
