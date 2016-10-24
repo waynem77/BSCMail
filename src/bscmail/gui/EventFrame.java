@@ -467,8 +467,8 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         shiftControls.clear();
         for (Shift shift : shifts) {
             LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
-            add(shiftControl.label);
-            add(shiftControl.component);
+            container.add(shiftControl.label);
+            container.add(shiftControl.component);
             shiftControls.add(shiftControl);
         }    // for
         pack();
