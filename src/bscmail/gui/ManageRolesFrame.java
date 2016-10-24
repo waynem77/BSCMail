@@ -25,11 +25,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import main.Application;
+import main.RolesObserver;
 
 /**
  * Created by nathan.cordner on 10/19/16.
  */
-public class ManageRolesFrame extends ManageListFrame<Role>  {
+public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObserver {
 
     /**
      * Constructs a new manage roles frame.
@@ -46,6 +47,7 @@ public class ManageRolesFrame extends ManageListFrame<Role>  {
                     }    // compare()
                 }    // Comparator
         );
+        Application.registerObserver(this);
 
         setTitle(Application.getApplicationName() + " - Manage Roles");
     }    // ManageRolesFrame()
@@ -61,4 +63,14 @@ public class ManageRolesFrame extends ManageListFrame<Role>  {
         assert (roles != null);
         Application.setRoles(roles);
     }    // saveListData()
+
+    public void rolesChanged(){
+        try {
+            updateListData(new Vector<>(Application.getRoles()));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+
 }    // ManageRolesFrame

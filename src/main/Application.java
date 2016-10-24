@@ -485,6 +485,23 @@ public class Application {
         theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
     }    // setRoles()
 
+    public static void importRoles(String fileName) throws IOException, ClassNotFoundException {
+        theApplication.assertInvariant();
+        if (fileName == null) {
+            throw new NullPointerException("file name may not be null");
+        }    // if
+        List<Role> importedRoles = theApplication.readRoles(fileName);
+        for (Role role : importedRoles) {
+            if (!theApplication.roles.contains(role))
+                theApplication.roles.add(role.clone());
+        }    // for
+        for (RolesObserver observer : theApplication.rolesObservers) {
+            observer.rolesChanged();
+        }    // for
+        theApplication.assertInvariant();
+        theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+    }   // importRoles()
+
     /**
      * Returns the defined email template.
      * 

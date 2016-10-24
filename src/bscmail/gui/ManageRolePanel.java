@@ -22,6 +22,10 @@ package bscmail.gui;
 import bscmail.Role;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import main.Application;
 
@@ -34,6 +38,16 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      * The text field displaying the role's name.
      */
     private final JTextField nameTextField;
+
+    /**
+     * Button to import another XML file of roles.
+     */
+    private final JButton importRoles;
+
+    /**
+     * Dialog window to choose file to import.
+     */
+    private final JFileChooser fileChooser;
 
     /**
      * Indicates whether the implicit role is valid.
@@ -53,6 +67,16 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
             @Override public void changedUpdate(DocumentEvent e) { nameTextFieldChanged(); }
         });    // addDocumentListener()
         layoutHelper.addComponent("Name: ", nameTextField);
+        importRoles = new JButton("Import Roles");
+        importRoles.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                importRolesButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListener()
+        fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        layoutHelper.addComponent("", importRoles);
+
         roleIsValid = elementIsValid();
     }    // ManageShiftPanel()
 
@@ -112,5 +136,23 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
         }    // if
         roleIsValid = newValidity;
     }    // nameTextFieldChanged()
+
+    /**
+     * Event fired when the import volunteers button is clicked.
+     */
+    private void importRolesButtonClicked() {
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                Application.importRoles(fileChooser.getSelectedFile().getPath());
+            } catch (ClassNotFoundException e) {
+                System.out.println(e);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+    }    // importRolesButtonClicked()
+
 
 }
