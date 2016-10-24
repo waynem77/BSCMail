@@ -31,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import main.Application;
 
 import javax.swing.*;
@@ -142,6 +144,13 @@ public class DisplayEmailFrame extends JFrame {
      * @param event the event; may not be null
      */
     private void populateSubjectLine(Event event) {
+        String subject = "Volunteer schedule";
+        String date = this.formattedEventDate(event);
+        if (! date.isEmpty()) {
+            subject += " for " + date;
+        }    // if
+
+        subjectLine.setText(subject);
     }    // populateSubjectLine()
 
     /**
@@ -163,6 +172,7 @@ public class DisplayEmailFrame extends JFrame {
         appendText("");
 
         // Event properties
+        appendText("Date: " + formattedEventDate(event));
         for (EventPropertyList eventProperty : event.getEventProperties()) {
             appendText(eventProperty.getPropertyName() + ": " + eventProperty.getValue());
         }    // for
@@ -199,6 +209,24 @@ public class DisplayEmailFrame extends JFrame {
 
         scrollToTop();
     }    // populateEmailBody()
+
+    /**
+     * Populates the subject line with appropriate text.
+     *
+     * @param event the event; may not be null
+     */
+    private String formattedEventDate(Event event) {
+        if (event == null) {
+            throw new NullPointerException("event may not be null");
+        }    // if
+        Date date = event.getDate();
+        if (date == null) {
+            return "";
+        }    // if
+
+        DateFormat format = new SimpleDateFormat("EEEEE MMMMM d");
+        return format.format(date);
+    }    // populateSubjectLine()
 
     /**
      * Event fired when the send email button is clicked.
