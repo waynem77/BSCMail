@@ -262,6 +262,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         E element = list.getSelectedValue();
         managerPanel.loadElement(element);
         setButtonStates();
+        pack();
     }    // listSelectionValueChanged(ListSelectionEvent e)
     
     /**

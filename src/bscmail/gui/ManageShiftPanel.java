@@ -97,6 +97,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         });
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        rolesSelectList.setListData(Application.getRoleNames());
 
         layoutHelper.addComponent("Description: ", descriptionTextField);
 
@@ -122,8 +123,9 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
     @Override
     public void loadElement(Shift shift) {
         descriptionTextField.setText((shift == null) ? "" : shift.getDescription());
-        rolesSelectList.setListData(Application.getRoleNames());
-        loadSelectedRoles(shift);
+        if (shift != null) {
+            loadSelectedRoles(shift);
+        }    // if
         displayVolunteerEmailCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerEmail());
         displayVolunteerPhoneCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerPhone());
         displayVolunteerNotesCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerNotes());
