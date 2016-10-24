@@ -332,9 +332,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     @Override
     public void shiftsChanged() {
         setShifts(Application.getShifts());
-        for (Shift shift : Application.getShifts()) {
-            getQualifiedVolunteers(shift, Application.getVolunteers());
-        }
     }    // shiftsChanged()
 
     /**
@@ -343,9 +340,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     @Override
     public void volunteersChanged() {
         setVolunteers(Application.getVolunteers());
-        for (Shift shift : Application.getShifts()) {
-            getQualifiedVolunteers(shift, Application.getVolunteers());
-        }
+        setShifts(Application.getShifts());
     }    // volunteersChanged()
 
     /**

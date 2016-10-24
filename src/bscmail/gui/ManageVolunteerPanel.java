@@ -19,12 +19,15 @@
 
 package bscmail.gui;
 
+import bscmail.Role;
 import main.Application;
 import bscmail.Volunteer;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A panel that displays and manages a {@link Volunteer}.
@@ -55,9 +58,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JTextArea notesTextArea;
 
     /**
-     * Button to pop-up new screen to manage roles of a volunteer.
+     * The selection panel for displaying a volunteer's roles
      */
-    private final JButton editRoles;
+    private final JList rolesSelectList;
 
     /**
      * Button to import another XML file of volunteers.
@@ -123,14 +126,10 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         layoutHelper.addComponent("Notes: ", new JScrollPane(notesTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
-        editRoles = new JButton("Edit Roles");
-        editRoles.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                editRolesButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        editRoles.setEnabled(false);
-        layoutHelper.addComponent("", editRoles);
+        rolesSelectList = new JList();
+        rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        rolesSelectList.setListData(Application.getRoleNames());
+        layoutHelper.addComponent("Roles: ", rolesSelectList);
         importVolunteers = new JButton("Import Volunteers");
         importVolunteers.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -157,8 +156,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
         phoneTextField.setText((volunteer == null) ? "" : volunteer.getPhone());
         notesTextArea.setText((volunteer == null) ? "" : volunteer.getNotes());
-        if (!editRolesWindowIsOpen)
-            editRoles.setEnabled((volunteer == null) ? false : true);
+        if (volunteer != null) {
+            loadSelectedRoles(volunteer);
+        }    // if
     }    // loadElement()
 
     /**
@@ -172,6 +172,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     public Volunteer createElement() {
         currentVolunteer = new Volunteer(nameTextField.getText(), emailTextField.getText(),
                                                          phoneTextField.getText(),notesTextArea.getText());
+        for (Role role : getSelectedRoles()) {
+            currentVolunteer.addRole(role);
+        }    // for
         return currentVolunteer;
     }    // createElement()
 
@@ -200,24 +203,39 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     }    // nameTextFieldChanged()
 
     /**
-     * Event fired when the edit roles button is clicked.
+     * Selects the current roles of the volunteer.
+     * This method assumes that each role on a volunteer
+     * is a valid role (exists in the roles list)
+     *
+     * @param volunteer current volunteer
      */
-    private void editRolesButtonClicked() {
-        editRoles.setEnabled(false); //disable button while edit window is open
-        editRolesWindowIsOpen = true;
-        EditVolunteerRolesFrame frame = new EditVolunteerRolesFrame(currentVolunteer);
-        frame.setAlwaysOnTop(true);
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                editRoles.setEnabled(true);
-                editRolesWindowIsOpen = false;
+    private void loadSelectedRoles(Volunteer volunteer) {
+        List<Role> allRoles = Application.getRoles();
+        List<Role> volunteerRoles = volunteer.getRoles();
+        int[] selectedIndices = new int[volunteerRoles.size()];
+        int selectIndex = 0;
+        for (Role role : allRoles) {
+            if (volunteerRoles.contains(role)) {
+                selectedIndices[selectIndex] = allRoles.indexOf(role);
+                selectIndex++;
             }
-        });
+        }
+        rolesSelectList.setSelectedIndices(selectedIndices);
+    }
 
-    }    // manageRolesButtonClicked()
+    /**
+     * Obtains the list of roles selected for the volunteer.
+     * @return a list of Roles
+     */
+    private List<Role> getSelectedRoles() {
+        int[] selectedIndices = rolesSelectList.getSelectedIndices();
+        ArrayList<Role> selectedRoles = new ArrayList<>();
+        List<Role> allRoles = Application.getRoles();
+        for (int ind : selectedIndices) {
+            selectedRoles.add(allRoles.get(ind));
+        }
+        return selectedRoles;
+    }
 
     /**
      * Event fired when the import volunteers button is clicked.

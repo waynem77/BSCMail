@@ -1,27 +1,51 @@
 <volunteer-list>
   <volunteer>
+    <name>Ann Charge</name>
+    <email>ann@charge</email>
+    <phone>555-ANN</phone>
+    <notes/>
+    <role>Manager</role>
+  </volunteer>
+  <volunteer>
     <name>Halva Ticket</name>
     <email>halva@ticket</email>
-    <role>Manager</role>
+    <phone/>
+    <notes/>
+    <role/>
+  </volunteer>
+  <volunteer>
+    <name>Manny Ager</name>
+    <email>manny@ager</email>
+    <phone>555-MANNY</phone>
+    <notes/>
+    <role>Angel,Manager</role>
   </volunteer>
   <volunteer>
     <name>Pasha Brum</name>
     <email>pasha@brum</email>
-    <role/>
-  </volunteer>
-  <volunteer>
-    <name>Seth Upp</name>
-    <email>seth@upp</email>
+    <phone/>
+    <notes/>
     <role/>
   </volunteer>
   <volunteer>
     <name>Sarah Fimm</name>
     <email>sarah@fimm</email>
-    <role>Manager,Angel</role>
+    <phone/>
+    <notes/>
+    <role>Angel</role>
+  </volunteer>
+  <volunteer>
+    <name>Seth Upp</name>
+    <email>seth@upp</email>
+    <phone/>
+    <notes/>
+    <role/>
   </volunteer>
   <volunteer>
     <name>Val Unteer</name>
     <email>val@unteer</email>
+    <phone/>
+    <notes/>
     <role>Angel</role>
   </volunteer>
 </volunteer-list>
