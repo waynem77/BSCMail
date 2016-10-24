@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.EmailTemplate;
 import bscmail.Event;
+import bscmail.EventPropertyList;
 import bscmail.Shift;
 import bscmail.Volunteer;
 
@@ -102,8 +103,20 @@ public class DisplayEmailFrame extends JFrame {
         add(mainPanel);
         //add(new JScrollPane(textArea));
         pack();
-        assertInvariant();
 
+        populateRecipientLine(event);
+        populateSubjectLine(event);
+        populateEmailBody(emailTemplate, event);
+
+        assertInvariant();
+    }    // DisplayEmailFrame()
+
+    /**
+     * Populates the recipient line with the appropriate email addresses.
+     *
+     * @param event the event; may not be null
+     */
+    private void populateRecipientLine(Event event) {
         Set<String> emails = new HashSet<>();
         for (Shift shift : event.getShifts()) {
             Volunteer volunteer = shift.getVolunteer();
@@ -121,10 +134,41 @@ public class DisplayEmailFrame extends JFrame {
         }    // for
 
         recipientLine.setText(toLine);
-        //appendText("To: " + toLine);
-        //appendText("");
+    }    // populateRecipientLine()
+
+    /**
+     * Populates the subject line with appropriate text.
+     *
+     * @param event the event; may not be null
+     */
+    private void populateSubjectLine(Event event) {
+    }    // populateSubjectLine()
+
+    /**
+     * Populates the email body with appropriate text.  This method places text
+     * in the following order.
+     * <ul>
+     *   <li>the pre-schedule text defined in the email template</li>
+     *   <li>a list of the event properties defined in the event</li>
+     *   <li>the volunteer schedule defined in the shifts of the event</li>
+     *   <li>the post-schedule text defined in the email template</li>
+     * </ul>
+     *
+     * @param emailTemplate the email template; may not be null
+     * @param event the event; may not be null
+     */
+    private void populateEmailBody(EmailTemplate emailTemplate, Event event) {
+        // Pre-schedule text
         appendText(emailTemplate.getPreScheduleText());
         appendText("");
+
+        // Event properties
+        for (EventPropertyList eventProperty : event.getEventProperties()) {
+            appendText(eventProperty.getPropertyName() + ": " + eventProperty.getValue());
+        }    // for
+        appendText("");
+
+        // Schedule
         for (Shift shift : event.getShifts()) {
             String shiftLine = shift.getDescription() + ":";
             Volunteer volunteer = shift.getVolunteer();
@@ -149,14 +193,12 @@ public class DisplayEmailFrame extends JFrame {
             appendText(shiftLine);
         }    // for
         appendText("");
+
+        // Post-schedule text
         appendText(emailTemplate.getPostScheduleText());
+
         scrollToTop();
-
-
-
-
-
-    }    // DisplayEmailFrame()
+    }    // populateEmailBody()
 
     /**
      * Event fired when the send email button is clicked.
@@ -223,16 +265,6 @@ public class DisplayEmailFrame extends JFrame {
         textArea.setCaretPosition(0);
         assertInvariant();
     }    // scrollToTop()
-
-    /**
-     * Returns the text area used for managing text.
-     *
-     * @return the text area used for managing text
-     */
-    protected final JTextArea getTextArea() {
-        assertInvariant();
-        return textArea;
-    }    // getTextArea()
 
     /**
      * Asserts the correctness of the object's internal state.

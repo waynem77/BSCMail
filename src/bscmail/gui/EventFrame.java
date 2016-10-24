@@ -115,6 +115,15 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
             return eventProperty;
         }    // getEventProperty()
 
+        /**
+         * Returns the value entered by the user.
+         *
+         * @return the value entered by the user
+         */
+        public String getValue() {
+            return getText();
+        }    // getVolunteer()
+
     }    // EventPropertiesTextField
 
     /**
@@ -368,6 +377,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         event.setAssistantManager(assistantManagerControl.getManager());
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
             EventPropertyList eventProperty = eventPropertyControl.component.getEventProperty();
+            eventProperty.setValue(eventPropertyControl.component.getValue());
             event.addEventProperty(eventProperty);
         }    // for
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {

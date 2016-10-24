@@ -1,14 +1,14 @@
 <eventpropertylist-list>
   <eventpropertylist>
     <name>Band</name>
-    <value>xxx</value>
+    <defaultValue/>
   </eventpropertylist>
   <eventpropertylist>
     <name>Instructors</name>
-    <value>yyy</value>
+    <defaultValue/>
   </eventpropertylist>
   <eventpropertylist>
     <name>Price</name>
-    <value>$</value>
+    <defaultValue>$</defaultValue>
   </eventpropertylist>
 </eventpropertylist-list>
