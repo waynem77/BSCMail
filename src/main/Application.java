@@ -491,6 +491,18 @@ public class Application {
     }    // getRoles()
 
     /**
+     *
+     * @return a list of Role names for display
+     */
+    public static Object[] getRoleNames() {
+        List<String> names = new ArrayList<>();
+        for (Role role : getRoles()) {
+            names.add(role.getName());
+        }
+        return names.toArray();
+    }
+
+    /**
      * Sets the list of defined roles. The argument is copied to the
      * master, so that changes to the master do not affect the original list and
      * vice-versa.

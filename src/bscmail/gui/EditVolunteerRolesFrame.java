@@ -29,7 +29,7 @@ import java.util.*;
 import javax.swing.*;
 
 /**
- * Created by nathan.cordner on 10/20/16.
+ * @author Nathan Cordner
  */
 public class EditVolunteerRolesFrame extends JFrame {
 
@@ -98,11 +98,11 @@ public class EditVolunteerRolesFrame extends JFrame {
         volunteerRoles.setPreferredSize(existingRoles.getPreferredScrollableViewportSize());
         panel.add(new JScrollPane(volunteerRoles));
         add(panel);
-
     }
 
     /**
      * Event fired when the assign button is clicked.
+     * TODO: DDV-19 : Trigger a volunteer update for those listening for volunteer changes
      */
     private void assignButtonClicked() {
         // 1. Get particular role from the left column
@@ -119,11 +119,11 @@ public class EditVolunteerRolesFrame extends JFrame {
         //Step 3.
         Vector<Role> assignedRoles = new Vector<Role>(volunteer.getRoles());
         volunteerRoles.setListData(assignedRoles);
-
-    }    // assignButtonClicked()
+    }
 
     /**
      * Event fired when the unassign roles button is clicked.
+     * TODO: DDV-19 : Trigger a volunteer update for those listening for volunteer changes
      */
     private void unassignButtonClicked() {
         Role role = volunteerRoles.getSelectedValue();
@@ -131,8 +131,5 @@ public class EditVolunteerRolesFrame extends JFrame {
             volunteer.removeRole(role);
         Vector<Role> assignedRoles = new Vector<Role>(volunteer.getRoles());
         volunteerRoles.setListData(assignedRoles);
-    }    // unassignButtonClicked()
-
-
-
+    }
 }

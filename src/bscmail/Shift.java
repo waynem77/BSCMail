@@ -21,12 +21,13 @@ package bscmail;
 
 import java.io.Serializable;
 import java.util.*;
+
 import main.*;
 
 /**
  * Represents a BSC volunteer shift.
  *
- * @author Wayne Miller
+ * @author Wayne Miller, Anthony Adams
  */
 public class Shift implements Cloneable, Serializable, ReadWritable {
     
@@ -101,9 +102,15 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
                 throw new NullPointerException("properties may not be null");
             }    // if
 
-            Shift shift = null;
+            Shift shift;
+
+            // description
             Object descriptionObject = properties.get("description");
             String description = (descriptionObject != null) ? descriptionObject.toString() : "";
+
+
+
+            // display configurations
             Object displayVolunteerEmailObject = properties.get("displayVolunteerEmail");
             boolean displayVolunteerEmail = Boolean.parseBoolean(displayVolunteerEmailObject.toString());
             Object displayVolunteerPhoneObject = properties.get("displayVolunteerPhone");
@@ -121,8 +128,23 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
                 volunteer = factory.constructReadWritable(volunteerProperties);
             }
 
-            // Construct a shift
-            shift = new Shift(description, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+            // roles
+            Object roleObject = properties.get("roles");
+            ArrayList<Role> roles = new ArrayList<>();
+            if (roleObject instanceof ArrayList) { // already an ArrayList<Role> object
+                roles = (ArrayList<Role>) roleObject;
+            } else if (roleObject != null) {
+                // extract list of roles via string split
+                for (String roleName : roleObject.toString().split(",")) {
+                    if (!roleName.isEmpty()) {
+                        Role role = new Role(roleName);
+                        roles.add(role);
+                    }
+                }
+            }
+
+            // Construct shift object
+            shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
             shift.setVolunteer(volunteer);
 
             return shift;
@@ -148,6 +170,11 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      * The shift's description.
      */
     private final String description;
+
+    /**
+     * The shift's required role(s)
+     */
+    private List<Role> roles;
 
     /**
      * Flag indicating whether the volunteer's email should be displayed in the
@@ -185,12 +212,13 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      * notes for the volunteer assigned to this shift; false otherwise
      * @throws NullPointerException if {@code description} is null
      */
-    public Shift(String description, boolean displayVolunteerEmail, boolean displayVolunteerPhone, boolean displayVolunteerNotes) {
+    public Shift(String description, List<Role> roles, boolean displayVolunteerEmail, boolean displayVolunteerPhone, boolean displayVolunteerNotes) {
         if (description == null) {
             throw new NullPointerException("description may not be null");
         }
         this.description = description;
         volunteer = null;
+        this.roles = roles;
         this.displayVolunteerEmail = displayVolunteerEmail;
         this.displayVolunteerPhone = displayVolunteerPhone;
         this.displayVolunteerNotes = displayVolunteerNotes;
@@ -205,6 +233,14 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     public String getDescription() {
         assertInvariant();
         return description;
+    }
+
+    /**
+     *
+     * @return the shift's required roles
+     */
+    public List<Role> getRoles() {
+        return this.roles;
     }
 
     /**
@@ -316,6 +352,9 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         if (volunteer != null) {
             properties.put("volunteer", volunteer);
         }
+        if (roles != null) {
+            properties.put("roles", roles);
+        }
         return properties;
     }
 
@@ -358,6 +397,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         Shift rhs = (Shift) obj;
         boolean volunteersAreEqual = (volunteer == null) ? (rhs.volunteer == null) : volunteer.equals(rhs.volunteer);
         return description.equals(rhs.description)
+                && roles.equals(rhs.roles)
                 && (displayVolunteerEmail == rhs.displayVolunteerEmail)
                 && (displayVolunteerPhone == rhs.displayVolunteerPhone)
                 && (displayVolunteerNotes == rhs.displayVolunteerNotes)
@@ -370,11 +410,20 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         final int MULTIPLIER = 37;
         int code = SEED;
         code = code * MULTIPLIER + description.hashCode();
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerEmail);
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerPhone);
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerNotes);
+        code = code * MULTIPLIER + booleanHashCode(displayVolunteerEmail);
+        code = code * MULTIPLIER + booleanHashCode(displayVolunteerPhone);
+        code = code * MULTIPLIER + booleanHashCode(displayVolunteerNotes);
         code = code * MULTIPLIER + ((volunteer == null) ? 0 : volunteer.hashCode());
         return code;
+    }
+
+    /**
+     * Hash code for primitive boolean
+     * @param bool
+     * @return The boolean's hash code
+     */
+    private int booleanHashCode(boolean bool) {
+        return bool ? 1231 : 1237;
     }
 
     /**

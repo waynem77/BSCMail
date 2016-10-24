@@ -370,6 +370,9 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     @Override
     public void shiftsChanged() {
         setShifts(Application.getShifts());
+        for (Shift shift : Application.getShifts()) {
+            getQualifiedVolunteers(shift, Application.getVolunteers());
+        }
     }    // shiftsChanged()
 
     /**
@@ -378,6 +381,9 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     @Override
     public void volunteersChanged() {
         setVolunteers(Application.getVolunteers());
+        for (Shift shift : Application.getShifts()) {
+            getQualifiedVolunteers(shift, Application.getVolunteers());
+        }
     }    // volunteersChanged()
 
     /**
@@ -424,7 +430,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         }    // component
         shiftControls.clear();
         for (Shift shift : shifts) {
-            LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, volunteers));
+            LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
             add(shiftControl.label);
             add(shiftControl.component);
             shiftControls.add(shiftControl);
@@ -584,6 +590,24 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         }    // for
     }    // setVolunteers()
 
+    /**
+     * Obtains the volunteers that are qualified to work a given shift
+     * @param shift shift to work
+     * @param volunteers set of volunteers to check
+     * @return a filtered list of qualified volunteers
+     */
+    private List<Volunteer> getQualifiedVolunteers(Shift shift, List<Volunteer> volunteers) {
+        List<Volunteer> filteredList = new ArrayList<>();
+        if (shift.getRoles().isEmpty()) {
+            return volunteers;
+        }
+        for (Volunteer volunteer : volunteers) {
+            if (!volunteer.getRoles().isEmpty() && volunteer.getRoles().containsAll(shift.getRoles())) {
+                filteredList.add(volunteer);
+            }
+        }
+        return filteredList;
+    }
     /**
      * Sets the list of event properties displayed in the frame to the given list.
      * If the new list of event properties is smaller than the

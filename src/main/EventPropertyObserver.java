@@ -34,6 +34,6 @@ public interface EventPropertyObserver {
    * This method is called whenever the list of defined event properties
    * changes.
    */
-  public void eventPropertiesChanged();
+  void eventPropertiesChanged();
 
 }    // ShiftsObserver
