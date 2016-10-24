@@ -24,7 +24,9 @@ import java.util.*;
 import main.*;
 
 /**
- * Created by nathan.cordner on 10/19/16.
+ * Represents a BSC Role.
+ *
+ * @author Nathan Cordner
  */
 public class Role implements Cloneable, Serializable, ReadWritable {
 
@@ -55,7 +57,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
          * Constructs a new role factory.
          */
         private Factory() {
-        }    // Factory()
+        }
 
         /**
          * Constructs a role from the given read-writable properties. If
@@ -83,15 +85,14 @@ public class Role implements Cloneable, Serializable, ReadWritable {
                 throw new NullPointerException("properties may not be null");
             }    // if
 
-            Role role = null;
+            Role role;
             try {
                 Object nameObject = properties.get("name");
                 String name = (nameObject != null) ? nameObject.toString() : "";
                 role = new Role(name);
-            } catch (ClassCastException e) {    // try
-                // if anything goes wrong,
-                // we will simply return null.
-            }    // catch
+            } catch (ClassCastException e) {
+                return null;
+            }
             return role;
         }    // constructReadWritable()
 

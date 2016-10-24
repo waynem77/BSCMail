@@ -57,7 +57,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     private final JButton editRoles;
 
-
     /**
      * Indicates whether the implicit volunteer is valid.
      */

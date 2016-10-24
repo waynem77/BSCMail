@@ -83,7 +83,7 @@ public class XMLIOLayer implements IOLayer {
         } catch (ParserConfigurationException e) {    // try
             throw new IOException("Unable to configure XML parser", e);
         } catch (Exception e) {    // catch
-            System.out.println("Something went wrong!  " + e);
+            System.out.println("Something went wrong!\n" + e.getMessage());
             return null;
         }    // catch
     }    // readAll()

@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.*;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.text.*;
 import java.util.*;
@@ -113,6 +114,15 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         public EventPropertyList getEventProperty() {
             return eventProperty;
         }    // getEventProperty()
+
+        /**
+         * Returns the value entered by the user.
+         *
+         * @return the value entered by the user
+         */
+        public String getValue() {
+            return getText();
+        }    // getVolunteer()
 
     }    // EventPropertiesTextField
 
@@ -211,7 +221,22 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     }    // LabeledComponent
     
     /* Swing controls */
-    
+
+    /**
+     * The panel that contains the "standard" event controls.
+     */
+    private final JPanel standardPanel;
+
+    /**
+     * The panel that contains the dynamic event properties.
+     */
+    private final JPanel eventPropertiesPanel;
+
+    /**
+     * The panel that contains the shifts.
+     */
+    private final JPanel shiftsPanel;
+
     /**
      * Date selector control.
      */
@@ -247,17 +272,26 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         volunteers = Application.getVolunteers();
         
         setTitle(Application.getApplicationName() + " - Event Setup");
-        setLayout(new GridLayout(0, 2));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        add(new JLabel("Date:"));
+        standardPanel = new JPanel();
+        add(standardPanel);
+        eventPropertiesPanel = new JPanel();
+        add(eventPropertiesPanel);
+        shiftsPanel = new JPanel();
+        add(shiftsPanel);
+
+        standardPanel.setLayout(new GridLayout(0, 2));
+        standardPanel.add(new JLabel("Date:"));
         dateControl = new JSpinner(new SpinnerDateModel());
         SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
-        add(dateControl);
-
+        standardPanel.add(dateControl);
+        eventPropertiesPanel.setLayout(new GridLayout(0, 2));
         eventPropertyControls = new LinkedList<>();
         setEventProperties(eventProperties);
 
+        shiftsPanel.setLayout(new GridLayout(0, 2));
         shiftControls = new LinkedList<>();
         setShifts(shifts);
 
@@ -279,6 +313,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         event.setDate((Date)dateControl.getValue());
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
             EventPropertyList eventProperty = eventPropertyControl.component.getEventProperty();
+            eventProperty.setValue(eventPropertyControl.component.getValue());
             event.addEventProperty(eventProperty);
         }    // for
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
@@ -297,6 +332,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     @Override
     public void shiftsChanged() {
         setShifts(Application.getShifts());
+        for (Shift shift : Application.getShifts()) {
+            getQualifiedVolunteers(shift, Application.getVolunteers());
+        }
     }    // shiftsChanged()
 
     /**
@@ -305,6 +343,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     @Override
     public void volunteersChanged() {
         setVolunteers(Application.getVolunteers());
+        for (Shift shift : Application.getShifts()) {
+            getQualifiedVolunteers(shift, Application.getVolunteers());
+        }
     }    // volunteersChanged()
 
     /**
@@ -335,6 +376,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @throws NullPointerException if {@code shifts} contains any null elements
      */
     final void setShifts(List<Shift> shifts) {
+        final Container container = shiftsPanel;
+
         if (shifts == null) {
             shifts = new ArrayList<>();
         }    // if
@@ -346,14 +389,14 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
             Volunteer volunteer = shiftControl.component.getVolunteer();
             selections.add((volunteer == null) ? null : volunteer.getName());
-            remove(shiftControl.label);
-            remove(shiftControl.component);
+            container.remove(shiftControl.label);
+            container.remove(shiftControl.component);
         }    // component
         shiftControls.clear();
         for (Shift shift : shifts) {
-            LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, volunteers));
-            add(shiftControl.label);
-            add(shiftControl.component);
+            LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
+            container.add(shiftControl.label);
+            container.add(shiftControl.component);
             shiftControls.add(shiftControl);
         }    // for
         pack();
@@ -432,6 +475,24 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     }    // setVolunteers()
 
     /**
+     * Obtains the volunteers that are qualified to work a given shift
+     * @param shift shift to work
+     * @param volunteers set of volunteers to check
+     * @return a filtered list of qualified volunteers
+     */
+    private List<Volunteer> getQualifiedVolunteers(Shift shift, List<Volunteer> volunteers) {
+        List<Volunteer> filteredList = new ArrayList<>();
+        if (shift.getRoles().isEmpty()) {
+            return volunteers;
+        }
+        for (Volunteer volunteer : volunteers) {
+            if (!volunteer.getRoles().isEmpty() && volunteer.getRoles().containsAll(shift.getRoles())) {
+                filteredList.add(volunteer);
+            }
+        }
+        return filteredList;
+    }
+    /**
      * Sets the list of event properties displayed in the frame to the given list.
      * If the new list of event properties is smaller than the
      * existing list, the "extra" comboboxes are simply removed. If the new list
@@ -446,6 +507,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @throws NullPointerException if {@code eventProperties} contains any null elements
      */
     final void setEventProperties(List<EventPropertyList> eventProperties) {
+        final Container container = eventPropertiesPanel;
+
         if (eventProperties == null) {
             eventProperties = new ArrayList<>();
         }    // if
@@ -455,18 +518,18 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         List<String> selections = new LinkedList<>();
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            remove(eventPropertyControl.label);
-            remove(eventPropertyControl.component);
+            container.remove(eventPropertyControl.label);
+            container.remove(eventPropertyControl.component);
         }    // component
         eventPropertyControls.clear();
         for (EventPropertyList eventProperty : eventProperties) {
             LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
                 .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
-            add(eventPropertyControl.label);
-            add(eventPropertyControl.component);
+            container.add(eventPropertyControl.label);
+            container.add(eventPropertyControl.component);
             eventPropertyControls.add(eventPropertyControl);
         }    // for
-        //pack();
+        pack();
     }    // setEventProperties()
     
     /**

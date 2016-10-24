@@ -225,7 +225,7 @@ public class ShiftTest extends ReadWritableTest {
         System.out.println("getVolunteer - after setVolunteer, no exception");
 
         shift = new Shift(description);
-        shift.setVolunteer(getVolunteer())
+        shift.setVolunteer(getVolunteer());
         shift.getVolunteer();
     }
 
@@ -238,7 +238,7 @@ public class ShiftTest extends ReadWritableTest {
         System.out.println("getVolunteer - after setVolunteer");
 
         shift = new Shift(description);
-        shift.setVolunteer(getVolunteer())
+        shift.setVolunteer(getVolunteer());
         Volunteer expected = volunteer;
         Volunteer received = shift.getVolunteer();
         assertEquals(expected, received);

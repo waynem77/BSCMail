@@ -1,6 +1,7 @@
 <shift-list>
   <shift>
     <description>Manager</description>
+    <roles>Angel</roles>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>true</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>
@@ -13,18 +14,21 @@
   </shift>
   <shift>
     <description>Door 9:00-10:00</description>
+    <roles>Manager</roles>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>false</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
-    <description>Door 9:00-10:00</description>
+    <description>(Angel) Door 9:00-10:00</description>
+    <roles>Angel,Manager</roles>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>false</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
     <description>Cleanup 10:00-11:00</description>
+    <roles></roles>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>false</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>

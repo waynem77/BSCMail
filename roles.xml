@@ -1,14 +1,8 @@
 <role-list>
   <role>
-    <name>Manager</name>
-  </role>
-  <role>
     <name>Angel</name>
   </role>
   <role>
-    <name>Yo</name>
-  </role>
-  <role>
-    <name>sg</name>
+    <name>Manager</name>
   </role>
 </role-list>

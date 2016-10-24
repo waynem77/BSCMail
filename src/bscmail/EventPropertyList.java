@@ -92,10 +92,10 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
       Object nameObject = properties.get("name");
       String name = (nameObject != null) ? nameObject.toString() : "";
 
-      Object defaultValueObject = properties.get("value");
-      String value = (defaultValueObject != null) ? defaultValueObject.toString() : "";
+      Object defaultValueObject = properties.get("defaultValue");
+      String defaultValue = (defaultValueObject != null) ? defaultValueObject.toString() : "";
 
-      eventProperty = new EventPropertyList(name, value);
+      eventProperty = new EventPropertyList(name, defaultValue);
       return eventProperty;
     }    // constructReadWritable()
   }    // Factory
@@ -123,21 +123,26 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
   /**
    * The event property's default value.
    */
-  private final String value;
+  private final String devaultValue;
+
+  /**
+   * The event property's value.
+   */
+  private String value;
 
   /**
    * Constructs a new event property.
    *
-   * @param name of the event property; may not be null
-   * @param default value of the event property; may be null
+   * @param name name of the event property; may not be null
+   * @param defaultValue default value of the event property; may be null
    * @throws NullPointerException if {@code name} is null
    */
-  public EventPropertyList(String propertyName, String defaultValue) {
-    if (propertyName == null) {
+  public EventPropertyList(String name, String defaultValue) {
+    if (name == null) {
       throw new NullPointerException("Event Property Name may not be null");
     }    // if
-    this.name = propertyName;
-    this.value = defaultValue;
+    this.name = name;
+    this.devaultValue = defaultValue;
     assertInvariant();
   }    // EventPropertyList()
 
@@ -158,8 +163,33 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    */
   public String getDefaultValue() {
     assertInvariant();
-    return value;
+    return devaultValue;
   }    // getDefaultValue()
+
+  /**
+   * Returns the event property's value.
+   *
+   * @return the event property's value.
+   */
+  public String getValue() {
+    assertInvariant();
+    return value;
+  }    // getValue()
+
+  /**
+   * Sets the event property's value to the given string.
+   *
+   * @param value the new value; may not be null
+   */
+  public void setValue(String value) {
+    assertInvariant();
+    if (value == null) {
+        throw new NullPointerException("value may not be null");
+    }    // if
+
+    this.value = value;
+    assertInvariant();
+  }    // getValue()
 
   /**
    * Returns a map containing the read-writable properties of the event property. The
@@ -183,7 +213,7 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
   public Map<String, Object> getReadWritableProperties() {
     Map<String, Object> properties = new LinkedHashMap<>();
     properties.put("name", name);
-    properties.put("value", value);
+    properties.put("defaultValue", devaultValue);
     return properties;
   }    // getReadWritableProperties()
 
@@ -219,7 +249,7 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
 
     EventPropertyList rhs = (EventPropertyList)obj;
 
-    return name.equals(rhs.name) && value.equals(rhs.value);
+    return name.equals(rhs.name) && devaultValue.equals(rhs.devaultValue) && value.equals(rhs.value);
   }    // equals()
 
   @Override
@@ -228,6 +258,7 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
     final int MULTIPLIER = 37;
     int code = SEED;
     code = code * MULTIPLIER + name.hashCode();
+    code = code * MULTIPLIER + devaultValue.hashCode();
     code = code * MULTIPLIER + value.hashCode();
     return code;
   }    // hashCode()
@@ -268,5 +299,6 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    */
   private void assertInvariant() {
     assert (name != null);
+    assert (value != null);
   }    // assertInvariant()
 }    // EventPropertyList
