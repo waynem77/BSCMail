@@ -46,19 +46,7 @@ public class Event {
      * The event properties assigned to the event.
      */
     private final List<EventPropertyList> eventProperties;
-    
-    /**
-     * The manager assigned to the event.  If no manager is assigned to the
-     * event, this property is null.
-     */
-    private Manager manager;
-    
-    /**
-     * The assistant manager assigned to the event. If no assistant manager is
-     * assigned to the event, this property is null.
-     */
-    private Manager assistantManager;
-    
+
     /**
      * The volunteer shifts assigned to the event.
      */
@@ -133,79 +121,6 @@ public class Event {
         assertInvariant();
         return Collections.unmodifiableList(eventProperties);
     }    // getEventProperties()
-
-    /**
-     * Returns true if the event has a house manager scheduled.
-     *
-     * @return true if the event has a house manager scheduled; false otherwise
-     */
-    public boolean hasManager() {
-        assertInvariant();
-        return (manager != null);
-    }    // public boolean hasManager()
-
-    /**
-     * Returns the house manager scheduled for this event. If there is no house
-     * manager scheduled (that is, if {@link #hasManager()} returns true), this
-     * method returns null.
-     *
-     * @return the house manager scheduled for this event
-     */
-    public Manager getManager() {
-        assertInvariant();
-        return manager;
-    }    // getManager()
-
-    /**
-     * Assigns a house manager to this event. If the parameter is null, this
-     * method unassigns the current house manager from this event.
-     *
-     * @param manager the house manager to assign to the event
-     */
-    public void setManager(Manager manager) {
-        assertInvariant();
-        this.manager = manager;
-        assertInvariant();
-    }    // setManager()
-
-    /**
-     * Returns true if the event has a assistant house manager scheduled.
-     *
-     * @return true if the event has a assistant house manager scheduled; false
-     * otherwise
-     * @since 2.1.2
-     */
-    public boolean hasAssistantManager() {
-        assertInvariant();
-        return (assistantManager != null);
-    }    // hasAssistantManager()
-
-    /**
-     * Returns the assistant house manager scheduled for this event. If there is
-     * no house manager scheduled (that is, if {@link #hasAssistantManager()}
-     * returns true), this method returns null.
-     *
-     * @return the assistant house manager scheduled for this event
-     * @since 2.1.2
-     */
-    public Manager getAssistantManager() {
-        assertInvariant();
-        return assistantManager;
-    }    // getAssistantManager()
-
-    /**
-     * Assigns a assistant house manager to this event. If the parameter is
-     * null, this method unassigns the current assistant house manager from this
-     * event.
-     *
-     * @param manager the assistant house manager to assign to the event
-     * @since 2.1.2
-     */
-    public void setAssistantManager(Manager manager) {
-        assertInvariant();
-        this.assistantManager = manager;
-        assertInvariant();
-    }    // setAssistantManager()
 
     /**
      * Adds a volunteer shift to the event.

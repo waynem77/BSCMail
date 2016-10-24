@@ -32,7 +32,7 @@ import main.*;
  * A graphical interface for an {@link Event}.  
  * @author Wayne Miller
  */
-public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserver, VolunteersObserver,
+public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObserver,
                                                   EventPropertyObserver {
 
     /* Private Classes */
@@ -126,49 +126,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
 
     }    // EventPropertiesTextField
 
-    /**
-     * A combo box that allows the user to select managers.  This class extends
-     * {@code JComboBox} to easily convert person containers to managers.
-     */
-    private class ManagerComboBox extends JComboBox<PersonContainer<Manager>> {
-        /**
-         * Constructs a new manager combo box.
-         * 
-         * @param managers the managers used to populate the combo box; may not
-         * contain any null elements
-         */
-        public ManagerComboBox(List<Manager> managers) {
-            setModel(managers);
-        }    // ManagerComboBox()
-        
-        /**
-         * Returns the manager selected by the user.
-         * 
-         * @return the manager selected by the user
-         */
-        public Manager getManager() {
-            PersonContainer<Manager> container = (PersonContainer<Manager>)getSelectedItem();
-            return container.getPerson();
-        }    // getManager()
-        
-        /**
-         * Sets the list of managers.
-         * 
-         * @param managers the managers used to populate the combo box; may not
-         * contain any null elements
-         */
-        public final void setModel(List<Manager> managers) {
-            assert ((managers == null) || (!managers.contains(null)));
-            removeAllItems();
-            addItem(new PersonContainer<Manager>(null));
-            if (managers != null) {
-                for (Manager manager : managers) {
-                    addItem(new PersonContainer<>(manager));
-                }    // for
-            }    // if
-        }    // setModel()
-    }    // ManagerComboBox
-    
     /**
      * A combo box that contains a shift and allows the user to select
      * volunteers. This class extends {@code JComboBox} to contain extra data
@@ -286,16 +243,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     private final JSpinner dateControl;
 
     /**
-     * Manager dropdown control.
-     */
-    private final ManagerComboBox managerControl;
-    
-    /**
-     * Assistant manager dropdown control.
-     */
-    private final ManagerComboBox assistantManagerControl;
-    
-    /**
      * Shift dropdown controls.
      */
     private final List<LabeledComponent<ShiftComboBox>> shiftControls;
@@ -322,7 +269,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     public EventFrame() {
         List<EventPropertyList> eventProperties = Application.getEventProperties();
         List<Shift> shifts = Application.getShifts();
-        List<Manager> managers = Application.getManagers();
         volunteers = Application.getVolunteers();
         
         setTitle(Application.getApplicationName() + " - Event Setup");
@@ -341,13 +287,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
         standardPanel.add(dateControl);
-        standardPanel.add(new JLabel("Manger:"));
-        managerControl = new ManagerComboBox(managers);
-        standardPanel.add(managerControl);
-        standardPanel.add(new JLabel("Assistant manger:"));
-        assistantManagerControl = new ManagerComboBox(managers);
-        standardPanel.add(assistantManagerControl);
-
         eventPropertiesPanel.setLayout(new GridLayout(0, 2));
         eventPropertyControls = new LinkedList<>();
         setEventProperties(eventProperties);
@@ -357,7 +296,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         setShifts(shifts);
 
         Application.registerObserver((EventPropertyObserver)this);
-        Application.registerObserver((ManagersObserver)this);
         Application.registerObserver((ShiftsObserver)this);
         Application.registerObserver((VolunteersObserver)this);
         
@@ -373,8 +311,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         assertInvariant();
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
-        event.setManager(managerControl.getManager());
-        event.setAssistantManager(assistantManagerControl.getManager());
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
             EventPropertyList eventProperty = eventPropertyControl.component.getEventProperty();
             eventProperty.setValue(eventPropertyControl.component.getValue());
@@ -389,14 +325,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
         return event;
     }    // getEvent()
 
-    /**
-     * This method is called whenever the list of defined managers changes.
-     */
-    @Override
-    public void managersChanged() {
-        setManagers(Application.getManagers());
-    }    // managersChanged()
-    
     /**
      * This method is called whenever the list of defined volunteer shifts
      * changes.
@@ -476,86 +404,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     }    // setShifts()
 
     /**
-     * Sets the manager options displayed in the manager combobox in the frame
-     * to those in the given list. If one of the managers in the given list has
-     * the same name as that selected in the combobox, that manager becomes the
-     * new selection. (The selection is effectively retained.) Otherwise, the
-     * selection is cleared. If the given list is null, it is treated as an
-     * empty list.
-     *
-     * The list of managers may not contain any null elements.
-     *
-     * @since 2.0
-     * @param managers the new list of managers; may not contain any null
-     * elements
-     * @throws NullPointerException if {@code managers} contains any null
-     * elements
-     */
-    void setManagers(List<Manager> managers) {
-        if ((managers != null) && managers.contains(null)) {
-            throw new NullPointerException("managers may not contain null");
-        }    // if
-        Manager selectedManager = managerControl.getManager();
-        managerControl.setModel(managers);
-        if (selectedManager != null) {
-            setSelectedManager(selectedManager.getName());
-        }    // if
-        selectedManager = assistantManagerControl.getManager();
-        assistantManagerControl.setModel(managers);
-        if (selectedManager != null) {
-            setSelectedAssistantManager(selectedManager.getName());
-        }    // if
-    }    // setVolunteers()
-    
-    /**
-     * Sets the selected manager in the manager combobox to the manager with the
-     * given name. If no manager in the list of choices of the combobox has the
-     * given name, or if the given name is null, this method clears the selected
-     * manager.
-     *
-     * @since 2.0
-     * @param manager the manager to set
-     */
-    void setSelectedManager(String manager) {
-        final int NULL_INDEX = 0;
-        int newIndex = NULL_INDEX;
-        for (int i = 0; i < managerControl.getItemCount(); ++i) {
-            PersonContainer<Manager> item = (PersonContainer<Manager>)managerControl.getItemAt(i);
-            assert (item != null);
-            Manager itemManager = item.person;
-            if ((itemManager != null) && (itemManager.getName().equals(manager))) {
-                newIndex = i;
-                break;
-            }    // if
-        }    // for
-        managerControl.setSelectedIndex(newIndex);
-    }    // setManager()
-    
-    /**
-     * Sets the selected manager in the assistant manager combobox to the
-     * manager with the given name. If no manager in the list of choices of the
-     * combobox has the given name, or if the given name is null, this method
-     * clears the selected manager.
-     *
-     * @since 2.1.2
-     * @param manager the manager to set
-     */
-    void setSelectedAssistantManager(String manager) {
-        final int NULL_INDEX = 0;
-        int newIndex = NULL_INDEX;
-        for (int i = 0; i < assistantManagerControl.getItemCount(); ++i) {
-            PersonContainer<Manager> item = (PersonContainer<Manager>)assistantManagerControl.getItemAt(i);
-            assert (item != null);
-            Manager itemManager = item.person;
-            if ((itemManager != null) && (itemManager.getName().equals(manager))) {
-                newIndex = i;
-                break;
-            }    // if
-        }    // for
-        assistantManagerControl.setSelectedIndex(newIndex);
-    }    // setSelectedAssistantManager()
-
-    /**
      * Sets the volunteer options displayed in the shift comboboxes in the frame
      * to those in the given list. If one of the volunteers in the given list
      * has the same name as that selected in a combobox, that volunteer becomes
@@ -614,7 +462,7 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
-                PersonContainer<Volunteer> item = (PersonContainer<Volunteer>) shiftControl.getItemAt(volunteerIndex);
+                PersonContainer<Volunteer> item = shiftControl.getItemAt(volunteerIndex);
                 assert (item != null);
                 Volunteer itemVolunteer = item.person;
                 if ((itemVolunteer != null) && (itemVolunteer.getName().equals(volunteer))) {
@@ -690,12 +538,6 @@ public class EventFrame extends JFrame implements ManagersObserver, ShiftsObserv
     private void assertInvariant() {
         assert (dateControl != null);
         assert (isAncestorOf(dateControl));
-        assert (managerControl != null);
-        assert (isAncestorOf(managerControl));
-        assert (! comboBoxContainsNull(managerControl));
-        assert (assistantManagerControl != null);
-        assert (isAncestorOf(assistantManagerControl));
-        assert (! comboBoxContainsNull(assistantManagerControl));
         assert (shiftControls != null);
         assert (! shiftControls.contains(null));
         assert (isAncestorOfAll(shiftControls));

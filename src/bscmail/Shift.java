@@ -108,8 +108,6 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
             Object descriptionObject = properties.get("description");
             String description = (descriptionObject != null) ? descriptionObject.toString() : "";
 
-
-
             // display configurations
             Object displayVolunteerEmailObject = properties.get("displayVolunteerEmail");
             boolean displayVolunteerEmail = Boolean.parseBoolean(displayVolunteerEmailObject.toString());
@@ -118,6 +116,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
             Object displayVolunteerNotesObject = properties.get("displayVolunteerNotes");
             boolean displayVolunteerNotes = Boolean.parseBoolean(displayVolunteerNotesObject.toString());
 
+            // volunteer
             Object volunteerObject = properties.get("volunteer");
             Volunteer volunteer = null;
             if (volunteerObject instanceof Volunteer) {
@@ -236,7 +235,6 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     }
 
     /**
-     *
      * @return the shift's required roles
      */
     public List<Role> getRoles() {

@@ -32,19 +32,16 @@ import static org.junit.Assert.*;
  */
 public class ApplicationTest {
 
-    private class ApplicationObserver implements ShiftsObserver, ManagersObserver, VolunteersObserver, EmailTemplateObserver {
+    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, EmailTemplateObserver {
         private boolean shiftsChanged = false;
-        private boolean managersChanged = false;
         private boolean volunteersChanged = false;
         private boolean emailTemplateObserver = false;
         
         @Override public void shiftsChanged() { shiftsChanged = true; }
-        @Override public void managersChanged() { managersChanged = true; }
         @Override public void volunteersChanged() { volunteersChanged = true; }
         @Override public void emailTemplateChanged() { emailTemplateObserver = true; }
         
         public boolean getShiftsChanged() { return shiftsChanged; }
-        public boolean getManagersChanged() { return managersChanged; }
         public boolean getVolunteersChanged() { return volunteersChanged; }
         public boolean getEmailTemplateChanged() { return emailTemplateObserver; }
     }    // ApplicationObserver
@@ -310,111 +307,7 @@ public class ApplicationTest {
             assertFalse(shifts.get(i) == received.get(i));
         }    // for
     }    // testGetShiftsSetShiftsNoElementIdentity()
-    
-    /* getManagers / setManagers */
-    
-    /**
-     * Tests that {@link Application#getManagers()} does not throw an exception.
-     */
-    @Test
-    public void testGetManagersNoException() {
-        System.out.println("getManagers - no exception");
 
-        Application.getManagers();
-    }    // testGetManagersNoException()
-
-    /**
-     * Tests that {@link Application#getManagers()} does not return null.
-     */
-    @Test
-    public void testGetManagersNotNull() {
-        System.out.println("getManagers - not null");
-
-        List<Manager> received = Application.getManagers();
-        assertNotNull(received);
-    }    // testGetManagersNotNull()
-    
-    /**
-     * Tests that {@link Application#setManagers(List)} throws a
-     * {@link NullPointerException} when managers is null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testSetManagersManagersNull() throws IOException {
-        System.out.println("setManagers - managers is null");
-
-        List<Manager> managers = null;
-        Application.setManagers(managers);
-    }    // testSetManagersManagersNull()
-    
-    /**
-     * Tests that {@link Application#setManagers(List)} throws a
-     * {@link NullPointerException} when managers is not null but contains a null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testSetManagersManagersContainsNull() throws IOException {
-        System.out.println("setManagers - managers contains null");
-
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), null);
-        Application.setManagers(managers);
-    }    // testSetManagersManagersContainsNull()
-    
-    /**
-     * Tests that {@link Application#setManagers(List)} does not throw an
-     * exception when managers is not null and contains no nulls.
-     */
-    @Test
-    public void testSetManagersNoException() throws IOException {
-        System.out.println("setManagers - no exception");
-
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        Application.setManagers(managers);
-    }    // testSetManagersNoException()
-    
-    /**
-     * Tests that {@link Application#setManagers(List)} does not alter its
-     * argument.
-     */
-    @Test
-    public void testSetManagersDoesNotAlterArgument() throws IOException {
-        System.out.println("setManagers - does not alter argument");
-
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        List<Manager> expected = new ArrayList<>(managers);
-        Application.setManagers(managers);
-        List<Manager> received = managers;
-        assertEquals(expected, received);
-    }    // testSetManagersDoesNotAlterArgument()
-    
-    /**
-     * Tests that {@link Application#getManagers()} returns a list that is
-     * equal to that passed to {@link Application#setManagers(List)}.
-     */
-    @Test
-    public void testGetManagersSetManagersListsAreEqual() throws IOException {
-        System.out.println("getManagers/setManagers - lists are equal");
-
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        List<Manager> expected = managers;
-        Application.setManagers(managers);
-        List<Manager> received = Application.getManagers();
-        assertEquals(expected, received);
-    }    // testGetManagersSetManagersListsAreEqual()
-    
-    /**
-     * Tests that {@link Application#getManagers()} returns a list that is not
-     * identical to that passed to {@link Application#setManagers(List)}.
-     */
-    @Test
-    public void testGetManagersSetManagersNoIdentity() throws IOException {
-        System.out.println("getManagers/setManagers - lists are not identical");
-
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        List<Manager> expected = managers;
-        Application.setManagers(managers);
-        List<Manager> received = Application.getManagers();
-        assertFalse(expected == received);
-    }    // testGetManagersSetManagersNoIdentity()
-    
     /* getVolunteers / setVolunteers */
     
     /**
@@ -677,22 +570,6 @@ public class ApplicationTest {
         }    // for
     }    // testSetShiftsRegisterObserverShiftsNotifiesAll()
 
-    /**
-     * Tests that a call to {@link Application#setManagers(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(ShiftsObserver)}.
-     */
-    @Test
-    public void testSetManagersRegisterObserverShiftsNotifiesAll() throws IOException {
-        System.out.println("setManagers/registerObserver(ShiftsObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ShiftsObserver)observer);
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        Application.setManagers(managers);
-        
-        assertFalse(observer.getShiftsChanged());
-    }    // testSetManagersRegisterObserverShiftsNotifiesAll()
 
     /**
      * Tests that a call to {@link Application#setVolunteers(List)} does not
@@ -728,120 +605,7 @@ public class ApplicationTest {
         
         assertFalse(observer.getShiftsChanged());
     }    // testSetEmailTemplateRegisterObserverShiftsNotifiesAll()
-    
-    /* registerObserver(ManagersObserver) */
-    
-    /**
-     * Tests that {@link Application#registerObserver(ManagersObserver)} throws a
-     * {@link NullPointerException} when observer is null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testRegisterObserverManagersObserverNull() {
-        System.out.println("registerObserver(ManagersObserver) - observer is null");
 
-        ManagersObserver observer = null;
-        Application.registerObserver(observer);
-    }    // testRegisterObserverManagersObserverNull()
-    
-    /**
-     * Tests that {@link Application#registerObserver(ManagersObserver)} does not
-     * throw an exception when observer is not null.
-     */
-    @Test
-    public void testRegisterObserverManagersObserverNotNull() {
-        System.out.println("registerObserver(ManagersObserver) - observer is null");
-
-        ManagersObserver observer = new ApplicationObserver();
-        Application.registerObserver(observer);
-    }    // testRegisterObserverManagersObserverNotNull()
-    
-    /**
-     * Tests that {@link Application#registerObserver(ManagersObserver)} does not
-     * throw an exception when called twice with different observers.
-     */
-    @Test
-    public void testRegisterObserverManagersTwice() {
-        System.out.println("registerObserver(ManagersObserver) - called twice");
-
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (ManagersObserver observer : observers) {
-            Application.registerObserver(observer);
-        }    // for
-    }    // testRegisterObserverManagersTwice()
-
-    /**
-     * Tests that a call to {@link Application#setManagers(List)} notifies all
-     * observers registered with
-     * {@link Application#registerObserver(ManagersObserver)}.
-     */
-    @Test
-    public void testSetManagersRegisterObserverManagersNotifiesAll() throws IOException {
-        System.out.println("setManagers/registerObserver(ManagersObserver) - notifies all observers");
-
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (ManagersObserver observer : observers) {
-            Application.registerObserver(observer);
-        }    // for
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        Application.setManagers(managers);
-        
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getManagersChanged());
-        }    // for
-    }    // testSetManagersRegisterObserverManagersNotifiesAll()
-
-    /**
-     * Tests that a call to {@link Application#setShifts(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(ManagersObserver)}.
-     */
-    @Test
-    public void testSetShiftsRegisterObserverManagersNotifiesAll() throws IOException {
-        System.out.println("setShifts/registerObserver(ManagersObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ManagersObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
-        
-        assertFalse(observer.getManagersChanged());
-    }    // testSetShiftsRegisterObserverManagersNotifiesAll()
-
-    /**
-     * Tests that a call to {@link Application#setVolunteers(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(ManagersObserver)}.
-     */
-    @Test
-    public void testSetVolunteersRegisterObserverManagersNotifiesAll() throws IOException {
-        System.out.println("setVolunteers/registerObserver(ManagersObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ManagersObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
-        Application.setVolunteers(volunteers);
-        
-        assertFalse(observer.getManagersChanged());
-    }    // testSetVolunteersRegisterObserverManagersNotifiesAll()
-
-    /**
-     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
-     * not notify any observers registered with
-     * {@link Application#registerObserver(ManagersObserver)}.
-     */
-    @Test
-    public void testSetEmailTemplateRegisterObserverManagerssNotifiesAll() throws IOException {
-        System.out.println("setEmailTemplate/registerObserver(ManagersObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ShiftsObserver)observer);
-        String text = "Foo\nBar\n";
-        Reader templateReader = new StringReader(text);
-        Application.setEmailTemplate(templateReader);
-        
-        assertFalse(observer.getManagersChanged());
-    }    // testSetEmailTemplateRegisterObserverManagerssNotifiesAll()
-    
     /* registerObserver(VolunteersObserver) */
      
     /**
@@ -920,41 +684,6 @@ public class ApplicationTest {
         assertFalse(observer.getVolunteersChanged());
     }    // testSetShiftsRegisterObserverVolunteersNotifiesAll()
 
-    /**
-     * Tests that a call to {@link Application#setManagers(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(VolunteersObserver)}.
-     */
-    @Test
-    public void testSetManagersRegisterObserverVolunteersNotifiesAll() throws IOException {
-        System.out.println("setVolunteers/registerObserver(VolunteersObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((VolunteersObserver)observer);
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        Application.setManagers(managers);
-        
-        assertFalse(observer.getVolunteersChanged());
-    }    // testSetManagersRegisterObserverVolunteersNotifiesAll()
-
-    /**
-     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
-     * not notify any observers registered with
-     * {@link Application#registerObserver(VolunteersObserver)}.
-     */
-    @Test
-    public void testSetEmailTemplateRegisterObserverVolunteersNotifiesAll() throws IOException {
-        System.out.println("setEmailTemplate/registerObserver(VolunteersObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ShiftsObserver)observer);
-        String text = "Foo\nBar\n";
-        Reader templateReader = new StringReader(text);
-        Application.setEmailTemplate(templateReader);
-        
-        assertFalse(observer.getVolunteersChanged());
-    }    // testSetEmailTemplateRegisterObserverManagerssNotifiesAll()
-    
     /* registerObserver(EmailTemplateObserver) */
      
     /**
@@ -1033,23 +762,6 @@ public class ApplicationTest {
         
         assertFalse(observer.getEmailTemplateChanged());
     }    // testSetShiftsRegisterObserverEmailTemplateNotifiesAll()
-
-    /**
-     * Tests that a call to {@link Application#setManagers(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(EmailTemplateObserver)}.
-     */
-    @Test
-    public void testSetManagersRegisterObserverEmailTemplateNotifiesAll() throws IOException {
-        System.out.println("setEmailTemplate/registerObserver(EmailTemplateObserver) - does not notify");
-
-        ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((EmailTemplateObserver)observer);
-        List<Manager> managers = Arrays.asList(new Manager("Foo", "foo", "555-FOO"), new Manager("Bar", "bar", "555-BAR"));
-        Application.setManagers(managers);
-        
-        assertFalse(observer.getEmailTemplateChanged());
-    }    // testSetManagersRegisterObserverEmailTemplateNotifiesAll()
 
     /**
      * Tests that a call to {@link Application#setVolunteers(List)} does not

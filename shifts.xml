@@ -19,9 +19,8 @@
     <displayVolunteerPhone>false</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
-  
   <shift>
-    <description>Door 9:00-10:00</description>
+    <description>(Angel) Door 9:00-10:00</description>
     <roles>Angel,Manager</roles>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>false</displayVolunteerPhone>

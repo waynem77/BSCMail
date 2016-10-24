@@ -71,11 +71,6 @@ public class Application {
         SHIFTS_FILE                (true),
         
         /**
-         * The name of the defined managers file.
-         */
-        MANAGERS_FILE              (true),
-        
-        /**
          * The name of the defined volunteers file.
          */
         VOLUNTEERS_FILE            (true),
@@ -192,11 +187,6 @@ public class Application {
      * The list of defined shifts.
      */
     private List<Shift> shifts;
-    
-    /**
-     * The list of defined managers.
-     */
-    private List<Manager> managers;
 
     /**
      * The list of defined volunteers.
@@ -222,12 +212,7 @@ public class Application {
      * The list of shifts observers.
      */
     private final List<ShiftsObserver> shiftsObservers;
-    
-    /**
-     * The list of managers observers.
-     */
-    private final List<ManagersObserver> managersObservers;
-    
+
     /**
      * The list of volunteers observers.
      */
@@ -264,21 +249,18 @@ public class Application {
             properties.put(PropertyKey.APPLICATION_VERSION, "3.0 beta");
             properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2016 its authors.  See the file \"AUTHORS\" for details.");
             properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
-            properties.put(PropertyKey.MANAGERS_FILE, "managers.xml");
             properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
             properties.put(PropertyKey.ROLES_FILE, "roles.xml");
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
             properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperty.xml");
 
             shifts = readShifts(properties.get(PropertyKey.SHIFTS_FILE));
-            managers = readManagers(properties.get(PropertyKey.MANAGERS_FILE));
             volunteers = readVolunteers(properties.get(PropertyKey.VOLUNTEERS_FILE));
             roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
             emailTemplate = readEmailTemplate(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
             eventProperties = readEventProperties(properties.get(PropertyKey.EVENT_PROPERTY_FILE));
             
             shiftsObservers = new LinkedList<>();
-            managersObservers = new LinkedList<>();
             volunteersObservers = new LinkedList<>();
             rolesObservers = new LinkedList<>();
             emailTemplateObservers = new LinkedList<>();
@@ -385,51 +367,6 @@ public class Application {
         theApplication.writeList(theApplication.shifts, theApplication.properties.get(PropertyKey.SHIFTS_FILE));
     }    // setShifts()
 
-    /**
-     * Returns the list of defined managers.  The list returned is a copy of the
-     * master, so changes to it do not affect the master and vice-versa.
-     * 
-     * @return the list of defined managers
-     */
-    public static List<Manager> getManagers() {
-        theApplication.assertInvariant();
-        List<Manager> clone = new ArrayList<>();
-        for (Manager manager : theApplication.managers) {
-            clone.add(manager.clone());
-        }    // for
-        return clone;
-    }    // getManagers()
-    
-    /**
-     * Sets the list of defined managers.  The argument is copied to the master,
-     * so that changes to the master do not affect the original list and
-     * vice-versa.
-     *
-     * @param managers the new list of managers; may not be null, nor contain
-     * any null elements
-     * @throws NullPointerException if {@code managers} is null or contains a
-     * null element
-     * @throws IOException if an I/O error occurs
-     */
-    public static void setManagers(List<Manager> managers) throws IOException {
-        theApplication.assertInvariant();
-        if (managers == null) {
-            throw new NullPointerException("managers may not be null");
-        }    // if
-        if (managers.contains(null)) {
-            throw new NullPointerException("managers may not contain null");
-        }    // if
-        theApplication.managers = new LinkedList<>();
-        for (Manager manager : managers) {
-            theApplication.managers.add(manager.clone());
-        }    // for
-        for (ManagersObserver observer : theApplication.managersObservers) {
-            observer.managersChanged();
-        }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.managers, theApplication.properties.get(PropertyKey.MANAGERS_FILE));
-    }    // setManagers()
-    
     /**
      * Returns the list of defined volunteers. The list returned is a copy of
      * the master, so changes to it do not affect the master and vice-versa.
@@ -562,8 +499,7 @@ public class Application {
      * Sets the defined email template.
      * 
      * @param emailTemplate the email template to set; may not be null
-     * @throws NullPointerException if {@code managers} is null or contains a
-     * null element
+     * @throws NullPointerException
      * @throws IOException if an I/O error occurs
      */
     public static void setEmailTemplate(EmailTemplate emailTemplate) throws IOException {
@@ -576,7 +512,7 @@ public class Application {
         wrapper.add(emailTemplate);
         theApplication.assertInvariant();
         theApplication.writeList(wrapper, theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
-    }    // setManagers()
+    }    // setEmailTemplate()
 
     /**
      * Returns the list of defined event properties. The list returned is a copy
@@ -639,21 +575,6 @@ public class Application {
             throw new NullPointerException("observer may not be null");
         }    // if
         theApplication.shiftsObservers.add(observer);
-        theApplication.assertInvariant();
-    }    // registerObserver()
-
-    /**
-     * Registers a managers observer with this application.
-     * 
-     * @param observer the observer to register; may not be null
-     * @throws NullPointerException if observer is null
-     */
-    public static void registerObserver(ManagersObserver observer) {
-        theApplication.assertInvariant();
-        if (observer == null) {
-            throw new NullPointerException("observer may not be null");
-        }    // if
-        theApplication.managersObservers.add(observer);
         theApplication.assertInvariant();
     }    // registerObserver()
 
@@ -776,21 +697,7 @@ public class Application {
         }    // while
         return shifts;
     }    // readShifts()
-    
-    /**
-     * Reads and returns a list of managers from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return a list containing all the managers contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private List<Manager> readManagers(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        return ioLayer.readAll(new FileInputStream(filename), Manager.getManagerFactory());
-    }    // readManagers()
-    
+
     /**
      * Reads and returns a list of volunteers from a binary file.
      *
@@ -832,7 +739,7 @@ public class Application {
         IOLayer ioLayer = getIOLayer();
         List<EmailTemplate> emailTemplates = ioLayer.readAll(new FileInputStream(filename), EmailTemplate.getEmailTemplateFactory());
         return emailTemplates.get(0);
-    }    // readManagers()
+    }    // readEmailTemplate()
 
     /**
      * Reads and returns a list of event properties from a binary file.
@@ -876,16 +783,12 @@ public class Application {
         assert (shifts != null);
         assert (! shifts.contains(null));
         assert (shiftsHasNoVolunteers());
-        assert (managers != null);
-        assert (! managers.contains(null));
         assert (volunteers != null);
         assert (! volunteers.contains(null));
         assert (eventProperties != null);
         assert (! eventProperties.contains(null));
         assert (shiftsObservers != null);
         assert (! shiftsObservers.contains(null));
-        assert (managersObservers != null);
-        assert (! managersObservers.contains(null));
         assert (volunteersObservers != null);
         assert (! volunteersObservers.contains(null));
         assert (rolesObservers != null);

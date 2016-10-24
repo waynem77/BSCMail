@@ -26,7 +26,7 @@ import main.*;
 /**
  * Represents a BSC Role.
  *
- * @author Nathan Cordner, Anthony Adams
+ * @author Nathan Cordner
  */
 public class Role implements Cloneable, Serializable, ReadWritable {
 
