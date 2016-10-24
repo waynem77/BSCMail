@@ -128,7 +128,7 @@ public class DisplayEmailFrame extends JFrame {
         }    // for
         String toLine = "";
         for (String email : emails) {
-            if (! toLine.isEmpty()) {
+            if (toLine.isEmpty()) {
                 toLine = email;
             } else {    // if
                 toLine += ", " + email;
