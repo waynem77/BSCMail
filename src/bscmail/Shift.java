@@ -136,8 +136,10 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
             } else if (roleObject != null) {
                 // extract list of roles via string split
                 for (String roleName : roleObject.toString().split(",")) {
-                    Role role = new Role(roleName);
-                    roles.add(role);
+                    if (!roleName.isEmpty()) {
+                        Role role = new Role(roleName);
+                        roles.add(role);
+                    }
                 }
             }
 
