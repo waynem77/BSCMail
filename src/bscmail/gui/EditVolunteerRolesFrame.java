@@ -19,10 +19,9 @@
 
 package bscmail.gui;
 
-import bscmail.Role;
-import bscmail.Volunteer;
-import main.Application;
-
+import bscmail.*;
+import main.*;
+import java.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -31,7 +30,7 @@ import javax.swing.*;
 /**
  * @author Nathan Cordner
  */
-public class EditVolunteerRolesFrame extends JFrame {
+public class EditVolunteerRolesFrame extends JFrame implements RolesObserver{
 
     /**
      * The Volunteer object being managed.
@@ -98,6 +97,8 @@ public class EditVolunteerRolesFrame extends JFrame {
         volunteerRoles.setPreferredSize(existingRoles.getPreferredScrollableViewportSize());
         panel.add(new JScrollPane(volunteerRoles));
         add(panel);
+
+        Application.registerObserver((RolesObserver)this);
     }
 
     /**
@@ -132,4 +133,14 @@ public class EditVolunteerRolesFrame extends JFrame {
         Vector<Role> assignedRoles = new Vector<Role>(volunteer.getRoles());
         volunteerRoles.setListData(assignedRoles);
     }
+
+    /**
+     * This method is called whenever the list of defined roles
+     * changes.
+     */
+    @Override
+    public void rolesChanged() {
+        Vector<Role> newRoleList = new Vector<Role>(Application.getRoles()); //read all roles from XML file
+        existingRoles.setListData(newRoleList);
+    }    // rolesChanged()
 }
