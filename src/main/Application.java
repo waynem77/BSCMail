@@ -475,6 +475,22 @@ public class Application {
         theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
     }    // setVolunteers()
 
+    public static void importVolunteers(String fileName) throws IOException, ClassNotFoundException {
+        theApplication.assertInvariant();
+        if (fileName == null) {
+            throw new NullPointerException("file name may not be null");
+        }    // if
+        List<Volunteer> importedVolunteers = theApplication.readVolunteers(fileName);
+        for (Volunteer volunteer : importedVolunteers) {
+            theApplication.volunteers.add(volunteer.clone());
+        }    // for
+        for (VolunteersObserver observer : theApplication.volunteersObservers) {
+            observer.volunteersChanged();
+        }    // for
+        theApplication.assertInvariant();
+        theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
+    }   // importVolunteers()
+
     /**
      * Returns the list of defined roles. The list returned is a copy of
      * the master, so changes to it do not affect the master and vice-versa.

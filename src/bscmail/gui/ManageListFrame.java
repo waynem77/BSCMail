@@ -100,10 +100,12 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         if (elementComparator == null) {
             throw new NullPointerException("elementComparator may not be null");
         }    // if
+
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
         listData = new Vector<>(initialData);
         list = new JList<>(listData);
+
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
@@ -222,6 +224,18 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         setButtonStates();
         setListDataHook(data);
     }    // setListData()
+
+    /**
+     * Essentially does the above, but without the data hook
+     * @param data
+     * @throws IOException
+     */
+    protected void updateListData(Vector<E> data) throws IOException {
+        assert (data != null);
+        list.setListData(data);
+        listData = data;
+        setButtonStates();
+    }
     
     /**
      * Enables or disables buttons depending on the state of the list box.

@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import main.Application;
+import main.VolunteersObserver;
 
 /**
  * A graphical interface to manage the defined list of volunteers in
@@ -33,7 +34,7 @@ import main.Application;
  * @since 2.0
  * @author Wayne Miller
  */
-public class ManageVolunteersFrame extends ManageListFrame<Volunteer> {
+public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements VolunteersObserver {
     
     /**
      * Constructs a new manage volunteers frame.
@@ -50,6 +51,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> {
                     }    // compare()
                 }    // Comparator
         );
+        Application.registerObserver(this);
         
         setTitle(Application.getApplicationName() + " - Manage Volunteers");
     }    // ManageVolunteersFrame()
@@ -65,4 +67,16 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> {
         assert (volunteers != null);
         Application.setVolunteers(volunteers);
     }    // saveListData()
+
+    /**
+     * Update list of volunteers in manager frame.
+     */
+    public void volunteersChanged(){
+        try {
+            updateListData(new Vector<>(Application.getVolunteers()));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
 }    // ManageVolunteersFrame

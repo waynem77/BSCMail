@@ -19,10 +19,12 @@
 
 package bscmail.gui;
 
+import main.Application;
 import bscmail.Volunteer;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
+import java.io.*;
 
 /**
  * A panel that displays and manages a {@link Volunteer}.
@@ -58,6 +60,16 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     private final JButton editRoles;
 
     /**
+     * Button to import another XML file of volunteers.
+     */
+    private final JButton importVolunteers;
+
+    /**
+     * Dialog window to choose file to import.
+     */
+    private final JFileChooser fileChooser;
+
+    /**
      * Indicates whether the implicit volunteer is valid.
      */
     private boolean volunteerIsValid;
@@ -66,6 +78,10 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      * Tracks the current volunteer selected.
      */
     private Volunteer currentVolunteer;
+
+    /**
+     * Ensures that only one edit roles window is open at a time.
+     */
 
     private boolean editRolesWindowIsOpen;
 
@@ -115,6 +131,15 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         });    // addActionListener()
         editRoles.setEnabled(false);
         layoutHelper.addComponent("", editRoles);
+        importVolunteers = new JButton("Import Volunteers");
+        importVolunteers.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                importVolunteersButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListener()
+        fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        layoutHelper.addComponent("", importVolunteers);
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
         editRolesWindowIsOpen = false;
@@ -145,10 +170,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
      */
     @Override
     public Volunteer createElement() {
-        currentVolunteer.setName(nameTextField.getText());
-        currentVolunteer.setEmail(emailTextField.getText());
-        currentVolunteer.setPhone(phoneTextField.getText());
-        currentVolunteer.setNotes(notesTextArea.getText());
+        currentVolunteer = new Volunteer(nameTextField.getText(), emailTextField.getText(),
+                                                         phoneTextField.getText(),notesTextArea.getText());
         return currentVolunteer;
     }    // createElement()
 
@@ -194,10 +217,24 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
             }
         });
 
-
-        //manageRolesFrame.setVisible(true);
     }    // manageRolesButtonClicked()
 
+    /**
+     * Event fired when the import volunteers button is clicked.
+     */
+    private void importVolunteersButtonClicked() {
+         int returnVal = fileChooser.showOpenDialog(this);
+         if (returnVal == JFileChooser.APPROVE_OPTION) {
+             try {
+                 Application.importVolunteers(fileChooser.getSelectedFile().getPath());
+             } catch (ClassNotFoundException e) {
+                 System.out.println(e);
+             } catch (IOException e) {
+                 System.out.println(e);
+             }
+         }
+
+    }    // importVolunteersButtonClicked()
     
 }    // ManageVolunteerPanel
 
