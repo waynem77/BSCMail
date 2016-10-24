@@ -37,12 +37,7 @@ public class MainFrame extends JFrame {
      * A frame to manage shifts.
      */
     private final ManageShiftsFrame manageShiftsFrame;
-    
-    /**
-     * A frame to manage managers.
-     */
-    private final ManageManagersFrame manageManagersFrame;
-    
+
     /**
      * A frame to manage volunteers.
      */
@@ -93,14 +88,6 @@ public class MainFrame extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 manageShiftsButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-
-        button = new JButton("Managers");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageManagersButtonClicked();
             }    // actionPerformed()
         });    // addActionListener()
         panel.add(button);
@@ -177,9 +164,6 @@ public class MainFrame extends JFrame {
         manageShiftsFrame = new ManageShiftsFrame();
         manageShiftsFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        manageManagersFrame = new ManageManagersFrame();
-        manageManagersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-
         manageVolunteersFrame = new ManageVolunteersFrame();
         manageVolunteersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -201,14 +185,7 @@ public class MainFrame extends JFrame {
     private void manageShiftsButtonClicked() {
         manageShiftsFrame.setVisible(true);
     }    // manageShiftsButtonClicked()
-    
-    /**
-     * Event fired when the manage managers button is clicked.
-     */
-    private void manageManagersButtonClicked() {
-        manageManagersFrame.setVisible(true);
-    }    // manageManagersButtonClicked()
-    
+
     /**
      * Event fired when the manage volunteers button is clicked.
      */

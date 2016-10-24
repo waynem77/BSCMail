@@ -370,11 +370,15 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         final int MULTIPLIER = 37;
         int code = SEED;
         code = code * MULTIPLIER + description.hashCode();
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerEmail);
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerPhone);
-        code = code * MULTIPLIER + Boolean.hashCode(displayVolunteerNotes);
+        code = code * MULTIPLIER + boolHashCode(displayVolunteerEmail);
+        code = code * MULTIPLIER + boolHashCode(displayVolunteerPhone);
+        code = code * MULTIPLIER + boolHashCode(displayVolunteerNotes);
         code = code * MULTIPLIER + ((volunteer == null) ? 0 : volunteer.hashCode());
         return code;
+    }
+
+    private int boolHashCode(boolean bool) {
+        return bool ? 1231 : 1237;
     }
 
     /**

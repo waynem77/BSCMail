@@ -25,7 +25,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for {@link Manager}
+ * Unit tests for {@link Shift}
  * @author Wayne Miller
  */
 public class ShiftTest extends ReadWritableTest {
