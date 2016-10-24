@@ -129,16 +129,13 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
 
             // roles
             Object roleObject = properties.get("roles");
-            ArrayList<Role> roles = new ArrayList<>();
-            if (roleObject instanceof ArrayList) { // already an ArrayList<Role> object
-                roles = (ArrayList<Role>) roleObject;
-            } else if (roleObject != null) {
-                // extract list of roles via string split
-                for (String roleName : roleObject.toString().split(",")) {
-                    if (!roleName.isEmpty()) {
-                        Role role = new Role(roleName);
-                        roles.add(role);
-                    }
+            List<Role> roles = new LinkedList<>();
+            if (roleObject != null) {
+                String rolesString = roleObject.toString();
+                String[] roleNames = rolesString.split(",");
+                for (String roleName : roleNames) {
+                    Role role = new Role(roleName);
+                    roles.add(role);
                 }
             }
 
@@ -350,8 +347,13 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         if (volunteer != null) {
             properties.put("volunteer", volunteer);
         }
-        if (roles != null) {
-            properties.put("roles", roles);
+        if (!roles.isEmpty()) {
+            String roleNames = "";
+            for (Role role : roles) {
+                roleNames += role.getName() + ",";
+            }
+            roleNames = roleNames.substring(0, roleNames.length() - 1);
+            properties.put("roles", roleNames);
         }
         return properties;
     }
