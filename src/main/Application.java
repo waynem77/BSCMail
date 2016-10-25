@@ -208,7 +208,7 @@ public class Application {
     /**
      * The list of defined event properties.
      */
-    private List<EventPropertyList> eventProperties;
+    private List<EventProperty> eventProperties;
     
     /**
      * The list of shifts observers.
@@ -571,10 +571,10 @@ public class Application {
      *
      * @return the list of defined event properties
      */
-    public static List<EventPropertyList> getEventProperties() {
+    public static List<EventProperty> getEventProperties() {
         theApplication.assertInvariant();
-        List<EventPropertyList> clone = new ArrayList<>();
-        for (EventPropertyList eventProperty : theApplication.eventProperties) {
+        List<EventProperty> clone = new ArrayList<>();
+        for (EventProperty eventProperty : theApplication.eventProperties) {
             clone.add(eventProperty.clone());
         }    // for
         return clone;
@@ -586,14 +586,14 @@ public class Application {
      * The argument is copied to the master, so that changes to the
      * master do not affect the original list and vice-versa.
      *
-     * @param new list of event properties; may not be null, nor
+     * @param eventProperties list of event properties; may not be null, nor
      * contain any null elements
      * @throws NullPointerException if {@code eventProperties} is null or contains a null
      * element
      * @throws IOException if an I/O error occurs
      */
 
-    public static void setEventProperties(List<EventPropertyList> eventProperties) throws IOException {
+    public static void setEventProperties(List<EventProperty> eventProperties) throws IOException {
         theApplication.assertInvariant();
         if (eventProperties == null) {
             throw new NullPointerException("Event Properties may not be null");
@@ -602,8 +602,8 @@ public class Application {
             throw new NullPointerException("Event Properties may not contain null");
         }    // if
         theApplication.eventProperties = new LinkedList<>();
-        for (EventPropertyList eventProperty : eventProperties) {
-            EventPropertyList clone = eventProperty.clone();
+        for (EventProperty eventProperty : eventProperties) {
+            EventProperty clone = eventProperty.clone();
             theApplication.eventProperties.add(clone);
         }    // for
         for (EventPropertyObserver observer : theApplication.eventPropertyObservers) {
@@ -800,10 +800,10 @@ public class Application {
      * @throws IOException if an I/O error occurs
      * @throws ClassNotFoundException if a serialization failure occurs
      */
-    private List<EventPropertyList> readEventProperties(String filename) throws IOException, ClassNotFoundException {
+    private List<EventProperty> readEventProperties(String filename) throws IOException, ClassNotFoundException {
         assert (filename != null);
         IOLayer ioLayer = getIOLayer();
-        List<EventPropertyList> eventProperties = ioLayer.readAll(new FileInputStream(filename), EventPropertyList
+        List<EventProperty> eventProperties = ioLayer.readAll(new FileInputStream(filename), EventProperty
             .getEventPropertyFactory());
         while (eventProperties.contains(null)) {
             eventProperties.remove(null);

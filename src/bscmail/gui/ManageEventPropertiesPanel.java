@@ -19,7 +19,7 @@
 
 package bscmail.gui;
 
-import bscmail.EventPropertyList;
+import bscmail.EventProperty;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -29,7 +29,7 @@ import javax.swing.event.*;
  * @since 3.0
  * @author Chaitra Mayya
  */
-class ManageEventPropertiesPanel extends ManageElementPanel<EventPropertyList> {
+class ManageEventPropertiesPanel extends ManageElementPanel<EventProperty> {
 
   /**
    * The text field displaying an event property's name.
@@ -67,10 +67,10 @@ class ManageEventPropertiesPanel extends ManageElementPanel<EventPropertyList> {
   /**
    * Loads the details of an Event Property into the panel.
    *
-   * @param Event Property to load; may be null
+   * @param eventProperty Property to load; may be null
    */
   @Override
-  public void loadElement(EventPropertyList eventProperty) {
+  public void loadElement(EventProperty eventProperty) {
     nameTextField.setText((eventProperty == null) ? "" : eventProperty.getPropertyName());
     valueTextField.setText((eventProperty == null) ? "" : eventProperty.getDefaultValue());
   }    // loadElement()
@@ -83,8 +83,8 @@ class ManageEventPropertiesPanel extends ManageElementPanel<EventPropertyList> {
    * panel
    */
   @Override
-  public EventPropertyList createElement() {
-    return new EventPropertyList(nameTextField.getText(), valueTextField.getText());
+  public EventProperty createElement() {
+    return new EventProperty(nameTextField.getText(), valueTextField.getText());
   }    // createElement()
 
   /**

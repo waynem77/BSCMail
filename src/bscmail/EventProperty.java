@@ -28,7 +28,7 @@ import main.*;
  *
  * @author Chaitra Mayya
  */
-public class EventPropertyList implements Cloneable, Serializable, ReadWritable {
+public class EventProperty implements Cloneable, Serializable, ReadWritable {
 
     /*
      * Static class properties and methods.
@@ -51,10 +51,10 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    * @author Chaitra Mayya
    * @since 3.0
    */
-  public static class Factory implements ReadWritableFactory<EventPropertyList> {
+  public static class Factory implements ReadWritableFactory<EventProperty> {
 
     /**
-     * Constructs a new EventPropertyList factory.
+     * Constructs a new EventProperty factory.
      */
     private Factory() {
     }    // Factory()
@@ -83,19 +83,19 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
      * @throws NullPointerException if {@code properties} is null
      */
     @Override
-    public EventPropertyList constructReadWritable(Map<String, Object> properties) {
+    public EventProperty constructReadWritable(Map<String, Object> properties) {
       if (properties == null) {
         throw new NullPointerException("properties may not be null");
       }    // if
 
-      EventPropertyList eventProperty = null;
+      EventProperty eventProperty = null;
       Object nameObject = properties.get("name");
       String name = (nameObject != null) ? nameObject.toString() : "";
 
       Object defaultValueObject = properties.get("defaultValue");
       String defaultValue = (defaultValueObject != null) ? defaultValueObject.toString() : "";
 
-      eventProperty = new EventPropertyList(name, defaultValue);
+      eventProperty = new EventProperty(name, defaultValue);
       return eventProperty;
     }    // constructReadWritable()
   }    // Factory
@@ -137,14 +137,14 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    * @param defaultValue default value of the event property; may be null
    * @throws NullPointerException if {@code name} is null
    */
-  public EventPropertyList(String name, String defaultValue) {
+  public EventProperty(String name, String defaultValue) {
     if (name == null) {
       throw new NullPointerException("Event Property Name may not be null");
     }    // if
     this.name = name;
     this.devaultValue = defaultValue;
     assertInvariant();
-  }    // EventPropertyList()
+  }    // EventProperty()
 
   /**
    * Returns the event property's name.
@@ -224,7 +224,7 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    */
   @Override
   public Factory getReadWritableFactory() {
-    return EventPropertyList.getEventPropertyFactory();
+    return EventProperty.getEventPropertyFactory();
   }    // getReadWritableFactory()
 
   /**
@@ -243,11 +243,11 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
     if (obj == null) {
       return false;
     }    // if
-    if (!(obj instanceof EventPropertyList)) {
+    if (!(obj instanceof EventProperty)) {
       return false;
     }    // if
 
-    EventPropertyList rhs = (EventPropertyList)obj;
+    EventProperty rhs = (EventProperty)obj;
 
     return name.equals(rhs.name) && devaultValue.equals(rhs.devaultValue) && value.equals(rhs.value);
   }    // equals()
@@ -270,12 +270,12 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
    * @since 3.0
    */
   @Override
-  public EventPropertyList clone() {
-    EventPropertyList clone = null;
+  public EventProperty clone() {
+    EventProperty clone = null;
     try {
-      clone = (EventPropertyList)super.clone();
+      clone = (EventProperty)super.clone();
     } catch (CloneNotSupportedException e) {    // try
-      // We should never get here.  EventPropertyList's only superclass is Object,
+      // We should never get here.  EventProperty's only superclass is Object,
       // which shouldn't throw.
       assert (false);
     }    // catch
@@ -301,4 +301,4 @@ public class EventPropertyList implements Cloneable, Serializable, ReadWritable 
     assert (name != null);
     assert (value != null);
   }    // assertInvariant()
-}    // EventPropertyList
+}    // EventProperty

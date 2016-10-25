@@ -21,7 +21,7 @@ package bscmail.gui;
 
 import bscmail.EmailTemplate;
 import bscmail.Event;
-import bscmail.EventPropertyList;
+import bscmail.EventProperty;
 import bscmail.Shift;
 import bscmail.Volunteer;
 
@@ -173,7 +173,7 @@ public class DisplayEmailFrame extends JFrame {
 
         // Event properties
         appendText("Date: " + formattedEventDate(event));
-        for (EventPropertyList eventProperty : event.getEventProperties()) {
+        for (EventProperty eventProperty : event.getEventProperties()) {
             appendText(eventProperty.getPropertyName() + ": " + eventProperty.getValue());
         }    // for
         appendText("");

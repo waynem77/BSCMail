@@ -86,7 +86,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         /**
          * The event property corresponding to this text field.
          */
-        private final EventPropertyList eventProperty;
+        private final EventProperty eventProperty;
 
         /**
          * Constructs a new event Property text field.
@@ -94,7 +94,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
          * @param eventProperty the event property corresponding to this text field; may not be
          * null
          */
-        public EventPropertiesTextField(EventPropertyList eventProperty) {
+        public EventPropertiesTextField(EventProperty eventProperty) {
             super(eventProperty.getDefaultValue());
             assert (eventProperty != null);
             this.eventProperty = eventProperty;
@@ -106,9 +106,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         /**
          * Returns the event property corresponding to this text field.
          *
-         * @return the event porperty corresponding to this text field
+         * @return the event property corresponding to this text field
          */
-        public EventPropertyList getEventProperty() {
+        public EventProperty getEventProperty() {
             return eventProperty;
         }    // getEventProperty()
 
@@ -264,7 +264,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * 
      */
     public EventFrame() {
-        List<EventPropertyList> eventProperties = Application.getEventProperties();
+        List<EventProperty> eventProperties = Application.getEventProperties();
         List<Shift> shifts = Application.getShifts();
         volunteers = Application.getVolunteers();
         
@@ -309,7 +309,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            EventPropertyList eventProperty = eventPropertyControl.component.getEventProperty();
+            EventProperty eventProperty = eventPropertyControl.component.getEventProperty();
             eventProperty.setValue(eventPropertyControl.component.getValue());
             event.addEventProperty(eventProperty);
         }    // for
@@ -498,7 +498,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @param eventProperties the new list of event properties; may not contain any null elements
      * @throws NullPointerException if {@code eventProperties} contains any null elements
      */
-    final void setEventProperties(List<EventPropertyList> eventProperties) {
+    final void setEventProperties(List<EventProperty> eventProperties) {
         final Container container = eventPropertiesPanel;
 
         if (eventProperties == null) {
@@ -514,7 +514,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             container.remove(eventPropertyControl.component);
         }    // component
         eventPropertyControls.clear();
-        for (EventPropertyList eventProperty : eventProperties) {
+        for (EventProperty eventProperty : eventProperties) {
             LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
                 .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
             container.add(eventPropertyControl.label);

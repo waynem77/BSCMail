@@ -45,7 +45,7 @@ public class Event {
     /**
      * The event properties assigned to the event.
      */
-    private final List<EventPropertyList> eventProperties;
+    private final List<EventProperty> eventProperties;
 
     /**
      * The volunteer shifts assigned to the event.
@@ -100,7 +100,7 @@ public class Event {
      * @param eventProperty the event property to add to the event; may not be null
      * @throws NullPointerException if {@code eventProperty} is null
      */
-    public void addEventProperty(EventPropertyList eventProperty) {
+    public void addEventProperty(EventProperty eventProperty) {
         assertInvariant();
         if (eventProperty == null) {
             throw new NullPointerException();
@@ -114,10 +114,10 @@ public class Event {
      * event. The event properties are ordered sequentially in the order they
      * were added.
      *
-     * @return an unmodifiable list of the event porperties associated with the
+     * @return an unmodifiable list of the event properties associated with the
      * event
      */
-    public List<EventPropertyList> getEventProperties() {
+    public List<EventProperty> getEventProperties() {
         assertInvariant();
         return Collections.unmodifiableList(eventProperties);
     }    // getEventProperties()

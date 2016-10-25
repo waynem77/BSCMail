@@ -31,7 +31,7 @@ import main.*;
  * @since 3.0
  * @author Chaitra Mayya
  */
-public class ManageEventPropertiesFrame extends ManageListFrame<EventPropertyList> {
+public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
 
   /**
    * Constructs a new manage event properties frame.
@@ -40,8 +40,8 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventPropertyLis
     super(
         new ManageEventPropertiesPanel(),
         new Vector<>(Application.getEventProperties()),
-        new Comparator<EventPropertyList>(){
-          @Override public int compare(EventPropertyList EventProperty1, EventPropertyList EventProperty2) {
+        new Comparator<EventProperty>(){
+          @Override public int compare(EventProperty EventProperty1, EventProperty EventProperty2) {
             assert (EventProperty1 != null);
             assert (EventProperty2 != null);
             return EventProperty1.toString().compareTo(EventProperty2.toString());
@@ -55,12 +55,12 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventPropertyLis
   /**
    * Saves the given list as the defined list of event properties.
    *
-   * @param event properties to save; may not be null
+   * @param eventProperties properties to save; may not be null
    * @throws IOException if an I/O error occurs
    */
   @Override
-  protected void setListDataHook(List<EventPropertyList> eventPropertiesList) throws IOException {
-    assert (eventPropertiesList != null);
-    Application.setEventProperties(eventPropertiesList);
+  protected void setListDataHook(List<EventProperty> eventProperties) throws IOException {
+    assert (eventProperties != null);
+    Application.setEventProperties(eventProperties);
   }    // saveListData()
 } //ManageEventPropertiesFrame
