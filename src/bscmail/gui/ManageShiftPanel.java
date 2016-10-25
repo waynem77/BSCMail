@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import main.RolesObserver;
 
 /**
  * A panel that displays and manages a {@link Shift}.
@@ -35,7 +36,7 @@ import javax.swing.event.*;
  * @since 2.0
  * @author Wayne Miller
  */
-class ManageShiftPanel extends ManageElementPanel<Shift> {
+class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserver {
 
     /**
      * The text field displaying a shift's description.
@@ -115,6 +116,8 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         layoutHelper.addComponent("Display volunteer notes: ", displayVolunteerNotesCheckBox);
 
         shiftIsValid = elementIsValid();
+
+        Application.registerObserver(this);
     }
 
     /**
@@ -164,6 +167,16 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         }
         return true;
     }
+
+    /**
+     * This method is called whenever the list of defined volunteer roles
+     * changes.
+     */
+    @Override
+    public void rolesChanged() {
+        rolesSelectList.setListData(Application.getRoleNames());
+        notifyObservers();
+    }    // rolesChanged()
 
     /**
      * Event that fires when the text in {@link #descriptionTextField} changes.

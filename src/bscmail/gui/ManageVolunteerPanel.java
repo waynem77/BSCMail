@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import main.RolesObserver;
 
-
 /**
  * A panel that displays and manages a {@link Volunteer}.
  *
@@ -150,6 +149,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
         editRolesWindowIsOpen = false;
+
+        Application.registerObserver(this);
     }    // ManageShiftPanel()
 
     /**
@@ -198,6 +199,16 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     public final boolean elementIsValid() {
         return !nameTextField.getText().isEmpty();
     }
+
+    /**
+     * This method is called whenever the list of defined volunteer roles
+     * changes.
+     */
+    @Override
+    public void rolesChanged() {
+        rolesSelectList.setListData(Application.getRoleNames());
+        notifyObservers();
+    }    // rolesChanged()
 
     /**
      * Event that fires when the text in {@link #nameTextField} changes.

@@ -196,6 +196,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     @Override
     public void elementValidityChanged() {
         setButtonStates();
+        pack();
     }    // elementValidityChanged()
     
     /**

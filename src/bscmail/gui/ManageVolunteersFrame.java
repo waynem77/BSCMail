@@ -19,12 +19,15 @@
 
 package bscmail.gui;
 
+import bscmail.Role;
 import bscmail.Volunteer;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import main.Application;
+import main.RolesObserver;
 import main.VolunteersObserver;
 
 /**
@@ -34,7 +37,7 @@ import main.VolunteersObserver;
  * @since 2.0
  * @author Wayne Miller
  */
-public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements VolunteersObserver {
+public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements RolesObserver, VolunteersObserver {
     
     /**
      * Constructs a new manage volunteers frame.
@@ -51,7 +54,8 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
                     }    // compare()
                 }    // Comparator
         );
-        Application.registerObserver(this);
+        Application.registerObserver((RolesObserver)this);
+        Application.registerObserver((VolunteersObserver)this);
         
         setTitle(Application.getApplicationName() + " - Manage Volunteers");
     }    // ManageVolunteersFrame()
@@ -67,6 +71,36 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
         assert (volunteers != null);
         Application.setVolunteers(volunteers);
     }    // saveListData()
+
+    /**
+     * This method is called whenever the list of defined volunteer roles
+     * changes.
+     */
+    @Override
+    public void rolesChanged() {
+        List<Role> canonicalRoles = Application.getRoles();
+        Vector<Volunteer> volunteers = new Vector<>(Application.getVolunteers());
+        for (int i = 0; i < volunteers.size(); ++i) {
+            Volunteer volunteer = volunteers.get(i);
+            List<Role> roles = volunteer.getRoles();
+            roles.retainAll(canonicalRoles);
+            Volunteer newVolunteer = new Volunteer(volunteer.getName(),
+                    volunteer.getEmail(),
+                    volunteer.getPhone(),
+                    volunteer.getNotes());
+            for (Role role : roles) {
+                newVolunteer.addRole(role);
+            }    // for
+            volunteers.set(i, newVolunteer);
+        }    // for
+
+        try {
+            updateListData(volunteers);
+            setListDataHook(volunteers);
+        } catch (IOException e) {    // try
+            JOptionPane.showMessageDialog(this, "Unable to update shift roles:\n\n" + e);
+        }    // catch
+    }    // rolesChanged()
 
     /**
      * Update list of volunteers in manager frame.

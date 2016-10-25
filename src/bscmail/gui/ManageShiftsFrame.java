@@ -22,6 +22,7 @@ package bscmail.gui;
 import bscmail.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 import main.*;
 
 /**
@@ -31,7 +32,7 @@ import main.*;
  * @since 2.0
  * @author Wayne Miller
  */
-public class ManageShiftsFrame extends ManageListFrame<Shift> {
+public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesObserver {
     
     /**
      * Constructs a new manage shifts frame.
@@ -50,6 +51,8 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> {
         );
         
         setTitle(Application.getApplicationName() + " - Manage Shifts");
+
+        Application.registerObserver(this);
     }    // ManageShiftsFrame()
     
     /**
@@ -63,4 +66,32 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> {
         assert (shifts != null);
         Application.setShifts(shifts);
     }    // saveListData()
+
+    /**
+     * This method is called whenever the list of defined volunteer roles
+     * changes.
+     */
+    @Override
+    public void rolesChanged() {
+        List<Role> canonicalRoles = Application.getRoles();
+        Vector<Shift> shifts = new Vector<>(Application.getShifts());
+        for (int i = 0; i < shifts.size(); ++i) {
+            Shift shift = shifts.get(i);
+            List<Role> roles = shift.getRoles();
+            roles.retainAll(canonicalRoles);
+            Shift newShift = new Shift(shift.getDescription(),
+                    roles,
+                    shift.getDisplayVolunteerEmail(),
+                    shift.getDisplayVolunteerPhone(),
+                    shift.getDisplayVolunteerNotes());
+            shifts.set(i, newShift);
+        }    // for
+
+        try {
+            updateListData(shifts);
+            setListDataHook(shifts);
+        } catch (IOException e) {    // try
+            JOptionPane.showMessageDialog(this, "Unable to update shift roles:\n\n" + e);
+        }    // catch
+    }    // rolesChanged()
 }    // ManageShiftsFrame
