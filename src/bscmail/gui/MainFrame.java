@@ -67,7 +67,7 @@ public class MainFrame extends JFrame {
      * The number of rows in the layout.  This should be equal to the maximum
      * number of buttons in an individual column.
      */
-    private final int LAYOUT_ROWS = 6;
+    private final int LAYOUT_ROWS = 5;
 
     /**
      * The number of columns in the layout.

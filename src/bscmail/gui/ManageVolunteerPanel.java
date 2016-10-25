@@ -28,6 +28,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import main.RolesObserver;
+
 
 /**
  * A panel that displays and manages a {@link Volunteer}.
@@ -35,7 +37,7 @@ import java.util.List;
  * @since 2.0
  * @author Wayne Miller
  */
-class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
+class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements RolesObserver {
 
     /**
      * The text field displaying a volunteer's name.
@@ -97,6 +99,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         final int NOTES_COLS = 20;
         final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
         final int VERTICAL_SPACE_AFTER_CONTROLS = 10;
+
+        Application.registerObserver(this);
 
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
@@ -239,6 +243,13 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
             selectedRoles.add(allRoles.get(ind));
         }
         return selectedRoles;
+    }
+
+    /**
+     * Updates the list of volunteer roles when something changes to the master role list
+     */
+    public void rolesChanged(){
+        rolesSelectList.setListData(Application.getRoleNames());
     }
 
     /**
