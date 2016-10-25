@@ -26,6 +26,8 @@ import java.awt.Frame;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
 
 /**
  * A collection of static methods for setting and returning application-wide
@@ -98,7 +100,7 @@ public class Application {
          * True if the property key denotes a filename.
          */
         private final boolean isFileName;
-        
+
         /**
          * Constructs a new property key.
          * 
@@ -237,12 +239,20 @@ public class Application {
      * The list of test dialogs.
      */
     private final List<JDialog> testDialogs;
+
+    /**
+     * Tracks name of XML file being imported
+     */
+    private String currentImportFile;
+
     
     /**
      * Constructs a new application. This constructor is private to prevent
      * uncontrolled initialization.
      */
     private Application() throws ExceptionInInitializerError {
+        currentImportFile = "";
+
         try {
             properties = new ApplicationProperties();
             properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
@@ -267,6 +277,9 @@ public class Application {
             eventPropertyObservers = new LinkedList<>();
             
             testDialogs = new LinkedList<>();
+
+
+
         } catch (IOException | ClassNotFoundException e) {    // try
             throw new ExceptionInInitializerError(e);
         }    // catch
@@ -276,7 +289,23 @@ public class Application {
     /*
      * Public static methods.
      */
-    
+
+
+    /**
+     * Methods to get and set file name for current import file
+     */
+    public static void setImportFileName(String fileName){
+        if (theApplication != null)
+            theApplication.currentImportFile = fileName;
+    }
+
+    public static String getImportFileName(){
+        if (theApplication != null)
+            return theApplication.currentImportFile;
+        else
+            return "";
+    }
+
     /**
      * Sets or unsets test mode.  If test mode is set, the application will
      * write any changes to special test files rather than the production files.
@@ -418,14 +447,17 @@ public class Application {
             throw new NullPointerException("file name may not be null");
         }    // if
         List<Volunteer> importedVolunteers = theApplication.readVolunteers(fileName);
-        for (Volunteer volunteer : importedVolunteers) {
-            theApplication.volunteers.add(volunteer.clone());
-        }    // for
-        for (VolunteersObserver observer : theApplication.volunteersObservers) {
-            observer.volunteersChanged();
-        }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
+
+        if (!importedVolunteers.contains(null)) {
+            for (Volunteer volunteer : importedVolunteers) {
+                theApplication.volunteers.add(volunteer.clone());
+            }    // for
+            for (VolunteersObserver observer : theApplication.volunteersObservers) {
+                observer.volunteersChanged();
+            }    // for
+            theApplication.assertInvariant();
+            theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
+        }
     }   // importVolunteers()
 
     /**
@@ -491,15 +523,17 @@ public class Application {
             throw new NullPointerException("file name may not be null");
         }    // if
         List<Role> importedRoles = theApplication.readRoles(fileName);
-        for (Role role : importedRoles) {
-            if (!theApplication.roles.contains(role))
-                theApplication.roles.add(role.clone());
-        }    // for
-        for (RolesObserver observer : theApplication.rolesObservers) {
-            observer.rolesChanged();
-        }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+        if(!importedRoles.contains(null)) {
+            for (Role role : importedRoles) {
+                if (!theApplication.roles.contains(role))
+                    theApplication.roles.add(role.clone());
+            }    // for
+            for (RolesObserver observer : theApplication.rolesObservers) {
+                observer.rolesChanged();
+            }    // for
+            theApplication.assertInvariant();
+            theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+        }
     }   // importRoles()
 
     /**

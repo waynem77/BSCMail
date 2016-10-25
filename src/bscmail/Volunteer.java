@@ -97,24 +97,41 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
 
             Volunteer volunteer = null;
             try {
-                Object nameObject = properties.get("name");
-                Object emailObject = properties.get("email");
-                Object phoneObject = properties.get("phone");
-                Object notesObject = properties.get("notes");
-                String name = (nameObject != null) ? nameObject.toString() : "";
-                String email = (emailObject != null) ? emailObject.toString() : "";
-                String phone = (phoneObject != null) ? phoneObject.toString() : "";
-                String notes = (notesObject != null) ? notesObject.toString() : "";
-                volunteer = new Volunteer(name, email, phone, notes);
-                Object roleObject = properties.get("role");
-                if (roleObject != null) {
-                    String roles = roleObject.toString();
-                    String[] roleNames = roles.split(",");
-                    for (String roleName : roleNames) {
-                        Role role = new Role(roleName);
-                        volunteer.addRole(role);
+
+                if(Application.getImportFileName() == "" || Application.getImportFileName() == "volunteer-list") {
+
+                    Object nameObject = properties.get("name");
+                    Object emailObject = properties.get("email");
+                    Object phoneObject = properties.get("phone");
+                    Object notesObject = properties.get("notes");
+                    String name = (nameObject != null) ? nameObject.toString() : "";
+                    String email = (emailObject != null) ? emailObject.toString() : "";
+                    String phone = (phoneObject != null) ? phoneObject.toString() : "";
+                    String notes = (notesObject != null) ? notesObject.toString() : "";
+                    volunteer = new Volunteer(name, email, phone, notes);
+                    Object roleObject = properties.get("role");
+                    if (roleObject != null) {
+                        String roles = roleObject.toString();
+                        String[] roleNames = roles.split(",");
+                        for (String roleName : roleNames) {
+                            Role role = new Role(roleName);
+                            volunteer.addRole(role);
+                        }
                     }
                 }
+
+                //import old manager files
+                else if (Application.getImportFileName() == "manager-list") {
+                    Object nameObject = properties.get("name");
+                    Object emailObject = properties.get("email");
+                    Object phoneObject = properties.get("phone");
+                    String name = (nameObject != null) ? nameObject.toString() : "";
+                    String email = (emailObject != null) ? emailObject.toString() : "";
+                    String phone = (phoneObject != null) ? phoneObject.toString() : "";
+                    volunteer = new Volunteer(name, email, phone, "");
+                    volunteer.addRole(new Role("Manager"));
+                }
+
             } catch (ClassCastException e) {    // try
                 // The canAngel property was not a Boolean, so we will simply
                 // return null.

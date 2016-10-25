@@ -70,6 +70,7 @@ public class XMLIOLayer implements IOLayer {
             Document document = parser.parse(input);
 
             Element inventory = document.getDocumentElement();
+            Application.setImportFileName(inventory.getTagName());
 
             List<T> readWritables = new LinkedList<>();
             for (Node element = inventory.getFirstChild(); element != null; element = element.getNextSibling()) {
