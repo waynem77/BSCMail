@@ -28,7 +28,7 @@ import main.*;
  *
  * @author Wayne Miller, github.com/acadams
  */
-public class Volunteer implements Person, Cloneable, Serializable, ReadWritable {
+public class Volunteer implements Cloneable, Serializable, ReadWritable {
     
     /*
      * Static class properties and methods.
@@ -217,7 +217,6 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
      *
      * @return the volunteer's name
      */
-    @Override
     public String getName() {
         assertInvariant();
         return name;
@@ -232,7 +231,6 @@ public class Volunteer implements Person, Cloneable, Serializable, ReadWritable 
      *
      * @return the volunteer's email address
      */
-    @Override
     public String getEmail() {
         assertInvariant();
         return email;

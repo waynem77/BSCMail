@@ -38,48 +38,45 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     /* Private Classes */
     
     /**
-     * Wrapper for a person implementation.  When displayed in a combo box, the
-     * container displays the name of the person, or "(open)" if the person is
-     * null.
-     * 
-     * @param <E> the person implementation
+     * Wrapper for a volunteer. When displayed in a combo box, the container
+     * displays the name of the volunteer, or "(open)" if the volunteer is null.
      */
-    private class PersonContainer<E extends Person> {
+    private class VolunteerContainer {
         /**
-         * The person being wrapped.
+         * The volunteer being wrapped.
          */
-        private final E person;
+        private final Volunteer volunteer;
 
         /**
-         * Constructs a new person container.
+         * Constructs a new volunteer container.
          * 
-         * @param person the person wrapped in the container
+         * @param volunteer the volunteer wrapped in the container
          */
-        public PersonContainer(E person) {
-            this.person = person;
+        public VolunteerContainer(Volunteer volunteer) {
+            this.volunteer = volunteer;
         }    // PersonContainer
         
         /**
-         * Returns the person wrapped in the container.
+         * Returns the volunteer wrapped in the container.
          * 
-         * @return the person wrapped in the container
+         * @return the volunteer wrapped in the container
          */
-        public E getPerson() {
-            return person;
+        public Volunteer getVolunteer() {
+            return volunteer;
         }    // getPerson()
         
         /**
-         * Returns the name of the person wrapped in the container, or "(open)"
-         * if the person is null.
-         * 
-         * @return name of the person wrapped in the container, or "(open)" if
-         * the person is null
+         * Returns the name of the volunteer wrapped in the container, or
+         * "(open)" if the volunteer is null.
+         *
+         * @return name of the volunteer wrapped in the container, or "(open)"
+         * if the volunteer is null
          */
         @Override
         public String toString() {
-            return (person == null) ? "(open)" : person.getName();
+            return (volunteer == null) ? "(open)" : volunteer.getName();
         }    // toString()
-    }    // PersonContainer
+    }    // VolunteerContainer
 
     /**
      * A text field that allows the user to select event properties. This class extends
@@ -131,7 +128,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * volunteers. This class extends {@code JComboBox} to contain extra data
      * (the shift) and easily convert person containers to volunteers.
      */
-    private class ShiftComboBox extends JComboBox<PersonContainer<Volunteer>> {
+    private class ShiftComboBox extends JComboBox<VolunteerContainer> {
         /**
          * The shift corresponding to this combo box.
          */
@@ -167,8 +164,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
          * @return the volunteer selected by the user
          */
         public Volunteer getVolunteer() {
-            PersonContainer<Volunteer> container = (PersonContainer<Volunteer>)getSelectedItem();
-            return container.getPerson();
+            VolunteerContainer container = (VolunteerContainer)getSelectedItem();
+            return container.getVolunteer();
         }    // getVolunteer()
         
         /**
@@ -180,10 +177,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         public final void setModel(List<Volunteer> volunteers) {
             assert ((volunteers == null) || (!volunteers.contains(null)));
             removeAllItems();
-            addItem(new PersonContainer<Volunteer>(null));
+            addItem(new VolunteerContainer(null));
             if (volunteers != null) {
                 for (Volunteer volunteer : volunteers) {
-                    addItem(new PersonContainer<>(volunteer));
+                    addItem(new VolunteerContainer(volunteer));
                 }    // for
             }    // if
         }    // setModel()
@@ -457,9 +454,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
-                PersonContainer<Volunteer> item = shiftControl.getItemAt(volunteerIndex);
+                VolunteerContainer item = shiftControl.getItemAt(volunteerIndex);
                 assert (item != null);
-                Volunteer itemVolunteer = item.person;
+                Volunteer itemVolunteer = item.volunteer;
                 if ((itemVolunteer != null) && (itemVolunteer.getName().equals(volunteer))) {
                     newIndex = volunteerIndex;
                     break;
