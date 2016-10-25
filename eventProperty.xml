@@ -1,5 +1,9 @@
 <eventpropertylist-list>
   <eventpropertylist>
+    <name>Location</name>
+    <defaultValue>36 Cambridgepark Dr.</defaultValue>
+  </eventpropertylist>
+  <eventpropertylist>
     <name>Band</name>
     <defaultValue/>
   </eventpropertylist>

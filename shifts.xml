@@ -19,17 +19,22 @@
     <displayVolunteerNotes>false</displayVolunteerNotes>
   </shift>
   <shift>
-    <description>(Angel) Door 9:00-10:00</description>
+    <description>Door 10:00-11:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
+  </shift>
+  <shift>
+    <description>Cleanup 11:00-12:00</description>
+    <displayVolunteerEmail>false</displayVolunteerEmail>
+    <displayVolunteerPhone>false</displayVolunteerPhone>
+    <displayVolunteerNotes>false</displayVolunteerNotes>
+  </shift>
+  <shift>
+    <description>Angel 9:00-10:00</description>
     <displayVolunteerEmail>false</displayVolunteerEmail>
     <displayVolunteerPhone>false</displayVolunteerPhone>
     <displayVolunteerNotes>false</displayVolunteerNotes>
     <roles>Angel</roles>
-  </shift>
-  <shift>
-    <description>Cleanup 10:00-11:00</description>
-    <displayVolunteerEmail>false</displayVolunteerEmail>
-    <displayVolunteerPhone>false</displayVolunteerPhone>
-    <displayVolunteerNotes>false</displayVolunteerNotes>
-    <roles>Angel,Manager</roles>
   </shift>
 </shift-list>
