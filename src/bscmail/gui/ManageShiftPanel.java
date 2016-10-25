@@ -75,6 +75,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
      */
     public ManageShiftPanel() {
         final int TEXT_COLS = 15;
+        final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
 
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
@@ -102,6 +103,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> {
         layoutHelper.addComponent("Description: ", descriptionTextField);
 
         layoutHelper.addComponent("Roles Required: ", rolesSelectList);
+        layoutHelper.addComponent("", new JLabel(ROLE_INSTRUCTIONS));
 
         displayVolunteerEmailCheckBox = new JCheckBox();
         layoutHelper.addComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);

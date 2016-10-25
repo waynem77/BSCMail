@@ -95,6 +95,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
     public ManageVolunteerPanel() {
         final int NOTES_ROWS = 4;
         final int NOTES_COLS = 20;
+        final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
+        final int VERTICAL_SPACE_AFTER_CONTROLS = 10;
 
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
@@ -138,6 +140,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> {
         });    // addActionListener()
         fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        layoutHelper.addComponent("", new JLabel(ROLE_INSTRUCTIONS));
+        layoutHelper.addComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
         layoutHelper.addComponent("", importVolunteers);
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
