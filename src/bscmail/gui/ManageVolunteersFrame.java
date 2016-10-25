@@ -21,11 +21,12 @@ package bscmail.gui;
 
 import bscmail.Role;
 import bscmail.Volunteer;
+import bscmail.gui.error.ErrorDialog;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 import main.Application;
 import main.RolesObserver;
 import main.VolunteersObserver;
@@ -98,7 +99,9 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
             updateListData(volunteers);
             setListDataHook(volunteers);
         } catch (IOException e) {    // try
-            JOptionPane.showMessageDialog(this, "Unable to update shift roles:\n\n" + e);
+            ErrorDialog dialog = new ErrorDialog(this, "Unable to update volunteer roles:", e);
+            dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
         }    // catch
     }    // rolesChanged()
 

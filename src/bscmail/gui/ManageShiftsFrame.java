@@ -20,9 +20,10 @@
 package bscmail.gui;
 
 import bscmail.*;
+import bscmail.gui.error.ErrorDialog;
 import java.io.*;
 import java.util.*;
-import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 import main.*;
 
 /**
@@ -91,7 +92,9 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
             updateListData(shifts);
             setListDataHook(shifts);
         } catch (IOException e) {    // try
-            JOptionPane.showMessageDialog(this, "Unable to update shift roles:\n\n" + e);
+            ErrorDialog dialog = new ErrorDialog(this, "Unable to update shift roles:", e);
+            dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
         }    // catch
     }    // rolesChanged()
 }    // ManageShiftsFrame
