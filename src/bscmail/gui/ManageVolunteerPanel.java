@@ -257,13 +257,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     }
 
     /**
-     * Updates the list of volunteer roles when something changes to the master role list
-     */
-    public void rolesChanged(){
-        rolesSelectList.setListData(Application.getRoleNames());
-    }
-
-    /**
      * Event fired when the import volunteers button is clicked.
      */
     private void importVolunteersButtonClicked() {
