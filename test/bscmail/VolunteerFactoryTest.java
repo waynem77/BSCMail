@@ -41,9 +41,19 @@ public class VolunteerFactoryTest {
     private String email;
 
     /**
-     * Variable used to hold the volunteer "can angel" status used in testing.
+     * Variable used to hold the volunteer phone number used in testing.
      */
-    private boolean canAngel;
+    private String phone;
+
+    /**
+     * Variable used to hold the volunteer notes used in testing.
+     */
+    private String notes;
+
+    /**
+     * Variable used to hold the volunteer roles used in testing.
+     */
+    private String roles;
 
     /**
      * Variable used to hold the read-writable properties used in testing.
@@ -78,8 +88,10 @@ public class VolunteerFactoryTest {
     @Before
     public void beforeTest() {
         name = "Foo Bar";
-        email = "foo@bar.baz";
-        canAngel = true;
+        email = "foo@bar";
+        phone = "555-FOO";
+        notes = "baz";
+        roles = "clark,kent";
         properties = null;
         factory = null;
     }    // beforeTest()
@@ -91,6 +103,9 @@ public class VolunteerFactoryTest {
     public void afterTest() {
         name = null;
         email = null;
+        phone = null;
+        notes = null;
+        roles = null;
         properties = null;
         factory = null;
     }    // afterTest()
@@ -127,7 +142,8 @@ public class VolunteerFactoryTest {
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} does not
-     * throw an exception when properties has only the name and email.
+     * throw an exception when properties has some but not all of the required
+     * properties.
      */
     @Test
     public void testConstructReadWritableNameEmailOnlyNoException() {
@@ -142,20 +158,6 @@ public class VolunteerFactoryTest {
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} does not
-     * throw an exception when properties has only the "can angel" status.
-     */
-    @Test
-    public void testConstructReadWritableCanAngelOnlyNoException() {
-        System.out.println("constructReadWritable - properties has canAngel only, no exception");
-
-        factory = Volunteer.getVolunteerFactory();
-        properties = new HashMap<>();
-        properties.put("canAngel", canAngel);
-        factory.constructReadWritable(properties);
-    }    // testConstructReadWritableCanAngelOnlyNoException()
-
-    /**
-     * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} does not
      * throw an exception when properties contains a null value.
      */
     @Test
@@ -166,7 +168,9 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", null);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
         factory.constructReadWritable(properties);
     }    // testConstructReadWritablePropertiesHasNullNoException()
 
@@ -183,7 +187,9 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
         factory.constructReadWritable(properties);
     }    // testConstructReadWritableNoException()
 
@@ -200,7 +206,9 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
         properties.put("foo", "bar");
         factory.constructReadWritable(properties);
     }    // testConstructReadWritablePropertiesExtraneousNoException()
@@ -215,27 +223,13 @@ public class VolunteerFactoryTest {
 
         factory = Volunteer.getVolunteerFactory();
         properties = new HashMap<>();
-        properties.put("name", new Volunteer(name, email, canAngel));
+        properties.put("name", new Volunteer(name, email, phone, notes));
         properties.put("email", 1);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", 2.0);
+        properties.put("notes", new ArrayList());
+        properties.put("roles", false);
         factory.constructReadWritable(properties);
     }    // testConstructReadWritableNameEmailWrongObjectsNoException()
-
-    /**
-     * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} does not
-     * throw an exception when the "can angel" value is not a boolean.
-     */
-    @Test
-    public void testConstructReadWritableCanAngelWrongObjectNoException() {
-        System.out.println("constructReadWritable - canAngel is not a boolean, no exception");
-
-        factory = Volunteer.getVolunteerFactory();
-        properties = new HashMap<>();
-        properties.put("name", name);
-        properties.put("email", email);
-        properties.put("canAngel", "true");
-        factory.constructReadWritable(properties);
-    }    // testConstructReadWritableCanAngelWrongObjectNoException()
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
@@ -255,8 +249,8 @@ public class VolunteerFactoryTest {
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
-     * null when properties has only the name and email.
-     */
+     * null when properties has some but not all of the required properties.
+     * */
     @Test
     public void testConstructReadWritableNameEmailOnly() {
         System.out.println("constructReadWritable - properties has name and email only");
@@ -273,23 +267,6 @@ public class VolunteerFactoryTest {
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
-     * the correct value when properties has only the "can angel" status.
-     */
-    @Test
-    public void testConstructReadWritableCanAngelOnly() {
-        System.out.println("constructReadWritable - properties has canAngel only");
-
-        factory = Volunteer.getVolunteerFactory();
-        properties = new HashMap<>();
-        properties.put("canAngel", canAngel);
-
-        Volunteer expected = new Volunteer("", "", canAngel);
-        Volunteer received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableCanAngelOnly()
-
-    /**
-     * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
      * the correct value when properties contains a null value.
      */
     @Test
@@ -300,9 +277,14 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", null);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
 
-        Volunteer expected = new Volunteer(name, "", canAngel);
+        Volunteer expected = new Volunteer(name, "", phone, notes);
+        for (String roleName : roles.split(",")) {
+            expected.addRole(new Role(roleName));
+        }    // for
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritablePropertiesHasNull()
@@ -320,9 +302,14 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
 
-        Volunteer expected = new Volunteer(name, email, canAngel);
+        Volunteer expected = new Volunteer(name, "", phone, notes);
+        for (String roleName : roles.split(",")) {
+            expected.addRole(new Role(roleName));
+        }    // for
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritable()
@@ -340,10 +327,15 @@ public class VolunteerFactoryTest {
         properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
         properties.put("foo", "bar");
 
-        Volunteer expected = new Volunteer(name, email, canAngel);
+        Volunteer expected = new Volunteer(name, "", phone, notes);
+        for (String roleName : roles.split(",")) {
+            expected.addRole(new Role(roleName));
+        }    // for
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritablePropertiesExtraneous()
@@ -358,33 +350,17 @@ public class VolunteerFactoryTest {
 
         factory = Volunteer.getVolunteerFactory();
         properties = new HashMap<>();
-        properties.put("name", new Volunteer(name, email, canAngel));
+        properties.put("name", new Volunteer(name, email, phone, notes));
         properties.put("email", 1);
-        properties.put("canAngel", canAngel);
+        properties.put("phone", 2.0);
+        properties.put("notes", new ArrayList());
+        properties.put("roles", false);
 
-        Volunteer expected = new Volunteer(name, "1", canAngel);
+        Volunteer expected = new Volunteer(name, "1", "2.0", "");
+        expected.addRole(new Role("false"));
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritableNameEmailWrongObjects()
-
-    /**
-     * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
-     * null when the "can angel" value is not a boolean.
-     */
-    @Test
-    public void testConstructReadWritableCanAngelWrongObject() {
-        System.out.println("constructReadWritable - canAngel is not a boolean");
-
-        factory = Volunteer.getVolunteerFactory();
-        properties = new HashMap<>();
-        properties.put("name", name);
-        properties.put("email", email);
-        properties.put("canAngel", 1);
-
-        Volunteer expected = null;
-        Volunteer received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableCanAngelWrongObject()
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
@@ -395,9 +371,17 @@ public class VolunteerFactoryTest {
     public void testConstructReadWritableReflexive() {
         System.out.println("constructReadWritable - reflexivity");
 
-        factory = Volunteer.getVolunteerFactory();
-        canAngel = !canAngel;
-        Volunteer volunteer = new Volunteer(name, email, canAngel);
+        properties.put("name", name);
+        properties.put("email", email);
+        properties.put("phone", phone);
+        properties.put("notes", notes);
+        properties.put("roles", roles);
+        properties.put("foo", "bar");
+
+        Volunteer volunteer = new Volunteer(name, "", phone, notes);
+        for (String roleName : roles.split(",")) {
+            volunteer.addRole(new Role(roleName));
+        }    // for
         properties = volunteer.getReadWritableProperties();
 
         Volunteer expected = volunteer;

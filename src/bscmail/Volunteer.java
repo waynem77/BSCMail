@@ -24,7 +24,15 @@ import java.util.*;
 import main.*;
 
 /**
- * Represents an event volunteer.
+ * Represents an event volunteer. Volunteers have the following properties.
+ * <ul>
+ * <li>A name, represented as a {@link String}.</li>
+ * <li>An email address, represented as a {@link String}.</li>
+ * <li>A phone number, represented as a {@link String}.</li>
+ * <li>Notes, represented as a {@link String}.</li>
+ * <li>Zero or more user roles, represented as a {@link List} of {@link Role}s.
+ * Volunteers are initialized with zero roles.</li>
+ * </ul>
  *
  * @author Wayne Miller, github.com/acadams
  */
@@ -38,7 +46,32 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * Class version number.
      */
     private static final long serialVersionUID = 1L;
-    
+
+    /**
+     * Read-writable key corresponding to volunteer name.
+     */
+    private static final String RW_NAME_KEY = "name";
+
+    /**
+     * Read-writable key corresponding to volunteer email.
+     */
+    private static final String RW_EMAIL_KEY = "email";
+
+    /**
+     * Read-writable key corresponding to volunteer phone.
+     */
+    private static final String RW_PHONE_KEY = "phone";
+
+    /**
+     * Read-writable key corresponding to volunteer notes.
+     */
+    private static final String RW_NOTES_KEY = "notes";
+
+    /**
+     * Read-writable key corresponding to volunteer roles.
+     */
+    private static final String RW_ROLES_KEY = "roles";
+
     /**
      * A factory that creates a {@link Volunteer} from a set of read-writable
      * properties. These properties may be extracted directly from a volunteer
@@ -100,18 +133,18 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
                 if(Application.getImportFileName() == "" || Application.getImportFileName() == "volunteer-list") {
 
-                    Object nameObject = properties.get("name");
-                    Object emailObject = properties.get("email");
-                    Object phoneObject = properties.get("phone");
-                    Object notesObject = properties.get("notes");
+                    Object nameObject = properties.get(RW_NAME_KEY);
+                    Object emailObject = properties.get(RW_EMAIL_KEY);
+                    Object phoneObject = properties.get(RW_PHONE_KEY);
+                    Object notesObject = properties.get(RW_NOTES_KEY);
                     String name = (nameObject != null) ? nameObject.toString() : "";
                     String email = (emailObject != null) ? emailObject.toString() : "";
                     String phone = (phoneObject != null) ? phoneObject.toString() : "";
                     String notes = (notesObject != null) ? notesObject.toString() : "";
                     volunteer = new Volunteer(name, email, phone, notes);
-                    Object roleObject = properties.get("role");
-                    if (roleObject != null) {
-                        String roles = roleObject.toString();
+                    Object rolesObject = properties.get(RW_ROLES_KEY);
+                    if (rolesObject != null) {
+                        String roles = rolesObject.toString();
                         String[] roleNames = roles.split(",");
                         for (String roleName : roleNames) {
                             Role role = new Role(roleName);
@@ -167,11 +200,6 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     private String email;
 
     /**
-     * The volunteer's list of roles
-     */
-    private List<Role> roles;
-
-    /**
      * The volunteer's phone number.
      */
     private String phone;
@@ -180,6 +208,11 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * Notes about the volunteer.
      */
     private String notes;
+
+    /**
+     * The volunteer's list of roles
+     */
+    private final List<Role> roles;
 
     /**
      * Constructs a new volunteer.
@@ -208,7 +241,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         this.email = email;
         this.phone = phone;
         this.notes = notes;
-        this.roles = new LinkedList<Role>();
+        this.roles = new LinkedList<>();
         assertInvariant();
     }    // Volunteer()
 
@@ -222,9 +255,21 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         return name;
     }    // getName()
 
-    public void setName(String newName) {
-        name = newName;
-    }
+    /**
+     * Sets the volunteer's name to the given string.
+     * 
+     * @param name the new name; may not be null
+     * @throws NullPointerException if {@code name} is null
+     */
+    public void setName(String name) {
+        assertInvariant();
+        if (name == null) {
+            throw new NullPointerException("name may not be null");
+        }    // if
+
+        this.name = name;
+        assertInvariant();
+    }    // setName()
 
     /**
      * Returns the volunteer's email address.
@@ -236,9 +281,21 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         return email;
     }    // getEmail()
 
-    public void setEmail(String newEmail) {
-        email = newEmail;
-    }
+    /**
+     * Sets the volunteer's email address to the given string.
+     * 
+     * @param email the new email address; may not be null
+     * @throws NullPointerException if {@code email} is null
+     */
+    public void setEmail(String email) {
+        assertInvariant();
+        if (email == null) {
+            throw new NullPointerException("email may not be null");
+        }    // if
+
+        this.email = email;
+        assertInvariant();
+    }    // setEmail()
 
     /**
      * Returns the volunteer's phone number.
@@ -251,18 +308,20 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     }    // getPhone()
 
     /**
-     * Sets the volunteer's phone number.
-     *
+     * Sets the volunteer's phone number to the given string.
+     * 
      * @param phone the new phone number; may not be null
      * @throws NullPointerException if {@code phone} is null
      */
     public void setPhone(String phone) {
+        assertInvariant();
         if (phone == null) {
             throw new NullPointerException("phone may not be null");
         }    // if
+
         this.phone = phone;
         assertInvariant();
-    }
+    }    // setPhone()
 
     /**
      * Returns the volunteer notes.
@@ -275,42 +334,65 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     }    // getNotes()
 
     /**
-     * Sets the volunteer notes.
-     *
+     * Sets the volunteer notes to the given string.
+     * 
      * @param notes the new notes; may not be null
-     * @throws NullPointerException if {@code phone} is null
+     * @throws NullPointerException if {@code notes} is null
      */
     public void setNotes(String notes) {
+        assertInvariant();
         if (notes == null) {
             throw new NullPointerException("notes may not be null");
         }    // if
+
         this.notes = notes;
         assertInvariant();
-    }
+    }    // setNotes()
 
-    public void addRole(Role newRole){
-        //ensure new role is unique
-        for (Role role : roles){
-            if (role.equals(newRole))
-                return;
-        }
-        roles.add(newRole);
-    }
-
-    public void removeRole(Role oldRole){
-        roles.remove(oldRole);
-    }
-
+    /**
+     * Returns an unmodifiable list of the roles added to the volunteer.
+     * 
+     * @return the roles added to the volunteer
+     */
     public List<Role> getRoles(){
-        //ensure that Volunteer's current roles are still kosher
-        List<Role> validRoles = Application.getRoles();
-        for (Role role : roles){
-            if (!validRoles.contains(role))
-                removeRole(role);
-        }
-
+        assertInvariant();
         return roles;
-    }
+    }    // getRoles()
+
+    /**
+     * Adds the given role to the volunteer.
+     * 
+     * @param role the role to add; may not be null
+     * @throws NullPointerException if {@code role} is null
+     */
+    public void addRole(Role role){
+        assertInvariant();
+        if (role == null) {
+            throw new NullPointerException("role may not be null");
+        }    // if
+
+        if (roles.contains(role)) {
+            return;
+        }    // if
+        roles.add(role);
+        assertInvariant();
+    }    // addRole()
+
+    /**
+     * Removes the given role from the volunteer.
+     * 
+     * @param role the role to remove; may not be null
+     * @throws NullPointerException if {@code role} is null
+     */
+    public void removeRole(Role role){
+        assertInvariant();
+        if (role == null) {
+            throw new NullPointerException("role may not be null");
+        }    // if
+
+        roles.remove(role);
+        assertInvariant();
+    }    // removeRole()
 
     /**
      * Returns a map containing the read-writable properties of the volunteer.
@@ -327,8 +409,9 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * value of {@link #getPhone()}.</li>
      *   <li>The value of "notes" is a non-null {@link String} equal to the
      * value of {@link #getNotes()}.</li>
-     *   <li>The value of each "role" is a non-null {@link Role} found in the list
-     * of {@link #getRoles()}.</li>
+     *   <li>The value of "roles" is a non-null {@link String} equal to a
+     * comma-separated list of the names of each role returned by
+     * {@link #getRoles()}.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
@@ -339,17 +422,17 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     @Override
     public Map<String, Object> getReadWritableProperties() {
         Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put("name", name);
-        properties.put("email", email);
-        properties.put("phone", phone);
-        properties.put("notes", notes);
+        properties.put(RW_NAME_KEY, name);
+        properties.put(RW_EMAIL_KEY, email);
+        properties.put(RW_PHONE_KEY, phone);
+        properties.put(RW_NOTES_KEY, notes);
         String roleNames = "";
         for (Role role : roles){
             roleNames += role.getName() +",";
         }
         if (roleNames.length() > 0)
             roleNames = roleNames.substring(0, roleNames.length() - 1);
-        properties.put("role", roleNames);
+        properties.put(RW_ROLES_KEY, roleNames);
         return properties;
     }    // getReadWritableProperties()
     
@@ -439,5 +522,9 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     private void assertInvariant() {
         assert (name != null);
         assert (email != null);
+        assert (phone != null);
+        assert (notes != null);
+        assert (roles != null);
+        assert (! roles.contains(null));
     }    // assertInvariant()
 }    // Volunteer

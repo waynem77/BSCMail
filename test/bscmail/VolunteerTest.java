@@ -32,26 +32,10 @@ import static org.junit.Assert.*;
  */
 public class VolunteerTest extends ReadWritableTest {
 
-    /**
-     * Variable used to hold the name used in testing.
+    /*
+     * Class methods methods
      */
-    private String name;
 
-    /**
-     * Variable used to hold the email address used in testing.
-     */
-    private String email;
-
-    /**
-     * Variable used to hold the "can angel" status used in testing.
-     */
-    private boolean canAngel;
-
-    /**
-     * Variable used to hold the volunteer being tested.
-     */
-    private Volunteer volunteer;
-    
     /**
      * Returns the volunteer to be tested.
      * 
@@ -59,98 +43,162 @@ public class VolunteerTest extends ReadWritableTest {
      */
     @Override
     protected Volunteer getReadWritable() {
-        return new Volunteer("foo", "bar", true);
+        return new Volunteer("foo", "bar", "baz", "smurf");
     }    // getReadWritable()
 
     /**
-     * Prints unit test header.
+     * Returns a comparator for roles.
+     * 
+     * @return a comparator for roles
      */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("Volunteer");
-        System.out.println("=========");
-    }    // setUpClass()
+    protected Comparator<Role> getRoleComparator() {
+        return new Comparator<Role>(){
+            @Override public int compare(Role role1, Role role2) { return role1.getName().compareTo(role2.getName()); }
+        };    // comparator
+    }    // getRoleComparator()
 
-    /**
-     * Prints unit test footer.
+
+    /*
+     * Unit tests
      */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
-     * Sets up the test environment before each test.
-     */
-    @Before
-    public void setUp() {
-        name = "Foo Bar";
-        email = "foo@bar.baz";
-        canAngel = false;
-        volunteer = null;
-    }    // setUp()
-
-    /**
-     * Cleans up the test environment after each test.
-     */
-    @After
-    public void tearDown() {
-        name = null;
-        email = null;
-        canAngel = false;
-        volunteer = null;
-    }    // tearDown()
-
+ 
     /* constructor */
-    
+
     /**
-     * Tests that {@link Volunteer#Volunteer(String, String, boolean)} does not
-     * throw an exception when name and email are not null and canAngel is true.
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * does not throw an exception when no parameter is null.
      */
     @Test
-    public void testConstructorCanAngelTrue() {
-        System.out.println("constructor - canAngel is true");
+    public void constructorDoesNotThrowExceptionWhenNoParameterIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
 
-        canAngel = true;
-        volunteer = new Volunteer(name, email, canAngel);
-    }    // testConstructorCanAngelTrue()
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorDoesNotThrowExceptionWhenNoParameterIsNull()
 
     /**
-     * Tests that {@link Volunteer#Volunteer(String, String, boolean)} does not
-     * throw an exception when name and email are not null and canAngel is
-     * false.
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * does not throw an exception when name is empty.
      */
     @Test
-    public void testConstructorCanAngelFalse() {
-        System.out.println("constructor - canAngel is false");
+    public void constructorDoesNotThrowExceptionWhenNameIsEmpty() {
+        String name = "";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
 
-        canAngel = false;
-        volunteer = new Volunteer(name, email, canAngel);
-    }    // testConstructorCanAngelTrue()
-
-    /**
-     * Tests that {@link Volunteer#Volunteer(String, String, boolean)} throws a
-     * {@link NullPointerException} when name is null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testConstructorNameNull() {
-        System.out.println("constructor - name is null");
-
-        name = null;
-        volunteer = new Volunteer(name, email, canAngel);
-    }    // testConstructorNameNull()
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorDoesNotThrowExceptionWhenNameIsEmpty()
 
     /**
-     * Tests that {@link Volunteer#Volunteer(String, String, boolean)} throws a
-     * {@link NullPointerException} when email is null.
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * throws a {@link NullPointerException} when name is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorEmailNull() {
-        System.out.println("constructor - email is null");
+    public void constructorThrowsExceptionWhenNameIsNull() {
+        String name = null;
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
 
-        email = null;
-        volunteer = new Volunteer(name, email, canAngel);
-    }    // testConstructorEmailNull()
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorThrowsExceptionWhenNameIsNull()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * does not throw an exception when email is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenEmailIsEmpty() {
+        String name = "Foo Bar";
+        String email = "";
+        String phone = "555-FOO";
+        String notes = "baz";
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorDoesNotThrowExceptionWhenEmailIsEmpty()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * throws a {@link NullPointerException} when email is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenEmailIsNull() {
+        String name = "Foo Bar";
+        String email = null;
+        String phone = "555-FOO";
+        String notes = "baz";
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorThrowsExceptionWhenEmailIsNull()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * does not throw an exception when phone is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenPhoneIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "";
+        String notes = "baz";
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorDoesNotThrowExceptionWhenPhoneIsEmpty()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * throws a {@link NullPointerException} when phone is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenPhoneIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = null;
+        String notes = "baz";
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorThrowsExceptionWhenPhoneIsNull()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * does not throw an exception when notes is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenNotesIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "";
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorDoesNotThrowExceptionWhenNotesIsEmpty()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * throws a {@link NullPointerException} when notes is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenNotesIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = null;
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+    }    // constructorThrowsExceptionWhenNotesIsNull()
+
 
     /* getName */
     
@@ -158,25 +206,119 @@ public class VolunteerTest extends ReadWritableTest {
      * Tests that {@link Volunteer#getName()} does not throw an exception.
      */
     @Test
-    public void testGetNameNoException() {
-        System.out.println("getName - no exception");
+    public void getNameDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        volunteer = new Volunteer(name, email, canAngel);
         volunteer.getName();
-    }    // testGetNameNoException()
+    }    // getNameDoesNotThrowException()
 
     /**
      * Tests that {@link Volunteer#getName()} returns the correct value.
      */
     @Test
-    public void testGetName() {
-        System.out.println("getName");
+    public void getNameReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        volunteer = new Volunteer(name, email, canAngel);
-        String expected = name;
         String received = volunteer.getName();
+
+        String expected = name;
         assertEquals(expected, received);
-    }    // testGetName()
+    }    // getNameReturnsTheCorrectValue()
+
+
+    /* setName */
+
+    /**
+     * Tests that {@link Volunteer#setName(java.lang.String)} does not throw an
+     * exception when name is not null.
+     */
+    @Test
+    public void setNameDoesNotThrowExceptionWhenNameIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        name = "Smurf";
+
+        volunteer.setName(name);
+    }    // setNameDoesNotThrowExceptionWhenNameIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#setName(java.lang.String)} does not throw an
+     * exception when name is empty.
+     */
+    @Test
+    public void setNameDoesNotThrowExceptionWhenNameIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        name = "";
+
+        volunteer.setName(name);
+    }    // setNameDoesNotThrowExceptionWhenNameIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#setName(java.lang.String)} does not throw an
+     * exception when name is identical to the existing name.
+     */
+    @Test
+    public void setNameDoesNotThrowExceptionWhenNameIsIdentical() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+ 
+        volunteer.setName(name);
+    }    // setNameDoesNotThrowExceptionWhenNameIsIdentical()
+
+    /**
+     * Tests that {@link Volunteer#setName(java.lang.String)} throws a
+     * {@link NullPointerException} when name is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setNameThrowsExceptionWhenNameIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        name = null;
+ 
+        volunteer.setName(name);
+    }    // setNameThrowsExceptionWhenNameIsNull()
+
+    /**
+     * Tests that {@link Volunteer#setName(java.lang.String)} correctly sets the
+     * name.
+     */
+    @Test
+    public void setNameActuallySetsName() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        name = "Smurf";
+ 
+        volunteer.setName(name);
+        String received = volunteer.getName();
+
+        String expected = name;
+        assertEquals(expected, received);
+    }    // setNameActuallySetsName()
+
 
     /* getEmail */
     
@@ -184,84 +326,680 @@ public class VolunteerTest extends ReadWritableTest {
      * Tests that {@link Volunteer#getEmail()} does not throw an exception.
      */
     @Test
-    public void testGetEmailNoException() {
-        System.out.println("getEmail - no exception");
+    public void getEmailDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        volunteer = new Volunteer(name, email, canAngel);
         volunteer.getEmail();
-    }    // testGetEmailNoException()
+    }    // getEmailDoesNotThrowException()
 
     /**
      * Tests that {@link Volunteer#getEmail()} returns the correct value.
      */
     @Test
-    public void testGetEmail() {
-        System.out.println("getEmail");
+    public void getEmailReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        volunteer = new Volunteer(name, email, canAngel);
-        String expected = email;
         String received = volunteer.getEmail();
-        assertEquals(expected, received);
-    }    // testGetEmail()
 
-    /* canAngel */
+        String expected = email;
+        assertEquals(expected, received);
+    }    // getEmailReturnsTheCorrectValue()
+
+
+    /* setEmail */
+
+    /**
+     * Tests that {@link Volunteer#setEmail(java.lang.String)} does not throw an
+     * exception when email is not null.
+     */
+    @Test
+    public void setEmailDoesNotThrowExceptionWhenEmailIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        email = "Smurf";
+
+        volunteer.setEmail(email);
+    }    // setEmailDoesNotThrowExceptionWhenEmailIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#setEmail(java.lang.String)} does not throw an
+     * exception when email is empty.
+     */
+    @Test
+    public void setEmailDoesNotThrowExceptionWhenEmailIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        email = "";
+
+        volunteer.setEmail(email);
+    }    // setEmailDoesNotThrowExceptionWhenEmailIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#setEmail(java.lang.String)} does not throw an
+     * exception when email is identical to the existing email.
+     */
+    @Test
+    public void setEmailDoesNotThrowExceptionWhenEmailIsIdentical() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+ 
+        volunteer.setEmail(email);
+    }    // setEmailDoesNotThrowExceptionWhenEmailIsIdentical()
+
+    /**
+     * Tests that {@link Volunteer#setEmail(java.lang.String)} throws a
+     * {@link NullPointerException} when email is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setEmailThrowsExceptionWhenEmailIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        email = null;
+ 
+        volunteer.setEmail(email);
+    }    // setEmailThrowsExceptionWhenEmailIsNull()
+
+    /**
+     * Tests that {@link Volunteer#setEmail(java.lang.String)} correctly sets
+     * the email.
+     */
+    @Test
+    public void setEmailActuallySetsEmail() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        email = "Smurf";
+ 
+        volunteer.setEmail(email);
+        String received = volunteer.getEmail();
+
+        String expected = email;
+        assertEquals(expected, received);
+    }    // setEmailActuallySetsEmail()
+
+
+    /* getPhone */
     
     /**
-     * Tests that {@link Volunteer#canAngel()} does not throw an exception when
-     * canAngel is true.
+     * Tests that {@link Volunteer#getPhone()} does not throw an exception.
      */
     @Test
-    public void testGetCanAngelTrueNoException() {
-        System.out.println("canAngel - true, no exception");
+    public void getPhoneDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        canAngel = true;
-        volunteer = new Volunteer(name, email, canAngel);
-        volunteer.canAngel();
-    }    // testGetCanAngelTrueNoException()
+        volunteer.getPhone();
+    }    // getPhoneDoesNotThrowException()
 
     /**
-     * Tests that {@link Volunteer#canAngel()} returns the correct value when
-     * canAngel is true.
+     * Tests that {@link Volunteer#getPhone()} returns the correct value.
      */
     @Test
-    public void testGetCanAngelTrue() {
-        System.out.println("canAngel - true");
+    public void getPhoneReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
 
-        canAngel = true;
-        volunteer = new Volunteer(name, email, canAngel);
-        boolean expected = canAngel;
-        boolean received = volunteer.canAngel();
+        String received = volunteer.getPhone();
+
+        String expected = phone;
         assertEquals(expected, received);
-    }    // testGetCanAngelTrue()
+    }    // getPhoneReturnsTheCorrectValue()
+
+
+    /* setPhone */
 
     /**
-     * Tests that {@link Volunteer#canAngel()} does not throw an exception when
-     * canAngel is false.
+     * Tests that {@link Volunteer#setPhone(java.lang.String)} does not throw an
+     * exception when phone is not null.
      */
     @Test
-    public void testGetCanAngelFalseNoException() {
-        System.out.println("canAngel - false, no exception");
+    public void setPhoneDoesNotThrowExceptionWhenPhoneIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        phone = "Smurf";
 
-        canAngel = false;
-        volunteer = new Volunteer(name, email, canAngel);
-        volunteer.canAngel();
-    }    // testGetCanAngelFalseNoException()
+        volunteer.setPhone(phone);
+    }    // setPhoneDoesNotThrowExceptionWhenPhoneIsNotNull()
 
     /**
-     * Tests that {@link Volunteer#canAngel()} returns the correct value when
-     * canAngel is false.
+     * Tests that {@link Volunteer#setPhone(java.lang.String)} does not throw an
+     * exception when phone is empty.
      */
     @Test
-    public void testGetCanAngelFalse() {
-        System.out.println("canAngel - false");
+    public void setPhoneDoesNotThrowExceptionWhenPhoneIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        phone = "";
 
-        canAngel = false;
-        volunteer = new Volunteer(name, email, canAngel);
-        boolean expected = canAngel;
-        boolean received = volunteer.canAngel();
+        volunteer.setPhone(phone);
+    }    // setPhoneDoesNotThrowExceptionWhenPhoneIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#setPhone(java.lang.String)} does not throw an
+     * exception when phone is identical to the existing phone.
+     */
+    @Test
+    public void setPhoneDoesNotThrowExceptionWhenPhoneIsIdentical() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+ 
+        volunteer.setPhone(phone);
+    }    // setPhoneDoesNotThrowExceptionWhenPhoneIsIdentical()
+
+    /**
+     * Tests that {@link Volunteer#setPhone(java.lang.String)} throws a
+     * {@link NullPointerException} when phone is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setPhoneThrowsExceptionWhenPhoneIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        phone = null;
+ 
+        volunteer.setPhone(phone);
+    }    // setPhoneThrowsExceptionWhenPhoneIsNull()
+
+    /**
+     * Tests that {@link Volunteer#setPhone(java.lang.String)} correctly sets
+     * the phone.
+     */
+    @Test
+    public void setPhoneActuallySetsPhone() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        phone = "Smurf";
+ 
+        volunteer.setPhone(phone);
+        String received = volunteer.getPhone();
+
+        String expected = phone;
         assertEquals(expected, received);
-    }    // testGetCanAngelFalse()
+    }    // setPhoneActuallySetsPhone()
+
+
+    /* getNotes */
     
+    /**
+     * Tests that {@link Volunteer#getNotes()} does not throw an exception.
+     */
+    @Test
+    public void getNotesDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        volunteer.getNotes();
+    }    // getNotesDoesNotThrowException()
+
+    /**
+     * Tests that {@link Volunteer#getNotes()} returns the correct value.
+     */
+    @Test
+    public void getNotesReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        String received = volunteer.getNotes();
+
+        String expected = notes;
+        assertEquals(expected, received);
+    }    // getNotesReturnsTheCorrectValue()
+
+
+    /* setNotes */
+
+    /**
+     * Tests that {@link Volunteer#setNotes(java.lang.String)} does not throw an
+     * exception when notes is not null.
+     */
+    @Test
+    public void setNotesDoesNotThrowExceptionWhenNotesIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        notes = "Smurf";
+
+        volunteer.setNotes(notes);
+    }    // setNotesDoesNotThrowExceptionWhenNotesIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#setNotes(java.lang.String)} does not throw an
+     * exception when notes is empty.
+     */
+    @Test
+    public void setNotesDoesNotThrowExceptionWhenNotesIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        notes = "";
+
+        volunteer.setNotes(notes);
+    }    // setNotesDoesNotThrowExceptionWhenNotesIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#setNotes(java.lang.String)} does not throw an
+     * exception when notes is identical to the existing notes.
+     */
+    @Test
+    public void setNotesDoesNotThrowExceptionWhenNotesIsIdentical() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+ 
+        volunteer.setNotes(notes);
+    }    // setNotesDoesNotThrowExceptionWhenNotesIsIdentical()
+
+    /**
+     * Tests that {@link Volunteer#setNotes(java.lang.String)} throws a
+     * {@link NullPointerException} when notes is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setNotesThrowsExceptionWhenNotesIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        notes = null;
+ 
+        volunteer.setNotes(notes);
+    }    // setNotesThrowsExceptionWhenNotesIsNull()
+
+    /**
+     * Tests that {@link Volunteer#setNotes(java.lang.String)} correctly sets
+     * the notes.
+     */
+    @Test
+    public void setNotesActuallySetsNotes() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        notes = "Smurf";
+ 
+        volunteer.setNotes(notes);
+        String received = volunteer.getNotes();
+
+        String expected = notes;
+        assertEquals(expected, received);
+    }    // setNotesActuallySetsNotes()
+
+
+    /* getRoles */
+
+    /**
+     * Tests that {@link Volunteer#getRoles()} does not throw an exception.
+     */
+    @Test
+    public void getRolesDoesNotThrowAnException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        volunteer.getRoles();
+    }    // getRolesDoesNotThrowAnException()
+
+    /**
+     * Tests that {@link Volunteer#getRoles()} returns an empty list if no roles
+     * have been added.
+     */
+    @Test
+    public void getRolesReturnsEmptyListForNewObject() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        List<Role> received = volunteer.getRoles();
+
+        assertTrue(received.isEmpty());
+    }    // getRolesReturnsEmptyListForNewObject()
+
+
+    /* addRole*/
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} does not throw an
+     * exception when role is not null.
+     */
+    @Test
+    public void addRoleDoesNotThrowAnExceptionWhenRoleIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        Role role = new Role("smurf");
+        volunteer.addRole(role);
+    }    // addRoleDoesNotThrowAnExceptionWhenRoleIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} does not throw an
+     * exception when role is identical to an already-added role.
+     */
+    @Test
+    public void addRoleDoesNotThrowAnExceptionWhenRoleHasBeenAdded() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Role role = new Role("smurf");
+        volunteer.addRole(role);
+
+        volunteer.addRole(role);
+    }    // addRoleDoesNotThrowAnExceptionWhenRoleHasBeenAdded()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} does not throw an
+     * exception when role is equal to an already-added role.
+     */
+    @Test
+    public void addRoleDoesNotThrowAnExceptionWhenRoleIsEqualToAnAlreadyAddedRole() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        String roleName = "smurf";
+        Role role = new Role(roleName);
+        volunteer.addRole(role);
+
+        role = new Role(roleName);
+        volunteer.addRole(role);
+    }    // addRoleDoesNotThrowAnExceptionWhenRoleIsEqualToAnAlreadyAddedRole()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} throws a {@link NullPointerException}
+     * when role is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void addRoleThrowsAnExceptionWhenRoleIsull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        Role role = null;
+        volunteer.addRole(role);
+    }    // addRoleThrowsAnExceptionWhenRoleIsull()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} correctly adds the
+     * role when the volunteer has no existing roles.
+     */
+    @Test
+    public void addRoleAddsTheRoleWhenRolesIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        String roleName = "smurf";
+        Role role = new Role(roleName);
+        volunteer.addRole(role);
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = Arrays.asList(new Role(roleName));
+        assertEquals(expected, received);
+    }    // addRoleAddsTheRoleWhenRolesIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} correctly adds the
+     * role when the volunteer does not already have the role.
+     */
+    @Test
+    public void addRoleAddsTheRole() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        List<Role> roles = Arrays.asList(new Role("first"), new Role("second"), new Role("third"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        List<Role> expected = roles;
+        Collections.sort(roles, getRoleComparator());
+        List<Role> received = volunteer.getRoles();
+        Collections.sort(received, getRoleComparator());
+        assertEquals(expected, received);
+    }    // addRoleAddsTheRole()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} does not add the role
+     * when it has already been added.
+     */
+    @Test
+    public void addRoleDoesNotAddTheRoleWhenItHasAlreadyBeenAdded() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        String roleName = "smurf";
+        Role role = new Role(roleName);
+        volunteer.addRole(role);
+        volunteer.addRole(role);
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = Arrays.asList(new Role(roleName));
+        assertEquals(expected, received);
+    }    // addRoleDoesNotAddTheRoleWhenItHasAlreadyBeenAdded()
+
+    /**
+     * Tests that {@link Volunteer#addRole(bscmail.Role)} does not add the role
+     * when it is equal to a role that has already been added.
+     */
+    @Test
+    public void addRoleDoesNotAddTheRoleWhenNotUnique() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+        String roleName = "smurf";
+        Role role = new Role(roleName);
+        volunteer.addRole(role);
+        role = new Role(roleName);
+        volunteer.addRole(role);
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = Arrays.asList(new Role(roleName));
+        assertEquals(expected, received);
+    }    // addRoleDoesNotAddTheRoleWhenNotUnique()
+
+
+    /* removeRole*/
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} does not throw an
+     * exception when role is not null.
+     */
+    @Test
+    public void removeRoleDoesNotThrowAnExceptionWhenRoleIsNotNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Role role = new Role("smurf");
+        volunteer.addRole(role);
+
+        volunteer.removeRole(role);
+    }    // addRoleDoesNotThrowAnExceptionWhenRoleIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} does not throw an
+     * exception when the volunteer has added no roles.
+     */
+    @Test
+    public void removeRoleDoesNotThrowAnExceptionWhenVolunteerHasNoRoles() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Role role = new Role("smurf");
+
+        volunteer.removeRole(role);
+    }    // removeRoleDoesNotThrowAnExceptionWhenVolunteerHasNoRoles()
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} does not throw an
+     * exception when the role has not been added.
+     */
+    @Test
+    public void removeRoleDoesNotThrowAnExceptionRoleHasNotBeenAdded() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        String roleName = "smurf";
+        Role role = new Role(roleName);
+        volunteer.addRole(role);
+
+        roleName += "X";
+        role = new Role(roleName);
+        volunteer.removeRole(role);
+    }    // removeRoleDoesNotThrowAnExceptionWhenVolunteerHasNoRoles()
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} throws a
+     * {@link NullPointerException} when role is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void removeRoleThrowsAnExceptionWhenRoleIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Role role = new Role("smurf");
+        volunteer.addRole(role);
+
+        role = null;
+        volunteer.removeRole(role);
+    }    // removeRoleThrowsAnExceptionWhenRoleIsNull()
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} removes the role.
+     */
+    @Test
+    public void removeRoleRemovesTheRole() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Role role = new Role("B");
+        volunteer.removeRole(role);
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = Arrays.asList(new Role("A"), new Role("C"));
+        Collections.sort(expected, getRoleComparator());
+        Collections.sort(received, getRoleComparator());
+        assertEquals(expected, received);
+    }    // removeRoleRemovesTheRole()
+
+    /**
+     * Tests that {@link Volunteer#removeRole(bscmail.Role)} does not alter the
+     * roles when role has not been added.
+     */
+    @Test
+    public void removeRoleDoesNotRemoveTheRoleWhenItHasNotBeenAdded() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Role role = new Role("D");
+        volunteer.removeRole(role);
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = roles;
+        Collections.sort(expected, getRoleComparator());
+        Collections.sort(received, getRoleComparator());
+        assertEquals(expected, received);
+    }    // removeRoleDoesNotRemoveTheRoleWhenItHasNotBeenAdded()
+
+
     /* getReadWritableProperties */
     
     /**
@@ -269,36 +1007,63 @@ public class VolunteerTest extends ReadWritableTest {
      * correct value.
      */
     @Test
-    public void testGetReadWritableProperties() {
-        System.out.println("getReadWritableProperties");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void getReadWritablePropertiesReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Map<String, Object> received = volunteer.getReadWritableProperties();
+
+        String receivedRoleNameString = (String)received.remove("roles");
+        String[] receivedRoleNames = receivedRoleNameString.split(",");
+        Arrays.sort(receivedRoleNames);
+        String[] expectedRoleNames = new String[roles.size()];
+        for (int i = 0; i < roles.size(); ++i) {
+            expectedRoleNames[i] = roles.get(i).getName();
+        }    // for
+        Arrays.sort(expectedRoleNames);
+        assertArrayEquals(expectedRoleNames, receivedRoleNames);
         Map<String, Object> expected = new HashMap<>();
         expected.put("name", name);
         expected.put("email", email);
-        expected.put("canAngel", canAngel);
-        Map<String, Object> received = volunteer.getReadWritableProperties();
+        expected.put("phone", phone);
+        expected.put("notes", notes);
         assertEquals(expected, received);
-    }    // testGetReadWritableProperties()
+    }    // Test()
     
     /**
      * Tests that the return value of {@link Volunteer#getReadWritableProperties()}
      * has the correct iteration order.
      */
     @Test
-    public void testGetReadWritablePropertiesIterationOrder() {
-        System.out.println("getReadWritableProperties - iteration order");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void getReadWritablePropertiesHasTheCorrectIterationOrder() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Map<String, Object> properties = volunteer.getReadWritableProperties();
-        List<String> expected = Arrays.asList("name", "email", "canAngel");
         List<String> received = new LinkedList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             received.add(entry.getKey());
         }    // for
+
+        List<String> expected = Arrays.asList("name", "email", "phone", "notes", "roles");
         assertEquals(expected, received);
-    }    // testGetReadWritablePropertiesIterationOrder()
-    
+    }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
+
+
     /* equals */
     
     /**
@@ -306,229 +1071,440 @@ public class VolunteerTest extends ReadWritableTest {
      * when the argument is null.
      */
     @Test
-    public void testEqualsNullNoException() {
-        System.out.println("equals - null, no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void equalsDoesNotThrowExceptionWhenArgumentIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Object obj = null;
         volunteer.equals(obj);
-    }    // testEqualsNullNoException()
+    }    // equalsDoesNotThrowExceptionWhenArgumentIsNull()
     
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument is null.
      */
     @Test
-    public void testEqualsNull() {
-        System.out.println("equals - null");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void equalsReturnsFalseWhenArgumentIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Object obj = null;
         boolean received = volunteer.equals(obj);
+
         assertFalse(received);
-    }    // testEqualsNull()
+    }    // equalsReturnsFalseWhenArgumentIsNull()
     
     /**
      * Tests that {@link Volunteer#equals(Object)} does not throw an exception
      * when the argument is not a volunteer.
      */
     @Test
-    public void testEqualsNotAVolunteerNoException() {
-        System.out.println("equals - not a volunteer, no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void equalsDoesNotThrowExceptionWhenArgumentIsNotVolunteer() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Object obj = 1;
         volunteer.equals(obj);
-    }    // testEqualsNotAVolunteerNoException()
+    }    // equalsDoesNotThrowExceptionWhenArgumentIsNotVolunteer()
     
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument is not a volunteer.
      */
     @Test
-    public void testEqualsNotAVolunteer() {
-        System.out.println("equals - not a volunteer");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void equalsReturnsFalseWhenArgumentIsNotVolunteer() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Object obj = 1;
         boolean received = volunteer.equals(obj);
+
         assertFalse(received);
-    }    // testEqualsNotAVolunteer()
+    }    // equalsReturnsFalseWhenArgumentIsNotVolunteer()
     
     /**
      * Tests that {@link Volunteer#equals(Object)} does not throw an exception
      * when the argument is a volunteer.
      */
     @Test
-    public void testEqualsVolunteerNoException() {
-        System.out.println("equals - volunteer, no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        Object obj = new Volunteer(name, email, !canAngel);
+    public void equalsDoesNotThrowExceptionWhenArgumentIsVolunteer() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Object obj = new Volunteer(name, email, notes, phone);
         volunteer.equals(obj);
-    }    // testEqualsVolunteerNoException()
+    }    // equalsDoesNotThrowExceptionWhenArgumentIsVolunteer()
     
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument has a different name than the caller.
      */
     @Test
-    public void testEqualsDifferentName() {
-        System.out.println("equals - volunteer, different name");
-        
-        name = "Foo";
-        volunteer = new Volunteer(name, email, canAngel);
-        name = "Bar";
-        Object obj = new Volunteer(name, email, canAngel);
+    public void equalsReturnsFalseWhenArgumentHasDifferentName() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
         boolean expected = false;
-        boolean received = volunteer.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsDifferentName()
-    
+    }    // equalsReturnsFalseWhenArgumentHasDifferentName()
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument has a different email address than the caller.
      */
     @Test
-    public void testEqualsDifferentEmail() {
-        System.out.println("equals - volunteer, different email");
-        
-        email = "Foo";
-        volunteer = new Volunteer(name, email, canAngel);
-        email = "Bar";
-        Object obj = new Volunteer(name, email, canAngel);
+    public void equalsReturnsFalseWhenArgumentHasDifferentEmail() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
         boolean expected = false;
-        boolean received = volunteer.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsDifferentEmail()
-    
+    }    // equalsReturnsFalseWhenArgumentHasDifferentEmail()
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
-     * argument has a different "can angel" status than the caller.
+     * argument has a different phone number.
      */
     @Test
-    public void testEqualsDifferentCanAngel() {
-        System.out.println("equals - volunteer, different can angel");
-        
-        canAngel = true;
-        volunteer = new Volunteer(name, email, canAngel);
-        canAngel = !canAngel;
-        Object obj = new Volunteer(name, email, canAngel);
+    public void equalsReturnsFalseWhenArgumentHasDifferentPhone() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
         boolean expected = false;
-        boolean received = volunteer.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsDifferentCanAngel()
-    
+    }    // equalsReturnsFalseWhenArgumentHasDifferentPhone()
+
+    /**
+     * Tests that {@link Volunteer#equals(Object)} returns false when the
+     * argument has different notes.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentNotes() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentNotes()
+
+    /**
+     * Tests that {@link Volunteer#equals(Object)} returns false when the
+     * argument has different roles.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentRoles() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        for (int i = 1; i < roles.size(); ++i) {    // Deliberately skipping index 0
+            obj.addRole(roles.get(i));
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentRoles()
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns true when the
-     * argument has the same name, email address, and "can angel" status as the
-     * caller.
+     * argument has identical properties and roles.
      */
     @Test
-    public void testEqualsEquivalent() {
-        System.out.println("equals - volunteer, equivalent");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        Object obj = new Volunteer(name, email, canAngel);
+    public void equalsReturnsTrueWhenArgumentIsEquivalent() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes);
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
         boolean expected = true;
-        boolean received = volunteer.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsEquivalent()
-    
+    }    // equalsReturnsTrueWhenArgumentIsEquivalent()
+
+    /**
+     * Tests that {@link Volunteer#equals(Object)} returns true when the
+     * argument has identical properties and roles, but the roles were added in
+     * a different order.
+     */
+    @Test
+    public void equalsReturnsTrueWhenArgumentIsEquivalentButRolesAreOrderedDifferently() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes);
+        Collections.reverse(roles);
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // equalsReturnsTrueWhenArgumentIsEquivalentButRolesAreOrderedDifferently()
     /**
      * Tests that {@link Volunteer#equals(Object)} returns true when the
      * argument is the same object as the caller.
      */
     @Test
-    public void testEqualsIdentical() {
-        System.out.println("equals - volunteer, identical");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        Object obj = volunteer;
+    public void equalsReturnsTrueWhenArgumentIsIdentical() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = volunteer;
+        boolean received = volunteer.equals((Object)obj);
+
         boolean expected = true;
-        boolean received = volunteer.equals(obj);
         assertEquals(expected, received);
-    }    // testEqualsIdentical()
-    
+    }    // equalsReturnsTrueWhenArgumentIsIdentical()
+
+
     /* hashCode */
     
     /**
      * Tests that {@link Volunteer#hashCode()} does not throw an exception.
      */
     @Test
-    public void testHashCodeNoException() {
-        System.out.println("hashCode - no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void hashCodeDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         volunteer.hashCode();
-    }    // testHashCodeNoException()
-    
+    }    // hashCodeDoesNotThrowException()
+
     /**
      * Tests that {@link Volunteer#hashCode()} returns equal values for equal
      * volunteers.
      */
     @Test
-    public void testHashCodeEqual() {
-        System.out.println("hashCode - equal volunteers");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        Volunteer experimental = new Volunteer(name, email, canAngel);
-        int expected = volunteer.hashCode();
-        int received = experimental.hashCode();
+    public void hashCodeReturnsEqualValuesForEquivalentVolunteers() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer1 = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer1.addRole(role);
+        }    // for
+        Volunteer volunteer2 = new Volunteer(name, email, phone, notes);
+        for (Role role : roles) {
+            volunteer2.addRole(role);
+        }    // for
+
+        int expected = volunteer1.hashCode();
+        int received = volunteer2.hashCode();
         assertEquals(expected, received);
-    }    // testHashCodeEqual()
-    
+    }    // hashCodeReturnsEqualValuesForEquivalentVolunteers()
+
+
     /* clone */
     
     /**
      * Tests that {@link Volunteer#clone()} does not throw an exception.
      */
     @Test
-    public void testCloneNoException() {
-        System.out.println("clone - no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void cloneDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         volunteer.clone();
-    }    // testCloneNoException()
+    }    // cloneDoesNotThrowException()
     
     /**
      * Tests that the return value of {@link Volunteer#clone()} is not null.
      */
     @Test
-    public void testCloneNotNull() {
-        System.out.println("clone - not null");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void cloneDoesNotReturnNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Volunteer received = volunteer.clone();
+
         assertNotNull(received);
-    }    // testCloneNotNull()
+    }    // testCloneNcloneDoesNotReturnNullotNull()
     
     /**
      * Tests that the return value of {@link Volunteer#clone()} is equal to the
      * argument.
      */
     @Test
-    public void testCloneEqual() {
-        System.out.println("clone - equal");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        Volunteer expected = volunteer;
+    public void returnValueOfCloneIsEqualToOriginal() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Volunteer received = volunteer.clone();
+
+        Volunteer expected = volunteer;
         assertEquals(expected, received);
-    }    // testCloneEqual()
+    }    // returnValueOfCloneIsEqualToOriginal()
     
     /**
      * Tests that the return value of {@link Volunteer#clone()} is not identical
      * to the argument.
      */
     @Test
-    public void testCloneIdentity() {
-        System.out.println("clone - not identical");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void returnValueOfCloneIsNotIdenticalToOriginal() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         Volunteer received = volunteer.clone();
+
         assertFalse(volunteer == received);
-    }    // testCloneIdentity()
+    }    // returnValueOfCloneIsNotIdenticalToOriginal()
     
     /* toString */
     
@@ -536,60 +1512,80 @@ public class VolunteerTest extends ReadWritableTest {
      * Tests that {@link Volunteer#toString()} does not throw an exception.
      */
     @Test
-    public void testToStringNoException() {
-        System.out.println("toString - no exception");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void toStringDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         volunteer.toString();
-    }    // testToStringNoException()
+    }    // toStringDoesNotThrowException()
     
     /**
      * Tests that the return value of {@link Volunteer#toString()} is not null.
      */
     @Test
-    public void testToStringNotNull() {
-        System.out.println("toString - not null");
-        
-        volunteer = new Volunteer(name, email, canAngel);
+    public void toStringDoesNotReturnNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         String received = volunteer.toString();
+
         assertNotNull(received);
-    }    // testToStringNotNull()
+    }    // toStringDoesNotReturnNull()
     
     /**
      * Tests that {@link Volunteer#toString()} returns the volunteer's name.
      */
     @Test
-    public void testToString() {
-        System.out.println("toString");
-        
-        volunteer = new Volunteer(name, email, canAngel);
-        String expected = name;
+    public void toStringReturnsName() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
         String received = volunteer.toString();
+
+        String expected = name;
         assertEquals(expected, received);
-    }    // testToString()
-    
+    }    // toStringReturnsName()
+
+
     /* getVolunteerFactory */
     
     /**
      * Tests that {@link Volunteer#getVolunteerFactory()} does not throw an exception.
      */
     @Test
-    public void testGetVolunteerFactoryNoException() {
-        System.out.println("getVolunteerFactory - no exception");
-        
+    public void volunteerFactoryDoesNotThrowException() {
         Volunteer.getVolunteerFactory();
-    }    // testToStringNoException()
+    }    // volunteerFactoryDoesNotThrowException()
     
     /**
      * Tests that the return value of {@link Volunteer#getVolunteerFactory()} is not
      * null.
      */
     @Test
-    public void testGetVolunteerFactoryNotNull() {
-        System.out.println("getVolunteerFactory - not null");
-        
+    public void volunteerFactoryDoesNotReturnNull() {
         ReadWritableFactory factory = Volunteer.getVolunteerFactory();
         assertNotNull(factory);
-    }    // testGetVolunteerFactoryNotNull()
+    }    // volunteerFactoryDoesNotReturnNull()
 
 }    // VolunteerTest

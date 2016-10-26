@@ -4,48 +4,48 @@
     <email>ann@charge</email>
     <phone>555-ANN</phone>
     <notes/>
-    <role>Manager</role>
+    <roles>Manager</roles>
   </volunteer>
   <volunteer>
     <name>Halva Ticket</name>
     <email>halva@ticket</email>
     <phone/>
     <notes/>
-    <role/>
+    <roles/>
   </volunteer>
   <volunteer>
     <name>Manny Ager</name>
     <email>manny@ager</email>
     <phone>555-MANNY</phone>
     <notes/>
-    <role>Angel,Manager</role>
+    <roles>Manager</roles>
   </volunteer>
   <volunteer>
     <name>Pasha Brum</name>
     <email>pasha@brum</email>
     <phone/>
     <notes/>
-    <role/>
+    <roles/>
   </volunteer>
   <volunteer>
     <name>Sarah Fimm</name>
     <email>sarah@fimm</email>
     <phone/>
     <notes/>
-    <role>Angel</role>
+    <roles>Angel</roles>
   </volunteer>
   <volunteer>
     <name>Seth Upp</name>
     <email>seth@upp</email>
     <phone/>
     <notes/>
-    <role/>
+    <roles/>
   </volunteer>
   <volunteer>
     <name>Val Unteer</name>
     <email>val@unteer</email>
     <phone/>
     <notes/>
-    <role>Angel</role>
+    <roles/>
   </volunteer>
 </volunteer-list>
