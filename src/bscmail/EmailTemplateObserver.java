@@ -17,7 +17,7 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package bscmail;
 
 /**
  * A class may implement the {@code EmailTemplateObserver} interface when it

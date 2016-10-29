@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-import main.Application;
-import main.RolesObserver;
+import bscmail.Application;
+import bscmail.RolesObserver;
 
 /**
  * Created by nathan.cordner on 10/19/16.

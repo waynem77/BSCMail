@@ -19,6 +19,8 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
+import bscmail.RolesObserver;
 import bscmail.*;
 import bscmail.gui.error.ErrorDialog;
 import java.io.*;

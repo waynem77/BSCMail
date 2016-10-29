@@ -33,7 +33,7 @@ import java.io.*;
 import java.net.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import main.Application;
+import bscmail.Application;
 
 import javax.swing.*;
 

@@ -27,9 +27,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JFrame;
-import main.Application;
-import main.RolesObserver;
-import main.VolunteersObserver;
+import bscmail.Application;
+import bscmail.RolesObserver;
+import bscmail.VolunteersObserver;
 
 /**
  * A graphical interface to manage the defined list of volunteers in

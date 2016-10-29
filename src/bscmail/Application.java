@@ -17,7 +17,7 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package bscmail;
 
 import bscmail.*;
 import bscmail.gui.error.ErrorDialog;
@@ -27,6 +27,7 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.xml.parsers.*;
+import main.ReadWritable;
 import org.w3c.dom.*;
 
 /**

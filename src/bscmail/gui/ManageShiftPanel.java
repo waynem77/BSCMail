@@ -21,14 +21,14 @@ package bscmail.gui;
 
 import bscmail.Shift;
 import bscmail.Role;
-import main.Application;
+import bscmail.Application;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import main.RolesObserver;
+import bscmail.RolesObserver;
 
 /**
  * A panel that displays and manages a {@link Shift}.

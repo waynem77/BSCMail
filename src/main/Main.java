@@ -19,6 +19,7 @@
 
 package main;
 
+import bscmail.Application;
 import bscmail.gui.MainFrame;
 import javax.swing.JFrame;
 

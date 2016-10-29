@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -17,26 +17,23 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package bscmail;
 
 /**
- * Created by nathan.cordner on 10/19/16.
- */
-
-/**
- * A class may implement the {@code RolesObserver} interface when it wants to
- * be informed of changes to the list of defined roles.
+ * A class may implement the {@code ShiftsObserver} interface when it wants to
+ * be informed of changes to the list of defined event properties.
  *
  * @see Application
- * @see bscmail.Volunteer
+ * @see bscmail.EventPropertyList
  * @since 3.0
- * @author Nathan Cordner, on behalf of Vecna
+ * @author Chaitra Mayya
  */
-public interface RolesObserver {
+public interface EventPropertyObserver {
 
-    /**
-     * This method is called whenever the list of defined roles changes.
-     */
-    public void rolesChanged();
+  /**
+   * This method is called whenever the list of defined event properties
+   * changes.
+   */
+  void eventPropertiesChanged();
 
-} //RolesObserver
+}    // ShiftsObserver

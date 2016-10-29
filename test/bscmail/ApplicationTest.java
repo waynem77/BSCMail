@@ -17,8 +17,12 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package bscmail;
 
+import bscmail.Application;
+import bscmail.VolunteersObserver;
+import bscmail.ShiftsObserver;
+import bscmail.EmailTemplateObserver;
 import bscmail.*;
 import bscmail.transformer.Transformer;
 import java.io.*;

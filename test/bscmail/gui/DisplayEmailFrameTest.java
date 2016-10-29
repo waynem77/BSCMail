@@ -22,7 +22,7 @@ package bscmail.gui;
 import bscmail.Event;
 import bscmail.transformer.Transformer;
 import java.io.*;
-import main.Application;
+import bscmail.Application;
 import org.junit.*;
 import static org.junit.Assert.*;
 

@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import main.Application;
+import bscmail.Application;
 
 /**
  * Created by nathan.cordner on 10/19/16.

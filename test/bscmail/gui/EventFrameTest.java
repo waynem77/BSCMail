@@ -22,7 +22,7 @@ package bscmail.gui;
 import bscmail.*;
 import java.io.IOException;
 import java.util.*;
-import main.Application;
+import bscmail.Application;
 import org.junit.*;
 import static org.junit.Assert.*;
 

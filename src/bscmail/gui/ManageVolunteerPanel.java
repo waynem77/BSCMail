@@ -20,7 +20,7 @@
 package bscmail.gui;
 
 import bscmail.Role;
-import main.Application;
+import bscmail.Application;
 import bscmail.Volunteer;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -28,7 +28,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import main.RolesObserver;
+import bscmail.RolesObserver;
 
 /**
  * A panel that displays and manages a {@link Volunteer}.

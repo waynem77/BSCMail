@@ -22,7 +22,7 @@ package bscmail.gui.error;
 import java.awt.Frame;
 import java.awt.event.*;
 import javax.swing.*;
-import main.Application;
+import bscmail.Application;
 
 /**
  * Dialog that displays an error message.

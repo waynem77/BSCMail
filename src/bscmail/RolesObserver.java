@@ -17,23 +17,26 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package bscmail;
 
 /**
- * A class may implement the {@code ShiftsObserver} interface when it wants to
- * be informed of changes to the list of defined volunteer shifts.
- * 
- * @see Application
- * @see bscmail.Shift
- * @since 2.0
- * @author Wayne Miller
+ * Created by nathan.cordner on 10/19/16.
  */
-public interface ShiftsObserver {
+
+/**
+ * A class may implement the {@code RolesObserver} interface when it wants to
+ * be informed of changes to the list of defined roles.
+ *
+ * @see Application
+ * @see bscmail.Volunteer
+ * @since 3.0
+ * @author Nathan Cordner, on behalf of Vecna
+ */
+public interface RolesObserver {
 
     /**
-     * This method is called whenever the list of defined volunteer shifts
-     * changes.
+     * This method is called whenever the list of defined roles changes.
      */
-    public void shiftsChanged();
-    
-}    // ShiftsObserver
+    public void rolesChanged();
+
+} //RolesObserver

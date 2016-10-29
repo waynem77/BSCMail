@@ -19,6 +19,7 @@
 
 package iolayer;
 
+import bscmail.Application;
 import java.io.*;
 import java.util.*;
 import javax.xml.parsers.*;

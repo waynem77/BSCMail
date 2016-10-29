@@ -19,6 +19,10 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
+import bscmail.EventPropertyObserver;
+import bscmail.VolunteersObserver;
+import bscmail.ShiftsObserver;
 import bscmail.*;
 import java.awt.Component;
 import java.awt.Container;

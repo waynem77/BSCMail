@@ -28,7 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import main.Application;
+import bscmail.Application;
 
 /**
  * A graphical interface to manage email template defined in

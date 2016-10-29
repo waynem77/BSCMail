@@ -19,6 +19,7 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.*;
 import java.io.*;
 import java.util.*;

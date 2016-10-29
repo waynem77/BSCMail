@@ -184,7 +184,7 @@ public class ErrorDialogTest {
         Frame owner = null;
         String message = "Foo";
         ErrorDialog dialog = new ErrorDialog(owner, message);
-        String expected = main.Application.getApplicationName();
+        String expected = bscmail.Application.getApplicationName();
         String received = dialog.getTitle();
         assertTrue(received.contains(expected));
     }    // testTitleHasApplicationName()

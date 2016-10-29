@@ -23,7 +23,7 @@ import bscmail.Event;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
-import main.Application;
+import bscmail.Application;
 
 /**
  * The main window for BSCMail.
