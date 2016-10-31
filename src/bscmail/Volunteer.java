@@ -128,47 +128,24 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
                 throw new NullPointerException("Volunteer properties were not set for ReadWritable construction.");
             }    // if
 
-            Volunteer volunteer = null;
-            try {
-
-                if(Application.getImportFileName() == "" || Application.getImportFileName() == "volunteer-list") {
-
-                    Object nameObject = properties.get(RW_NAME_KEY);
-                    Object emailObject = properties.get(RW_EMAIL_KEY);
-                    Object phoneObject = properties.get(RW_PHONE_KEY);
-                    Object notesObject = properties.get(RW_NOTES_KEY);
-                    String name = (nameObject != null) ? nameObject.toString() : "";
-                    String email = (emailObject != null) ? emailObject.toString() : "";
-                    String phone = (phoneObject != null) ? phoneObject.toString() : "";
-                    String notes = (notesObject != null) ? notesObject.toString() : "";
-                    volunteer = new Volunteer(name, email, phone, notes);
-                    Object rolesObject = properties.get(RW_ROLES_KEY);
-                    if (rolesObject != null) {
-                        String roles = rolesObject.toString();
-                        String[] roleNames = roles.split(",");
-                        for (String roleName : roleNames) {
-                            Role role = new Role(roleName);
-                            volunteer.addRole(role);
-                        }
-                    }
+            Object nameObject = properties.get(RW_NAME_KEY);
+            Object emailObject = properties.get(RW_EMAIL_KEY);
+            Object phoneObject = properties.get(RW_PHONE_KEY);
+            Object notesObject = properties.get(RW_NOTES_KEY);
+            String name = (nameObject != null) ? nameObject.toString() : "";
+            String email = (emailObject != null) ? emailObject.toString() : "";
+            String phone = (phoneObject != null) ? phoneObject.toString() : "";
+            String notes = (notesObject != null) ? notesObject.toString() : "";
+            Volunteer volunteer = new Volunteer(name, email, phone, notes);
+            Object rolesObject = properties.get(RW_ROLES_KEY);
+            if (rolesObject != null) {
+                String roles = rolesObject.toString();
+                String[] roleNames = roles.split(",");
+                for (String roleName : roleNames) {
+                    Role role = new Role(roleName);
+                    volunteer.addRole(role);
                 }
-
-                //import old manager files
-                else if (Application.getImportFileName() == "manager-list") {
-                    Object nameObject = properties.get("name");
-                    Object emailObject = properties.get("email");
-                    Object phoneObject = properties.get("phone");
-                    String name = (nameObject != null) ? nameObject.toString() : "";
-                    String email = (emailObject != null) ? emailObject.toString() : "";
-                    String phone = (phoneObject != null) ? phoneObject.toString() : "";
-                    volunteer = new Volunteer(name, email, phone, "");
-                    volunteer.addRole(new Role("Manager"));
-                }
-
-            } catch (ClassCastException e) {    // try
-                // The canAngel property was not a Boolean, so we will simply
-                // return null.
-            }    // catch
+            }
             return volunteer;
         }    // constructReadWritable()
     }

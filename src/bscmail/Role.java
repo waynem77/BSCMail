@@ -85,17 +85,9 @@ public class Role implements Cloneable, Serializable, ReadWritable {
                 throw new NullPointerException("properties may not be null");
             }    // if
 
-            Role role = null;
-            try {
-                if(Application.getImportFileName() == "" || Application.getImportFileName() == "role-list") {
-                    Object nameObject = properties.get("name");
-                    String name = (nameObject != null) ? nameObject.toString() : "";
-                    role = new Role(name);
-                }
-            } catch (ClassCastException e) {
-                return null;
-            }
-            return role;
+            Object nameObject = properties.get("name");
+            String name = (nameObject != null) ? nameObject.toString() : "";
+            return new Role(name);
         }    // constructReadWritable()
 
     }    // Factory
