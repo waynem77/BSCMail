@@ -30,7 +30,6 @@ import java.awt.GridLayout;
 import java.text.*;
 import java.util.*;
 import javax.swing.*;
-import main.*;
 
 /**
  * A graphical interface for an {@link Event}.  
@@ -251,7 +250,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     /**
      * Other private variables.
      */
-    
+
+    private final Application application;
+
     private final List<Volunteer> volunteers;
 
     /**
@@ -265,14 +266,21 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     
     /**
      * Constructs a new EventFrame.
-     * 
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public EventFrame() {
-        List<EventProperty> eventProperties = Application.getEventProperties();
-        List<Shift> shifts = Application.getShifts();
-        volunteers = Application.getVolunteers();
+    public EventFrame(Application application) {
+        if (application == null) {
+            throw new NullPointerException("applicaiton may not be null");
+        }    // if
+        this.application = application;
+
+        List<EventProperty> eventProperties = application.getEventProperties();
+        List<Shift> shifts = application.getShifts();
+        volunteers = application.getVolunteers();
         
-        setTitle(Application.getApplicationName() + " - Event Setup");
+        setTitle(application.getApplicationName() + " - Event Setup");
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         standardPanel = new JPanel();
@@ -296,9 +304,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         shiftControls = new LinkedList<>();
         setShifts(shifts);
 
-        Application.registerObserver((EventPropertyObserver)this);
-        Application.registerObserver((ShiftsObserver)this);
-        Application.registerObserver((VolunteersObserver)this);
+        application.registerObserver((EventPropertyObserver)this);
+        application.registerObserver((ShiftsObserver)this);
+        application.registerObserver((VolunteersObserver)this);
         
         assertInvariant();
     }    // EventFrame()
@@ -332,7 +340,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     @Override
     public void shiftsChanged() {
-        setShifts(Application.getShifts());
+        setShifts(application.getShifts());
     }    // shiftsChanged()
 
     /**
@@ -340,8 +348,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     @Override
     public void volunteersChanged() {
-        setVolunteers(Application.getVolunteers());
-        setShifts(Application.getShifts());
+        setVolunteers(application.getVolunteers());
+        setShifts(application.getShifts());
     }    // volunteersChanged()
 
     /**
@@ -350,7 +358,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     @Override
     public void eventPropertiesChanged() {
-        setEventProperties(Application.getEventProperties());
+        setEventProperties(application.getEventProperties());
     }    // eventPropertiesChanged()
     
     /*
@@ -532,6 +540,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
+        assert (application != null);
         assert (dateControl != null);
         assert (isAncestorOf(dateControl));
         assert (shiftControls != null);

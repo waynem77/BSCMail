@@ -22,11 +22,8 @@ package bscmail.gui;
 import bscmail.Application;
 import bscmail.RolesObserver;
 import bscmail.*;
-import bscmail.gui.error.ErrorDialog;
 import java.io.*;
 import java.util.*;
-import javax.swing.JFrame;
-import main.*;
 
 /**
  * A graphical interface to manage the defined list of shifts in
@@ -39,11 +36,15 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
     
     /**
      * Constructs a new manage shifts frame.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageShiftsFrame() {
+    public ManageShiftsFrame(Application application) {
         super(
-                new ManageShiftPanel(),
-                new Vector<>(Application.getShifts()),
+                application,
+                new ManageShiftPanel(application),
+                new Vector<>(application.getShifts()),
                 new Comparator<Shift>(){
                     @Override public int compare(Shift shift1, Shift shift2) {
                         assert (shift1 != null);
@@ -53,9 +54,9 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
                 }    // Comparator
         );
         
-        setTitle(Application.getApplicationName() + " - Manage Shifts");
+        setTitle(application.getApplicationName() + " - Manage Shifts");
 
-        Application.registerObserver(this);
+        application.registerObserver(this);
     }    // ManageShiftsFrame()
     
     /**
@@ -67,7 +68,7 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
     @Override
     protected void setListDataHook(List<Shift> shifts) throws IOException {
         assert (shifts != null);
-        Application.setShifts(shifts);
+        getApplication().setShifts(shifts);
     }    // saveListData()
 
     /**
@@ -76,8 +77,8 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
      */
     @Override
     public void rolesChanged() {
-        List<Role> canonicalRoles = Application.getRoles();
-        Vector<Shift> shifts = new Vector<>(Application.getShifts());
+        List<Role> canonicalRoles = getApplication().getRoles();
+        Vector<Shift> shifts = new Vector<>(getApplication().getShifts());
         for (int i = 0; i < shifts.size(); ++i) {
             Shift shift = shifts.get(i);
             List<Role> roles = shift.getRoles();
@@ -94,9 +95,7 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
             updateListData(shifts);
             setListDataHook(shifts);
         } catch (IOException e) {    // try
-            ErrorDialog dialog = new ErrorDialog(this, "Unable to update shift roles:", e);
-            dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
+            application.showErrorDialog(this, "Unable to update shift roles:", e);
         }    // catch
     }    // rolesChanged()
 }    // ManageShiftsFrame

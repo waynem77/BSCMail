@@ -19,11 +19,11 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.Event;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
-import bscmail.Application;
 
 /**
  * The main window for BSCMail.
@@ -32,6 +32,11 @@ import bscmail.Application;
  * @author Wayne Miller
  */
 public class MainFrame extends JFrame {
+
+    /**
+     * The calling application.
+     */
+    private final Application application;
 
     /**
      * A frame to manage shifts.
@@ -76,9 +81,17 @@ public class MainFrame extends JFrame {
 
     /**
      * Constructs a new main frame.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public MainFrame() {
-        setTitle(Application.getApplicationName());
+    public MainFrame(Application application) {
+        if (application == null) {
+            throw new NullPointerException("application may not be null");
+        }    // if
+        this.application = application;
+
+        setTitle(application.getApplicationName());
         setLayout(new GridLayout(1, LAYOUT_COLUMNS));
         
         JPanel panel = new JPanel();
@@ -161,97 +174,114 @@ public class MainFrame extends JFrame {
         
         pack();
         
-        manageShiftsFrame = new ManageShiftsFrame();
+        manageShiftsFrame = new ManageShiftsFrame(application);
         manageShiftsFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        manageVolunteersFrame = new ManageVolunteersFrame();
+        manageVolunteersFrame = new ManageVolunteersFrame(application);
         manageVolunteersFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        manageEmailTemplateFrame = new ManageEmailTemplateFrame();
+        manageEmailTemplateFrame = new ManageEmailTemplateFrame(application);
         manageEmailTemplateFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        manageRolesFrame = new ManageRolesFrame();
+        manageRolesFrame = new ManageRolesFrame(application);
         manageRolesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        manageEventPropertiesFrame = new ManageEventPropertiesFrame();
+        manageEventPropertiesFrame = new ManageEventPropertiesFrame(application);
         manageEventPropertiesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        eventFrame = new EventFrame();
+        eventFrame = new EventFrame(application);
         eventFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        assertInvariant();
     }    // MainFrame()
     
     /**
      * Event fired when the manage shifts button is clicked.
      */
     private void manageShiftsButtonClicked() {
+        assertInvariant();
         manageShiftsFrame.setVisible(true);
+        assertInvariant();
     }    // manageShiftsButtonClicked()
 
     /**
      * Event fired when the manage volunteers button is clicked.
      */
     private void manageVolunteersButtonClicked() {
+        assertInvariant();
         manageVolunteersFrame.setVisible(true);
+        assertInvariant();
     }    // manageVolunteersButtonClicked()
 
     /**
      * Event fired when the manage roles button is clicked.
      */
     private void manageRolesButtonClicked() {
+        assertInvariant();
         manageRolesFrame.setVisible(true);
+        assertInvariant();
     }    // manageRolesButtonClicked()
 
     /**
      * Event fired when the manage email button is clicked.
      */
     private void manageEmailButtonClicked() {
+        assertInvariant();
         manageEmailTemplateFrame.setVisible(true);
+        assertInvariant();
     }    // manageVolunteersButtonClicked()
 
     /**
      * Event fired when the manage volunteers button is clicked.
      */
     private void manageEventPropertiesButtonClicked() {
+        assertInvariant();
         manageEventPropertiesFrame.setVisible(true);
+        assertInvariant();
     }    // manageEventPropertiesButtonClicked()
 
     /**
      * Event fired when the create event button is clicked.
      */
     private void createEventButtonClicked() {
+        assertInvariant();
         eventFrame.setVisible(true);
+        assertInvariant();
     }    // createEventButtonClicked()
     
     /**
      * Event fired when the create email button is clicked.
      */
     private void createEmailButtonClicked() {
+        assertInvariant();
         Event event = eventFrame.getEvent();
-        DisplayEmailFrame displayFrame = new DisplayEmailFrame(Application.getEmailTemplate(), event);
+        DisplayEmailFrame displayFrame = new DisplayEmailFrame(application, event);
         displayFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         displayFrame.setVisible(true);
+        assertInvariant();
     }    // createEmailButtonClicked()
     
     /**
      * Event fired when the help about button is clicked.
      */
     private void helpAboutButtonClicked() {
-        String versionString = Application.getApplicationName() + " v" + Application.getVersion();
-        String aboutText = Application.getCopyright() + "\n\n";
-        aboutText += Application.getApplicationName() + " is free software: you can redistribute it and/or modify\n";
+        assertInvariant();
+        String versionString = application.getApplicationName() + " v" + application.getVersion();
+        String aboutText = application.getCopyright() + "\n\n";
+        aboutText += application.getApplicationName() + " is free software: you can redistribute it and/or modify\n";
         aboutText += "it under the terms of the GNU General Public License as published by\n";
         aboutText += "the Free Software Foundation, either version 3 of the License, or\n";
         aboutText += "(at your option) any later version.\n\n";
-        aboutText += Application.getApplicationName() + " is distributed in the hope that it will be useful,\n";
+        aboutText += application.getApplicationName() + " is distributed in the hope that it will be useful,\n";
         aboutText += "but WITHOUT ANY WARRANTY; without even the implied warranty of\n";
         aboutText += "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n";
         aboutText += "GNU General Public License for more details.\n\n";
         aboutText += "You should have received a copy of the GNU General Public License\n";
-        aboutText += "along with " + Application.getApplicationName() + ".  If not, see <http://www.gnu.org/licenses/>.";
+        aboutText += "along with " + application.getApplicationName() + ".  If not, see <http://www.gnu.org/licenses/>.";
 
         final int MARGIN = 10;
         final int INTERNAL_MARGIN = MARGIN / 2;
         JFrame frame = new JFrame();
-        frame.setTitle(Application.getApplicationName() + " - About");
+        frame.setTitle(application.getApplicationName() + " - About");
         Box contentPane = Box.createVerticalBox();
         contentPane.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
         frame.setContentPane(contentPane);
@@ -267,5 +297,19 @@ public class MainFrame extends JFrame {
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.setVisible(true);
+        assertInvariant();
     }    // helpAboutButtonClicked()
+
+    /**
+     * Asserts the correctness of the object's internal state.
+     */
+    private void assertInvariant() {
+        assert(application != null);
+        assert(manageShiftsFrame != null);
+        assert(manageVolunteersFrame != null);
+        assert(manageEmailTemplateFrame != null);
+        assert(manageRolesFrame != null);
+        assert(manageEventPropertiesFrame != null);
+        assert(eventFrame != null);
+    }    // assertInvariant()
 }    // MainFrame

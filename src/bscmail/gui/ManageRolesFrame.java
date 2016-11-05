@@ -34,11 +34,15 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
 
     /**
      * Constructs a new manage roles frame.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageRolesFrame() {
+    public ManageRolesFrame(Application application) {
         super(
-                new ManageRolePanel(),
-                new Vector<>(Application.getRoles()),
+                application,
+                new ManageRolePanel(application),
+                new Vector<>(application.getRoles()),
                 new Comparator<Role>(){
                     @Override public int compare(Role role1, Role role2) {
                         assert (role1 != null);
@@ -47,9 +51,9 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
                     }    // compare()
                 }    // Comparator
         );
-        Application.registerObserver(this);
+        application.registerObserver(this);
 
-        setTitle(Application.getApplicationName() + " - Manage Roles");
+        setTitle(application.getApplicationName() + " - Manage Roles");
     }    // ManageRolesFrame()
 
     /**
@@ -61,12 +65,12 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
     @Override
     protected void setListDataHook(List<Role> roles) throws IOException {
         assert (roles != null);
-        Application.setRoles(roles);
+        getApplication().setRoles(roles);
     }    // saveListData()
 
     public void rolesChanged(){
         try {
-            updateListData(new Vector<>(Application.getRoles()));
+            updateListData(new Vector<>(getApplication().getRoles()));
         } catch (IOException e) {
             System.out.println(e);
         }

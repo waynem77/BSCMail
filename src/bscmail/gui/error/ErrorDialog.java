@@ -53,12 +53,13 @@ public class ErrorDialog extends JDialog {
      * convenience.
      *
      * @param owner the owner of the dialog, or null if there is no owner
+     * @param title the window title
      * @param message the message to display, or null if there is no message
-     * @param cause the throwable that is the cause of the error, or null if
      * there is no cause
+     * @throws NullPointerException if {@code applicationName} is null
      */
-    public ErrorDialog(Frame owner, String message, Throwable cause) {
-        super(owner, Application.getApplicationName() + " - Error", true);
+    public ErrorDialog(Frame owner, String title, String message, Throwable cause) {
+        super(owner, title, true);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JPanel panel = new JPanel();
@@ -96,10 +97,12 @@ public class ErrorDialog extends JDialog {
      * Constructs a new error dialog with the given owner.
      *
      * @param owner the owner of the dialog, or null if there is no owner
+     * @param title the window title
      * @param message the message to display, or null if there is no message
+     * @throws NullPointerException if {@code applicationName} is null
      */
-    public ErrorDialog(Frame owner, String message) {
-        this(owner, message, null);
+    public ErrorDialog(Frame owner, String title, String message) {
+        this(owner, title, message, null);
     }    // ErrorDialog()
     
     /**

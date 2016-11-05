@@ -62,19 +62,19 @@ public class DisplayEmailFrame extends JFrame {
      * Constructs a new display email frame displaying an email constructed from
      * the given template and list of shifts.
      * 
-     * @param emailTemplate the email template; may not be null
+     * @param application the calling application; may not be null
      * @param event the event; may not be null
      * @throws NullPointerException if either parameter is null
      */
-    public DisplayEmailFrame(EmailTemplate emailTemplate, Event event) {
-        if (emailTemplate == null) {
-            throw new NullPointerException("emailTemplate may not be null");
+    public DisplayEmailFrame(Application application, Event event) {
+        if (application == null) {
+            throw new NullPointerException("application may not be null");
         }    // if
         if (event == null) {
             throw new NullPointerException("event may not be null");
         }    // if
         
-        setTitle(Application.getApplicationName() + " - Event Email Text");
+        setTitle(application.getApplicationName() + " - Event Email Text");
 
         final int COLUMNS = 24;
         final int ROWS = 80;
@@ -108,7 +108,7 @@ public class DisplayEmailFrame extends JFrame {
 
         populateRecipientLine(event);
         populateSubjectLine(event);
-        populateEmailBody(emailTemplate, event);
+        populateEmailBody(application.getEmailTemplate(), event);
 
         assertInvariant();
     }    // DisplayEmailFrame()

@@ -19,13 +19,13 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import bscmail.Application;
 
 
 /**
@@ -36,7 +36,12 @@ import bscmail.Application;
  * @author Wayne Miller
  */
 public abstract class ManageListFrame<E> extends JFrame implements ManageElementPanelObserver<E> {
-    
+
+    /**
+     * The calling application.
+     */
+    final Application application;
+
     /**
      * The list box used to display elements.
      */
@@ -85,12 +90,16 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     /**
      * Constructs a new manage list frame.
      * 
+     * @param application the calling application; may not be null
      * @param managerPanel the panel used to manipulate individual elements; may not be null
      * @param initialData the initial data for the list control; may not be null
      * @param elementComparator an element comparator
      * @throws NullPointerException if any parameter is null
      */
-    public ManageListFrame(ManageElementPanel<E> managerPanel, java.util.List<E> initialData, Comparator<E> elementComparator) {
+    public ManageListFrame(Application application, ManageElementPanel<E> managerPanel, java.util.List<E> initialData, Comparator<E> elementComparator) {
+        if (application == null) {
+            throw new NullPointerException("application may not be null");
+        }    // if
         if (managerPanel == null) {
             throw new NullPointerException("managerPanel may not be null");
         }    // if
@@ -100,6 +109,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         if (elementComparator == null) {
             throw new NullPointerException("elementComparator may not be null");
         }    // if
+        this.application = application;
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
@@ -198,7 +208,17 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         setButtonStates();
         pack();
     }    // elementValidityChanged()
-    
+
+    /**
+     * Returns the calling application.
+     *
+     * @return the calling application
+     */
+    protected final Application getApplication() {
+        assertInvariant();
+        return application;
+    }    // getApplication()
+
     /**
      * A hook run whenever the data in the list control changes. The default
      * implementation of this method does nothing. Any subclasses of
@@ -382,13 +402,14 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * Displays a message box indicating that the frame is unable to save data.
      */
     private void unableToSave(Exception e) {
-        Application.showErrorDialog(this, "Unable to save data", e);
+        application.showErrorDialog(this, "Unable to save data", e);
     }    // unableToSave()
 
     /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
+        assert (application != null);
         assert (list != null);
         assert (this.isAncestorOf(list));
         assert (upButton != null);

@@ -38,6 +38,15 @@ import org.w3c.dom.*;
  */
 public class XMLIOLayer implements IOLayer {
 
+    private final Application application;
+
+    public XMLIOLayer(Application application) {
+        if (application == null) {
+            throw new NullPointerException("applciation may not be null");
+        }    // if
+        this.application = application;
+    }    // XMLIOLayer
+
     /**
      * Constructs a list of read-writables from an XML input stream using the
      * given read-writable factory. The programmer must ensure that the given
@@ -71,7 +80,7 @@ public class XMLIOLayer implements IOLayer {
             Document document = parser.parse(input);
 
             Element inventory = document.getDocumentElement();
-            Application.setImportFileName(inventory.getTagName());
+            application.setImportFileName(inventory.getTagName());
 
             List<T> readWritables = new LinkedList<>();
             for (Node element = inventory.getFirstChild(); element != null; element = element.getNextSibling()) {

@@ -18,6 +18,7 @@
  */
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.EmailTemplate;
 import java.io.IOException;
 import javax.swing.GroupLayout;
@@ -28,7 +29,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import bscmail.Application;
 
 /**
  * A graphical interface to manage email template defined in
@@ -38,6 +38,11 @@ import bscmail.Application;
  * @author Wayne Miller
  */
 public class ManageEmailTemplateFrame extends JFrame {
+
+    /**
+     * The capping application.
+     */
+    final Application application;
 
     /**
      * The pre-schedule text text area.
@@ -51,12 +56,16 @@ public class ManageEmailTemplateFrame extends JFrame {
 
     /**
      * Constructs a new manage email template frame.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageEmailTemplateFrame() {
+    public ManageEmailTemplateFrame(Application application) {
         final int TEXT_AREA_COLS = 40;
         final int TEXT_AREA_ROWS = 12;
 
-        setTitle(Application.getApplicationName() + " - Manage Email");
+        this.application = application;
+        setTitle(application.getApplicationName() + " - Manage Email");
 
         JLabel preScheduleLabel = new JLabel("Pre-schedule text:");
         preScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
@@ -97,7 +106,7 @@ public class ManageEmailTemplateFrame extends JFrame {
         );
         pack();
 
-        EmailTemplate emailTemplate = Application.getEmailTemplate();
+        EmailTemplate emailTemplate = application.getEmailTemplate();
         preScheduleTextArea.setText(emailTemplate.getPreScheduleText());
         postScheduleTextArea.setText(emailTemplate.getPostScheduleText());
 
@@ -132,7 +141,7 @@ public class ManageEmailTemplateFrame extends JFrame {
     private void textAreasChanged() {
         EmailTemplate emailTemplate = new EmailTemplate(preScheduleTextArea.getText(), postScheduleTextArea.getText());
         try {
-            Application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
         } catch (IOException e) {
         }
     }    // textAreasChanged()

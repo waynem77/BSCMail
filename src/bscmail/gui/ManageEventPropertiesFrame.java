@@ -23,7 +23,6 @@ import bscmail.Application;
 import bscmail.*;
 import java.io.*;
 import java.util.*;
-import main.*;
 
 /**
  * A graphical interface to manage the list of event properties in
@@ -36,11 +35,15 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
 
   /**
    * Constructs a new manage event properties frame.
+   *
+   * @param application the calling application; may not be null
+   * @throws NullPointerException if {@code application} is null
    */
-  public ManageEventPropertiesFrame() {
+  public ManageEventPropertiesFrame(Application application) {
     super(
+        application,
         new ManageEventPropertiesPanel(),
-        new Vector<>(Application.getEventProperties()),
+        new Vector<>(application.getEventProperties()),    // may throw
         new Comparator<EventProperty>(){
           @Override public int compare(EventProperty EventProperty1, EventProperty EventProperty2) {
             assert (EventProperty1 != null);
@@ -50,7 +53,7 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
         }    // Comparator
     );
 
-    setTitle(Application.getApplicationName() + " - Manage Event Properties");
+    setTitle(application.getApplicationName() + " - Manage Event Properties");
   }    // ManageVolunteersFrame()
 
   /**
@@ -62,6 +65,6 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
   @Override
   protected void setListDataHook(List<EventProperty> eventProperties) throws IOException {
     assert (eventProperties != null);
-    Application.setEventProperties(eventProperties);
+    application.setEventProperties(eventProperties);
   }    // saveListData()
 } //ManageEventPropertiesFrame

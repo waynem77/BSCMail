@@ -45,8 +45,9 @@ public class Main {
      * Runs and tests the system.
      */
     private void run() {
-        Application.setTestMode(false);
-        JFrame frame = new MainFrame();
+        Application application = new Application();
+        application.setTestMode(false);
+        JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }    // run()

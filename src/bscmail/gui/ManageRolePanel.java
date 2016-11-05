@@ -19,6 +19,7 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.Role;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -27,12 +28,16 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import bscmail.Application;
 
 /**
  * Created by nathan.cordner on 10/19/16.
  */
 public class ManageRolePanel extends ManageElementPanel<Role> {
+
+    /**
+     * The calling application.
+     */
+    final Application application;
 
     /**
      * The text field displaying the role's name.
@@ -56,8 +61,16 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
 
     /**
      * Constructs a new role panel.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageRolePanel() {
+    public ManageRolePanel(Application application) {
+        if (application == null) {
+            throw new NullPointerException("application may not be null");
+        }    // if
+        this.application = application;
+
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
         nameTextField = new JTextField();
@@ -117,7 +130,7 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
         }
 
         // check for uniqueness
-        List<Role> myRoles = Application.getRoles();
+        List<Role> myRoles = application.getRoles();
         for (Role role : myRoles) {
             if (role.getName().equals(nameTextField.getText())) {
                 return false;
@@ -144,7 +157,7 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                Application.importRoles(fileChooser.getSelectedFile().getPath());
+                application.importRoles(fileChooser.getSelectedFile().getPath());
             } catch (ClassNotFoundException e) {
                 System.out.println(e);
             } catch (IOException e) {

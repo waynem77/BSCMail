@@ -21,12 +21,10 @@ package bscmail.gui;
 
 import bscmail.Role;
 import bscmail.Volunteer;
-import bscmail.gui.error.ErrorDialog;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.JFrame;
 import bscmail.Application;
 import bscmail.RolesObserver;
 import bscmail.VolunteersObserver;
@@ -42,11 +40,15 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
     
     /**
      * Constructs a new manage volunteers frame.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageVolunteersFrame() {
+    public ManageVolunteersFrame(Application application) {
         super(
-                new ManageVolunteerPanel(),
-                new Vector<>(Application.getVolunteers()),
+                application,
+                new ManageVolunteerPanel(application),
+                new Vector<>(application.getVolunteers()),
                 new Comparator<Volunteer>(){
                     @Override public int compare(Volunteer volunteer1, Volunteer volunteer2) {
                         assert (volunteer1 != null);
@@ -55,10 +57,10 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
                     }    // compare()
                 }    // Comparator
         );
-        Application.registerObserver((RolesObserver)this);
-        Application.registerObserver((VolunteersObserver)this);
+        application.registerObserver((RolesObserver)this);
+        application.registerObserver((VolunteersObserver)this);
         
-        setTitle(Application.getApplicationName() + " - Manage Volunteers");
+        setTitle(application.getApplicationName() + " - Manage Volunteers");
     }    // ManageVolunteersFrame()
     
     /**
@@ -70,7 +72,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
     @Override
     protected void setListDataHook(List<Volunteer> volunteers) throws IOException {
         assert (volunteers != null);
-        Application.setVolunteers(volunteers);
+        getApplication().setVolunteers(volunteers);
     }    // saveListData()
 
     /**
@@ -79,8 +81,8 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
      */
     @Override
     public void rolesChanged() {
-        List<Role> canonicalRoles = Application.getRoles();
-        Vector<Volunteer> volunteers = new Vector<>(Application.getVolunteers());
+        List<Role> canonicalRoles = getApplication().getRoles();
+        Vector<Volunteer> volunteers = new Vector<>(getApplication().getVolunteers());
         for (int i = 0; i < volunteers.size(); ++i) {
             Volunteer volunteer = volunteers.get(i);
             List<Role> roles = volunteer.getRoles();
@@ -99,9 +101,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
             updateListData(volunteers);
             setListDataHook(volunteers);
         } catch (IOException e) {    // try
-            ErrorDialog dialog = new ErrorDialog(this, "Unable to update volunteer roles:", e);
-            dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
+            application.showErrorDialog(this, "Unable to update volunteer roles:", e);
         }    // catch
     }    // rolesChanged()
 
@@ -110,7 +110,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
      */
     public void volunteersChanged(){
         try {
-            updateListData(new Vector<>(Application.getVolunteers()));
+            updateListData(new Vector<>(getApplication().getVolunteers()));
         } catch (IOException e) {
             System.out.println(e);
         }

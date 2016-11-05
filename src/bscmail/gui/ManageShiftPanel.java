@@ -39,6 +39,11 @@ import bscmail.RolesObserver;
 class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserver {
 
     /**
+     * The calling application.
+     */
+    final Application application;
+
+    /**
      * The text field displaying a shift's description.
      */
     private final JTextField descriptionTextField;
@@ -73,10 +78,18 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
 
     /**
      * Constructs a new shift panel.
+     *
+     * @param application the calling application; may not be null
+     * @throws NullPointerException if {@code application} is null
      */
-    public ManageShiftPanel() {
+    public ManageShiftPanel(Application application) {
         final int TEXT_COLS = 15;
         final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
+
+        if (application == null) {
+            throw new NullPointerException("application may not be null");
+        }    // if
+        this.application = application;
 
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
         layoutHelper.setLayoutManager();
@@ -99,7 +112,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
         });
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        rolesSelectList.setListData(Application.getRoleNames());
+        rolesSelectList.setListData(application.getRoleNames());
 
         layoutHelper.addComponent("Description: ", descriptionTextField);
 
@@ -117,7 +130,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
 
         shiftIsValid = elementIsValid();
 
-        Application.registerObserver(this);
+        application.registerObserver(this);
     }
 
     /**
@@ -174,7 +187,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
      */
     @Override
     public void rolesChanged() {
-        rolesSelectList.setListData(Application.getRoleNames());
+        rolesSelectList.setListData(application.getRoleNames());
         notifyObservers();
     }    // rolesChanged()
 
@@ -197,7 +210,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
      * @param shift current shift
      */
     private void loadSelectedRoles(Shift shift) {
-        List<Role> allRoles = Application.getRoles();
+        List<Role> allRoles = application.getRoles();
         List<Role> shiftRoles = shift.getRoles();
         int[] selectedIndices = new int[shiftRoles.size()];
         int selectIndex = 0;
@@ -217,7 +230,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
     private List<Role> getSelectedRoles() {
         int[] selectedIndices = rolesSelectList.getSelectedIndices();
         ArrayList<Role> selectedRoles = new ArrayList<>();
-        List<Role> allRoles = Application.getRoles();
+        List<Role> allRoles = application.getRoles();
         for (int ind : selectedIndices) {
             selectedRoles.add(allRoles.get(ind));
         }

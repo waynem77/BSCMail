@@ -19,30 +19,21 @@
 
 package bscmail;
 
-import bscmail.*;
 import bscmail.gui.error.ErrorDialog;
 import iolayer.*;
 import java.awt.Frame;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import javax.xml.parsers.*;
 import main.ReadWritable;
-import org.w3c.dom.*;
 
 /**
- * A collection of static methods for setting and returning application-wide
- * properties and objects.
+ * An application controls application-wide properties and objects.
  * 
  * @since 2.0
  * @author Wayne Miller
  */
 public class Application {
-    
-    /**
-     * The application singleton instance.
-     */
-    private static final Application theApplication = new Application();
 
     /*
      * Private class properties.
@@ -248,10 +239,9 @@ public class Application {
 
     
     /**
-     * Constructs a new application. This constructor is private to prevent
-     * uncontrolled initialization.
+     * Constructs a new application.
      */
-    private Application() throws ExceptionInInitializerError {
+    public Application() throws ExceptionInInitializerError {
         currentImportFile = "";
 
         try {
@@ -279,33 +269,37 @@ public class Application {
             
             testDialogs = new LinkedList<>();
 
-
-
+            currentImportFile = "";
         } catch (IOException | ClassNotFoundException e) {    // try
             throw new ExceptionInInitializerError(e);
         }    // catch
         assertInvariant();
     }    // Application()
 
-    /*
-     * Public static methods.
+    /**
+     * Sets the name of the current import file.
+     *
+     * @param fileName the name of the new import file; may not be null
+     * @throws NullPointerException if {@code fileName] is null
      */
-
+    public void setImportFileName(String fileName){
+        assertInvariant();
+        if (fileName == null) {
+            throw new NullPointerException("fileName may not be null");
+        }    // if
+        currentImportFile = fileName;
+        assertInvariant();
+    }    // setImportFileName()
 
     /**
-     * Methods to get and set file name for current import file
+     * Returns the name of the current import file.
+     *
+     * @return the name of the current import file.
      */
-    public static void setImportFileName(String fileName){
-        if (theApplication != null)
-            theApplication.currentImportFile = fileName;
-    }
-
-    public static String getImportFileName(){
-        if (theApplication != null)
-            return theApplication.currentImportFile;
-        else
-            return "";
-    }
+    public String getImportFileName(){
+        assertInvariant();
+        return currentImportFile;
+    }    // getImportFileName();
 
     /**
      * Sets or unsets test mode.  If test mode is set, the application will
@@ -314,17 +308,19 @@ public class Application {
      * 
      * @param testMode sets test mode if true; unsets test mode if false
      */
-    public static void setTestMode(boolean testMode) {
-        theApplication.properties.setTestMode(testMode);
+    public void setTestMode(boolean testMode) {
+        assertInvariant();
+        properties.setTestMode(testMode);
+        assertInvariant();
     }    // setTestMode()
 
     /**
      * Returns the name of the application.
      * @return the name of the application.
      */
-    public static String getApplicationName() {
-        String property = theApplication.properties.get(PropertyKey.APPLICATION_NAME);
-        assert (property != null);
+    public String getApplicationName() {
+        assertInvariant();
+        String property = properties.get(PropertyKey.APPLICATION_NAME);
         return property;
     }    // getApplicationName()
     
@@ -332,9 +328,9 @@ public class Application {
      * Returns the application version.
      * @return the application version
      */
-    public static String getVersion() {
-        String property = theApplication.properties.get(PropertyKey.APPLICATION_VERSION);
-        assert (property != null);
+    public String getVersion() {
+        assertInvariant();
+        String property = properties.get(PropertyKey.APPLICATION_VERSION);
         return property;
     }    // getVersion()
     
@@ -342,9 +338,9 @@ public class Application {
      * Returns a copyright string for the application.
      * @return a copyright string for the application
      */
-    public static String getCopyright() {
-        String property = theApplication.properties.get(PropertyKey.APPLICATION_COPYRIGHT);
-        assert (property != null);
+    public String getCopyright() {
+        assertInvariant();
+        String property = properties.get(PropertyKey.APPLICATION_COPYRIGHT);
         return property;
     }    // getCopyright()
     
@@ -355,13 +351,14 @@ public class Application {
      *
      * @return the list of defined volunteer shifts
      */
-    public static List<Shift> getShifts() {
-        theApplication.assertInvariant();
-        List<Shift> clone = new ArrayList<>();
-        for (Shift shift : theApplication.shifts) {
-            clone.add(shift.clone());
+    public List<Shift> getShifts() {
+        assertInvariant();
+        assertInvariant();
+        List<Shift> clones = new ArrayList<>();
+        for (Shift shift : shifts) {
+            clones.add(shift.clone());
         }    // for
-        return clone;
+        return clones;
     }    // getShifts()
     
     /**
@@ -376,25 +373,25 @@ public class Application {
      * element
      * @throws IOException if an I/O error occurs
      */
-    public static void setShifts(List<Shift> shifts) throws IOException {
-        theApplication.assertInvariant();
+    public void setShifts(List<Shift> shifts) throws IOException {
+        assertInvariant();
         if (shifts == null) {
             throw new NullPointerException("shifts may not be null");
         }    // if
         if (shifts.contains(null)) {
             throw new NullPointerException("shifts may not contain null");
         }    // if
-        theApplication.shifts = new LinkedList<>();
+        this.shifts = new LinkedList<>();
         for (Shift shift : shifts) {
             Shift clone = shift.clone();
             clone.setVolunteer(null);
-            theApplication.shifts.add(clone);
+            this.shifts.add(clone);
         }    // for
-        for (ShiftsObserver observer : theApplication.shiftsObservers) {
+        for (ShiftsObserver observer : shiftsObservers) {
             observer.shiftsChanged();
         }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.shifts, theApplication.properties.get(PropertyKey.SHIFTS_FILE));
+        assertInvariant();
+        writeList(this.shifts, properties.get(PropertyKey.SHIFTS_FILE));
     }    // setShifts()
 
     /**
@@ -403,13 +400,14 @@ public class Application {
      *
      * @return the list of defined volunteers
      */
-    public static List<Volunteer> getVolunteers() {
-        theApplication.assertInvariant();
-        List<Volunteer> clone = new ArrayList<>();
-        for (Volunteer volunteer : theApplication.volunteers) {
-            clone.add(volunteer.clone());
+    public List<Volunteer> getVolunteers() {
+        assertInvariant();
+        assertInvariant();
+        List<Volunteer> clones = new ArrayList<>();
+        for (Volunteer volunteer : volunteers) {
+            clones.add(volunteer.clone());
         }    // for
-        return clone;
+        return clones;
     }    // getVolunteers()
 
     /**
@@ -423,41 +421,48 @@ public class Application {
      * null element
      * @throws IOException if an I/O error occurs
      */
-    public static void setVolunteers(List<Volunteer> volunteers) throws IOException {
-        theApplication.assertInvariant();
+    public void setVolunteers(List<Volunteer> volunteers) throws IOException {
+        assertInvariant();
         if (volunteers == null) {
             throw new NullPointerException("volunteers may not be null");
         }    // if
         if (volunteers.contains(null)) {
             throw new NullPointerException("volunteers may not contain null");
         }    // if
-        theApplication.volunteers = new LinkedList<>();
+        this.volunteers = new LinkedList<>();
         for (Volunteer volunteer : volunteers) {
-            theApplication.volunteers.add(volunteer.clone());
+            this.volunteers.add(volunteer.clone());
         }    // for
-        for (VolunteersObserver observer : theApplication.volunteersObservers) {
+        for (VolunteersObserver observer : volunteersObservers) {
             observer.volunteersChanged();
         }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
+        assertInvariant();
+        writeList(this.volunteers, properties.get(PropertyKey.VOLUNTEERS_FILE));
     }    // setVolunteers()
 
-    public static void importVolunteers(String fileName) throws IOException, ClassNotFoundException {
-        theApplication.assertInvariant();
+    /**
+     * Imports volunteers from a file and adds them to the list of defined volunteers.
+     *
+     * @param fileName the filename of the file to import
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if a serialization failure occurs
+     */
+    public void importVolunteers(String fileName) throws IOException, ClassNotFoundException {
+        assertInvariant();
         if (fileName == null) {
             throw new NullPointerException("file name may not be null");
         }    // if
-        List<Volunteer> importedVolunteers = theApplication.readVolunteers(fileName);
+        List<Volunteer> importedVolunteers = readVolunteers(fileName);
 
         if (!importedVolunteers.contains(null)) {
             for (Volunteer volunteer : importedVolunteers) {
-                theApplication.volunteers.add(volunteer.clone());
+                volunteers.add(volunteer.clone());
             }    // for
-            for (VolunteersObserver observer : theApplication.volunteersObservers) {
+            for (VolunteersObserver observer : volunteersObservers) {
                 observer.volunteersChanged();
             }    // for
-            theApplication.assertInvariant();
-            theApplication.writeList(theApplication.volunteers, theApplication.properties.get(PropertyKey.VOLUNTEERS_FILE));
+            assertInvariant();
+            writeList(volunteers, properties.get(PropertyKey.VOLUNTEERS_FILE));
         }
     }   // importVolunteers()
 
@@ -467,26 +472,27 @@ public class Application {
      *
      * @return the list of defined roles
      */
-    public static List<Role> getRoles() {
-        theApplication.assertInvariant();
-        List<Role> clone = new ArrayList<>();
-        for (Role role : theApplication.roles) {
-            clone.add(role.clone());
+    public List<Role> getRoles() {
+        assertInvariant();
+        List<Role> clones = new ArrayList<>();
+        for (Role role : roles) {
+            clones.add(role.clone());
         }    // for
-        return clone;
+        return clones;
     }    // getRoles()
 
     /**
+     * Returns a list containing the names of all the defined roles.
      *
      * @return a list of Role names for display
      */
-    public static Object[] getRoleNames() {
+    public Object[] getRoleNames() {
         List<String> names = new ArrayList<>();
         for (Role role : getRoles()) {
             names.add(role.getName());
         }
         return names.toArray();
-    }
+    }    // getRoleNames()
 
     /**
      * Sets the list of defined roles. The argument is copied to the
@@ -499,41 +505,48 @@ public class Application {
      * null element
      * @throws IOException if an I/O error occurs
      */
-    public static void setRoles(List<Role> roles) throws IOException {
-        theApplication.assertInvariant();
+    public void setRoles(List<Role> roles) throws IOException {
+        assertInvariant();
         if (roles == null) {
             throw new NullPointerException("roles may not be null");
         }    // if
         if (roles.contains(null)) {
             throw new NullPointerException("roles may not contain null");
         }    // if
-        theApplication.roles = new LinkedList<>();
+        this.roles = new LinkedList<>();
         for (Role role : roles) {
-            theApplication.roles.add(role.clone());
+            this.roles.add(role.clone());
         }    // for
-        for (RolesObserver observer : theApplication.rolesObservers) {
+        for (RolesObserver observer : rolesObservers) {
             observer.rolesChanged();
         }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+        assertInvariant();
+        writeList(this.roles, properties.get(PropertyKey.ROLES_FILE));
     }    // setRoles()
 
-    public static void importRoles(String fileName) throws IOException, ClassNotFoundException {
-        theApplication.assertInvariant();
+    /**
+     * Imports roles from a file and adds them to the list of defined roles.
+     *
+     * @param fileName the filename of the file to import
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if a serialization failure occurs
+     */
+    public void importRoles(String fileName) throws IOException, ClassNotFoundException {
+        assertInvariant();
         if (fileName == null) {
             throw new NullPointerException("file name may not be null");
         }    // if
-        List<Role> importedRoles = theApplication.readRoles(fileName);
+        List<Role> importedRoles = readRoles(fileName);
         if(!importedRoles.contains(null)) {
             for (Role role : importedRoles) {
-                if (!theApplication.roles.contains(role))
-                    theApplication.roles.add(role.clone());
+                if (! roles.contains(role))
+                    roles.add(role.clone());
             }    // for
-            for (RolesObserver observer : theApplication.rolesObservers) {
+            for (RolesObserver observer : rolesObservers) {
                 observer.rolesChanged();
             }    // for
-            theApplication.assertInvariant();
-            theApplication.writeList(theApplication.roles, theApplication.properties.get(PropertyKey.ROLES_FILE));
+            assertInvariant();
+            writeList(roles, properties.get(PropertyKey.ROLES_FILE));
         }
     }   // importRoles()
 
@@ -542,9 +555,9 @@ public class Application {
      * 
      * @return the defined email template
      */
-    public static EmailTemplate getEmailTemplate() {
-        theApplication.assertInvariant();
-        return theApplication.emailTemplate;
+    public EmailTemplate getEmailTemplate() {
+        assertInvariant();
+        return emailTemplate.clone();
     }    // getEmailTemplate()
 
     /**
@@ -554,16 +567,16 @@ public class Application {
      * @throws NullPointerException
      * @throws IOException if an I/O error occurs
      */
-    public static void setEmailTemplate(EmailTemplate emailTemplate) throws IOException {
-        theApplication.assertInvariant();
+    public void setEmailTemplate(EmailTemplate emailTemplate) throws IOException {
+        assertInvariant();
         if (emailTemplate == null) {
             throw new NullPointerException("emailTemplate may not be null");
         }    // if
-        theApplication.emailTemplate = emailTemplate.clone();
+        this.emailTemplate = emailTemplate.clone();
         List<EmailTemplate> wrapper = new LinkedList<>();
-        wrapper.add(emailTemplate);
-        theApplication.assertInvariant();
-        theApplication.writeList(wrapper, theApplication.properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
+        wrapper.add(this.emailTemplate);
+        assertInvariant();
+        writeList(wrapper, properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
     }    // setEmailTemplate()
 
     /**
@@ -572,13 +585,13 @@ public class Application {
      *
      * @return the list of defined event properties
      */
-    public static List<EventProperty> getEventProperties() {
-        theApplication.assertInvariant();
-        List<EventProperty> clone = new ArrayList<>();
-        for (EventProperty eventProperty : theApplication.eventProperties) {
-            clone.add(eventProperty.clone());
+    public List<EventProperty> getEventProperties() {
+        assertInvariant();
+        List<EventProperty> clones = new ArrayList<>();
+        for (EventProperty eventProperty : eventProperties) {
+            clones.add(eventProperty.clone());
         }    // for
-        return clone;
+        return clones;
     }    // getEventProperties()
 
     /**
@@ -594,24 +607,24 @@ public class Application {
      * @throws IOException if an I/O error occurs
      */
 
-    public static void setEventProperties(List<EventProperty> eventProperties) throws IOException {
-        theApplication.assertInvariant();
+    public void setEventProperties(List<EventProperty> eventProperties) throws IOException {
+        assertInvariant();
         if (eventProperties == null) {
             throw new NullPointerException("Event Properties may not be null");
         }    // if
         if (eventProperties.contains(null)) {
             throw new NullPointerException("Event Properties may not contain null");
         }    // if
-        theApplication.eventProperties = new LinkedList<>();
+        this.eventProperties = new LinkedList<>();
         for (EventProperty eventProperty : eventProperties) {
             EventProperty clone = eventProperty.clone();
-            theApplication.eventProperties.add(clone);
+            this.eventProperties.add(clone);
         }    // for
-        for (EventPropertyObserver observer : theApplication.eventPropertyObservers) {
+        for (EventPropertyObserver observer : eventPropertyObservers) {
             observer.eventPropertiesChanged();
         }    // for
-        theApplication.assertInvariant();
-        theApplication.writeList(theApplication.eventProperties, theApplication.properties.get(PropertyKey.EVENT_PROPERTY_FILE));
+        assertInvariant();
+        writeList(this.eventProperties, properties.get(PropertyKey.EVENT_PROPERTY_FILE));
     }    // setEventProperties()
 
 
@@ -621,13 +634,13 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public static void registerObserver(ShiftsObserver observer) {
-        theApplication.assertInvariant();
+    public void registerObserver(ShiftsObserver observer) {
+        assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        theApplication.shiftsObservers.add(observer);
-        theApplication.assertInvariant();
+        shiftsObservers.add(observer);
+        assertInvariant();
     }    // registerObserver()
 
     /**
@@ -636,13 +649,13 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public static void registerObserver(VolunteersObserver observer) {
-        theApplication.assertInvariant();
+    public void registerObserver(VolunteersObserver observer) {
+        assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        theApplication.volunteersObservers.add(observer);
-        theApplication.assertInvariant();
+        volunteersObservers.add(observer);
+        assertInvariant();
     }    // registerObserver()
 
     /**
@@ -651,13 +664,13 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public static void registerObserver(RolesObserver observer) {
-        theApplication.assertInvariant();
+    public void registerObserver(RolesObserver observer) {
+        assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        theApplication.rolesObservers.add(observer);
-        theApplication.assertInvariant();
+        rolesObservers.add(observer);
+        assertInvariant();
     }    // registerObserver()
 
 
@@ -667,13 +680,13 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public static void registerObserver(EmailTemplateObserver observer) {
-        theApplication.assertInvariant();
+    public void registerObserver(EmailTemplateObserver observer) {
+        assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        theApplication.emailTemplateObservers.add(observer);
-        theApplication.assertInvariant();
+        emailTemplateObservers.add(observer);
+        assertInvariant();
     }    // registerObserver()
 
     /**
@@ -682,13 +695,13 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public static void registerObserver(EventPropertyObserver observer) {
-        theApplication.assertInvariant();
+    public void registerObserver(EventPropertyObserver observer) {
+        assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        theApplication.eventPropertyObservers.add(observer);
-        theApplication.assertInvariant();
+        eventPropertyObservers.add(observer);
+        assertInvariant();
     }    // registerObserver()
     
     /**
@@ -700,9 +713,9 @@ public class Application {
      * underlying cause
      * @since 2.0.2
      */
-    public static void showErrorDialog(Frame owner, String message, Throwable cause) {
-        theApplication.assertInvariant();
-        ErrorDialog dialog = new ErrorDialog(owner, message, cause);
+    public void showErrorDialog(Frame owner, String message, Throwable cause) {
+        assertInvariant();
+        ErrorDialog dialog = new ErrorDialog(owner, getApplicationName() + " - Error", message, cause);
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
     }    // showErrorDialog()
@@ -714,9 +727,9 @@ public class Application {
      * @param message the message in the dialog, or null if there is no message
      * @since 2.0.2
      */
-    public static void showErrorDialog(Frame owner, String message) {
-        theApplication.assertInvariant();
-        Application.showErrorDialog(owner, message, null);
+    public void showErrorDialog(Frame owner, String message) {
+        assertInvariant();
+        showErrorDialog(owner, message, null);
     }    // showErrorDialog()
     
     /*
@@ -729,7 +742,7 @@ public class Application {
      * @return the default I/O layer used for reading and writing data
      */
     private IOLayer getIOLayer() {
-        return new XMLIOLayer();
+        return new XMLIOLayer(this);
     }    // getIOLayer()
     
     /**
@@ -853,8 +866,9 @@ public class Application {
         assert (testDialogs != null);
         assert (! testDialogs.contains(null));
         assert (properties.getTestMode() ? true : testDialogs.isEmpty());
+        assert (currentImportFile != null);
     }    // assertInvariant()
-    
+
     /**
      * Returns true if the elements of {@link shifts} have no volunteers.
      * 
