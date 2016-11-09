@@ -19,10 +19,19 @@
 
 package iolayer;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
-import main.*;
+import java.util.Map;
+import main.ReadWritable;
+import main.ReadWritableFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -71,94 +80,144 @@ public class SerializingIOLayerTest extends IOLayerTest {
             return NotSerializable.getFactory();
         }    // getReadWritableFactory()
    }    // NotSerializable
-    
-    /**
-     * Returns the I/O layer being tested.
-     * 
-     * @return the I/O layer being tested
-     */
-    @Override
-    protected SerializingIOLayer getIOLayer() {
-        return new SerializingIOLayer();
-    }    // getIOLayer()
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("SerializingIOLayer");
-        System.out.println("==================");
-    }    // setUpClass()
 
     /**
-     * Prints unit test footer.
+     * File used to store XML data for tests.
      */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
+    private File tempfile;
+
+    /**
+     * The initial data that should be stored in the I/O layer.
+     */
+    private final List<RWElement> seedList = Arrays.asList(
+            new RWElement("foo", 1),
+            new RWElement("bar", 2),
+            new RWElement("baz", 3));
+
+    /**
+     * Returns the serializing I/O layer being tested.
+     * 
+     * @return the serializing I/O layer being tested
+     * @throws IOException if an I/O exception occurs while constructing the
+     * I/O layer
+     */
+    @Override
+    protected SerializingIOLayer<RWElement> getIOLayer() throws IOException {
+        return new SerializingIOLayer<>(tempfile.getCanonicalPath(), RWElement.getFactory());
+    }    // getIOLayer()
+
+    /**
+     * Returns true, indicating that the data persists beyond the lifetime of
+     * the serializing I/O layer being tested.
+     *
+     * @return true
+     */
+    @Override
+    protected boolean dataIsPersistent() {
+        return true;
+    }    // dataIsPersistemt()
+    
+    /**
+     * Creates a temporary file, marks it to be deleted upon application exit,
+     * and places a reference to it in {@link tempfile}.
+     */
+    @Before
+    public void setUpFileStorage() throws IOException {
+        tempfile = File.createTempFile("bscmailtest", null);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(tempfile.getCanonicalPath());
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(seedList);
+            objectOutputStream.flush();
+        }
+    }    // setUpFileStorage()
+
+    /**
+     * Sets tempfile to null.
+     */
+    @After
+    public void removeFileStorage() {
+        tempfile.delete();
+        tempfile = null;
+    }    // removeFileStorage()
+
 
     /*
      * Unit tests
      */
-    
-    /**
-     * Tests that {@link SerializingIOLayer#SerializingIOLayer()} does not throw
-     * an exception.
-     */
-    @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
-        
-        IOLayer ioLayer = new SerializingIOLayer();
-    }    // testConstructorNoException()
-    
-    
-    
 
     /**
-     * Tests that {@link SerializingIOLayer#writeAll(Writer, List)} correctly
-     * serializes its argument.
+     * Tests that
+     * {@link SerializingIOLayer#SerializingIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * throws a {@link NullPointerException} when pathname is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenPathnameIsNull() {
+        String pathname = null;
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+
+        IOLayer<RWElement> ioLayer = new SerializingIOLayer<>(pathname, factory);
+    }    // constructorThrowsExceptionWhenPathnameIsNull()
+
+    /**
+     * Tests that
+     * {@link SerializingIOLayer#SerializingIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * throws a {@link NullPointerException} when factory is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenFactoryIsNull() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = null;
+
+        IOLayer<RWElement> ioLayer = new SerializingIOLayer<>(pathname, factory);
+    }    // constructorThrowsExceptionWhenFactoryIsNull()
+
+    /**
+     * Tests that
+     * {@link SerializingIOLayer#SerializingIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * does not throw an exception when no parameter is null.
      */
     @Test
-    public void testWriteAll() throws IOException {
-        System.out.println("writeAll");
-        
-        List<RWElement> readWritables = Arrays.asList(new RWElement("foo", 1), new RWElement("bar", 2), new RWElement("baz", 3));
-        
-        byte[] expected = null;
+    public void constructorDoesNotThrowAnExceptionWhenNoParameterIsNull() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+
+        IOLayer<RWElement> ioLayer = new SerializingIOLayer<>(pathname, factory);
+    }    // constructorDoesNotThrowAnExceptionWhenNoParameterIsNull()
+
+    /**
+     * Tests that {@link SerializingIOLayer} correctly processes the data file.
+     */
+    public void layerCorrectlyProcessesXML() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+        IOLayer<RWElement> ioLayer = new SerializingIOLayer<>(pathname, factory);
+
+        List<RWElement> received = ioLayer.getAll();
+
+        List<RWElement> expected = seedList;
+        assertEquals(expected, received);
+    }    // layerCorrectlyProcessesXML()
+
+    /**
+     * Tests that {@link SerializingIOLayer#setAll(java.util.List)} correctly
+     * serializes its objects.
+     */
+    @Test
+    public void setAllSerializes() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+        IOLayer<RWElement> ioLayer = new SerializingIOLayer<>(pathname, factory);
+        List<RWElement> list = Arrays.asList(new RWElement("aaa", 10), new RWElement("bbb", 100));
+
+        ioLayer.setAll(list);
+
         try (ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                ObjectOutputStream output = new ObjectOutputStream(buffer)) {
-            output.writeObject(readWritables);
-            expected = buffer.toByteArray();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(buffer)) {
+            objectOutputStream.writeObject(list);
+            objectOutputStream.flush();
+            byte[] expected = buffer.toByteArray();
+            byte[] received = Files.readAllBytes(Paths.get(pathname));
+            Assert.assertArrayEquals(expected, received);
         }    // try
-        assert (expected != null);
-
-        byte[] received = null;
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-            IOLayer ioLayer = getIOLayer();
-            ioLayer.writeAll(output, readWritables);
-            received = output.toByteArray();
-        }    // try
-        
-        assertArrayEquals(expected, received);
-    }    // testWriteAll()
-
-    /**
-     * Tests that {@link SerializingIOLayer#writeAll(Writer, List)} throws a
-     * {@link NotSerializableException} if its argument is not serializable.
-     * serializes its argument.
-     */
-    @Test(expected = NotSerializableException.class)
-    public void testWriteAllNotSerializable() throws IOException {
-        System.out.println("writeAll");
- 
-        List<NotSerializable> readWritables = Arrays.asList(new NotSerializable("foo", 1), new NotSerializable("bar", 2), new NotSerializable("baz", 3));
-        try (OutputStream output = new ByteArrayOutputStream()) {
-            IOLayer ioLayer = getIOLayer();
-            ioLayer.writeAll(output, readWritables);
-        }    // try
-    }    // testWriteAllNotSerializable()
-    
+    }    // setAllSerializes()
 }    // SerializingIOLayerTest

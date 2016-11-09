@@ -19,49 +19,40 @@
 
 package iolayer;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.List;
 import main.ReadWritable;
-import main.ReadWritableFactory;
 
 /**
- * Represents an I/O layer that reads and writes {@link ReadWritable}s to disk.
- * 
+ * Represents an I/O layer that reads and writes {@link ReadWritable}s to
+ * storage. The manner of storage is defined by the individual implementation.
+ * Data may or may not persist beyond the lifetime of the object; this is
+ * defined by the implementation.
+ *
  * @author Wayne Miller
+ * @param <T> the type of read-writable managed by this I/O layer
  * @since 2.1
  */
-public interface IOLayer {
+public interface IOLayer<T extends ReadWritable> {
 
     /**
-     * Constructs a list of read-writables from an input stream using the given
-     * read-writable factory. The programmer must ensure that the given factory
-     * makes sense for the given file.
-     * 
-     * If the I/O layer is unable to create a read-writable from the input
-     * stream, it will insert a null into the appropriate place in the list.  If
-     * the I/O layer is unable to create any read-writables, it will return
-     * null.
+     * Returns the list of read-writables currently stored by the I/O layer.
      *
-     * @param <T> the type of read-writable to construct
-     * @param input the input stream; may not be null
-     * @param factory the read-writable factory to use; may not be null
-     * @return a list of read-writables constructed from {@code filename} using
-     * {@code factory}, or null if no read-writables could be constructed
-     * @throws NullPointerException if either parameter is null
+     * @return the list of read-writables currently stored by the I/O layer
      * @throws IOException if an I/O error occurs
      */
-    public <T extends ReadWritable> List<T> readAll(InputStream input, ReadWritableFactory<T> factory) throws IOException;
+    public List<T> getAll() throws IOException;
 
     /**
-     * Writes the given list of read-writables to an output stream.
+     * Sets the list of read-writables stored by the I/O layer to the given
+     * list.
      *
-     * @param output the output stream; may not be null
-     * @param readWritables the list of read-writables; may not be null, nor
-     * contain any null elements
-     * @throws NullPointerException if either parameter is null, or if
-     * {@code readWritables} contains a null element
+     * @param list the list of read-writables to store; may not be null nor
+     * contain a null element
+     * @throws NullPointerException if {@code list} is null or contains a null
+     * element
      * @throws IOException if an I/O error occurs
      */
-    public void writeAll(OutputStream output, List<? extends ReadWritable> readWritables) throws IOException;
+    public void setAll(List<T> list) throws IOException;
     
 }    // IOLayer

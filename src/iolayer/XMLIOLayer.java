@@ -19,69 +19,92 @@
 
 package iolayer;
 
-import bscmail.Application;
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import main.*;
-import org.w3c.dom.*;
+import main.ReadWritable;
+import main.ReadWritableFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
- * An I/O layer that reads and writes {@link ReadWritable}s to and from XML
- * files.
+ * An I/O layer that reads and writes {@link ReadWritable}s to and from an XML
+ * file.  The data persists in the file, beyond the lifetime of the object.
  * 
  * @author Wayne Miller
+ * @param <T> the type of read-writable managed by this I/O layer
  * @since 2.1
  */
-public class XMLIOLayer implements IOLayer {
-
-    private final Application application;
-
-    public XMLIOLayer(Application application) {
-        if (application == null) {
-            throw new NullPointerException("applciation may not be null");
-        }    // if
-        this.application = application;
-    }    // XMLIOLayer
+public class XMLIOLayer<T extends ReadWritable> implements IOLayer<T> {
 
     /**
-     * Constructs a list of read-writables from an XML input stream using the
-     * given read-writable factory. The programmer must ensure that the given
-     * factory makes sense for the given file.
-     *
-     * If the I/O layer is unable to create a read-writable from the input
-     * stream, it will insert a null into the appropriate place in the list.  If
-     * the I/O layer is unable to create any read-writables, it will return
-     * null.
-     *
-     * @param <T> the type of read-writable to construct
-     * @param input the input stream; may not be null
-     * @param factory the read-writable factory to use; may not be null
-     * @return a list of read-writables constructed from {@code filename} using
-     * {@code factory}, or null if no read-writables could be constructed
-     * @throws NullPointerException if either parameter is null
-     * @throws IOException if an I/O error occurs
+     * The pathname of the XML file used to store the read-writables
      */
-    @Override
-    public <T extends ReadWritable> List<T> readAll(InputStream input, ReadWritableFactory<T> factory) throws IOException {
-        if (input == null) {
-            throw new NullPointerException("input may not be null");
+    private final String pathname;
+
+    /**
+     * The factory used to create read-writables from property maps.
+     */
+    private final ReadWritableFactory<T> factory;
+
+    /**
+     * Constructs a new XML file I/O layer. The pathname of the XML file and the
+     * factory used to create the read-writables are supplied as parameters. It
+     * is the responsibility of the programmer to ensure that both parameters
+     * make sense. (Isn't it always?)
+     *
+     * @param pathname the pathname of the XML file used to store the
+     * read-writables; may not be null
+     * @param factory the factory used to construct read-writables; may not be
+     * null
+     * @throws NullPointerException if either parameter is null
+     */
+    public XMLIOLayer(String pathname, ReadWritableFactory<T> factory) {
+        if (pathname == null) {
+            throw new NullPointerException("pathname may not be null");
         }    // if
         if (factory == null) {
             throw new NullPointerException("factory may not be null");
         }    // if
 
+        this.pathname = pathname;
+        this.factory = factory;
+        assertInvariant();
+    }    // XMLIOLayer
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<T> getAll() throws IOException {
+        assertInvariant();
+        FileInputStream inputStream = new FileInputStream(pathname);
+
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = documentBuilderFactory.newDocumentBuilder();
-            Document document = parser.parse(input);
+            Document document = parser.parse(inputStream);
 
             Element inventory = document.getDocumentElement();
-            application.setImportFileName(inventory.getTagName());
-
             List<T> readWritables = new LinkedList<>();
             for (Node element = inventory.getFirstChild(); element != null; element = element.getNextSibling()) {
                 Map<String, Object> properties = nodeToPropertyMap(element);
@@ -89,43 +112,34 @@ public class XMLIOLayer implements IOLayer {
                     readWritables.add(factory.constructReadWritable(properties));
                 }    // if
             }    // for element
-            
+
+            assertInvariant();
             return readWritables;
         } catch (ParserConfigurationException e) {    // try
             throw new IOException("Unable to configure XML parser", e);
-        } catch (Exception e) {    // catch
-            System.out.println("Something went wrong!\n" + e.getMessage());
-            return null;
+        } catch (SAXException e) {    // catch
+            throw new IOException("Unable to parse file", e);
         }    // catch
-    }    // readAll()
+    }    // getAll()
 
     /**
-     * Writes the given list of read-writables as XML to an output stream.
-     *
-     * @param output the output stream; may not be null
-     * @param readWritables the list of read-writables; may not be null, nor
-     * contain any null elements
-     * @throws NullPointerException if either parameter is null, or if
-     * {@code readWritables} contains a null element
-     * @throws IOException if an I/O error occurs
+     * {@inheritDoc}
      */
     @Override
-    public void writeAll(OutputStream output, List<? extends ReadWritable> readWritables) throws IOException {
-        if (output == null) {
-            throw new NullPointerException("output may not be null");
+    public void setAll(List<T> list) throws IOException {
+        assertInvariant();
+        if (list == null) {
+            throw new NullPointerException("list may not be null");
         }    // if
-        if (readWritables == null) {
-            throw new NullPointerException("readWritables may not be null");
-        }    // if
-        if (readWritables.contains(null)) {
-            throw new NullPointerException("readWritables may not contain null");
+        if (list.contains(null)) {
+            throw new NullPointerException("list may not contain null");
         }    // if
         
         String elementName;
-        if (readWritables.isEmpty()) {
+        if (list.isEmpty()) {
             elementName = "element";
         } else {    // if
-            ReadWritable element = readWritables.get(0);
+            ReadWritable element = list.get(0);
             elementName = element.getClass().getSimpleName().toLowerCase();
         }    // else
         
@@ -137,12 +151,13 @@ public class XMLIOLayer implements IOLayer {
             Element root = document.createElement(pluralize(elementName));
             document.appendChild(root);
             
-            for (ReadWritable readWritable : readWritables) {
+            for (ReadWritable readWritable : list) {
                 Element element = createElement(document, elementName, readWritable);
                 root.appendChild(element);
             }    // for
 
-            writeDocument(document, output);
+            FileOutputStream outputStream = new FileOutputStream(pathname);
+            writeDocument(document, outputStream);
         } catch (ParserConfigurationException e) {    // try
             throw new IOException("Unable to configure XML parser", e);
         } catch (TransformerConfigurationException e) {    // catch
@@ -150,7 +165,7 @@ public class XMLIOLayer implements IOLayer {
         } catch (TransformerException e) {    // catch
             throw new IOException("Unrecoverable error during XML transformation", e);
         }    // catch
-     }    // writeAll()
+    }
     
     /**
      * Converts a DOM node into a read-writable property map.
@@ -277,4 +292,11 @@ public class XMLIOLayer implements IOLayer {
         transformer.transform(source, result);
     }    // writeDocument()
 
+    /**
+     * Asserts the correctness of the object's internal state.
+     */
+    private void assertInvariant() {
+        assert (pathname != null);
+        assert (factory != null);
+    }    // assertInvariant()
 }    // XMLIOLayer

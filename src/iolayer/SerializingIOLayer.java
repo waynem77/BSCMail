@@ -19,47 +19,74 @@
 
 package iolayer;
 
-import java.io.*;
-import java.util.*;
-import main.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import main.ReadWritable;
+import main.ReadWritableFactory;
 
 /**
  * An I/O layer that serializes and unserializes {@link ReadWritable}s to and
- * from binary files.
- * 
+ * from binary storage files. The data persists in the file, beyond the lifetime
+ * of the object.
+ *
+ * This I/O layer may only be used with {@link Serializable} read-writables.
+ *
  * @author Wayne Miller
+ * @param <T> the type of read-writable managed by this I/O layer
  * @since 2.1
  */
-public class SerializingIOLayer implements IOLayer {
+public class SerializingIOLayer<T extends ReadWritable & Serializable> implements IOLayer<T> {
 
     /**
-     * Unserializes a list of read-writables from a binary input stream.
-     *
-     * If the I/O layer is unable to create a read-writable from the input
-     * stream, it will insert a null into the appropriate place in the list.  If
-     * the I/O layer is unable to create any read-writables, it will return
-     * null.
-     *
-     * @param <T> the type of read-writable to construct
-     * @param input the input stream; may not be null
-     * @param factory the read-writable factory to use; may not be null
-     * @return a list of read-writables constructed from {@code filename}, or
-     * null if no read-writables could be constructed
-     * @throws NullPointerException if either parameter is null
-     * @throws IOException if an I/O error occurs
+     * The pathname of the XML file used to store the read-writables
      */
-    @Override
-    public <T extends ReadWritable> List<T> readAll(InputStream input, ReadWritableFactory<T> factory) throws IOException {
-        if (input == null) {
-            throw new NullPointerException("input may not be null");
+    private final String pathname;
+
+    /**
+     * The factory used to create read-writables from property maps.
+     */
+    private final ReadWritableFactory<T> factory;
+
+    /**
+     * Constructs a new serializing I/O layer. The pathname of the storage file
+     * and the factory used to create the read-writables are supplied as
+     * parameters. It is the responsibility of the programmer to ensure that
+     * both parameters make sense. (Isn't it always?)
+     *
+     * @param pathname the pathname of the storage file used to store the
+     * read-writables; may not be null
+     * @param factory the factory used to construct read-writables; may not be
+     * null
+     * @throws NullPointerException if either parameter is null
+     */
+    public SerializingIOLayer(String pathname, ReadWritableFactory<T> factory) {
+        if (pathname == null) {
+            throw new NullPointerException("pathname may not be null");
         }    // if
         if (factory == null) {
             throw new NullPointerException("factory may not be null");
         }    // if
-        
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(input)) {
+
+        this.pathname = pathname;
+        this.factory = factory;
+        assertInvariant();
+    }    // XMLIOLayer
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<T> getAll() throws IOException {
+        assertInvariant();
+        try (FileInputStream fileInputStream = new FileInputStream(pathname);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             Object object = objectInputStream.readObject();
-            
             if (object instanceof List) {
                 List oldList = (List)object;
                 List<T> newList = new ArrayList<>();
@@ -72,44 +99,37 @@ public class SerializingIOLayer implements IOLayer {
                 }    // for
                 return newList;
             }    // if
-            
         } catch (ClassNotFoundException | ClassCastException e) {    // try
             // We could not create an object.
-            return null;
         }    // catch
         
         return null;
-    }    // readAll()
+    }    // getAll()
 
     /**
-     * Writes the given list of read-writables as XML to an output stream.  The
-     * read-writables are required to implement the {@link Serializable}
-     * interface.
-     *
-     * @param output the output stream; may not be null
-     * @param readWritables the list of read-writables; may not be null, nor
-     * contain any null elements; must be serializable
-     * @throws NullPointerException if either parameter is null, or if
-     * {@code readWritables} contains a null element
-     * @throws NotSerializableException if the elements of {@code readWritables}
-     * cannot be serialized
-     * @throws IOException if an I/O error occurs
+     * {@inheritDoc}
      */
     @Override
-    public void writeAll(OutputStream output, List<? extends ReadWritable> readWritables) throws IOException {
-        if (output == null) {
-            throw new NullPointerException("output may not be null");
+    public void setAll(List<T> list) throws IOException {
+        assertInvariant();
+        if (list == null) {
+            throw new NullPointerException("list may not be null");
         }    // if
-        if (readWritables == null) {
-            throw new NullPointerException("readWritables may not be null");
+        if (list.contains(null)) {
+            throw new NullPointerException("list may not contain null");
         }    // if
-        if (readWritables.contains(null)) {
-            throw new NullPointerException("readWritables may not contain null");
-        }    // if
-        
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(output)) {
-            outputStream.writeObject(readWritables);
-        }    // try
-     }    // writeAll()
 
+        try (FileOutputStream fileOutputStream = new FileOutputStream(pathname);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(list);
+        }    // try
+    }    // setAll()
+
+    /**
+     * Asserts the correctness of the object's internal state.
+     */
+    private void assertInvariant() {
+        assert (pathname != null);
+        assert (factory != null);
+    }    // assertInvariant()
 }    // SerializingIOLayer

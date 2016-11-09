@@ -20,12 +20,15 @@
 package bscmail;
 
 import bscmail.gui.error.ErrorDialog;
-import iolayer.*;
+import iolayer.IOLayer;
+import iolayer.XMLIOLayer;
 import java.awt.Frame;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.*;
-import main.ReadWritable;
 
 /**
  * An application controls application-wide properties and objects.
@@ -201,6 +204,31 @@ public class Application {
      * The list of defined event properties.
      */
     private List<EventProperty> eventProperties;
+
+    /**
+     * The shifts I/O layer.
+     */
+    private final IOLayer<Shift> shiftsIOLayer;
+
+    /**
+     * The volunteers I/O layer.
+     */
+    private final IOLayer<Volunteer> volunteersIOLayer;
+
+    /**
+     * The shifts I/O layer.
+     */
+    private final IOLayer<Role> rolesIOLayer;
+
+    /**
+     * The shifts I/O layer.
+     */
+    private final IOLayer<EmailTemplate> emailTemplateIOLayer;
+
+    /**
+     * The shifts I/O layer.
+     */
+    private final IOLayer<EventProperty> eventPropertiesIOLayer;
     
     /**
      * The list of shifts observers.
@@ -236,7 +264,6 @@ public class Application {
      * Tracks name of XML file being imported
      */
     private String currentImportFile;
-
     
     /**
      * Constructs a new application.
@@ -255,11 +282,18 @@ public class Application {
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
             properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperty.xml");
 
-            shifts = readShifts(properties.get(PropertyKey.SHIFTS_FILE));
-            volunteers = readVolunteers(properties.get(PropertyKey.VOLUNTEERS_FILE));
-            roles = readRoles(properties.get(PropertyKey.ROLES_FILE));
-            emailTemplate = readEmailTemplate(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
-            eventProperties = readEventProperties(properties.get(PropertyKey.EVENT_PROPERTY_FILE));
+            shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
+            volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
+            rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
+            emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());
+            eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
+
+            shifts = shiftsIOLayer.getAll();
+            volunteers = volunteersIOLayer.getAll();
+            roles = rolesIOLayer.getAll();
+            List<EmailTemplate> emailTemplates = emailTemplateIOLayer.getAll();
+            emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "");
+            eventProperties = eventPropertiesIOLayer.getAll();
             
             shiftsObservers = new LinkedList<>();
             volunteersObservers = new LinkedList<>();
@@ -270,7 +304,7 @@ public class Application {
             testDialogs = new LinkedList<>();
 
             currentImportFile = "";
-        } catch (IOException | ClassNotFoundException e) {    // try
+        } catch (IOException e) {    // try
             throw new ExceptionInInitializerError(e);
         }    // catch
         assertInvariant();
@@ -353,7 +387,6 @@ public class Application {
      */
     public List<Shift> getShifts() {
         assertInvariant();
-        assertInvariant();
         List<Shift> clones = new ArrayList<>();
         for (Shift shift : shifts) {
             clones.add(shift.clone());
@@ -390,8 +423,9 @@ public class Application {
         for (ShiftsObserver observer : shiftsObservers) {
             observer.shiftsChanged();
         }    // for
+
+        shiftsIOLayer.setAll(shifts);
         assertInvariant();
-        writeList(this.shifts, properties.get(PropertyKey.SHIFTS_FILE));
     }    // setShifts()
 
     /**
@@ -436,8 +470,9 @@ public class Application {
         for (VolunteersObserver observer : volunteersObservers) {
             observer.volunteersChanged();
         }    // for
+
+        volunteersIOLayer.setAll(volunteers);
         assertInvariant();
-        writeList(this.volunteers, properties.get(PropertyKey.VOLUNTEERS_FILE));
     }    // setVolunteers()
 
     /**
@@ -452,7 +487,9 @@ public class Application {
         if (fileName == null) {
             throw new NullPointerException("file name may not be null");
         }    // if
-        List<Volunteer> importedVolunteers = readVolunteers(fileName);
+
+        IOLayer<Volunteer> importIOLayer = new XMLIOLayer<>(fileName, Volunteer.getVolunteerFactory());
+        List<Volunteer> importedVolunteers = importIOLayer.getAll();
 
         if (!importedVolunteers.contains(null)) {
             for (Volunteer volunteer : importedVolunteers) {
@@ -461,8 +498,9 @@ public class Application {
             for (VolunteersObserver observer : volunteersObservers) {
                 observer.volunteersChanged();
             }    // for
+
+            volunteersIOLayer.setAll(volunteers);
             assertInvariant();
-            writeList(volunteers, properties.get(PropertyKey.VOLUNTEERS_FILE));
         }
     }   // importVolunteers()
 
@@ -520,8 +558,9 @@ public class Application {
         for (RolesObserver observer : rolesObservers) {
             observer.rolesChanged();
         }    // for
+
+        rolesIOLayer.setAll(roles);
         assertInvariant();
-        writeList(this.roles, properties.get(PropertyKey.ROLES_FILE));
     }    // setRoles()
 
     /**
@@ -536,7 +575,10 @@ public class Application {
         if (fileName == null) {
             throw new NullPointerException("file name may not be null");
         }    // if
-        List<Role> importedRoles = readRoles(fileName);
+
+        IOLayer<Role> importIOLayer = new XMLIOLayer<>(fileName, Role.getRoleFactory());
+        List<Role> importedRoles = importIOLayer.getAll();
+
         if(!importedRoles.contains(null)) {
             for (Role role : importedRoles) {
                 if (! roles.contains(role))
@@ -545,8 +587,9 @@ public class Application {
             for (RolesObserver observer : rolesObservers) {
                 observer.rolesChanged();
             }    // for
+
+            rolesIOLayer.setAll(roles);
             assertInvariant();
-            writeList(roles, properties.get(PropertyKey.ROLES_FILE));
         }
     }   // importRoles()
 
@@ -575,8 +618,9 @@ public class Application {
         this.emailTemplate = emailTemplate.clone();
         List<EmailTemplate> wrapper = new LinkedList<>();
         wrapper.add(this.emailTemplate);
+
+        emailTemplateIOLayer.setAll(wrapper);
         assertInvariant();
-        writeList(wrapper, properties.get(PropertyKey.EMAIL_TEMPLATE_FILE));
     }    // setEmailTemplate()
 
     /**
@@ -606,7 +650,6 @@ public class Application {
      * element
      * @throws IOException if an I/O error occurs
      */
-
     public void setEventProperties(List<EventProperty> eventProperties) throws IOException {
         assertInvariant();
         if (eventProperties == null) {
@@ -623,8 +666,9 @@ public class Application {
         for (EventPropertyObserver observer : eventPropertyObservers) {
             observer.eventPropertiesChanged();
         }    // for
+
+        eventPropertiesIOLayer.setAll(eventProperties);
         assertInvariant();
-        writeList(this.eventProperties, properties.get(PropertyKey.EVENT_PROPERTY_FILE));
     }    // setEventProperties()
 
 
@@ -737,114 +781,17 @@ public class Application {
      */
     
     /**
-     * Returns the default I/O layer used for reading and writing data.
-     * 
-     * @return the default I/O layer used for reading and writing data
-     */
-    private IOLayer getIOLayer() {
-        return new XMLIOLayer(this);
-    }    // getIOLayer()
-    
-    /**
-     * Reads and returns a list of shifts from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return a list containing all the shifts contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private List<Shift> readShifts(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        List<Shift> shifts = ioLayer.readAll(new FileInputStream(filename), Shift.getShiftFactory());
-        while (shifts.contains(null)) {
-            shifts.remove(null);
-        }    // while
-        return shifts;
-    }    // readShifts()
-
-    /**
-     * Reads and returns a list of volunteers from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return a list containing all the volunteers contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private List<Volunteer> readVolunteers(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        return ioLayer.readAll(new FileInputStream(filename), Volunteer.getVolunteerFactory());
-    }    // readVolunteers()
-
-    /**
-     * Reads and returns a list of roles from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return a list containing all the roles contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private List<Role> readRoles(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        return ioLayer.readAll(new FileInputStream(filename), Role.getRoleFactory());
-    }    // readRoles()
-
-    /**
-     * Reads and returns an email template from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return the email template contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private EmailTemplate readEmailTemplate(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        List<EmailTemplate> emailTemplates = ioLayer.readAll(new FileInputStream(filename), EmailTemplate.getEmailTemplateFactory());
-        return emailTemplates.get(0);
-    }    // readEmailTemplate()
-
-    /**
-     * Reads and returns a list of event properties from a binary file.
-     *
-     * @param filename the name of the file; may not be null
-     * @return a list containing all the event properties contained in {@code filename}
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    private List<EventProperty> readEventProperties(String filename) throws IOException, ClassNotFoundException {
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        List<EventProperty> eventProperties = ioLayer.readAll(new FileInputStream(filename), EventProperty
-            .getEventPropertyFactory());
-        while (eventProperties.contains(null)) {
-            eventProperties.remove(null);
-        }    // while
-        return eventProperties;
-    }    // readEventProperties()
-
-    /**
-     * Writes a list of objects to a binary file.
-     *
-     * @param list the list to write; may not be null
-     * @param filename the name of the file; may not be null
-     */
-    private void writeList(List<? extends ReadWritable> list, String filename) throws IOException {
-        assert (list != null);
-        assert (filename != null);
-        IOLayer ioLayer = getIOLayer();
-        ioLayer.writeAll(new FileOutputStream(filename), list);
-    }    // writeShifts()
-    
-    /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
         assert (properties != null);
         assert (properties.size() == PropertyKey.values().length);
         assert (! properties.containsValue(null));
+        assert (shiftsIOLayer != null);
+        assert (volunteersIOLayer != null);
+        assert (rolesIOLayer != null);
+        assert (emailTemplateIOLayer != null);
+        assert (eventPropertiesIOLayer != null);
         assert (shifts != null);
         assert (! shifts.contains(null));
         assert (shiftsHasNoVolunteers());

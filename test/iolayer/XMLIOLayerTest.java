@@ -19,13 +19,17 @@
 
 package iolayer;
 
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.List;
+import main.ReadWritableFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 /**
  * Unit tests for {@link XMLIOLayer}.
@@ -33,125 +37,155 @@ import org.xml.sax.SAXException;
  * @author Wayne Miller
  */
 public class XMLIOLayerTest extends IOLayerTest {
-    
-    /**
-     * Returns the I/O layer being tested.
-     * 
-     * @return the I/O layer being tested
-     */
-    @Override
-    protected XMLIOLayer getIOLayer() {
-        return new XMLIOLayer();
-    }    // getIOLayer()
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("XMLIOLayer");
-        System.out.println("==========");
-    }    // setUpClass()
 
     /**
-     * Prints unit test footer.
+     * File used to store XML data for tests.
      */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
+    private File tempfile;
+
+    /**
+     * The initial data that should be stored in the I/O layer.
+     */
+    private final List<RWElement> seedList = Arrays.asList(
+            new RWElement("foo", 1),
+            new RWElement("bar", 2),
+            new RWElement("baz", 3));
+
+    /**
+     * The initial XML used to seed the XML I/O layer.  This should correspond
+     * to the list in {@link #seedList}.
+     */
+    private final String seedXML = "<rwelement-list>\n"
+            + "<rwelement><name>foo</name><value>1</value></rwelement>\n"
+            + "<rwelement><name>bar</name><value>2</value></rwelement>\n"
+            + "<rwelement><name>baz</name><value>3</value></rwelement>\n"
+            + "</rwelement-list>\n";
+
+    /**
+     * Returns the XML I/O layer being tested.
+     * 
+     * @return the XML I/O layer being tested
+     * @throws IOException if an I/O exception occurs while constructing the
+     * I/O layer
+     */
+    @Override
+    protected XMLIOLayer<RWElement> getIOLayer() throws IOException {
+        return new XMLIOLayer<>(tempfile.getCanonicalPath(), RWElement.getFactory());
+    }    // getIOLayer()
+
+    /**
+     * Returns true, indicating that the data persists beyond the lifetime of
+     * the XML I/O layer being tested.
+     *
+     * @return true
+     */
+    @Override
+    protected boolean dataIsPersistent() {
+        return true;
+    }    // dataIsPersistemt()
+    
+    /**
+     * Creates a temporary file, marks it to be deleted upon application exit,
+     * and places a reference to it in {@link tempfile}.
+     */
+    @Before
+    public void setUpFileStorage() throws IOException {
+        tempfile = File.createTempFile("bscmailtest", null);
+        Writer writer = new FileWriter(tempfile);
+        writer.write(seedXML);
+        writer.flush();
+    }    // setUpFileStorage()
+
+    /**
+     * Sets tempfile to null.
+     */
+    @After
+    public void removeFileStorage() {
+        tempfile.delete();
+        tempfile = null;
+    }    // removeFileStorage()
 
     /*
      * Unit tests
      */
-    
-    /**
-     * Tests that {@link XMLIOLayer#XMLIOLayer()} does not throw
-     * an exception.
-     */
-    @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
-        
-        IOLayer ioLayer = new XMLIOLayer();
-    }    // testConstructorNoException()
 
     /**
-     * Tests that {@link XMLIOLayer#writeAll(Writer, List)} correctly
-     * translates its argument to XML.
+     * Tests that
+     * {@link XMLIOLayer#XMLIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * throws a {@link NullPointerException} when pathname is null.
      */
-    @Test
-    public void testWriteAll() throws IOException, ParserConfigurationException, SAXException {
-        System.out.println("writeAll");
-        
-        List<RWElement> readWritables = Arrays.asList(new RWElement("foo", 1), new RWElement("bar", 2), new RWElement("baz", 3));
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenPathnameIsNull() {
+        String pathname = null;
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
 
-        String expectedString = "<rwelement-list>\n";
-        expectedString += "<rwelement><name>foo</name><value>1</value></rwelement>\n";
-        expectedString += "<rwelement><name>bar</name><value>2</value></rwelement>\n";
-        expectedString += "<rwelement><name>baz</name><value>3</value></rwelement>\n";
-        expectedString += "</rwelement-list>";
-        
-        byte[] receivedBytes = null;
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-            IOLayer ioLayer = getIOLayer();
-            ioLayer.writeAll(output, readWritables);
-            receivedBytes = output.toByteArray();
-        }    // try
-        assert (receivedBytes != null);
-        Document received = null;
-        try (InputStream input = new ByteArrayInputStream(receivedBytes)) {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder parser = factory.newDocumentBuilder();
-            received = parser.parse(input);
-        }    // try
-        assert (received != null);
-        String receivedString = new String(receivedBytes);
-        
-        expectedString = expectedString.replaceAll("\\s+", "");
-        receivedString = receivedString.replaceAll("\\s+", "");
-        assertEquals(expectedString, receivedString);
-    }    // testWriteAll()
+        IOLayer<RWElement> ioLayer = new XMLIOLayer<>(pathname, factory);
+    }    // constructorThrowsExceptionWhenPathnameIsNull()
 
     /**
-     * Tests that {@link XMLIOLayer#writeAll(Writer, List)} correctly
-     * translates its argument to XML, when the argument is compound.
+     * Tests that
+     * {@link XMLIOLayer#XMLIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * throws a {@link NullPointerException} when factory is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenFactoryIsNull() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = null;
+
+        IOLayer<RWElement> ioLayer = new XMLIOLayer<>(pathname, factory);
+    }    // constructorThrowsExceptionWhenFactoryIsNull()
+
+    /**
+     * Tests that
+     * {@link XMLIOLayer#XMLIOLayer(java.lang.String, main.ReadWritableFactory)}
+     * does not throw an exception when no parameter is null.
      */
     @Test
-    public void testWriteAllCompound() throws IOException, ParserConfigurationException, SAXException {
-        System.out.println("writeAll - compound argument");
-        
-        List<RWContainer> readWritables = Arrays.asList(
-                new RWContainer("one", new RWElement("foo", 1)),
-                new RWContainer("two", new RWElement("bar", 2)),
-                new RWContainer("three", new RWElement("baz", 3))
-        );    // readWritables
+    public void constructorDoesNotThrowAnExceptionWhenNoParameterIsNull() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
 
-        String expectedString = "<rwcontainer-list>\n";
-        expectedString += "<rwcontainer><name>one</name><element><name>foo</name><value>1</value></element></rwcontainer>\n";
-        expectedString += "<rwcontainer><name>two</name><element><name>bar</name><value>2</value></element></rwcontainer>\n";
-        expectedString += "<rwcontainer><name>three</name><element><name>baz</name><value>3</value></element></rwcontainer>\n";
-        expectedString += "</rwcontainer-list>";
-        
-        byte[] receivedBytes = null;
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-            IOLayer ioLayer = getIOLayer();
-            ioLayer.writeAll(output, readWritables);
-            receivedBytes = output.toByteArray();
-        }    // try
-        assert (receivedBytes != null);
-        Document received = null;
-        try (InputStream input = new ByteArrayInputStream(receivedBytes)) {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder parser = factory.newDocumentBuilder();
-            received = parser.parse(input);
-        }    // try
-        assert (received != null);
-        String receivedString = new String(receivedBytes);
-        
-        expectedString = expectedString.replaceAll("\\s+", "");
-        receivedString = receivedString.replaceAll("\\s+", "");
-        assertEquals(expectedString, receivedString);
-    }    // testWriteAll()
+        IOLayer<RWElement> ioLayer = new XMLIOLayer<>(pathname, factory);
+    }    // constructorDoesNotThrowAnExceptionWhenNoParameterIsNull()
 
+    /**
+     * Tests that {@link XMLIOLayer} correctly processes the XML file.
+     */
+    public void layerCorrectlyProcessesXML() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+        IOLayer<RWElement> ioLayer = new XMLIOLayer<>(pathname, factory);
+
+        List<RWElement> received = ioLayer.getAll();
+
+        List<RWElement> expected = seedList;
+        assertEquals(expected, received);
+    }    // layerCorrectlyProcessesXML()
+
+    /**
+     * Tests that {@link XMLIOLayer#setAll(java.util.List)} correctly
+     * outputs XML.
+     */
+    @Test
+    public void setAllSavesXML() throws IOException {
+        String pathname = tempfile.getCanonicalPath();
+        ReadWritableFactory<RWElement> factory = RWElement.getFactory();
+        IOLayer<RWElement> ioLayer = new XMLIOLayer<>(pathname, factory);
+        List<RWElement> list = Arrays.asList(new RWElement("aaa", 10), new RWElement("bbb", 100));
+
+        ioLayer.setAll(list);
+
+        String expected = "<rwelement-list>\n"
+                + "<rwelement><name>aaa</name><value>10</value></rwelement>\n"
+                + "<rwelement><name>bbb</name><value>100</value></rwelement>\n"
+                + "</rwelement-list>";
+        BufferedReader reader = new BufferedReader(new FileReader(tempfile));
+        String received = "";
+        for (String line; (line = reader.readLine()) != null; ) {
+            received += line;
+        }    // for
+        expected = expected.replaceAll("\\s+", "");    // Place in a sort of canonical form.
+        received = received.replaceAll("\\s+", "");    // Ditto.
+        assertEquals(expected, received);
+    }    // setAllSavesXML()
 }    // testWriteAllCompound
