@@ -19,16 +19,29 @@
 
 package bscmail.gui;
 
-import bscmail.Role;
 import bscmail.Application;
+import bscmail.Role;
+import bscmail.RolesObserver;
 import bscmail.Volunteer;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import bscmail.RolesObserver;
+import java.util.Vector;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * A panel that displays and manages a {@link Volunteer}.
@@ -144,7 +157,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        rolesSelectList.setListData(application.getRoleNames());
+        rolesSelectList.setListData(new Vector<>(application.getRoles()));
         layoutHelper.addComponent("Roles: ", rolesSelectList);
         importVolunteers = new JButton("Import Volunteers");
         importVolunteers.addActionListener(new ActionListener() {
@@ -217,7 +230,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      */
     @Override
     public void rolesChanged() {
-        rolesSelectList.setListData(application.getRoleNames());
+        rolesSelectList.setListData(new Vector<>(application.getRoles()));
         notifyObservers();
     }    // rolesChanged()
 
