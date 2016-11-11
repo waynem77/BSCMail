@@ -49,9 +49,11 @@ public class ShiftTest extends ReadWritableTest {
      * Returns a valid volunteer
      */
     private Volunteer getVolunteer() {
-        String name = "Foo Bar";
-        String email = "foo@bar.baz";
-        return new Volunteer(name, email);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        return new Volunteer(name, email, phone, notes);
     }    // getVolunteer()
 
     /**
@@ -61,7 +63,12 @@ public class ShiftTest extends ReadWritableTest {
      */
     @Override
     protected Shift getReadWritable() {
-        Shift shift = new Shift("foo", false);
+        String description = "foo";
+        List<Role> roles = new LinkedList<>();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         shift.setVolunteer(getVolunteer());
         return shift;
     }    // getReadWritable()
@@ -106,16 +113,68 @@ public class ShiftTest extends ReadWritableTest {
     /* constructor */
 
     /**
-     * Tests that {@link Shift#Shift(String, boolean)} throws a {@link NullPointerException}
-     * when description is null.
+     * Tests that
+     * {@link Shift#Shift(java.lang.String, java.util.List, boolean, boolean, boolean)}
+     * throws a {@link NullPointerException} when description is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorDescriptionNull() {
-        System.out.println("constructor - description is null");
-        
+    public void constructorThrowsExceptionWhenDescriptionIsNull() {
         description = null;
-        shift = new Shift(description);
-    }
+        List<Role> roles = new LinkedList<>();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+    }    // constructorThrowsExceptionWhenDescriptionIsNull()
+
+    /**
+     * Tests that
+     * {@link Shift#Shift(java.lang.String, java.util.List, boolean, boolean, boolean)}
+     * throws a {@link NullPointerException} when roles is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenRolesIsNull() {
+        description = "foo";
+        List<Role> roles = null;
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+    }    // constructorThrowsExceptionWhenRolesIsNull()
+
+    /**
+     * Tests that
+     * {@link Shift#Shift(java.lang.String, java.util.List, boolean, boolean, boolean)}
+     * does not throw an exception when no parameter is null nor contains null.
+     */
+    @Test
+    public void constructorDoesNotThrowsExceptionNormally() {
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+    }    // constructorDoesNotThrowsExceptionNormally()
+
+    /**
+     * Tests that
+     * {@link Shift#Shift(java.lang.String, java.util.List, boolean, boolean, boolean)}
+     * throws a {@link NullPointerException} when roles contains null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenRolesContainsNull() {
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), null, new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+    }    // constructorThrowsExceptionWhenRolesContainsNull()
 
     /* getDescription */
     
@@ -126,7 +185,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetDescriptionNoException() {
         System.out.println("getDescription - no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.getDescription();
     }    // testGetDescriptionNoException()
     
@@ -137,7 +202,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetDescription() {
         System.out.println("getDescription");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         String expected = description;
         String received = shift.getDescription();
         assertEquals(expected, received);
@@ -153,7 +224,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testIsOpenBeforeSetVolunteer() {
         System.out.println("isOpen - before setVolunteer");
         
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         boolean received = shift.isOpen();
         assertTrue(received);
     }    // testIsOpenBeforeSetVolunteer()
@@ -166,7 +243,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testIsOpenAfterSetVolunteer() {
         System.out.println("isOpen - after setVolunteer");
         
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         boolean received = shift.isOpen();
         assertFalse(received);
@@ -180,10 +263,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testIsOpenAfterUnsetVolunteer() {
         System.out.println("isOpen - after unsetVolunteer");
         
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         volunteer = null;
-        shift.setVolunteer(getVolunteer());
+        shift.setVolunteer(volunteer);
         boolean received = shift.isOpen();
         assertTrue(received);
     }    // testIsOpenAfterUnsetVolunteer()
@@ -198,7 +287,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerBeforeSetVolunteerNoException() {
         System.out.println("getVolunteer - before setVolunteer, no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.getVolunteer();
     }    // testGetVolunteerBeforeSetVolunteerNoException()
 
@@ -210,7 +305,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerBeforeSetVolunteer() {
         System.out.println("getVolunteer - before setVolunteer");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Volunteer expected = null;
         Volunteer received = shift.getVolunteer();
         assertEquals(expected, received);
@@ -224,7 +325,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerAfterSetVolunteerNoException() {
         System.out.println("getVolunteer - after setVolunteer, no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         shift.getVolunteer();
     }
@@ -237,8 +344,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerAfterSetVolunteer() {
         System.out.println("getVolunteer - after setVolunteer");
 
-        shift = new Shift(description);
-        shift.setVolunteer(getVolunteer());
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
+        volunteer = getVolunteer();
+        shift.setVolunteer(volunteer);
         Volunteer expected = volunteer;
         Volunteer received = shift.getVolunteer();
         assertEquals(expected, received);
@@ -252,7 +366,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerAfterSetVolunteerNullNoException() {
         System.out.println("getVolunteer - after setVolunteer(null), no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         volunteer = null;
         shift.setVolunteer(volunteer);
@@ -267,7 +387,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetVolunteerAfterSetVolunteerNull() {
         System.out.println("getVolunteer - after setVolunteer(null)");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         volunteer = null;
         shift.setVolunteer(volunteer);
@@ -284,7 +410,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testSetVolunteerVolunteerNull() {
         System.out.println("setVolunteer - volunteer is null");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         volunteer = null;
         shift.setVolunteer(volunteer);
     }    // testSetVolunteerVolunteerNull()
@@ -299,10 +431,21 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetReadWritablePropertiesVolunteer() {
         System.out.println("getReadWritableProperties - shift has volunteer");
 
-        shift = new Shift(description);
-        shift.setVolunteer(getVolunteer());
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
+        volunteer = getVolunteer();
+        shift.setVolunteer(volunteer);
         Map<String, Object> expected = new HashMap<>();
         expected.put("description", description);
+        expected.put("roles", "foo,bar");
+        expected.put("displayVolunteerEmail", displayVolunteerEmail);
+        expected.put("displayVolunteerPhone", displayVolunteerPhone);
+        expected.put("displayVolunteerNotes", displayVolunteerNotes);
         expected.put("volunteer", volunteer);
         Map<String, Object> received = shift.getReadWritableProperties();
         assertEquals(expected, received);
@@ -316,9 +459,19 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetReadWritablePropertiesNoVolunteer() {
         System.out.println("getReadWritableProperties - shift does not have a volunteer");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Map<String, Object> expected = new HashMap<>();
         expected.put("description", description);
+        expected.put("roles", "foo,bar");
+        expected.put("displayVolunteerEmail", displayVolunteerEmail);
+        expected.put("displayVolunteerPhone", displayVolunteerPhone);
+        expected.put("displayVolunteerNotes", displayVolunteerNotes);
         Map<String, Object> received = shift.getReadWritableProperties();
         assertEquals(expected, received);
     }    // testGetReadWritablePropertiesNoVolunteer()
@@ -331,10 +484,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetReadWritablePropertiesIterationOrderVolunteer() {
         System.out.println("getReadWritableProperties - iteration order, shift has volunteer");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.setVolunteer(getVolunteer());
         Map<String, Object> properties = shift.getReadWritableProperties();
-        List<String> expected = Arrays.asList("description", "volunteer");
+        List<String> expected = Arrays.asList("description", "roles", "displayVolunteerEmail", "displayVolunteerPhone", "displayVolunteerNotes", "volunteer");
         List<String> received = new LinkedList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             received.add(entry.getKey());
@@ -350,9 +509,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testGetReadWritablePropertiesIterationOrderNoVolunteer() {
         System.out.println("getReadWritableProperties - iteration order, shift does not have a volunteer");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Map<String, Object> properties = shift.getReadWritableProperties();
-        List<String> expected = Arrays.asList("description");
+        List<String> expected = Arrays.asList("description", "roles", "displayVolunteerEmail", "displayVolunteerPhone", "displayVolunteerNotes");
         List<String> received = new LinkedList<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             received.add(entry.getKey());
@@ -370,7 +535,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNullNoException() {
         System.out.println("equals - null, no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Object obj = null;
         shift.equals(obj);
     }    // testEqualsNullNoException()
@@ -383,7 +554,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNull() {
         System.out.println("equals - null");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Object obj = null;
         boolean received = shift.equals(obj);
         assertFalse(received);
@@ -397,7 +574,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNotAShiftNoException() {
         System.out.println("equals - not a shift, no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Object obj = 1;
         shift.equals(obj);
     }    // testEqualsNotAShiftNoException()
@@ -410,7 +593,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNotAShift() {
         System.out.println("equals - not a shift");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Object obj = 1;
         boolean received = shift.equals(obj);
         assertFalse(received);
@@ -424,8 +613,14 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsShiftNoException() {
         System.out.println("equals - shift, no exception");
 
-        shift = new Shift(description);
-        Object obj = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        Object obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.equals(obj);
     }    // testEqualsShiftNoException()
 
@@ -437,10 +632,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsDifferentDescription() {
         System.out.println("equals - shift, different description");
 
-        description = "Foo";
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         description = "Bar";
-        Object obj = new Shift(description);
+        Object obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         boolean expected = false;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -455,12 +655,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNoVolunteerArgHasVolunteer() {
         System.out.println("equals - no volunteer, argument has volunteer");
 
-        shift = new Shift(description);
-        Shift obj = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        volunteer = getVolunteer();
         obj.setVolunteer(volunteer);
+
         boolean expected = false;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -475,12 +679,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsVolunteerArgHasNoVolunteer() {
         System.out.println("equals - volunteer, argument has no volunteer");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        volunteer = getVolunteer();
         shift.setVolunteer(volunteer);
-        Object obj = new Shift(description);
+        Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         boolean expected = false;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -494,16 +702,23 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsDifferentVolunteers() {
         System.out.println("equals - different volunteers");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
-        Shift obj = new Shift(description);
-        name = "Bar";
-        email = "Foo";
-        volunteer = new Volunteer(name, email);
+        Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        name += "X";
+        volunteer = new Volunteer(name, email, phone, notes);
         obj.setVolunteer(volunteer);
+
         boolean expected = false;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -517,8 +732,14 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsNoVolunteers() {
         System.out.println("equals - no volunteers");
 
-        shift = new Shift(description);
-        Object obj = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        Object obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         boolean expected = true;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -532,14 +753,22 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsSameVolunteer() {
         System.out.println("equals - same volunteers");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
-        Shift obj = new Shift(description);
-        volunteer = new Volunteer(name, email);
+        Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        volunteer = new Volunteer(name, email, phone, notes);
         obj.setVolunteer(volunteer);
+
         boolean expected = true;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -553,8 +782,14 @@ public class ShiftTest extends ReadWritableTest {
     public void testEqualsIdentical() {
         System.out.println("equals - shift, identical");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         Object obj = shift;
+
         boolean expected = true;
         boolean received = shift.equals(obj);
         assertEquals(expected, received);
@@ -567,7 +802,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testHashCodeNoException() {
         System.out.println("hashCode - no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.hashCode();
     }    // testHashCodeNoException()
 
@@ -581,8 +822,14 @@ public class ShiftTest extends ReadWritableTest {
     public void testHashCodeEqualNoVolunteers() {
         System.out.println("hashCode - equal shifts without volunteers");
 
-        shift = new Shift(description);
-        Shift experimental = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        Shift experimental  = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         int expected = shift.hashCode();
         int received = experimental.hashCode();
         assertEquals(expected, received);
@@ -596,14 +843,22 @@ public class ShiftTest extends ReadWritableTest {
     public void testHashCodeEqualWithVolunteers() {
         System.out.println("hashCode - equal shifts with volunteers");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
-        Shift experimental = new Shift(description);
-        volunteer = new Volunteer(name, email);
+        Shift experimental = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        volunteer = new Volunteer(name, email, phone, notes);
         experimental.setVolunteer(volunteer);
+
         int expected = shift.hashCode();
         int received = experimental.hashCode();
         assertEquals(expected, received);
@@ -619,7 +874,13 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneNoVolunteerNoException() {
         System.out.println("clone - no volunteer, no exception");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.clone();
     }    // testCloneNoVolunteerNoException()
 
@@ -631,11 +892,19 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneVolunteerNoException() {
         System.out.println("clone - volunteer, no exception");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
+
         shift.clone();
     }    // testCloneVolunteerNoException()
 
@@ -647,8 +916,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneNoVolunteerNotNull() {
         System.out.println("clone - no volunteer, not null");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Shift received = shift.clone();
+
         assertNotNull(received);
     }    // testCloneNoVolunteerNotNull()
 
@@ -660,12 +936,21 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneVolunteerNotNull() {
         System.out.println("clone - volunteer, not null");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
+
         Shift received = shift.clone();
+
         assertNotNull(received);
     }    // testCloneVolunteerNotNull()
 
@@ -677,9 +962,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneNoVolunteerEqual() {
         System.out.println("clone - no volunteer, equal");
 
-        shift = new Shift(description);
-        Shift expected = shift;
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Shift received = shift.clone();
+
+        Shift expected = shift;
         assertEquals(expected, received);
     }    // testCloneNoVolunteerNoException()
 
@@ -691,13 +983,22 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneVolunteerEqual() {
         System.out.println("clone - volunteer, equal");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
-        Shift expected = shift;
+
         Shift received = shift.clone();
+
+        Shift expected = shift;
         assertEquals(expected, received);
     }    // testCloneVolunteerNoException()
 
@@ -709,8 +1010,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneNoVolunteerIdentity() {
         System.out.println("clone - no volunteer, not identical");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         Shift received = shift.clone();
+
         assertFalse(shift == received);
     }    // testCloneNoVolunteerNoException()
 
@@ -722,12 +1030,21 @@ public class ShiftTest extends ReadWritableTest {
     public void testCloneVolunteerIdentity() {
         System.out.println("clone - volunteer, not identical");
 
-        shift = new Shift(description);
-        String name = "Foo";
-        String email = "Bar";
-        volunteer = new Volunteer(name, email);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "foo";
+        String email = "bar";
+        String phone = "baz";
+        String notes = "smurf";
+        volunteer = new Volunteer(name, email, phone, notes);
         shift.setVolunteer(volunteer);
+
         Shift received = shift.clone();
+
         assertFalse(shift == received);
     }    // testCloneVolunteerNoException()
 
@@ -739,7 +1056,14 @@ public class ShiftTest extends ReadWritableTest {
     @Test
     public void testToStringNoException() {
         System.out.println("toString - no exception");
-        shift = new Shift(description);
+
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         shift.toString();
     }    // testToStringNoException()
 
@@ -750,8 +1074,15 @@ public class ShiftTest extends ReadWritableTest {
     public void testToStringNotNull() {
         System.out.println("toString - not null");
 
-        shift = new Shift(description);
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         String received = shift.toString();
+
         assertNotNull(received);
     }    // testToStringNotNull()
 
@@ -762,9 +1093,16 @@ public class ShiftTest extends ReadWritableTest {
     public void testToString() {
         System.out.println("toString");
 
-        shift = new Shift(description);
-        String expected = description;
+        description = "foo";
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         String received = shift.toString();
+
+        String expected = description;
         assertEquals(expected, received);
     }    // testToString()
     

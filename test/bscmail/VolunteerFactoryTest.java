@@ -233,7 +233,7 @@ public class VolunteerFactoryTest {
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
-     * null when properties is an empty map.
+     * an appropriate volunteer when properties is an empty map.
      */
     @Test
     public void testConstructReadWritablePropertiesEmpty() {
@@ -242,15 +242,16 @@ public class VolunteerFactoryTest {
         factory = Volunteer.getVolunteerFactory();
         properties = new HashMap<>();
 
-        Volunteer expected = null;
+        Volunteer expected = new Volunteer("", "", "", "");
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritablePropertiesEmpty()
 
     /**
      * Tests that {@link Volunteer.Factory#constructReadWritable(Map)} returns
-     * null when properties has some but not all of the required properties.
-     * */
+     * an appropriate volunteer when properties has some but not all of the
+     * required properties.
+     */
     @Test
     public void testConstructReadWritableNameEmailOnly() {
         System.out.println("constructReadWritable - properties has name and email only");
@@ -260,7 +261,7 @@ public class VolunteerFactoryTest {
         properties.put("name", name);
         properties.put("email", email);
 
-        Volunteer expected = null;
+        Volunteer expected = new Volunteer(name, email, "", "");
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
     }    // testConstructReadWritableNameEmailOnly()
@@ -306,7 +307,7 @@ public class VolunteerFactoryTest {
         properties.put("notes", notes);
         properties.put("roles", roles);
 
-        Volunteer expected = new Volunteer(name, "", phone, notes);
+        Volunteer expected = new Volunteer(name, email, phone, notes);
         for (String roleName : roles.split(",")) {
             expected.addRole(new Role(roleName));
         }    // for
@@ -332,7 +333,7 @@ public class VolunteerFactoryTest {
         properties.put("roles", roles);
         properties.put("foo", "bar");
 
-        Volunteer expected = new Volunteer(name, "", phone, notes);
+        Volunteer expected = new Volunteer(name, email, phone, notes);
         for (String roleName : roles.split(",")) {
             expected.addRole(new Role(roleName));
         }    // for
@@ -356,7 +357,7 @@ public class VolunteerFactoryTest {
         properties.put("notes", new ArrayList());
         properties.put("roles", false);
 
-        Volunteer expected = new Volunteer(name, "1", "2.0", "");
+        Volunteer expected = new Volunteer(name, "1", "2.0", "[]");
         expected.addRole(new Role("false"));
         Volunteer received = factory.constructReadWritable(properties);
         assertEquals(expected, received);
@@ -371,6 +372,8 @@ public class VolunteerFactoryTest {
     public void testConstructReadWritableReflexive() {
         System.out.println("constructReadWritable - reflexivity");
 
+        factory = Volunteer.getVolunteerFactory();
+        properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
         properties.put("phone", phone);

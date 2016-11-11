@@ -51,6 +51,23 @@ public class ShiftFactoryTest {
     private Shift.Factory factory;
 
     /**
+     * Returns the names of the given roles, separated by commas.
+     *
+     * @param roles the list of roles; may not be null nor contain null
+     * @return a string containing the names of the roles separated by commas
+     */
+    private String concatenateRoles(List<Role> roles) {
+        String value = "";
+        for (Role role : roles) {
+            if (!value.isEmpty()) {
+                value += ",";
+            }    // if
+            value += role.getName();
+        }    // for
+        return value;
+    }    // concatenateRoles()
+
+    /**
      * Prints unit test header.
      */
     @BeforeClass
@@ -73,7 +90,7 @@ public class ShiftFactoryTest {
     @Before
     public void beforeTest() {
         description = "Foo";
-        volunteer = new Volunteer("Foo Bar", "foo@bar");
+        volunteer = new Volunteer("foo", "bar", "baz", "smurf");
         properties = null;
         factory = null;
     }    // beforeTest()
@@ -121,17 +138,58 @@ public class ShiftFactoryTest {
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
-     * throw an exception when properties has only the description.
+     * return null when properties is an empty map.
      */
     @Test
-    public void testConstructReadWritableDescriptionOnlyNoException() {
-        System.out.println("constructReadWritable - properties has description only, no exception");
+    public void testConstructReadWritablePropertiesEmptyDoesNotReturnNull() {
+        System.out.println("constructReadWritable - properties empty, does not return null");
 
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
-        properties.put("description", description);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // testConstructReadWritablePropertiesEmptyNoException()
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when description is missing.
+     */
+    @Test
+    public void testConstructReadWritableDescriptionIsMissingNoException() {
+        System.out.println("constructReadWritable - description is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
         factory.constructReadWritable(properties);
-    }    // testConstructReadWritableDescriptionOnlyNoException()
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when description is missing.
+     */
+    @Test
+    public void testConstructReadWritableDescriptionIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - description is missing, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
@@ -145,7 +203,72 @@ public class ShiftFactoryTest {
         properties = new HashMap<>();
         properties.put("description", null);
         properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
         factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when description is null.
+     */
+    @Test
+    public void testConstructReadWritableDescriptionIsNullDoesNotReturn() {
+        System.out.println("constructReadWritable - description is null, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", null);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when volunteer is missing.
+     */
+    @Test
+    public void testConstructReadWritableVolunteerIsMissingNoException() {
+        System.out.println("constructReadWritable - volunteer is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when volunteer is missing.
+     */
+    @Test
+    public void testConstructReadWritableVolunteerIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - volunteer is missing, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
     }
 
     /**
@@ -160,7 +283,309 @@ public class ShiftFactoryTest {
         properties = new HashMap<>();
         properties.put("description", description);
         properties.put("volunteer", null);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
         factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when volunteer is null.
+     */
+    @Test
+    public void testConstructReadWritableVolunteerIsNullDoesNotReturnNull() {
+        System.out.println("constructReadWritable - volunteer is null, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", null);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when roles is missing.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsMissingNoException() {
+        System.out.println("constructReadWritable - roles is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when roles is missing.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - roles is missing, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when roles is null.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsNullNoException() {
+        System.out.println("constructReadWritable - roles is null, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", null);
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when roles is null.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsNullDoesNotReturnNull() {
+        System.out.println("constructReadWritable - roles is null, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", null);
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when roles is empty.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsEmptyNoException() {
+        System.out.println("constructReadWritable - roles is empty, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", new LinkedList<Role>());
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when roles is empty.
+     */
+    @Test
+    public void testConstructReadWritableRolesIsEmptyDoesNotReturnNull() {
+        System.out.println("constructReadWritable - roles is empty, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", new LinkedList<Role>());
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when roles contains null.
+     */
+    @Test
+    public void testConstructReadWritableRolesContainsNullNoException() {
+        System.out.println("constructReadWritable - roles contains, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(null, new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when roles contains null.
+     */
+    @Test
+    public void testConstructReadWritableRolesContainsNullDoesNotReturnNull() {
+        System.out.println("constructReadWritable - roles contains, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(null, new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when displayVolunteerEmail is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerEmailIsMissingNoException() {
+        System.out.println("constructReadWritable - displayVolunteerEmail is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when displayVolunteerEmail is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerEmailIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - displayVolunteerEmail is missing, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when displayVolunteerPhone is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerPhoneIsMissingNoException() {
+        System.out.println("constructReadWritable - displayVolunteerPhone is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerNotes", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when displayVolunteerPhone is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerPhoneIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - displayVolunteerPhone is missing, does not return null");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerNotes", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * throw an exception when displayVolunteerNotes is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerNotesIsMissingNoException() {
+        System.out.println("constructReadWritable - displayVolunteerNotes is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        factory.constructReadWritable(properties);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
+     * return null when displayVolunteerNotes is missing.
+     */
+    @Test
+    public void testConstructReadWritabledisplayVolunteerNotesIsMissingDoesNotReturnNull() {
+        System.out.println("constructReadWritable - displayVolunteerNotes is missing, no exception");
+
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+
+        Shift received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
     }
 
     /**
@@ -176,6 +601,10 @@ public class ShiftFactoryTest {
         properties = new HashMap<>();
         properties.put("description", description);
         properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
         factory.constructReadWritable(properties);
     }
 
@@ -192,13 +621,17 @@ public class ShiftFactoryTest {
         properties = new HashMap<>();
         properties.put("description", description);
         properties.put("volunteer", volunteer);
+        properties.put("roles", Arrays.asList(new Role("foo")));
+        properties.put("displayVolunteerEmail", true);
+        properties.put("displayVolunteerPhone", true);
+        properties.put("displayVolunteerNotes", true);
         properties.put("foo", "bar");
         factory.constructReadWritable(properties);
     }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} does not
-     * throw an exception when the description and volunteer values are not the
+     * throw an exception when the values are not the
      * correct objects.
      */
     @Test
@@ -207,76 +640,65 @@ public class ShiftFactoryTest {
 
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
-        properties.put("description", new Volunteer("description", ""));
-        properties.put("volunteer", "foo");
+        properties.put("description", 1);
+        properties.put("volunteer", 2.0);
+        properties.put("roles", false);
+        properties.put("displayVolunteerEmail", "foo");
+        properties.put("displayVolunteerPhone", new Volunteer("foo", "bar", "baz", "smurf"));
+        properties.put("displayVolunteerNotes", Arrays.asList(new Role("foo")));
         factory.constructReadWritable(properties);
     }    // testConstructReadWritableDescriptionVolunteerWrongObjectsNoException()
 
     /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
-     * when properties is an empty map.
-     */
-    @Test
-    public void testConstructReadWritablePropertiesEmpty() {
-        System.out.println("constructReadWritable - properties empty");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        Shift expected = null;
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns null
-     * when properties has only the description.
-     */
-    @Test
-    public void testConstructReadWritableDescriptionOnly() {
-        System.out.println("constructReadWritable - properties has description only");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", description);
-        Shift expected = null;
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }
-
-    /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
-     * correct value when description is null.
+     * correct value there is no volunteer.
      */
     @Test
-    public void testConstructReadWritableDescriptionIsNull() {
-        System.out.println("constructReadWritable - description is null");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", null);
-        properties.put("volunteer", volunteer);
-        
-        Shift expected = new Shift("");
-        expected.setVolunteer(volunteer);
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }    // testConstructReadWritableDescriptionIsNull()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
-     * correct value when volunteer is null.
-     */
-    @Test
-    public void testConstructReadWritableVolunteerIsNull() {
+    public void testConstructReadWritableNoVolunteer() {
         System.out.println("constructReadWritable - volunteer is null");
 
+        List<Role> roles = Arrays.asList(new Role("foo"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
-        properties.put("volunteer", null);
+        properties.put("roles", concatenateRoles(roles));
+        properties.put("displayVolunteerEmail", displayVolunteerEmail);
+        properties.put("displayVolunteerPhone", displayVolunteerPhone);
+        properties.put("displayVolunteerNotes", displayVolunteerNotes);
         
-        Shift expected = new Shift(description);
         Shift received = factory.constructReadWritable(properties);
+
+        Shift expected = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        assertEquals(expected, received);
+    }
+
+    /**
+     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
+     * correct value there are no roles.
+     */
+    @Test
+    public void testConstructReadWritableNoRoles() {
+        System.out.println("constructReadWritable - roles is null");
+
+        List<Role> roles = new LinkedList<>();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        factory = Shift.getShiftFactory();
+        properties = new HashMap<>();
+        properties.put("description", description);
+        properties.put("volunteer", volunteer);
+        properties.put("displayVolunteerEmail", displayVolunteerEmail);
+        properties.put("displayVolunteerPhone", displayVolunteerPhone);
+        properties.put("displayVolunteerNotes", displayVolunteerNotes);
+        
+        Shift received = factory.constructReadWritable(properties);
+
+        Shift expected = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        expected.setVolunteer(volunteer);
         assertEquals(expected, received);
     }
 
@@ -288,14 +710,23 @@ public class ShiftFactoryTest {
     public void testConstructReadWritable() {
         System.out.println("constructReadWritable");
 
+        List<Role> roles = Arrays.asList(new Role("foo"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
         factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
         properties.put("volunteer", volunteer);
+        properties.put("roles", concatenateRoles(roles));
+        properties.put("displayVolunteerEmail", displayVolunteerEmail);
+        properties.put("displayVolunteerPhone", displayVolunteerPhone);
+        properties.put("displayVolunteerNotes", displayVolunteerNotes);
         
-        Shift expected = new Shift(description);
-        expected.setVolunteer(volunteer);
         Shift received = factory.constructReadWritable(properties);
+        
+        Shift expected = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        expected.setVolunteer(volunteer);
         assertEquals(expected, received);
     }    // testConstructReadWritable()
 
@@ -309,35 +740,26 @@ public class ShiftFactoryTest {
         System.out.println("constructReadWritable - properties has extraneous properties");
 
         factory = Shift.getShiftFactory();
+        List<Role> roles = Arrays.asList(new Role("foo"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        factory = Shift.getShiftFactory();
         properties = new HashMap<>();
         properties.put("description", description);
         properties.put("volunteer", volunteer);
+        properties.put("roles", concatenateRoles(roles));
+        properties.put("displayVolunteerEmail", displayVolunteerEmail);
+        properties.put("displayVolunteerPhone", displayVolunteerPhone);
+        properties.put("displayVolunteerNotes", displayVolunteerNotes);
         properties.put("foo", "bar");
-        
-        Shift expected = new Shift(description);
-        expected.setVolunteer(volunteer);
+
         Shift received = factory.constructReadWritable(properties);
+        
+        Shift expected = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        expected.setVolunteer(volunteer);
         assertEquals(expected, received);
     }    // testConstructReadWritablePropertiesExtraneous()
-
-    /**
-     * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns the
-     * correct value when the description and volunteer values are not the
-     * correct objects.
-     */
-    @Test
-    public void testConstructReadWritableDescriptionVolunteerWrongObjects() {
-        System.out.println("constructReadWritable - description and volunteer values are not correct objects");
-
-        factory = Shift.getShiftFactory();
-        properties = new HashMap<>();
-        properties.put("description", new Volunteer(description, "", false));
-        properties.put("volunteer", "foo");
-        
-        Shift expected = new Shift(description);
-        Shift received = factory.constructReadWritable(properties);
-        assertEquals(expected, received);
-    }
 
     /**
      * Tests that {@link Shift.Factory#constructReadWritable(Map)} returns
@@ -349,7 +771,11 @@ public class ShiftFactoryTest {
         System.out.println("constructReadWritable - reflexivity");
 
         factory = Shift.getShiftFactory();
-        Shift shift = new Shift(description);
+        List<Role> roles = Arrays.asList(new Role("foo"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         shift.setVolunteer(volunteer);
         properties = shift.getReadWritableProperties();
 

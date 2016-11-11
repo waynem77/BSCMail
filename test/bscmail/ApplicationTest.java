@@ -19,12 +19,6 @@
 
 package bscmail;
 
-import bscmail.Application;
-import bscmail.VolunteersObserver;
-import bscmail.ShiftsObserver;
-import bscmail.EmailTemplateObserver;
-import bscmail.*;
-import bscmail.transformer.Transformer;
 import java.io.*;
 import java.util.*;
 import org.junit.*;
@@ -36,6 +30,9 @@ import static org.junit.Assert.*;
  */
 public class ApplicationTest {
 
+    /**
+     * Observer used in tests.
+     */
     private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, EmailTemplateObserver {
         private boolean shiftsChanged = false;
         private boolean volunteersChanged = false;
@@ -49,7 +46,12 @@ public class ApplicationTest {
         public boolean getVolunteersChanged() { return volunteersChanged; }
         public boolean getEmailTemplateChanged() { return emailTemplateObserver; }
     }    // ApplicationObserver
-    
+
+    /**
+     * The application being tested.
+     */
+    private Application application;
+
     /**
      * Prints unit test header.
      */
@@ -72,7 +74,8 @@ public class ApplicationTest {
      */
     @Before
     public void setUp() {
-        Application.setTestMode(true);
+        application = new Application();
+        application.setTestMode(true);
     }    // setUp()
 
     /**
@@ -80,7 +83,7 @@ public class ApplicationTest {
      */
     @After
     public void tearDown() {
-        Application.setTestMode(false);
+        application = null;
     }    // tearDown()
 
     /*
@@ -97,7 +100,7 @@ public class ApplicationTest {
         System.out.println("setTestMode - no exception when arg is true");
         
         boolean testMode = true;
-        Application.setTestMode(testMode);
+        application.setTestMode(testMode);
     }    // testSetTestModeTrue()
 
     /**
@@ -108,7 +111,7 @@ public class ApplicationTest {
         System.out.println("setTestMode - no exception when arg is false");
         
         boolean testMode = false;
-        Application.setTestMode(testMode);
+        application.setTestMode(testMode);
     }    // testSetTestModeFalse()
     
     /* getApplicationName */
@@ -121,7 +124,7 @@ public class ApplicationTest {
     public void testGetApplicationNameNoException() {
         System.out.println("getApplicationName - no exception");
         
-        Application.getApplicationName();
+        application.getApplicationName();
     }    // testGetApplicationNameNoException()
     
     /**
@@ -131,7 +134,7 @@ public class ApplicationTest {
     public void testGetApplicationNameNotNull() {
         System.out.println("getApplicationName - not null");
         
-        String received = Application.getApplicationName();
+        String received = application.getApplicationName();
         assertNotNull(received);
     }    // testGetApplicationNameNotNull()
     
@@ -144,7 +147,7 @@ public class ApplicationTest {
     public void testGetVersionNoException() {
         System.out.println("getVersion - no exception");
 
-        Application.getVersion();
+        application.getVersion();
     }    // testGetVersionNoException()
 
     /**
@@ -154,7 +157,7 @@ public class ApplicationTest {
     public void testGetVersionNotNull() {
         System.out.println("getVersion - not null");
 
-        String received = Application.getVersion();
+        String received = application.getVersion();
         assertNotNull(received);
     }    // testGetVersionNotNull()
     
@@ -167,7 +170,7 @@ public class ApplicationTest {
     public void testGetCopyrightNoException() {
         System.out.println("getCopyright - no exception");
 
-        Application.getCopyright();
+        application.getCopyright();
     }    // testGetCopyrightNoException()
 
     /**
@@ -177,7 +180,7 @@ public class ApplicationTest {
     public void testGetCopyrightNotNull() {
         System.out.println("getCopyright - not null");
 
-        String received = Application.getCopyright();
+        String received = application.getCopyright();
         assertNotNull(received);
     }    // testGetCopyrightNotNull()
     
@@ -190,7 +193,7 @@ public class ApplicationTest {
     public void testGetShiftsNoException() {
         System.out.println("getShifts - no exception");
 
-        Application.getShifts();
+        application.getShifts();
     }    // testGetShiftsNoException()
 
     /**
@@ -200,7 +203,7 @@ public class ApplicationTest {
     public void testGetShiftsNotNull() {
         System.out.println("getShifts - not null");
 
-        List<Shift> received = Application.getShifts();
+        List<Shift> received = application.getShifts();
         assertNotNull(received);
     }    // testGetShiftsNotNull()
     
@@ -213,7 +216,7 @@ public class ApplicationTest {
         System.out.println("setShifts - shifts is null");
 
         List<Shift> shifts = null;
-        Application.setShifts(shifts);
+        application.setShifts(shifts);
     }    // testSetShiftsShiftsNull()
     
     /**
@@ -224,8 +227,8 @@ public class ApplicationTest {
     public void testSetShiftsShiftsContainsNull() throws IOException {
         System.out.println("setShifts - shifts contains null");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), null);
-        Application.setShifts(shifts);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+        application.setShifts(shifts);
     }    // testSetShiftsShiftsContainsNull()
     
     /**
@@ -236,8 +239,9 @@ public class ApplicationTest {
     public void testSetShiftsNoException() throws IOException {
         System.out.println("setShifts - no exception");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        application.setShifts(shifts);
     }    // testSetShiftsNoException()
     
     /**
@@ -248,13 +252,14 @@ public class ApplicationTest {
     public void testSetShiftsDoesNotAlterArgument() throws IOException {
         System.out.println("setShifts - does not alter argument");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", true));
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
         List<Shift> expected = new LinkedList<>();
         for (Shift shift : shifts) {
             expected.add(shift.clone());
         }    // for
-        Application.setShifts(shifts);
+        application.setShifts(shifts);
         List<Shift> received = shifts;
         assertEquals(expected, received);
     }    // testSetShiftsDoesNotAlterArgument()
@@ -267,16 +272,17 @@ public class ApplicationTest {
     public void testGetShiftsSetShiftsListsAreEqualMinusVolunteers() throws IOException {
         System.out.println("getShifts/setShifts - lists are equal minus volunteers");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", true));
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
         List<Shift> expected = new LinkedList<>();
         for (Shift shift : shifts) {
             Shift newShift = shift.clone();
             newShift.setVolunteer(null);
             expected.add(newShift);
         }    // for
-        Application.setShifts(shifts);
-        List<Shift> received = Application.getShifts();
+        application.setShifts(shifts);
+        List<Shift> received = application.getShifts();
         assertEquals(expected, received);
     }    // testGetShiftsSetShiftsListsAreEqualMinusVolunteers()
     
@@ -288,10 +294,10 @@ public class ApplicationTest {
     public void testGetShiftsSetShiftsNoIdentity() throws IOException {
         System.out.println("getShifts/setShifts - lists are not identical");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
         List<Shift> expected = shifts;
-        Application.setShifts(shifts);
-        List<Shift> received = Application.getShifts();
+        application.setShifts(shifts);
+        List<Shift> received = application.getShifts();
         assertFalse(expected == received);
     }    // testGetShiftsSetShiftsNoIdentity()
     
@@ -304,9 +310,9 @@ public class ApplicationTest {
     public void testGetShiftsSetShiftsNoElementIdentity() throws IOException {
         System.out.println("getShifts/setShifts - lists elements are not identical");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
-        List<Shift> received = Application.getShifts();
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+        application.setShifts(shifts);
+        List<Shift> received = application.getShifts();
         for (int i = 0; i < shifts.size(); ++i) {
             assertFalse(shifts.get(i) == received.get(i));
         }    // for
@@ -321,7 +327,7 @@ public class ApplicationTest {
     public void testGetVolunteersNoException() {
         System.out.println("getVolunteers - no exception");
 
-        Application.getVolunteers();
+        application.getVolunteers();
     }    // testGetVolunteersNoException()
 
     /**
@@ -331,7 +337,7 @@ public class ApplicationTest {
     public void testGetVolunteersNotNull() {
         System.out.println("getVolunteers - not null");
 
-        List<Volunteer> received = Application.getVolunteers();
+        List<Volunteer> received = application.getVolunteers();
         assertNotNull(received);
     }    // testGetVolunteersNotNull()
     
@@ -344,7 +350,7 @@ public class ApplicationTest {
         System.out.println("setVolunteers - volunteers is null");
 
         List<Volunteer> volunteers = null;
-        Application.setVolunteers(volunteers);
+        application.setVolunteers(volunteers);
     }    // testSetVolunteersVolunteersNull()
     
     /**
@@ -355,8 +361,8 @@ public class ApplicationTest {
     public void testSetVolunteersVolunteersContainsNull() throws IOException {
         System.out.println("setVolunteers - volunteers contains null");
 
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), null);
-        Application.setVolunteers(volunteers);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), null);
+        application.setVolunteers(volunteers);
     }    // testSetVolunteersVolunteersContainsNull()
     
     /**
@@ -367,8 +373,8 @@ public class ApplicationTest {
     public void testSetVolunteersNoException() throws IOException {
         System.out.println("setVolunteers - no exception");
 
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
-        Application.setVolunteers(volunteers);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
     }    // testSetVolunteersNoException()
     
     /**
@@ -379,9 +385,9 @@ public class ApplicationTest {
     public void testSetVolunteersDoesNotAlterArgument() throws IOException {
         System.out.println("setVolunteers - does not alter argument");
 
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         List<Volunteer> expected = new ArrayList<>(volunteers);
-        Application.setVolunteers(volunteers);
+        application.setVolunteers(volunteers);
         List<Volunteer> received = volunteers;
         assertEquals(expected, received);
     }    // testSetVolunteersDoesNotAlterArgument()
@@ -394,10 +400,10 @@ public class ApplicationTest {
     public void testGetVolunteersSetVolunteersListsAreEqual() throws IOException {
         System.out.println("getVolunteers/setVolunteers - lists are equal");
 
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         List<Volunteer> expected = volunteers;
-        Application.setVolunteers(volunteers);
-        List<Volunteer> received = Application.getVolunteers();
+        application.setVolunteers(volunteers);
+        List<Volunteer> received = application.getVolunteers();
         assertEquals(expected, received);
     }    // testGetVolunteersSetVolunteersListsAreEqual()
     
@@ -409,10 +415,10 @@ public class ApplicationTest {
     public void testGetVolunteersSetVolunteersNoIdentity() throws IOException {
         System.out.println("getVolunteers/setVolunteers - lists are not identical");
 
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         List<Volunteer> expected = volunteers;
-        Application.setVolunteers(volunteers);
-        List<Volunteer> received = Application.getVolunteers();
+        application.setVolunteers(volunteers);
+        List<Volunteer> received = application.getVolunteers();
         assertFalse(expected == received);
     }    // testGetVolunteersSetVolunteersNoIdentity()
     
@@ -425,7 +431,7 @@ public class ApplicationTest {
     public void testGetEmailTemplateNoException() throws IOException {
         System.out.println("getEmailTemplate - no exception");
 
-        Application.getEmailTemplate();
+        application.getEmailTemplate();
     }    // testGetEmailTemplateNoException()
 
     /**
@@ -435,83 +441,50 @@ public class ApplicationTest {
     public void testGetEmailTemplateNotNull() throws IOException {
         System.out.println("getEmailTemplate - not null");
 
-        Reader received = Application.getEmailTemplate();
+        EmailTemplate received = application.getEmailTemplate();
         assertNotNull(received);
     }    // testGetEmailTemplateNotNull()
     
     /**
-     * Tests that {@link Application#setEmailTemplate(Reader)} throws a
+     * Tests that {@link Application#setEmailTemplate(bscmail.EmailTemplate)} throws a
      * {@link NullPointerException} when templateReader is null.
      */
     @Test(expected = NullPointerException.class)
     public void testSetEmailTemplateArgNull() throws IOException {
         System.out.println("setEmailTemplate - templateReader is null");
 
-        Reader templateReader = null;
-        Application.setEmailTemplate(templateReader);
+        EmailTemplate emailTemplate = null;
+        application.setEmailTemplate(emailTemplate);
     }    // testSetEmailTemplateArgNull()
     
     /**
-     * Tests that {@link Application#setEmailTemplate(Reader)} does not throw an
+     * Tests that {@link Application#setEmailTemplate(bscmail.EmailTemplate)} does not throw an
      * exception when templateReAder is not null.
      */
     @Test
     public void testSetEmailTemplateArgNotNull() throws IOException {
         System.out.println("setEmailTemplate - templateReader is not null");
 
-        Reader templateReader = new StringReader("foo");
-        Application.setEmailTemplate(templateReader);
+        EmailTemplate emailTemplate = new EmailTemplate("", "");
+        application.setEmailTemplate(emailTemplate);
     }    // testSetEmailTemplateArgNotNull()
     
     /**
-     * Tests that the content of the stream returned by
-     * {@link Application#getEmailTemplate()} is equal to the content of the
-     * stream passed to {@link Application#setEmailTemplate(List)}.
+     * Tests that the email template returned by
+     * {@link Application#setEmailTemplate(bscmail.EmailTemplate)} is equal to the email template
+     * passed to {@link Application#setEmailTemplate(List)}.
      */
     @Test
     public void testGetEmailTemplateSetEmailTemplateContents() throws IOException {
         System.out.println("getEmailTemplate/setEmailTemplate - character streams have equal contents");
 
-        String template = "Foo.\nBar bar.\nBork bork bork.\n";
-        Reader input = new StringReader(template);
-        Application.setEmailTemplate(input);
-        BufferedReader output = new BufferedReader(Application.getEmailTemplate());
+        EmailTemplate emailTemplate = new EmailTemplate("foo", "bar");
+        application.setEmailTemplate(emailTemplate);
 
-        try {
-            String expected = template;
-            String received = "";
-            String line;
-            while ((line = output.readLine()) != null) {
-                received += line + "\n";
-            }    // while()
-            assertEquals(expected, received);
-        } catch (IOException e) {    // try
-            fail("Test not completed: IOException: " + e);
-        }    // catch
+        EmailTemplate received = application.getEmailTemplate();
+        EmailTemplate expected = emailTemplate;
+        assertEquals(expected, received);
     }    // testGetEmailTemplateSetEmailTemplateContents()
-    
-    /* getTransformer */
-    
-    /**
-     * Tests that {@link Application#getTransformer()} does not throw an exception.
-     */
-    @Test
-    public void testGetTransformerNoException() {
-        System.out.println("getTransformer - no exception");
-
-        Application.getTransformer();
-    }    // testGetTransformerNoException()
-
-    /**
-     * Tests that {@link Application#getTransformer()} does not return null.
-     */
-    @Test
-    public void testGetTransformerNotNull() {
-        System.out.println("getTransformer - not null");
-
-        Transformer received = Application.getTransformer();
-        assertNotNull(received);
-    }    // testGetTransformerNotNull()
     
     /* registerObserver(ShiftsObserver) */
     
@@ -524,7 +497,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(ShiftsObserver) - observer is null");
 
         ShiftsObserver observer = null;
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverShiftsObserverNull()
     
     /**
@@ -536,7 +509,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(ShiftsObserver) - observer is null");
 
         ShiftsObserver observer = new ApplicationObserver();
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverShiftsObserverNotNull()
     
     /**
@@ -549,7 +522,7 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (ShiftsObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
     }    // testRegisterObserverShiftsTwice()
 
@@ -564,10 +537,11 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (ShiftsObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        application.setShifts(shifts);
         
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getShiftsChanged());
@@ -585,9 +559,9 @@ public class ApplicationTest {
         System.out.println("setVolunteers/registerObserver(ShiftsObserver) - does not notify");
 
         ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ShiftsObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
-        Application.setVolunteers(volunteers);
+        application.registerObserver((ShiftsObserver)observer);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
         
         assertFalse(observer.getShiftsChanged());
     }    // testSetVolunteersRegisterObserverShiftsNotifiesAll()
@@ -602,10 +576,9 @@ public class ApplicationTest {
         System.out.println("setEmailTemplate/registerObserver(ShiftsObserver) - does not notify");
 
         ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((ShiftsObserver)observer);
-        String text = "Foo\nBar\n";
-        Reader templateReader = new StringReader(text);
-        Application.setEmailTemplate(templateReader);
+        application.registerObserver((ShiftsObserver)observer);
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        application.setEmailTemplate(emailTemplate);
         
         assertFalse(observer.getShiftsChanged());
     }    // testSetEmailTemplateRegisterObserverShiftsNotifiesAll()
@@ -621,7 +594,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(VolunteersObserver) - observer is null");
 
         VolunteersObserver observer = null;
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverVolunteersObserverNull()
     
     /**
@@ -633,7 +606,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(VolunteersObserver) - observer is null");
 
         VolunteersObserver observer = new ApplicationObserver();
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverVolunteersObserverNotNull()
     
     /**
@@ -646,7 +619,7 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (VolunteersObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
     }    // testRegisterObserverVolunteersTwice()
 
@@ -661,10 +634,10 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (VolunteersObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
-        Application.setVolunteers(volunteers);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
         
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getVolunteersChanged());
@@ -681,9 +654,10 @@ public class ApplicationTest {
         System.out.println("setShifts/registerObserver(VolunteersObserver) - does not notify");
 
         ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((VolunteersObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
+        application.registerObserver((VolunteersObserver)observer);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        application.setShifts(shifts);
         
         assertFalse(observer.getVolunteersChanged());
     }    // testSetShiftsRegisterObserverVolunteersNotifiesAll()
@@ -699,7 +673,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(EmailTemplateObserver) - observer is null");
 
         EmailTemplateObserver observer = null;
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverEmailTemplateObserverNull()
     
     /**
@@ -711,7 +685,7 @@ public class ApplicationTest {
         System.out.println("registerObserver(EmailTemplateObserver) - observer is null");
 
         EmailTemplateObserver observer = new ApplicationObserver();
-        Application.registerObserver(observer);
+        application.registerObserver(observer);
     }    // testRegisterObserverEmailTemplateObserverNotNull()
     
     /**
@@ -724,7 +698,7 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (EmailTemplateObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
     }    // testRegisterObserverEmailTemplateTwice()
 
@@ -739,11 +713,10 @@ public class ApplicationTest {
 
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (EmailTemplateObserver observer : observers) {
-            Application.registerObserver(observer);
+            application.registerObserver(observer);
         }    // for
-        String text = "Foo\nBar\n";
-        Reader templateReader = new StringReader(text);
-        Application.setEmailTemplate(templateReader);
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        application.setEmailTemplate(emailTemplate);
         
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getEmailTemplateChanged());
@@ -760,9 +733,10 @@ public class ApplicationTest {
         System.out.println("setShifts/registerObserver(EmailTemplateObserver) - does not notify");
 
         ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((EmailTemplateObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", false), new Shift("Bar", false));
-        Application.setShifts(shifts);
+        application.registerObserver((EmailTemplateObserver)observer);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        application.setShifts(shifts);
         
         assertFalse(observer.getEmailTemplateChanged());
     }    // testSetShiftsRegisterObserverEmailTemplateNotifiesAll()
@@ -777,9 +751,9 @@ public class ApplicationTest {
         System.out.println("setVolunteers/registerObserver(EmailTemplateObserver) - does not notify");
 
         ApplicationObserver observer = new ApplicationObserver();
-        Application.registerObserver((EmailTemplateObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", false), new Volunteer("Bar", "bar", true));
-        Application.setVolunteers(volunteers);
+        application.registerObserver((EmailTemplateObserver)observer);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
         
         assertFalse(observer.getEmailTemplateChanged());
     }    // testSetVolunteersRegisterObserverEmailTemplateNotifiesAll()

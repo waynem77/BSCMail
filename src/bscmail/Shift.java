@@ -88,12 +88,14 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
          * such a value does not exist, or if the value is not a Volunteer, then
          * no volunteer is assigned to the shift.</li>
          * </ul>
+         * If a property is missing or null, a suitable default value will be
+         * used in its place.
+         * 
          * This method effectively acts as the reverse of
          * {@link Shift#getReadWritableProperties()}.
          *
          * @param properties the read-writable properties; may not be null
-         * @return a shift constructed from the given properties, or
-         * null if the factory is unable to construct a shift
+         * @return a shift constructed from the given properties
          * @throws NullPointerException if {@code properties} is null
          */
         @Override
@@ -110,11 +112,11 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
 
             // display configurations
             Object displayVolunteerEmailObject = properties.get("displayVolunteerEmail");
-            boolean displayVolunteerEmail = Boolean.parseBoolean(displayVolunteerEmailObject.toString());
+            boolean displayVolunteerEmail = (displayVolunteerEmailObject == null) ? false : Boolean.parseBoolean(displayVolunteerEmailObject.toString());
             Object displayVolunteerPhoneObject = properties.get("displayVolunteerPhone");
-            boolean displayVolunteerPhone = Boolean.parseBoolean(displayVolunteerPhoneObject.toString());
+            boolean displayVolunteerPhone = (displayVolunteerPhoneObject == null) ? false : Boolean.parseBoolean(displayVolunteerPhoneObject.toString());
             Object displayVolunteerNotesObject = properties.get("displayVolunteerNotes");
-            boolean displayVolunteerNotes = Boolean.parseBoolean(displayVolunteerNotesObject.toString());
+            boolean displayVolunteerNotes = (displayVolunteerNotesObject == null) ? false : Boolean.parseBoolean(displayVolunteerNotesObject.toString());
 
             // volunteer
             Object volunteerObject = properties.get("volunteer");
@@ -199,19 +201,29 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     /**
      * Constructs a new shift.
      *
-     * @param description  the shift's description; may not be null
+     * @param description the shift's description; may not be null
+     * @param roles the roles required by the shift; may not be null, nor
+     * contain null
      * @param displayVolunteerEmail true if the event email should display the
      * email address of the volunteer assigned to this shift; false otherwise
      * @param displayVolunteerPhone true if the event email should display the
      * phone number of the volunteer assigned to this shift; false otherwise
      * @param displayVolunteerNotes true if the event email should display the
      * notes for the volunteer assigned to this shift; false otherwise
-     * @throws NullPointerException if {@code description} is null
+     * @throws NullPointerException if {@code description} is null, if
+     * {@code roles} is null, or if {@code roles} contains null
      */
     public Shift(String description, List<Role> roles, boolean displayVolunteerEmail, boolean displayVolunteerPhone, boolean displayVolunteerNotes) {
         if (description == null) {
             throw new NullPointerException("description may not be null");
-        }
+        }    // if
+        if (roles == null) {
+            throw new NullPointerException("roles may not be null");
+        }    // if
+        if (roles.contains(null)) {
+            throw new NullPointerException("roles may not contain null");
+        }    // if
+
         this.description = description;
         volunteer = null;
         this.roles = roles;
@@ -219,7 +231,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         this.displayVolunteerPhone = displayVolunteerPhone;
         this.displayVolunteerNotes = displayVolunteerNotes;
         assertInvariant();
-    }
+    }    // Shift()
 
     /**
      * Returns the shift's description.
@@ -312,7 +324,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      * map returned by this method is guaranteed to have the following
      * properties.
      * <ul>
-     * <li>The map has four guaranteed keys: "description",
+     * <li>The map has five guaranteed keys: "description", "roles"
      * "displayVolunteerEmail", "displayVolunteerPhone", and
      * "displayVolunteerNotes".</li>
      * <li>If the shift has a volunteer, then the map has a key
@@ -320,6 +332,8 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      * <li>No value is null.
      * <li>The value of "description" is a non-null {@link String} equal to the
      * return value of {@link #getDescription()}.</li>
+     * <li>The value of "roles" is a comma-delimited {@link String} containing
+     * the names of all the roles returned by {@link #getRoles()}.</li>
      * <li>The value of "displayVolunteerEmail" is a boolean equal to the return
      * value of {@link #displayVolunteerEmail()}.</li>
      * <li>The value of "displayVolunteerPhone" is a boolean equal to the return
@@ -341,12 +355,6 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     public Map<String, Object> getReadWritableProperties() {
         Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("description", description);
-        properties.put("displayVolunteerEmail", displayVolunteerEmail);
-        properties.put("displayVolunteerPhone", displayVolunteerPhone);
-        properties.put("displayVolunteerNotes", displayVolunteerNotes);
-        if (volunteer != null) {
-            properties.put("volunteer", volunteer);
-        }
         if (!roles.isEmpty()) {
             String roleNames = "";
             for (Role role : roles) {
@@ -354,6 +362,12 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
             }
             roleNames = roleNames.substring(0, roleNames.length() - 1);
             properties.put("roles", roleNames);
+        }
+        properties.put("displayVolunteerEmail", displayVolunteerEmail);
+        properties.put("displayVolunteerPhone", displayVolunteerPhone);
+        properties.put("displayVolunteerNotes", displayVolunteerNotes);
+        if (volunteer != null) {
+            properties.put("volunteer", volunteer);
         }
         return properties;
     }
@@ -461,6 +475,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      */
     private void assertInvariant() {
         assert (description != null);
-        assert (volunteer != null);
-    }
+        assert (roles != null);
+        assert (! roles.contains(null));
+    }    // assertInvariant()
 }
