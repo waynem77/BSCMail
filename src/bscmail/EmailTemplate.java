@@ -110,12 +110,12 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     /**
      * The email template's pre-schedule text.
      */
-    private String preScheduleText;
+    private final String preScheduleText;
 
     /**
      * The email template's post-schedule text.
      */
-    private String postScheduleText;
+    private final String postScheduleText;
 
     /**
      * Constructs a new email template.
@@ -149,22 +149,6 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     }    // getDescription()
 
     /**
-     * Sets the email template's pre-schedule text to the given parameter.
-     *
-     * @param preScheduleText the email template's pre-schedule text; may be
-     * empty, but not null
-     * @throws NullPointerException if {@code preScheduleText} is null
-     */
-    public void setPreScheduleText(String preScheduleText) {
-        assertInvariant();
-        if (preScheduleText == null) {
-            throw new NullPointerException("preScheduleText may not be null");
-        }    // if
-        this.preScheduleText = preScheduleText;
-        assertInvariant();
-    }    // getDescription()
-
-    /**
      * Returns the email template's post-schedule text.
      *
      * @return the email template's post-schedule text
@@ -172,22 +156,6 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     public String getPostScheduleText() {
         assertInvariant();
         return postScheduleText;
-    }    // getDescription()
-
-    /**
-     * Sets the email template's post-schedule text to the given parameter.
-     *
-     * @param postScheduleText the email template's post-schedule text; may be
-     * empty, but not null
-     * @throws NullPointerException if {@code postScheduleText} is null
-     */
-    public void setPostScheduleText(String postScheduleText) {
-        assertInvariant();
-        if (postScheduleText == null) {
-            throw new NullPointerException("postScheduleText may not be null");
-        }    // if
-        this.postScheduleText = postScheduleText;
-        assertInvariant();
     }    // getDescription()
 
     /**
