@@ -27,6 +27,7 @@ import main.*;
  * Represents a BSC Role.
  *
  * @author Nathan Cordner
+ * @since 3.0
  */
 public class Role implements Cloneable, Serializable, ReadWritable {
 
@@ -134,7 +135,6 @@ public class Role implements Cloneable, Serializable, ReadWritable {
      *
      * @return the role's name
      */
-    //@Override
     public String getName() {
         assertInvariant();
         return name;
@@ -154,7 +154,6 @@ public class Role implements Cloneable, Serializable, ReadWritable {
      * </ul>
      *
      * @return a map containing the read-writable properties of the role
-     * @since 3.0
      */
     @Override
     public Map<String, Object> getReadWritableProperties() {
