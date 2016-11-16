@@ -241,395 +241,172 @@ public class EventTest {
         event.setDate(date);
     }    // testSetDateNullNoException()
 
-    /* getBand / setBand */
-    
-    /**
-     * Tests that {@link Event#getBand()} does not throw an exception.
-     */
-    @Test
-    public void testGetBandNoException() {
-        System.out.println("getBand - no exception");
-
-        event.getBand();
-    }    // testGetBandNoException()
+    /* addEventProperty / getEventProperties */
 
     /**
-     * Tests that {@link Event#getBand()} returns an empty string when called
-     * before {@link Event#setBand(String)}.
+     * Tests that {@link Event#addEventProperty(EventProperty)} throws a
+     * {@link NullPointerException} when the parameter is null.
      */
-    @Test
-    public void testGetBandBeforeSetBand() {
-        System.out.println("getBand - before setBand");
-
-        String expected = "";
-        String received = event.getBand();
-        assertEquals(expected, received);
-    }    // testGetBandNoException()
-
-    /**
-     * Tests that (@link Event#getBand()} returns the correct value when called
-     * after {@link Event#setBand(String)}.
-     */
-    @Test
-    public void testGetBandAfterSetBand() {
-        System.out.println("getBand - after setBand");
-
-        String band = "foo";
-        event.setBand(band);
-        String expected = band;
-        String received = event.getBand();
-        assertEquals(expected, received);
-    }    // testGetBandAfterSetBand()
-
-    /**
-     * Tests that (@link Event#getBand()} returns the correct value when called
-     * after {@link Event#setBand(String)}, called with null.
-     */
-    @Test
-    public void testGetBandAfterSetBandNull() {
-        System.out.println("getBand - after setBand(null)");
-
-        String band = null;
-        event.setBand(band);
-        String expected = "";
-        String received = event.getBand();
-        assertEquals(expected, received);
-    }    // testGetBandAfterSetBandNull()
-    
-    /**
-     * Tests that {@link Event#setBand(String)} does not throw an exception.
-     */
-    @Test
-    public void testSetBandNoException() {
-        System.out.println("setBand - no exception");
+    @Test(expected = NullPointerException.class)
+    public void testAddEventPropertyNull() {
+        System.out.println("addEventProperty - null");
         
-        String band = "foo";
-        event.setBand(band);
-    }    // testSetBandNoException()
+        EventProperty eventProperty = null;
+        event.addEventProperty(eventProperty);
+    }    // testAddEventPropertyNull()
     
     /**
-     * Tests that {@link Event#setBand(String)} does not throw an exception
-     * when the parameter is null.
+     * Tests that {@link Event#addEventProperty(EventProperty)} does not throw
+     * an exception when the parameter is not null.
      */
     @Test
-    public void testSetBandNullNoException() {
-        System.out.println("setBand - null, no exception");
+    public void testAddEventProperty() {
+        System.out.println("addEventProperty");
         
-        String band = null;
-        event.setBand(band);
-    }    // testSetBandNullNoException()
-
-    /* getInstructors / setInstructors */
+        String name = "foo";
+        String defaultValue = "bar";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        event.addEventProperty(eventProperty);
+    }
     
     /**
-     * Tests that {@link Event#getInstructors()} does not throw an exception.
+     * Tests that {@link Event#getEventProperties()} does not throw an exception
+     * when no eventProperties have been added.
      */
     @Test
-    public void testGetInstructorsNoException() {
-        System.out.println("getInstructors - no exception");
-
-        event.getInstructors();
-    }    // testGetInstructorsNoException()
-
-    /**
-     * Tests that {@link Event#getInstructors()} returns an empty string when called
-     * before {@link Event#setInstructors(String)}.
-     */
-    @Test
-    public void testGetInstructorsBeforeSetInstructors() {
-        System.out.println("getInstructors - before setInstructors");
-
-        String expected = "";
-        String received = event.getInstructors();
-        assertEquals(expected, received);
-    }    // testGetInstructorsNoException()
-
-    /**
-     * Tests that (@link Event#getInstructors()} returns the correct value when called
-     * after {@link Event#setInstructors(String)}.
-     */
-    @Test
-    public void testGetInstructorsAfterSetInstructors() {
-        System.out.println("getInstructors - after setInstructors");
-
-        String instructors = "foo";
-        event.setInstructors(instructors);
-        String expected = instructors;
-        String received = event.getInstructors();
-        assertEquals(expected, received);
-    }    // testGetInstructorsAfterSetInstructors()
-
-    /**
-     * Tests that (@link Event#getInstructors()} returns the correct value when called
-     * after {@link Event#setInstructors(String)}, called with null.
-     */
-    @Test
-    public void testGetInstructorsAfterSetInstructorsNull() {
-        System.out.println("getInstructors - after setInstructors(null)");
-
-        String instructors = null;
-        event.setInstructors(instructors);
-        String expected = "";
-        String received = event.getInstructors();
-        assertEquals(expected, received);
-    }    // testGetInstructorsAfterSetInstructorsNull()
-    
-    /**
-     * Tests that {@link Event#setInstructors(String)} does not throw an exception.
-     */
-    @Test
-    public void testSetInstructorsNoException() {
-        System.out.println("setInstructors - no exception");
+    public void testGetEventPropertiesEmptyNoException() {
+        System.out.println("getEventProperties - empty, no exception");
         
-        String instructors = "foo";
-        event.setInstructors(instructors);
-    }    // testSetInstructorsNoException()
+        event.getEventProperties();
+    }    // testGetEventPropertiesEmptyNoException()
     
     /**
-     * Tests that {@link Event#setInstructors(String)} does not throw an exception
-     * when the parameter is null.
+     * Tests that {@link Event#getEventProperties()} returns an empty list when
+     * no eventProperties have been added.
      */
     @Test
-    public void testSetInstructorsNullNoException() {
-        System.out.println("setInstructors - null, no exception");
+    public void testGetEventPropertiesEmpty() {
+        System.out.println("getEventProperties - empty");
         
-        String instructors = null;
-        event.setInstructors(instructors);
-    }    // testSetInstructorsNullNoException()
-
-    /* getGeneralPrice / setGeneralPrice */
-    
-    /**
-     * Tests that {@link Event#getGeneralPrice()} does not throw an exception.
-     */
-    @Test
-    public void testGetGeneralPriceNoException() {
-        System.out.println("getGeneralPrice - no exception");
-
-        event.getGeneralPrice();
-    }    // testGetGeneralPriceNoException()
-
-    /**
-     * Tests that {@link Event#getGeneralPrice()} returns an empty string when called
-     * before {@link Event#setGeneralPrice(String)}.
-     */
-    @Test
-    public void testGetGeneralPriceBeforeSetGeneralPrice() {
-        System.out.println("getGeneralPrice - before setGeneralPrice");
-
-        String expected = "";
-        String received = event.getGeneralPrice();
+        List<EventProperty> expected = Collections.emptyList();
+        List<EventProperty> received = event.getEventProperties();
         assertEquals(expected, received);
-    }    // testGetGeneralPriceNoException()
-
-    /**
-     * Tests that (@link Event#getGeneralPrice()} returns the correct value when called
-     * after {@link Event#setGeneralPrice(String)}.
-     */
-    @Test
-    public void testGetGeneralPriceAfterSetGeneralPrice() {
-        System.out.println("getGeneralPrice - after setGeneralPrice");
-
-        String generalPrice = "foo";
-        event.setGeneralPrice(generalPrice);
-        String expected = generalPrice;
-        String received = event.getGeneralPrice();
-        assertEquals(expected, received);
-    }    // testGetGeneralPriceAfterSetGeneralPrice()
-
-    /**
-     * Tests that (@link Event#getGeneralPrice()} returns the correct value when called
-     * after {@link Event#setGeneralPrice(String)}, called with null.
-     */
-    @Test
-    public void testGetGeneralPriceAfterSetGeneralPriceNull() {
-        System.out.println("getGeneralPrice - after setGeneralPrice(null)");
-
-        String generalPrice = null;
-        event.setGeneralPrice(generalPrice);
-        String expected = "";
-        String received = event.getGeneralPrice();
-        assertEquals(expected, received);
-    }    // testGetGeneralPriceAfterSetGeneralPriceNull()
-    
-    /**
-     * Tests that {@link Event#setGeneralPrice(String)} does not throw an exception.
-     */
-    @Test
-    public void testSetGeneralPriceNoException() {
-        System.out.println("setGeneralPrice - no exception");
+    }    // testGetEventPropertiesEmpty()
         
-        String generalPrice = "foo";
-        event.setGeneralPrice(generalPrice);
-    }    // testSetGeneralPriceNoException()
-    
     /**
-     * Tests that {@link Event#setGeneralPrice(String)} does not throw an exception
-     * when the parameter is null.
+     * Tests that {@link Event#getEventProperties()} does not throw an exception
+     * after eventProperties have been added.
      */
     @Test
-    public void testSetGeneralPriceNullNoException() {
-        System.out.println("setGeneralPrice - null, no exception");
+    public void testGetEventPropertiesNoException() {
+        System.out.println("getEventProperties - no exception");
         
-        String generalPrice = null;
-        event.setGeneralPrice(generalPrice);
-    }    // testSetGeneralPriceNullNoException()
-
-    /* getStudentPrice / setStudentPrice */
-    
-    /**
-     * Tests that {@link Event#getStudentPrice()} does not throw an exception.
-     */
-    @Test
-    public void testGetStudentPriceNoException() {
-        System.out.println("getStudentPrice - no exception");
-
-        event.getStudentPrice();
-    }    // testGetStudentPriceNoException()
-
-    /**
-     * Tests that {@link Event#getStudentPrice()} returns an empty string when called
-     * before {@link Event#setStudentPrice(String)}.
-     */
-    @Test
-    public void testGetStudentPriceBeforeSetStudentPrice() {
-        System.out.println("getStudentPrice - before setStudentPrice");
-
-        String expected = "";
-        String received = event.getStudentPrice();
-        assertEquals(expected, received);
-    }    // testGetStudentPriceNoException()
-
-    /**
-     * Tests that (@link Event#getStudentPrice()} returns the correct value when called
-     * after {@link Event#setStudentPrice(String)}.
-     */
-    @Test
-    public void testGetStudentPriceAfterSetStudentPrice() {
-        System.out.println("getStudentPrice - after setStudentPrice");
-
-        String studentPrice = "foo";
-        event.setStudentPrice(studentPrice);
-        String expected = studentPrice;
-        String received = event.getStudentPrice();
-        assertEquals(expected, received);
-    }    // testGetStudentPriceAfterSetStudentPrice()
-
-    /**
-     * Tests that (@link Event#getStudentPrice()} returns the correct value when called
-     * after {@link Event#setStudentPrice(String)}, called with null.
-     */
-    @Test
-    public void testGetStudentPriceAfterSetStudentPriceNull() {
-        System.out.println("getStudentPrice - after setStudentPrice(null)");
-
-        String studentPrice = null;
-        event.setStudentPrice(studentPrice);
-        String expected = "";
-        String received = event.getStudentPrice();
-        assertEquals(expected, received);
-    }    // testGetStudentPriceAfterSetStudentPriceNull()
-    
-    /**
-     * Tests that {@link Event#setStudentPrice(String)} does not throw an exception.
-     */
-    @Test
-    public void testSetStudentPriceNoException() {
-        System.out.println("setStudentPrice - no exception");
         
-        String studentPrice = "foo";
-        event.setStudentPrice(studentPrice);
-    }    // testSetStudentPriceNoException()
-    
-    /**
-     * Tests that {@link Event#setStudentPrice(String)} does not throw an exception
-     * when the parameter is null.
-     */
-    @Test
-    public void testSetStudentPriceNullNoException() {
-        System.out.println("setStudentPrice - null, no exception");
+        String name = "foo";
+        String defaultValue = "bar";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        event.addEventProperty(eventProperty);
+        event.getEventProperties();
+    }    // testGetEventPropertiesNoException()
         
-        String studentPrice = null;
-        event.setStudentPrice(studentPrice);
-    }    // testSetStudentPriceNullNoException()
-
-    /* getDiscountPrice / setDiscountPrice */
-    
     /**
-     * Tests that {@link Event#getDiscountPrice()} does not throw an exception.
+     * Tests that {@link Event#getEventProperties()} returns the correct value
+     * after eventProperties have been added.
      */
     @Test
-    public void testGetDiscountPriceNoException() {
-        System.out.println("getDiscountPrice - no exception");
-
-        event.getDiscountPrice();
-    }    // testGetDiscountPriceNoException()
-
-    /**
-     * Tests that {@link Event#getDiscountPrice()} returns an empty string when called
-     * before {@link Event#setDiscountPrice(String)}.
-     */
-    @Test
-    public void testGetDiscountPriceBeforeSetDiscountPrice() {
-        System.out.println("getDiscountPrice - before setDiscountPrice");
-
-        String expected = "";
-        String received = event.getDiscountPrice();
-        assertEquals(expected, received);
-    }    // testGetDiscountPriceNoException()
-
-    /**
-     * Tests that (@link Event#getDiscountPrice()} returns the correct value when called
-     * after {@link Event#setDiscountPrice(String)}.
-     */
-    @Test
-    public void testGetDiscountPriceAfterSetDiscountPrice() {
-        System.out.println("getDiscountPrice - after setDiscountPrice");
-
-        String discountPrice = "foo";
-        event.setDiscountPrice(discountPrice);
-        String expected = discountPrice;
-        String received = event.getDiscountPrice();
-        assertEquals(expected, received);
-    }    // testGetDiscountPriceAfterSetDiscountPrice()
-
-    /**
-     * Tests that (@link Event#getDiscountPrice()} returns the correct value when called
-     * after {@link Event#setDiscountPrice(String)}, called with null.
-     */
-    @Test
-    public void testGetDiscountPriceAfterSetDiscountPriceNull() {
-        System.out.println("getDiscountPrice - after setDiscountPrice(null)");
-
-        String discountPrice = null;
-        event.setDiscountPrice(discountPrice);
-        String expected = "";
-        String received = event.getDiscountPrice();
-        assertEquals(expected, received);
-    }    // testGetDiscountPriceAfterSetDiscountPriceNull()
-    
-    /**
-     * Tests that {@link Event#setDiscountPrice(String)} does not throw an exception.
-     */
-    @Test
-    public void testSetDiscountPriceNoException() {
-        System.out.println("setDiscountPrice - no exception");
+    public void testGetEventProperties() {
+        System.out.println("getEventProperties");
         
-        String discountPrice = "foo";
-        event.setDiscountPrice(discountPrice);
-    }    // testSetDiscountPriceNoException()
-    
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
+                new EventProperty("bar", "two"),
+                new EventProperty("baz", "three"));
+        for (EventProperty eventProperty : eventProperties) {
+            event.addEventProperty(eventProperty);
+        }    // for
+        List<EventProperty> expected = eventProperties;
+        List<EventProperty> received = event.getEventProperties();
+        assertEquals(expected, received);
+    }    // testGetEventProperties()
+        
     /**
-     * Tests that {@link Event#setDiscountPrice(String)} does not throw an exception
-     * when the parameter is null.
+     * Tests that the list returned from {@link Event#getEventProperties()} is
+     * unmodifiable.
      */
     @Test
-    public void testSetDiscountPriceNullNoException() {
-        System.out.println("setDiscountPrice - null, no exception");
+    public void testGetEventPropertiesUnmodifiable() {
+        System.out.println("getEventProperties - return value is unmodifiable");
         
-        String discountPrice = null;
-        event.setDiscountPrice(discountPrice);
-    }    // testSetDiscountPriceNullNoException()
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
+                new EventProperty("bar", "two"),
+                new EventProperty("baz", "three"));
+        for (EventProperty eventProperty : eventProperties) {
+            event.addEventProperty(eventProperty);
+        }    // for
+        List<EventProperty> list = event.getEventProperties();
+        
+        EventProperty eventProperty = new EventProperty("smurf", "four");
+        try {
+            list.add(eventProperty);
+            fail("able to add eventProperties to return value");
+        } catch (RuntimeException e) {    // try
+        }    // catch
+        try {
+            list.remove(0);
+            fail("able to remove eventProperties from return value");
+        } catch (RuntimeException e) {    // try
+        }    // catch
+        try {
+            list.set(0, eventProperty);
+            fail("able to replace eventProperties in return value");
+        } catch (RuntimeException e) {    // try
+        }    // catch
+    }    // testGetEventPropertiesUnmodifiable()
+        
+    /**
+     * Tests that the elements of the list returned from
+     * {@link Event#getEventProperties()} are modifiable.
+     */
+    @Test
+    public void testGetEventPropertiesElementsModifiable() {
+        System.out.println("getEventProperties - elements of return value are modifiable");
+        
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
+                new EventProperty("bar", "two"),
+                new EventProperty("baz", "three"));
+        for (EventProperty eventProperty : eventProperties) {
+            event.addEventProperty(eventProperty);
+        }    // for
+        List<EventProperty> list = event.getEventProperties();
+        int index = 0;
+        String value = "smurf";
+        list.get(index).setValue(value);
+    }    // testGetEventPropertiesElementsModifiable()
+        
+    /**
+     * Tests that changes to the elements of the list returned from
+     * {@link Event#getEventProperties()} are persistent.
+     */
+    @Test
+    public void testGetEventPropertiesPersistence() {
+        System.out.println("getEventProperties - persistence");
+        
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
+                new EventProperty("bar", "two"),
+                new EventProperty("baz", "three"));
+        for (EventProperty eventProperty : eventProperties) {
+            event.addEventProperty(eventProperty);
+        }    // for
+        List<EventProperty> list = event.getEventProperties();
+        int index = 0;
+        String value = "smurf";
+        list.get(index).setValue(value);
+        list = null;
+        
+        list = event.getEventProperties();
+        String expected = value;
+        String received = list.get(index).getValue();
+        assertEquals(expected, received);
+    }    // testGetEventPropertiesPersistence()
     
     /* addShift / getShifts */
     
@@ -654,7 +431,11 @@ public class EventTest {
         System.out.println("addShift");
         
         String description = "foo";
-        Shift shift = new Shift(description);
+        List<Role> roles = new LinkedList<>();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         event.addShift(shift);
     }
     
@@ -692,7 +473,11 @@ public class EventTest {
         
         
         String description = "foo";
-        Shift shift = new Shift(description);
+        List<Role> roles = new LinkedList<>();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         event.addShift(shift);
         event.getShifts();
     }    // testGetShiftsNoException()
@@ -705,7 +490,9 @@ public class EventTest {
     public void testGetShifts() {
         System.out.println("getShifts");
         
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true), new Shift("baz", false));
+        List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
+                new Shift("bar", new LinkedList<Role>(), true, true, true),
+                new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
@@ -722,13 +509,15 @@ public class EventTest {
     public void testGetShiftsUnmodifiable() {
         System.out.println("getShifts - return value is unmodifiable");
         
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true), new Shift("baz", false));
+        List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
+                new Shift("bar", new LinkedList<Role>(), true, true, true),
+                new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
         List<Shift> list = event.getShifts();
         
-        Shift shift = new Shift("smurf", true);
+        Shift shift = new Shift("smurf", new LinkedList<Role>(), true, true, true);
         try {
             list.add(shift);
             fail("able to add shifts to return value");
@@ -754,13 +543,15 @@ public class EventTest {
     public void testGetShiftsElementsModifiable() {
         System.out.println("getShifts - elements of return value are modifiable");
         
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true), new Shift("baz", false));
+        List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
+                new Shift("bar", new LinkedList<Role>(), true, true, true),
+                new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
         List<Shift> list = event.getShifts();
         int index = 0;
-        Volunteer volunteer = new Volunteer("smurf", "quux", true);
+        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
         list.get(index).setVolunteer(volunteer);
     }    // testGetShiftsElementsModifiable()
         
@@ -772,13 +563,15 @@ public class EventTest {
     public void testGetShiftsPersistence() {
         System.out.println("getShifts - persistence");
         
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true), new Shift("baz", false));
+        List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
+                new Shift("bar", new LinkedList<Role>(), true, true, true),
+                new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
         List<Shift> list = event.getShifts();
         int index = 0;
-        Volunteer volunteer = new Volunteer("smurf", "quux", true);
+        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
         list.get(index).setVolunteer(volunteer);
         list = null;
         
