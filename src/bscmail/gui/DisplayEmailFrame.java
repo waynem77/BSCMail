@@ -103,12 +103,11 @@ public class DisplayEmailFrame extends JFrame {
         layoutHelper.addComponent("Actions: ", sendEmail);
 
         add(mainPanel);
-        //add(new JScrollPane(textArea));
-        pack();
 
         populateRecipientLine(event);
         populateSubjectLine(event);
         populateEmailBody(application.getEmailTemplate(), event);
+        pack();
 
         assertInvariant();
     }    // DisplayEmailFrame()
