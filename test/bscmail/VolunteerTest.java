@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 public class VolunteerTest extends ReadWritableTest {
 
     /*
-     * Class methods methods
+     * Class methods
      */
 
     /**
@@ -1186,7 +1186,7 @@ public class VolunteerTest extends ReadWritableTest {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        Volunteer obj = new Volunteer(name + "X", email, phone, notes);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1212,7 +1212,7 @@ public class VolunteerTest extends ReadWritableTest {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        Volunteer obj = new Volunteer(name, email + "X", phone, notes);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1238,7 +1238,7 @@ public class VolunteerTest extends ReadWritableTest {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        Volunteer obj = new Volunteer(name, email, phone + "X", notes);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1290,7 +1290,7 @@ public class VolunteerTest extends ReadWritableTest {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        Volunteer obj = new Volunteer(name, email, phone, notes);
         for (int i = 1; i < roles.size(); ++i) {    // Deliberately skipping index 0
             obj.addRole(roles.get(i));
         }    // for
@@ -1353,6 +1353,7 @@ public class VolunteerTest extends ReadWritableTest {
         boolean expected = true;
         assertEquals(expected, received);
     }    // equalsReturnsTrueWhenArgumentIsEquivalentButRolesAreOrderedDifferently()
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns true when the
      * argument is the same object as the caller.

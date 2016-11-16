@@ -31,4 +31,4 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({bscmail.EventPropertyTest.class, bscmail.EventPropertyFactoryTest.class})
 public class EventPropertyTestSuite {
     
-}    // VolunteerTestSuite
+}    // EventPropertyTestSuite
