@@ -76,15 +76,15 @@ public class DisplayEmailFrame extends JFrame {
         
         setTitle(application.getApplicationName() + " - Event Email Text");
 
-        final int COLUMNS = 24;
-        final int ROWS = 80;
+        final int ROWS = 24;
+        final int COLUMNS = 80;
 
         mainPanel = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(mainPanel);
         layoutHelper.setLayoutManager();
 
-        recipientLine = new JTextField();
-        subjectLine = new JTextField();
+        recipientLine = new JTextField(COLUMNS);
+        subjectLine = new JTextField(COLUMNS);
         sendEmail = new JButton("Generate Email");
         sendEmail.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -94,7 +94,7 @@ public class DisplayEmailFrame extends JFrame {
             }    // actionPerformed()
         });    // addActionListener()
 
-        textArea = new JTextArea(COLUMNS, ROWS);
+        textArea = new JTextArea(ROWS, COLUMNS);
         textArea.setLineWrap(true);
 
         layoutHelper.addComponent("To: ", recipientLine);
