@@ -19,6 +19,7 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.Volunteer;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -48,13 +49,22 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     }    // tearDownClass(
 
     /**
+     * Returns an application object to be used in testing.
+     *
+     * @return Returns an application object to be used in testing
+     */
+    private Application getApplication() {
+        return new Application();
+    }    // getApplication()
+
+    /**
      * Returns the manage volunteer panel to be tested.
      * 
      * @return the manage volunteer panel to be tested
      */
     @Override
     protected ManageVolunteerPanel getPanel() {
-        return new ManageVolunteerPanel();
+        return new ManageVolunteerPanel(getApplication());
     }    // getPanel()
 
     /**
@@ -74,19 +84,37 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      */
     @Override
     protected Volunteer getElement() {
-        return new Volunteer("foo", "bar", true);
+        return new Volunteer("foo", "bar", "baz", "smurf");
     }    // getElement()
+
+    /*
+     * Unit tests
+     */
+
+    /**
+     * Tests that
+     * {@link ManageVolunteerPanel#ManageVolunteerPanel(bscmail.Application)}
+     * throws a {@link NullPointerException} if application is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenApplicationIsNull() {
+        Application application = null;
+
+        ManageVolunteerPanel panel = new ManageVolunteerPanel(application);
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
     
     /**
-     * Tests that {@link ManageVolunteerPanel#ManageVolunteerPanel()} does not throw an
-     * exception.
+     * Tests that
+     * {@link ManageVolunteerPanel#ManageVolunteerPanel(bscmail.Application)}
+     * does not throw an exception when application is not null.
      */
     @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
-        
-        ManageVolunteerPanel panel = new ManageVolunteerPanel();
-    }    // testConstructorNoException()
+    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
+        Application application = getApplication();
+        assert (application != null);
+
+        ManageVolunteerPanel panel = new ManageVolunteerPanel(application);
+    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
     
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} does not throw an
@@ -125,7 +153,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
         
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
-        Volunteer expected = new Volunteer("", "", false);
+        Volunteer expected = new Volunteer("", "", "", "");
         Volunteer received = panel.createElement();
         assertEquals(expected, received);
     }    // testCreateElementNotLoaded()

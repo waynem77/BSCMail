@@ -20,9 +20,8 @@
 package bscmail.gui;
 
 import bscmail.Event;
-import bscmail.transformer.Transformer;
-import java.io.*;
 import bscmail.Application;
+import java.io.IOException;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -32,15 +31,6 @@ import static org.junit.Assert.*;
  * @author Wayne Miller
  */
 public class DisplayEmailFrameTest {
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("DisplayEmailFrame");
-        System.out.println("=================");
-    }    // setUpClass()
 
     /*
      * Unit tests
@@ -48,65 +38,41 @@ public class DisplayEmailFrameTest {
     
     /**
      * Tests that
-     * {@link DisplayEmailFrame#DisplayEmailFrame(Reader, Transformer)} throws a
-     * {@link NullPointerException} when the reader is null.
+     * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
+     * throws a {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorReaderNull() throws IOException {
-        System.out.println("constructor - reader is null");
-        
-        Reader reader = null;
-        Transformer transformer = Application.getTransformer();
+    public void constructorThrowsExceptionWhenApplicationIsNull() throws IOException {
+        Application application = null;
         Event event = new Event();
-        DisplayEmailFrame frame = new DisplayEmailFrame(reader, transformer, event);
-    }    // testConstructorReaderNull()
+
+        DisplayEmailFrame frame = new DisplayEmailFrame(application, event);
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
     
     /**
      * Tests that
-     * {@link DisplayEmailFrame#DisplayEmailFrame(Reader, Transformer)} throws a
-     * {@link NullPointerException} when the transformer is null.
+     * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
+     * throws a {@link NullPointerException} when event is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorTransformerNull() throws IOException {
-        System.out.println("constructor - transformer is null");
-        
-        String text = "Unit test the class.\nSample text, perhaps, can be\nin a haiku form.";
-        Reader reader = new StringReader(text);
-        Transformer transformer = null;
-        Event event = new Event();
-        DisplayEmailFrame frame = new DisplayEmailFrame(reader, transformer, event);
-    }    // testConstructorTransformerNull()
-    
-    /**
-     * Tests that
-     * {@link DisplayEmailFrame#DisplayEmailFrame(Reader, Transformer)} throws a
-     * {@link NullPointerException} when the event is null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testConstructorEventNull() throws IOException {
-        System.out.println("constructor - event is null");
-        
-        String text = "Unit test the class.\nSample text, perhaps, can be\nin a haiku form.";
-        Reader reader = new StringReader(text);
-        Transformer transformer = Application.getTransformer();
+    public void constructorThrowsExceptionWhenEventIsNull() throws IOException {
+        Application application = new Application();
         Event event = null;
-        DisplayEmailFrame frame = new DisplayEmailFrame(reader, transformer, event);
-    }    // testConstructorEventNull()
+
+        DisplayEmailFrame frame = new DisplayEmailFrame(application, event);
+    }    // constructorThrowsExceptionWhenEventIsNull()
     
     /**
      * Tests that
-     * {@link DisplayEmailFrame#DisplayEmailFrame(Reader, Transformer)} does not
-     * throw an exception when no parameter is null.
+     * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
+     * does not throw an exception when no parameter is null.
      */
     @Test
-    public void testConstructorNoException() throws IOException {
-        System.out.println("constructor - no exception");
-        
-        String text = "Unit test the class.\nSample text, perhaps, can be\nin a haiku form.";
-        Reader reader = new StringReader(text);
-        Transformer transformer = Application.getTransformer();
+    public void constructorDoesNotThrowExceptionWhenNoParamIsNull() throws IOException {
+        Application application = new Application();
         Event event = new Event();
-        DisplayEmailFrame frame = new DisplayEmailFrame(reader, transformer, event);
-    }    // testConstructorNoException()
+
+        DisplayEmailFrame frame = new DisplayEmailFrame(application, event);
+    }    // constructorDoesNotThrowExceptionWhenNoParamIsNull()
 
 }    // DisplayEmailFrameTest

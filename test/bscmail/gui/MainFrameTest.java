@@ -19,6 +19,7 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -28,32 +29,27 @@ import static org.junit.Assert.*;
  * @author Wayne Miller
  */
 public class MainFrameTest {
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("MainFrame");
-        System.out.println("=========");
-    }    // setUpClass()
 
     /**
-     * Prints unit test footer.
+     * Tests that {@link MainFrame#MainFrame(bscmail.Application)} throws a
+     * {@link NullPointerException} when application is null.
      */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass()
-    
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenApplicationIsNull() {
+        Application application = null;
+
+        MainFrame frame = new MainFrame(application);
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
+
     /**
-     * Tests that {@link MainFrame#MainFrame()} does not throw
-     * an exception.
+     * Tests that {@link MainFrame#MainFrame(bscmail.Application)} does not
+     * throw an exception when application is not null.
      */
     @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
-        
-        MainFrame frame = new MainFrame();
-    }    // testConstructorNoException()
+    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
+        Application application = new Application();
+
+        MainFrame frame = new MainFrame(application);
+    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
+
 }    // MainFrameTest
