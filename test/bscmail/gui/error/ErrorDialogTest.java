@@ -20,6 +20,7 @@
 package bscmail.gui.error;
 
 import java.awt.*;
+import javax.swing.JFrame;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -44,149 +45,114 @@ public class ErrorDialogTest {
      */
 
     /* constructors */
+
     /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String, Throwable)} does
-     * not throw an exception when owner is null.
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String, java.lang.Throwable)}
+     * does not throw an exception when owner is null.
      */
     @Test
-    public void testConstructorFrameStringThrowableOwnerNullNoException() {
-        System.out.println("constructor(Frame, String, Throwable) - owner is null, no exception");
+    public void fourArgConstructorDoesNotThrowExceptionWhenOwnerIsNull() {
 
         Frame owner = null;
-        String message = "Foo";
+        String title = "Foo";
+        String message = "Bar";
         Throwable cause = new RuntimeException();
-        ErrorDialog dialog = new ErrorDialog(owner, message, cause);
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message, cause);
     }    // testConstructorFrameStringThrowableOwnerNullNoException()
 
     /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String, Throwable)} does
-     * not throw an exception when message is null.
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String, java.lang.Throwable)}
+     * does not throw an exception when title is null.
      */
     @Test
-    public void testConstructorFrameStringThrowableMessageNullNoException() {
-        System.out.println("constructor(Frame, String, Throwable) - message is null, no exception");
+    public void fourArgConstructorDoesNotThrowExceptionWhenTitleIsNull() {
 
-        Frame owner = new Frame();
-        String message = null;
+        Frame owner = new JFrame();
+        String title = null;
+        String message = "Bar";
         Throwable cause = new RuntimeException();
-        ErrorDialog dialog = new ErrorDialog(owner, message, cause);
-    }    // testConstructorFrameStringThrowableMessageNullNoException()
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message, cause);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenTitleIsNull()
 
     /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String, Throwable)} does
-     * not throw an exception when cause is null.
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String, java.lang.Throwable)}
+     * does not throw an exception when message is null.
      */
     @Test
-    public void testConstructorFrameStringThrowableCauseNullNoException() {
-        System.out.println("constructor(Frame, String, Throwable) - cause is null, no exception");
+    public void fourArgConstructorDoesNotThrowExceptionWhenMessageIsNull() {
 
-        Frame owner = new Frame();
-        String message = "Foo";
+        Frame owner = new JFrame();
+        String title = "Foo";
+        String message = null;
+        Throwable cause = new RuntimeException();
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message, cause);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenMessageIsNull()
+
+    /**
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String, java.lang.Throwable)}
+     * does not throw an exception when cause is null.
+     */
+    @Test
+    public void fourArgConstructorDoesNotThrowExceptionWhenCauseIsNull() {
+
+        Frame owner = new JFrame();
+        String title = "Foo";
+        String message = "Bar";
         Throwable cause = null;
-        ErrorDialog dialog = new ErrorDialog(owner, message, cause);
-    }    // testConstructorFrameStringThrowableCauseNullNoException()
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message, cause);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenCauseIsNull()
 
     /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String, Throwable)} does
-     * not throw an exception when no parameter is null.
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String)}
+     * does not throw an exception when owner is null.
      */
     @Test
-    public void testConstructorFrameStringThrowableNoException() {
-        System.out.println("constructor(Frame, String, Throwable) - no exception");
-
-        Frame owner = new Frame();
-        String message = "Foo";
-        Throwable cause = new RuntimeException();
-        ErrorDialog dialog = new ErrorDialog(owner, message, cause);
-    }    // testConstructorFrameStringThrowableNoException()
-
-    /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String)} does not throw
-     * an exception when owner is null.
-     */
-    @Test
-    public void testConstructorFrameStringOwnerNullNoException() {
-        System.out.println("constructor(Frame, String) - owner is null, no exception");
+    public void threeArgConstructorDoesNotThrowExceptionWhenOwnerIsNull() {
 
         Frame owner = null;
-        String message = "Foo";
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-    }    // testConstructorFrameStringOwnerNullNoException()
+        String title = "Foo";
+        String message = "Bar";
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenMessageIsNull()
 
     /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String)} does not throw
-     * an exception when message is null.
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String)}
+     * does not throw an exception when title is null.
      */
     @Test
-    public void testConstructorFrameStringMessageNullNoException() {
-        System.out.println("constructor(Frame, String) - message is null, no exception");
+    public void threeArgConstructorDoesNotThrowExceptionWhenTitleIsNull() {
 
-        Frame owner = new Frame();
+        Frame owner = new JFrame();
+        String title = null;
+        String message = "Bar";
+
+        ErrorDialog dialog = new ErrorDialog(owner, title, message);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenTitleIsNull()
+
+    /**
+     * Tests that
+     * {@link ErrorDialog#ErrorDialog(java.awt.Frame, java.lang.String, java.lang.String)}
+     * does not throw an exception when message is null.
+     */
+    @Test
+    public void threeArgConstructorDoesNotThrowExceptionWhenMessageIsNull() {
+
+        Frame owner = new JFrame();
+        String title = "Foo";
         String message = null;
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-    }    // testConstructorFrameStringMessageNullNoException()
 
-    /**
-     * Tests that {@link ErrorDialog#ErrorDialog(Frame, String)} does not throw
-     * an exception when no parameter is null.
-     */
-    @Test
-    public void testConstructorFrameStringNoException() {
-        System.out.println("constructor(Frame, String) - no exception");
-
-        Frame owner = new Frame();
-        String message = "Foo";
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-    }    // testConstructorFrameStringNoException()
-
-    /* modality */
-    /**
-     * Tests that {@link ErrorDialog} is modal by default when created with an
-     * owner.
-     */
-    @Test
-    public void testIsModalHasOwner() {
-        System.out.println("getModalityType - has owner");
-
-        Frame owner = new Frame();
-        String message = "Foo";
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-        Dialog.ModalityType expected = Dialog.DEFAULT_MODALITY_TYPE;
-        Dialog.ModalityType received = dialog.getModalityType();
-        assertEquals(expected, received);
-    }    // testIsModalHasOwner()
-
-    /**
-     * Tests that {@link ErrorDialog} is modal by default when created without
-     * an owner.
-     */
-    @Test
-    public void testIsModalNoOwner() {
-        System.out.println("getModalityType - has no owner");
-
-        Frame owner = null;
-        String message = "Foo";
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-        Dialog.ModalityType expected = Dialog.DEFAULT_MODALITY_TYPE;
-        Dialog.ModalityType received = dialog.getModalityType();
-        assertEquals(expected, received);
-    }    // testIsModalNoOwner()
-
-    /* title */
-    /**
-     * Tests that the title of {@link ErrorDialog} contains the application name
-     * by default.
-     */
-    @Test
-    public void testTitleHasApplicationName() {
-        System.out.println("getTitle - contains application name");
-
-        Frame owner = null;
-        String message = "Foo";
-        ErrorDialog dialog = new ErrorDialog(owner, message);
-        String expected = bscmail.Application.getApplicationName();
-        String received = dialog.getTitle();
-        assertTrue(received.contains(expected));
-    }    // testTitleHasApplicationName()
+        ErrorDialog dialog = new ErrorDialog(owner, title, message);
+    }    // fourArgConstructorDoesNotThrowExceptionWhenMessageIsNull()
 
 }    // ErrorDialogTest

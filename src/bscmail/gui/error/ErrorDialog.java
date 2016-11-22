@@ -20,9 +20,17 @@
 package bscmail.gui.error;
 
 import java.awt.Frame;
-import java.awt.event.*;
-import javax.swing.*;
-import bscmail.Application;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 /**
  * Dialog that displays an error message.
@@ -48,15 +56,15 @@ public class ErrorDialog extends JDialog {
     private final Throwable cause;
     
     /**
-     * Constructs a new error dialog with the given owner, message, and throwable. The
-     * throwable provides extra information that the user may display at their
-     * convenience.
+     * Constructs a new error dialog with the given owner, message, and
+     * throwable. The throwable provides extra information that the user may
+     * display at their convenience.
      *
      * @param owner the owner of the dialog, or null if there is no owner
      * @param title the window title
      * @param message the message to display, or null if there is no message
-     * there is no cause
-     * @throws NullPointerException if {@code applicationName} is null
+     * @param cause the underlying error, or null if there is no underlying
+     * error object
      */
     public ErrorDialog(Frame owner, String title, String message, Throwable cause) {
         super(owner, title, true);
