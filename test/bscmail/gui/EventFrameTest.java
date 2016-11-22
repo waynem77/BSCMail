@@ -34,10 +34,20 @@ import static org.junit.Assert.*;
 public class EventFrameTest {
 
     /**
+     * A role used in testing.
+     */
+    private final Role ANGEL_ROLE = new Role("Angel");
+
+    /**
      * Variable used to hold the event frame being tested.
      */
     private EventFrame eventFrame;
-    
+
+    /**
+     * Variable used to hold the application used in testing.
+     */
+    private Application application;
+
     /**
      * Variable used to hold the event used in testing.
      */
@@ -48,19 +58,19 @@ public class EventFrameTest {
      * 
      * The shifts in the list are:
      * <ul>
-     *   <li>Door 1, false</li>
-     *   <li>Door 2, false</li>
-     *   <li>Angel, true</li>
+     *   <li>Door 1, no roles</li>
+     *   <li>Door 2, no roles</li>
+     *   <li>Angel, Angel role</li>
      * </ul>
      * 
      * @return a list of shifts to use in testing
      */
     private List<Shift> getTestShifts() {
-        return Arrays.asList(
-                new Shift("Door 1", false),
-                new Shift("Door 2", false),
-                new Shift("Angel", true)
-        );    // asList
+        return new LinkedList<>(Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false)
+        ));    // LinkedList
     }    // getTestShifts()
 
     /**
@@ -68,21 +78,32 @@ public class EventFrameTest {
      * 
      * The volunteers in the list are:
      * <ul>
-     *   <li>Val Unteer, true</li>
-     *   <li>Halva Ticket, true</li>
-     *   <li>Ang El, true</li>
-     *   <li>Colleen Up, false</li>
+     *   <li>Val Unteer, Angel role</li>
+     *   <li>Halva Ticket, no roles</li>
+     *   <li>Ang El, Angel role</li>
+     *   <li>Colleen Up, no roles</li>
      * </ul>
      * 
      * @return a list of volunteers to use in testing
      */
     private List<Volunteer> getTestVolunteers() {
-        return Arrays.asList(
-                new Volunteer("Val Unteer", "val@unteer", true),
-                new Volunteer("Halva Ticket", "halva@ticket", true),
-                new Volunteer("Ang El", "ang@el", true),
-                new Volunteer("Colleen Up", "colleen@up", false)
-        );    // asList
+        List<Volunteer> volunteers = new LinkedList<>();
+
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!");
+        volunteers.add(volunteer);
+
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+
+        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!");
+        volunteers.add(volunteer);
+
+        return volunteers;
     }    // getTestVolunteers()
     
     /**
@@ -143,8 +164,8 @@ public class EventFrameTest {
      */
     @Before
     public void setUp() {
-        Application.setTestMode(true);
         eventFrame = null;
+        application = null;
         event = null;
     }    // setUp()
 
@@ -153,8 +174,8 @@ public class EventFrameTest {
      */
     @After
     public void tearDown() {
-        Application.setTestMode(false);
         eventFrame = null;
+        application = null;
         event = null;
     }    // tearDown()
 
@@ -165,23 +186,35 @@ public class EventFrameTest {
     /* constructor */
 
     /**
-     * Tests that {@link EventFrame#EventFrame()} does not throw an exception.
+     * Tests that {@link EventFrame#EventFrame(bscmail.Application)} throws a
+     * {@link NullPointerException} when application is null.
      */
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenApplicationIsNull() {
+        application = null;
+        eventFrame = new EventFrame(application);
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
 
-        eventFrame = new EventFrame();
-    }    // testConstructorNoException()
+    /**
+     * Tests that {@link EventFrame#EventFrame(bscmail.Application)} does not
+     * throws an exception when application is not null.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
+        application = new Application();
+        eventFrame = new EventFrame(application);
+    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
     
     /* getEvent */
-    
+
     /**
      * Tests that {@link EventFrame#getEvent()} does not throw an exception.
      */
     @Test
     public void testGetEventNoException() {
         System.out.println("getEvent - no event");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         event = eventFrame.getEvent();
     }    // testGetEventNoException()
     
@@ -191,7 +224,8 @@ public class EventFrameTest {
     @Test
     public void testGetEventDoesNotReturnNull() {
         System.out.println("getEvent - does not return null");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         event = eventFrame.getEvent();
         assertNotNull(event);
     }    // testGetEventDoesNotReturnNull()
@@ -203,9 +237,10 @@ public class EventFrameTest {
     @Test
     public void testGetEventCorrectShifts() {
         System.out.println("getEvent - correct shifts");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         event = eventFrame.getEvent();
-        List<Shift> expected = Application.getShifts();
+        List<Shift> expected = application.getShifts();
         List<Shift> received = event.getShifts();
         assertEquals(expected, received);
     }    // testGetEventCorrectShifts()
@@ -219,7 +254,8 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsNullNoException() {
         System.out.println("setShifts - shifts is null, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = null;
         eventFrame.setShifts(shifts);
     }    // testSetShiftsNullNoException()
@@ -232,8 +268,12 @@ public class EventFrameTest {
     @Test(expected = NullPointerException.class)
     public void testSetShiftsContainsNull() {
         System.out.println("setShifts - shifts contains null");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = Arrays.asList(new Shift("foo", true), null, new Shift("bar", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = getTestShifts();
+        final int INSERTION_INDEX = 1;
+        assertTrue("Test setup error", shifts.size() > INSERTION_INDEX + 1);
+        shifts.add(INSERTION_INDEX, null);
         eventFrame.setShifts(shifts);
     }    // testSetShiftsContainsNull()
     
@@ -244,8 +284,9 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsNotNullNoException() {
         System.out.println("setShifts - shifts is not null, no exception");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = Arrays.asList(new Shift("foo", true), new Shift("bar", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
     }    // testSetShiftsNotNullNoException()
     
@@ -256,8 +297,9 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsNull() {
         System.out.println("setShifts - shifts is null");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", false), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = getTestShifts();
         eventFrame.setShifts(original);
         List<Shift> shifts = null;
         eventFrame.setShifts(shifts);
@@ -274,8 +316,9 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsEmpty() {
         System.out.println("setShifts - shifts is empty");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", false), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = getTestShifts();
         eventFrame.setShifts(original);
         List<Shift> shifts = new ArrayList<>();
         eventFrame.setShifts(shifts);
@@ -292,10 +335,14 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsFewerShifts() {
         System.out.println("setShifts - shifts is smaller than those in frame");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", false), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = getTestShifts();
+        final int ELEMENT_INDEX = 1;
+        assertTrue("Test setup error", original.size() > ELEMENT_INDEX + 1);
         eventFrame.setShifts(original);
-        List<Shift> shifts = Arrays.asList(new Shift("foo", true));
+        List<Shift> shifts = new LinkedList<>();
+        shifts.add(original.get(ELEMENT_INDEX));
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Shift> expected = shifts;
@@ -310,10 +357,12 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsSameNumberOfShifts() {
         System.out.println("setShifts - shifts is as large as those in frame");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", false), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = getTestShifts();
         eventFrame.setShifts(original);
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", false));
+        List<Shift> shifts = getTestShifts();
+        Collections.reverse(shifts);
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Shift> expected = shifts;
@@ -328,10 +377,12 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsMoreShifts() {
         System.out.println("setShifts - shifts is larger than those in frame");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", false), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = getTestShifts();
         eventFrame.setShifts(original);
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", false), new Shift("baz", false));
+        List<Shift> shifts = getTestShifts();
+        shifts.add(shifts.get(0));
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Shift> expected = shifts;
@@ -341,21 +392,28 @@ public class EventFrameTest {
     
     /**
      * Tests that {@link EventFrame#setShifts(List)} sets the shifts correctly
-     * when the "is angel shift" status of the shifts changes.
+     * when the shift roles change.
      */
     @Test
-    public void testSetShiftsIsAngelChanges() {
-        System.out.println("setShifts - is angel shift status changes");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", true), new Shift("two", false));
+    public void testSetShiftsShiftRolesChange() {
+        System.out.println("setShifts - shift roles change");
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(original);
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true));
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Arrays.asList(ANGEL_ROLE), false, false, false),
+                new Shift("Angel", Collections.<Role>emptyList(), false, false, false));
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Shift> expected = shifts;
         List<Shift> received = event.getShifts();
         assertEquals(expected, received);
-    }    // testSetShiftsIsAngelChanges()
+    }    // testSetShiftsShiftRolesChange()
     
     /**
      * Tests that {@link EventFrame#setShifts(List)} retains selections
@@ -364,14 +422,21 @@ public class EventFrameTest {
     @Test
     public void testSetShiftsRetainsSelections() {
         System.out.println("setShifts - retains selections");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", true), new Shift("two", false));
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(original);
         List<Volunteer> volunteers = getTestVolunteers();
         eventFrame.setVolunteers(volunteers);
         List<Volunteer> selections = volunteers.subList(0, original.size() - 1);
         eventFrame.setSelectedVolunteers(getVolunteerNames(selections));
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true));
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Foo", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Bar", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Baz", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Volunteer> expected = new ArrayList<>(selections);
@@ -387,18 +452,34 @@ public class EventFrameTest {
     
     /**
      * Tests that {@link EventFrame#setShifts(List)} retains selections
-     * correctly when the "is angel shift" status changes..
+     * correctly when the shift roles change.
      */
     @Test
-    public void testSetShiftsRetainsSelectionsWhenIsAngelChanges() {
-        System.out.println("setShifts - retains selections when is angel status changes");
-        eventFrame = new EventFrame();
-        List<Shift> original = Arrays.asList(new Shift("one", true), new Shift("two", false));
+    public void testSetShiftsRetainsSelectionsWhenShiftRolesChange() {
+        System.out.println("setShifts - retains selections when shift roles change");
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> original = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(original);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Angie El", "angie@el", true), new Volunteer("Val Unteer", "val@unteer", false));
+
+        List<Volunteer> volunteers = new LinkedList<>();
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!");
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!");
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+
         eventFrame.setVolunteers(volunteers);
-        eventFrame.setSelectedVolunteers(this.getVolunteerNames(volunteers));
-        List<Shift> shifts = Arrays.asList(new Shift("foo", false), new Shift("bar", true));
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Arrays.asList(ANGEL_ROLE), false, false, false),
+                new Shift("Angel", Collections.<Role>emptyList(), false, false, false));
         eventFrame.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Volunteer> expected = volunteers;
@@ -408,7 +489,7 @@ public class EventFrameTest {
             received.add(shift.getVolunteer());
         }    // for
         assertEquals(expected, received);
-    }    // testSetShiftsRetainsSelectionsWhenIsAngelChanges()
+    }    // testSetShiftsRetainsSelectionsWhenShiftRolesChange()
 
     /* setVolunteers */
     
@@ -419,7 +500,8 @@ public class EventFrameTest {
     @Test
     public void testSetVolunteersNullNoException() {
         System.out.println("setVolunteers - volunteers is null, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = null;
         eventFrame.setVolunteers(volunteers);
@@ -433,9 +515,13 @@ public class EventFrameTest {
     @Test(expected = NullPointerException.class)
     public void testSetVolunteersContainsNull() {
         System.out.println("setVolunteers - volunteers contains null");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("foo", "foo", true), null, new Volunteer("bar", "bar", true));
+        List<Volunteer> volunteers = getTestVolunteers();
+        final int INSERTION_INDEX = 1;
+        assertTrue("Test setup error", volunteers.size() > INSERTION_INDEX + 1);
+        volunteers.add(INSERTION_INDEX, null);
         eventFrame.setVolunteers(volunteers);
     }    // testSetVolunteersContainsNull()
     
@@ -447,9 +533,10 @@ public class EventFrameTest {
     @Test
     public void testSetVolunteersNotNullNoException() {
         System.out.println("setVolunteers - volunteers is not null, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("foo", "foo", true), new Volunteer("bar", "bar", true));
+        List<Volunteer> volunteers = getTestVolunteers();
         eventFrame.setVolunteers(volunteers);
     }    // testSetVolunteersNotNullNoException()
     
@@ -460,15 +547,16 @@ public class EventFrameTest {
     @Test
     public void testSetVolunteersNewVolunteersHasSameName() {
         System.out.println("setVolunteers - selected volunteers have same name as those previously selected");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = getTestVolunteers();
         eventFrame.setVolunteers(volunteers);
-        eventFrame.setSelectedVolunteers(this.getVolunteerNames(volunteers));
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), "foo", true);
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X");
         newVolunteers.set(INDEX, newVolunteer);
         eventFrame.setVolunteers(newVolunteers);
         List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
@@ -485,15 +573,16 @@ public class EventFrameTest {
     @Test
     public void testSetVolunteersNewVolunteersAreFromList() {
         System.out.println("setVolunteers - selected volunteers are from the lsit");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = getTestVolunteers();
         eventFrame.setVolunteers(volunteers);
-        eventFrame.setSelectedVolunteers(this.getVolunteerNames(volunteers));
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), "foo", true);
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X");
         newVolunteers.set(INDEX, newVolunteer);
         eventFrame.setVolunteers(newVolunteers);
         List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
@@ -510,19 +599,37 @@ public class EventFrameTest {
     @Test
     public void testSetVolunteersClearsSelection() {
         System.out.println("setVolunteers - selected volunteers are cleared");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
-        List<Volunteer> volunteers = getTestVolunteers();
+
+        List<Volunteer> volunteers = new LinkedList<>();
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!");
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+
         eventFrame.setVolunteers(volunteers);
-        eventFrame.setSelectedVolunteers(this.getVolunteerNames(volunteers));
-        List<Volunteer> newVolunteers = getTestVolunteers();
-        final int INDEX = 0;
-        Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer("foo", "foo", true);
-        newVolunteers.set(INDEX, newVolunteer);
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
+
+        List<Volunteer> newVolunteers = new LinkedList<>();
+        volunteer = new Volunteer("Foor", "val@unteer", "555-VAL", "Val!");
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!");
+        volunteer.addRole(ANGEL_ROLE);
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
+        volunteer.addRole(ANGEL_ROLE);
+        newVolunteers.add(volunteer);
+
+        final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 0;
         eventFrame.setVolunteers(newVolunteers);
         List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
-        Volunteer received = receivedVolunteers.get(INDEX);
+        Volunteer received = receivedVolunteers.get(INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER);
         assertNull(received);
     }    // testSetVolunteersClearsSelection()
     
@@ -535,7 +642,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersNullNoException() {
         System.out.println("setSelectedVolunteers - volunteers is null, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         eventFrame.setVolunteers(getTestVolunteers());
         List<String> volunteers = null;
@@ -549,7 +657,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersContainsNullNoException() {
         System.out.println("setSelectedVolunteers - volunteers contains null, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -568,7 +677,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersSmallNoException() {
         System.out.println("setSelectedVolunteers - volunteers is smaller than the number of shifts, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -588,7 +698,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersJustRightNoException() {
         System.out.println("setSelectedVolunteers - volunteers is the same size as the number of shifts, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -607,7 +718,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersLargeNoException() {
         System.out.println("setSelectedVolunteers - volunteers is larger than the number of shifts, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -626,7 +738,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersDoNotCorrespondNoException() {
         System.out.println("setSelectedVolunteers - volunteers do not correspond, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -648,7 +761,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersAngelConflictNoException() {
         System.out.println("setSelectedVolunteers - angel conflict, no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -669,7 +783,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersNull() {
         System.out.println("setSelectedVolunteers - volunteers is null");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         final int SIZE = shifts.size();
         eventFrame.setShifts(shifts);
@@ -677,7 +792,7 @@ public class EventFrameTest {
         List<String> volunteers = null;
         
         List<Volunteer> expected = Collections.nCopies(SIZE, null);
-        List<Volunteer> received = this.getSelectedVolunteers(eventFrame);
+        List<Volunteer> received = getSelectedVolunteers(eventFrame);
         eventFrame.setSelectedVolunteers(volunteers);
         assertEquals(expected, received);
     }    // testSetSelectedVolunteersNull()
@@ -689,7 +804,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersEmpty() {
         System.out.println("setSelectedVolunteers - volunteers is empty");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         final int SIZE = shifts.size();
         eventFrame.setShifts(shifts);
@@ -697,7 +813,7 @@ public class EventFrameTest {
         List<String> volunteers = new ArrayList<>();
         
         List<Volunteer> expected = Collections.nCopies(SIZE, null);
-        List<Volunteer> received = this.getSelectedVolunteers(eventFrame);
+        List<Volunteer> received = getSelectedVolunteers(eventFrame);
         eventFrame.setSelectedVolunteers(volunteers);
         assertEquals(expected, received);
     }    // testSetSelectedVolunteersEmpty()
@@ -709,7 +825,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersContainsNull() {
         System.out.println("setSelectedVolunteers - volunteers contains null");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -737,7 +854,8 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersSmall() {
         System.out.println("setSelectedVolunteers - volunteers is smaller than the number of shifts");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> shifts = getTestShifts();
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
@@ -766,8 +884,12 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersJustRight() {
         System.out.println("setSelectedVolunteers - volunteers is the same size as the number of shifts");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = getTestShifts();
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Collections.<Role>emptyList(), false, false, false));
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
         List<String> volunteers = getVolunteerNames(getTestVolunteers());
@@ -792,8 +914,12 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersLarge() {
         System.out.println("setSelectedVolunteers - volunteers is larger than the number of shifts");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = getTestShifts();
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Collections.<Role>emptyList(), false, false, false));
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
         List<String> volunteers = getVolunteerNames(getTestVolunteers());
@@ -818,8 +944,12 @@ public class EventFrameTest {
     @Test
     public void testSetSelectedVolunteersDoNotCorrespond() {
         System.out.println("setSelectedVolunteers - volunteers do not correspond");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = getTestShifts();
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Collections.<Role>emptyList(), false, false, false));
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(getTestVolunteers());
         List<String> volunteers = getVolunteerNames(getTestVolunteers());
@@ -841,31 +971,47 @@ public class EventFrameTest {
     
     /**
      * Tests that {@link EventFrame#setSelectedVolunteers(List)} sets the
-     * selected volunteers correctly when trying to fit a volunteer who is not
-     * and angel into an angel shift.
+     * selected volunteers correctly when trying to fit a volunteer who has the
+     * wrong roles into a shift.
      */
     @Test
-    public void testSetSelectedVolunteersAngelConflict() {
-        System.out.println("setSelectedVolunteers - angel conflict");
-        eventFrame = new EventFrame();
-        List<Shift> shifts = getTestShifts();
+    public void testSetSelectedVolunteersRoleConflict() {
+        System.out.println("setSelectedVolunteers - role conflict");
+        application = new Application();
+        eventFrame = new EventFrame(application);
+        List<Shift> shifts = Arrays.asList(
+                new Shift("Door 1", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Door 2", Collections.<Role>emptyList(), false, false, false),
+                new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
+
+        List<Volunteer> volunteers = new LinkedList<>();
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!");
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!");
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!");
+        volunteers.add(volunteer);
+
         eventFrame.setShifts(shifts);
-        eventFrame.setVolunteers(getTestVolunteers());
-        List<String> volunteers = getVolunteerNames(getTestVolunteers());
+        eventFrame.setVolunteers(volunteers);
+        List<String> volunteerNames = getVolunteerNames(volunteers);
         final int ANGEL_SHIFT_INDEX = 2;
         final int NON_ANGEL_VOLUNTEER_INDEX = 3;
-        volunteers.set(ANGEL_SHIFT_INDEX, volunteers.get(NON_ANGEL_VOLUNTEER_INDEX));
+        volunteerNames.set(ANGEL_SHIFT_INDEX, volunteers.get(NON_ANGEL_VOLUNTEER_INDEX).getName());
         final int SIZE = shifts.size();
         assert (volunteers.size() >= SIZE);
-        volunteers = volunteers.subList(0, SIZE);
-        eventFrame.setSelectedVolunteers(volunteers);
+        volunteerNames = volunteerNames.subList(0, SIZE);
+        eventFrame.setSelectedVolunteers(volunteerNames);
 
-        List<Volunteer> expected = new ArrayList<>(getTestVolunteers());
+        List<Volunteer> expected = new ArrayList<>(volunteers);
         expected.set(ANGEL_SHIFT_INDEX, null);
         expected = expected.subList(0, SIZE);
         List<Volunteer> received = getSelectedVolunteers(eventFrame);
         assertEquals(expected, received);
-    }    // testSetSelectedVolunteersAngelConflict()
+    }    // testSetSelectedVolunteersRoleConflict()
 
     /* shiftsChanged */
     
@@ -876,7 +1022,8 @@ public class EventFrameTest {
     @Test
     public void testShiftsChangedNoException() {
         System.out.println("shiftsChanged - no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.shiftsChanged();
     }    // testShiftsChangedNoException()
     
@@ -887,14 +1034,15 @@ public class EventFrameTest {
     @Test
     public void testShiftsChanged() throws IOException {
         System.out.println("shiftsChanged");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Shift> originalShifts = getTestShifts();
         eventFrame.setShifts(originalShifts);
         event = eventFrame.getEvent();
         List<Shift> shifts = new ArrayList<>(event.getShifts());
         assert (shifts != null);
-        shifts.add(new Shift("Foo", false));
-        Application.setShifts(shifts);
+        shifts.add(new Shift("Foo", Collections.<Role>emptyList(), false, false, false));
+        application.setShifts(shifts);
         event = eventFrame.getEvent();
         List<Shift> expected = shifts;
         List<Shift> received = event.getShifts();
@@ -910,7 +1058,8 @@ public class EventFrameTest {
     @Test
     public void testVolunteersChangedNoException() {
         System.out.println("volunteersChanged - no exception");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         eventFrame.volunteersChanged();
     }    // testVolunteersChangedNoException()
     
@@ -921,7 +1070,8 @@ public class EventFrameTest {
     @Test
     public void testVolunteersChanged() throws IOException {
         System.out.println("volunteersChanged");
-        eventFrame = new EventFrame();
+        application = new Application();
+        eventFrame = new EventFrame(application);
         List<Volunteer> originalVolunteers = getTestVolunteers();
         eventFrame.setVolunteers(originalVolunteers);
         eventFrame.setSelectedVolunteers(Arrays.asList(originalVolunteers.get(0).getName()));
@@ -930,7 +1080,7 @@ public class EventFrameTest {
         Volunteer originalVolunteer = shifts.get(0).getVolunteer();
         assert (originalVolunteer != null);
         List<Volunteer> volunteers = new ArrayList<>();
-        Application.setVolunteers(volunteers);
+        application.setVolunteers(volunteers);
         event = eventFrame.getEvent();
         shifts = event.getShifts();
         Volunteer expected = null;

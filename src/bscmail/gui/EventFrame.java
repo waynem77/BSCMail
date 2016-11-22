@@ -436,7 +436,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             Volunteer selectedVolunteer = shiftControl.component.getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
-            shiftControl.component.setModel(this.volunteers);
+            shiftControl.component.setModel(this.getQualifiedVolunteers(shiftControl.component.getShift(), this.volunteers));
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
