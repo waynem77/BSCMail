@@ -19,7 +19,10 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
+import bscmail.Role;
 import bscmail.Shift;
+import java.util.Collections;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -54,7 +57,8 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
      */
     @Override
     protected ManageShiftPanel getPanel() {
-        return new ManageShiftPanel();
+        Application application = new Application();
+        return new ManageShiftPanel(application);
     }    // getPanel()
 
     /**
@@ -74,19 +78,36 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
      */
     @Override
     protected Shift getElement() {
-        return new Shift("foo", true);
+        return new Shift("foo", Collections.<Role>emptyList(), false, false, false);
     }    // getElement()
-    
+
+    /*
+     * Unit tests
+     */
+
     /**
-     * Tests that {@link ManageShiftPanel#ManageShiftPanel()} does not throw an
-     * exception.
+     * Tests that {@link ManageShiftPanel#ManageShiftPanel(bscmail.Application)}
+     * throws a {@link NullPointerException} when application is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testConstructorApplicationNullException() {
+        System.out.println("constructor - application null, exception");
+        
+        Application application = null;
+        ManageShiftPanel panel = new ManageShiftPanel(application);
+    }    // testConstructorApplicationNullException()
+
+    /**
+     * Tests that {@link ManageShiftPanel#ManageShiftPanel(bscmail.Application)}
+     * does not throw an exception when application is not null.
      */
     @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
+    public void testConstructorApplicationNotNullNoException() {
+        System.out.println("constructor - application not null, no exception");
         
-        ManageShiftPanel panel = new ManageShiftPanel();
-    }    // testConstructorNoException()
+        Application application = new Application();
+        ManageShiftPanel panel = new ManageShiftPanel(application);
+    }    // testConstructorApplicationNotNullNoException()
     
     /**
      * Tests that {@link ManageShiftPanel#createElement()} does not throw an
@@ -125,7 +146,7 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
         
         ManageShiftPanel panel = getPanel();
         panel.loadElement(null);
-        Shift expected = new Shift("", false);
+        Shift expected = new Shift("", Collections.<Role>emptyList(), false, false, false);
         Shift received = panel.createElement();
         assertEquals(expected, received);
     }    // testCreateElementNotLoaded()
