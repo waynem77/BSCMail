@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,34 +23,33 @@ import bscmail.Application;
 import org.junit.*;
 
 /**
- * Unit tests for {@link ManageVolunteersFrame}.
- * 
+ *
  * @author Wayne Miller
  */
-public class ManageVolunteersFrameTest {
+public class ManageEmailTemplateFrameTest {
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
+     * {@link ManageEmailTemplateFrame#ManageEmailTemplateFrame(bscmail.Application)}
      * throws a {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenApplicationIsNull() {
         Application application = null;
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageEmailTemplateFrame frame = new ManageEmailTemplateFrame(application);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
+     * {@link ManageEmailTemplateFrame#ManageEmailTemplateFrame(bscmail.Application)}
      * does not throw an exception when application is not null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
         Application application = new Application();
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageEmailTemplateFrame frame = new ManageEmailTemplateFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
-}    // ManageVolunteersFrameTest
+}    // ManageEmailTemplateFrameTest

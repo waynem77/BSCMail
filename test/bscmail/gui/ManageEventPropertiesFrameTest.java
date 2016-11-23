@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,34 +23,34 @@ import bscmail.Application;
 import org.junit.*;
 
 /**
- * Unit tests for {@link ManageVolunteersFrame}.
+ * Unit tests for {@link ManageEventPropertiesFrame}.
  * 
  * @author Wayne Miller
  */
-public class ManageVolunteersFrameTest {
+public class ManageEventPropertiesFrameTest {
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
+     * {@link ManageEventPropertiesFrame#ManageEventPropertiesFrame(bscmail.Application)}
      * throws a {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenApplicationIsNull() {
         Application application = null;
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageEventPropertiesFrame frame = new ManageEventPropertiesFrame(application);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
+     * {@link ManageEventPropertiesFrame#ManageEventPropertiesFrame(bscmail.Application)}
      * does not throw an exception when application is not null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
         Application application = new Application();
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageEventPropertiesFrame frame = new ManageEventPropertiesFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
-}    // ManageVolunteersFrameTest
+}    // ManageEventPropertiesFrameTest

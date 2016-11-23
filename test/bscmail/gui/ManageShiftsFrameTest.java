@@ -19,8 +19,8 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link ManageShiftsFrame}.
@@ -28,32 +28,29 @@ import static org.junit.Assert.*;
  * @author Wayne Miller
  */
 public class ManageShiftsFrameTest {
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("ManageShiftsFrame");
-        System.out.println("=================");
-    }    // setUpClass()
 
     /**
-     * Prints unit test footer.
+     * Tests that
+     * {@link ManageShiftsFrame#ManageShiftsFrame(bscmail.Application)} throws a
+     * {@link NullPointerException} when application is null.
      */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass()
-    
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenApplicationIsNull() {
+        Application application = null;
+
+        ManageShiftsFrame frame = new ManageShiftsFrame(application);
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
+
     /**
-     * Tests that {@link ManageShiftsFrame#ManageShiftsFrame()} does not throw
-     * an exception.
+     * Tests that
+     * {@link ManageShiftsFrame#ManageShiftsFrame(bscmail.Application)} does not
+     * throw an exception when application is not null.
      */
     @Test
-    public void testConstructorNoException() {
-        System.out.println("constructor - no exception");
-        
-        ManageShiftsFrame frame = new ManageShiftsFrame();
-    }    // testConstructorNoException()
+    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
+        Application application = new Application();
+
+        ManageShiftsFrame frame = new ManageShiftsFrame(application);
+    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
+
 }    // ManageShiftsFrameTest

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,34 +23,34 @@ import bscmail.Application;
 import org.junit.*;
 
 /**
- * Unit tests for {@link ManageVolunteersFrame}.
+ * Unit tests for {@link ManageRolesFrame}.
  * 
  * @author Wayne Miller
  */
-public class ManageVolunteersFrameTest {
+public class ManageRolesFrameTest {
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
-     * throws a {@link NullPointerException} when application is null.
+     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} throws a
+     * {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenApplicationIsNull() {
         Application application = null;
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageRolesFrame frame = new ManageRolesFrame(application);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
 
     /**
      * Tests that
-     * {@link ManageVolunteersFrame#ManageVolunteersFrame(bscmail.Application)}
-     * does not throw an exception when application is not null.
+     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} does not
+     * throw an exception when application is not null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
         Application application = new Application();
 
-        ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
+        ManageRolesFrame frame = new ManageRolesFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
-}    // ManageVolunteersFrameTest
+}    // ManageRolesFrameTest
