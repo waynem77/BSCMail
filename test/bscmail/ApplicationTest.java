@@ -294,7 +294,8 @@ public class ApplicationTest {
     public void testGetShiftsSetShiftsNoIdentity() throws IOException {
         System.out.println("getShifts/setShifts - lists are not identical");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
         List<Shift> expected = shifts;
         application.setShifts(shifts);
         List<Shift> received = application.getShifts();
@@ -310,7 +311,8 @@ public class ApplicationTest {
     public void testGetShiftsSetShiftsNoElementIdentity() throws IOException {
         System.out.println("getShifts/setShifts - lists elements are not identical");
 
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
         application.setShifts(shifts);
         List<Shift> received = application.getShifts();
         for (int i = 0; i < shifts.size(); ++i) {

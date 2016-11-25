@@ -1275,11 +1275,11 @@ public class VolunteerTest extends ReadWritableTest {
     }    // equalsReturnsFalseWhenArgumentHasDifferentNotes()
 
     /**
-     * Tests that {@link Volunteer#equals(Object)} returns false when the
+     * Tests that {@link Volunteer#equals(Object)} returns true when the
      * argument has different roles.
      */
     @Test
-    public void equalsReturnsFalseWhenArgumentHasDifferentRoles() {
+    public void equalsReturnsTrueWhenArgumentHasDifferentRoles() {
         String name = "Foo Bar";
         String email = "foo@bar";
         String phone = "555-FOO";
@@ -1296,9 +1296,9 @@ public class VolunteerTest extends ReadWritableTest {
         }    // for
         boolean received = volunteer.equals((Object)obj);
 
-        boolean expected = false;
+        boolean expected = true;
         assertEquals(expected, received);
-    }    // equalsReturnsFalseWhenArgumentHasDifferentRoles()
+    }    // equalsReturnsTrueWhenArgumentHasDifferentRoles()
 
     /**
      * Tests that {@link Volunteer#equals(Object)} returns true when the

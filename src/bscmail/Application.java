@@ -289,6 +289,9 @@ public class Application {
             eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
 
             shifts = shiftsIOLayer.getAll();
+            for (Shift shift : shifts) {
+                shift.setVolunteer(null);
+            }    // for
             volunteers = volunteersIOLayer.getAll();
             roles = rolesIOLayer.getAll();
             List<EmailTemplate> emailTemplates = emailTemplateIOLayer.getAll();
@@ -605,6 +608,9 @@ public class Application {
         this.emailTemplate = emailTemplate.clone();
         List<EmailTemplate> wrapper = new LinkedList<>();
         wrapper.add(this.emailTemplate);
+        for (EmailTemplateObserver observer : emailTemplateObservers) {
+            observer.emailTemplateChanged();
+        }    // for
 
         emailTemplateIOLayer.setAll(wrapper);
         assertInvariant();
