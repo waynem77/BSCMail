@@ -184,7 +184,6 @@ public class XMLIOLayer<T extends ReadWritable> implements IOLayer<T> {
                 String key = property.getTagName();
                 Object value;
                 if (nodeHasElementChildren(property)) {
-                    System.out.println("\tRecurse!");
                     value = nodeToPropertyMap(property);
                 } else {    // if
                     value = property.getTextContent();
