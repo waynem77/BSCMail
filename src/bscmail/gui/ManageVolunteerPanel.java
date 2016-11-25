@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.Box;
@@ -255,15 +256,17 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     private void loadSelectedRoles(Volunteer volunteer) {
         List<Role> allRoles = application.getRoles();
         List<Role> volunteerRoles = volunteer.getRoles();
-        int[] selectedIndices = new int[volunteerRoles.size()];
-        int selectIndex = 0;
-        for (Role role : allRoles) {
-            if (volunteerRoles.contains(role)) {
-                selectedIndices[selectIndex] = allRoles.indexOf(role);
-                selectIndex++;
-            }
-        }
-        rolesSelectList.setSelectedIndices(selectedIndices);
+        List<Integer> selectedIndices = new LinkedList<>();
+        for (int i = 0; i < allRoles.size(); ++i) {
+            if (volunteerRoles.contains(allRoles.get(i))) {
+                selectedIndices.add(i);
+            }    // if
+        }    // for
+        int[] selectedIndicesAsArray = new int[selectedIndices.size()];
+        for (int i = 0; i < selectedIndices.size(); ++i) {
+            selectedIndicesAsArray[i] = selectedIndices.get(i);
+        }    // for
+        rolesSelectList.setSelectedIndices(selectedIndicesAsArray);
     }
 
     /**
