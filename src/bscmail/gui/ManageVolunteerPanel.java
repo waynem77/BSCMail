@@ -23,17 +23,11 @@ import bscmail.Application;
 import bscmail.Role;
 import bscmail.RolesObserver;
 import bscmail.Volunteer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -81,16 +75,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      * The selection panel for displaying a volunteer's roles
      */
     private final JList rolesSelectList;
-
-    /**
-     * Button to import another XML file of volunteers.
-     */
-    private final JButton importVolunteers;
-
-    /**
-     * Dialog window to choose file to import.
-     */
-    private final JFileChooser fileChooser;
 
     /**
      * Indicates whether the implicit volunteer is valid.
@@ -160,17 +144,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         rolesSelectList.setListData(new Vector<>(application.getRoles()));
         layoutHelper.addComponent("Roles: ", rolesSelectList);
-        importVolunteers = new JButton("Import Volunteers");
-        importVolunteers.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                importVolunteersButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         layoutHelper.addComponent("", new JLabel(ROLE_INSTRUCTIONS));
         layoutHelper.addComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
-        layoutHelper.addComponent("", importVolunteers);
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
         editRolesWindowIsOpen = false;
@@ -282,23 +257,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         }
         return selectedRoles;
     }
-
-    /**
-     * Event fired when the import volunteers button is clicked.
-     */
-    private void importVolunteersButtonClicked() {
-         int returnVal = fileChooser.showOpenDialog(this);
-         if (returnVal == JFileChooser.APPROVE_OPTION) {
-             try {
-                 application.importVolunteers(fileChooser.getSelectedFile().getPath());
-             } catch (ClassNotFoundException e) {
-                 System.out.println(e);
-             } catch (IOException e) {
-                 System.out.println(e);
-             }
-         }
-
-    }    // importVolunteersButtonClicked()
     
 }    // ManageVolunteerPanel
 
