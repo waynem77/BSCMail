@@ -83,9 +83,14 @@ public class Application {
         EMAIL_TEMPLATE_FILE        (true),
 
         /**
-         * The name of the defined event prtoperties file.
+         * The name of the defined event properties file.
          */
-        EVENT_PROPERTY_FILE        (true);
+        EVENT_PROPERTY_FILE        (true),
+
+        /**
+         * The name of the user guide file.
+         */
+        USER_GUIDE_FILE            (true);
 
         /*
          * Class methods and properties
@@ -281,6 +286,7 @@ public class Application {
             properties.put(PropertyKey.ROLES_FILE, "roles.xml");
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
             properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperty.xml");
+            properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
 
             shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
             volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
@@ -370,7 +376,7 @@ public class Application {
         String property = properties.get(PropertyKey.APPLICATION_VERSION);
         return property;
     }    // getVersion()
-    
+
     /**
      * Returns a copyright string for the application.
      * @return a copyright string for the application
@@ -380,7 +386,18 @@ public class Application {
         String property = properties.get(PropertyKey.APPLICATION_COPYRIGHT);
         return property;
     }    // getCopyright()
-    
+
+    /**
+     * Returns the filename of the user guide.
+     *
+     * @return the filename of the user guide
+     */
+    public String getUserGuideFilename() {
+        assertInvariant();
+        String property = properties.get(PropertyKey.USER_GUIDE_FILE);
+        return property;
+    }    // getUserGuideFilename()
+
     /**
      * Returns the list of defined volunteer shifts. The list returned is a copy
      * of the master, so changes to it do not affect the master and vice-versa.

@@ -21,8 +21,11 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.Event;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.*;
 
 /**
@@ -160,7 +163,11 @@ public class MainFrame extends JFrame {
         panel.setBorder(BorderFactory.createTitledBorder("Help"));
         panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
         button = new JButton("Help");
-        button.setEnabled(false);
+        button.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                helpHelpButtonClicked();
+            }    // actionPerformed()
+        });    // addActionListener()
         panel.add(button);
         button = new JButton("About");
         button.addActionListener(new ActionListener() {
@@ -259,7 +266,22 @@ public class MainFrame extends JFrame {
         displayFrame.setVisible(true);
         assertInvariant();
     }    // createEmailButtonClicked()
-    
+
+    /**
+     * Event fired when the help help button is clicked.
+     */
+    private void helpHelpButtonClicked() {
+        assertInvariant();
+        Desktop desktop = Desktop.getDesktop();
+        String userGuideFilename = application.getUserGuideFilename();
+        File userGuide = new File(userGuideFilename);
+        try {
+            desktop.open(userGuide);
+        } catch (IOException e) {    // try
+            application.showErrorDialog(this, "Error opening user guide", e);
+        }    // catch
+    }    // helpHelpButtonClicked()
+
     /**
      * Event fired when the help about button is clicked.
      */

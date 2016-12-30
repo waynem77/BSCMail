@@ -184,6 +184,31 @@ public class ApplicationTest {
         assertNotNull(received);
     }    // testGetCopyrightNotNull()
     
+    /* getUserGuideFilename */
+
+    /**
+     * Tests that {@link Application#getUserGuideFilename()} does not throw an
+     * exception.
+     */
+    @Test
+    public void testGetUserGuideFilenameNoException() {
+        System.out.println("getUserGuideFilename - no exception");
+
+        application.getUserGuideFilename();
+    }    // testGetUserGuideFilenameNoException()
+
+    /**
+     * Tests that {@link Application#getUserGuideFilename()} does not return
+     * null.
+     */
+    @Test
+    public void testGetUserGuideFilenameNotNull() {
+        System.out.println("getUserGuideFilename - not null");
+
+        String received = application.getUserGuideFilename();
+        assertNotNull(received);
+    }    // testGetUserGuideFilenameNotNull()
+
     /* getShifts / setShifts */
     
     /**
