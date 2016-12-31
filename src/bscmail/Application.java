@@ -285,7 +285,7 @@ public class Application {
             properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
             properties.put(PropertyKey.ROLES_FILE, "roles.xml");
             properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
-            properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperty.xml");
+            properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
             properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
 
             shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
