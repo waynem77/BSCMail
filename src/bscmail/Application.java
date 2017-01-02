@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -278,8 +278,8 @@ public class Application {
 
         properties = new ApplicationProperties();
         properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
-        properties.put(PropertyKey.APPLICATION_VERSION, "3.0 beta");
-        properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2016 its authors.  See the file \"AUTHORS\" for details.");
+        properties.put(PropertyKey.APPLICATION_VERSION, "3.0");
+        properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.");
         properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
         properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
         properties.put(PropertyKey.ROLES_FILE, "roles.xml");
