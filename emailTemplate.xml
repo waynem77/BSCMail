@@ -1,9 +1,0 @@
-<emailtemplate-list>
-  <emailtemplate>
-    <preScheduleText>Here is the schedule for the event.
-</preScheduleText>
-    <postScheduleText>Sincerely,
-Your volunteer coordinator.
-</postScheduleText>
-  </emailtemplate>
-</emailtemplate-list>
