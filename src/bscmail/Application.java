@@ -276,46 +276,67 @@ public class Application {
     public Application() throws ExceptionInInitializerError {
         currentImportFile = "";
 
+        properties = new ApplicationProperties();
+        properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
+        properties.put(PropertyKey.APPLICATION_VERSION, "3.0 beta");
+        properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2016 its authors.  See the file \"AUTHORS\" for details.");
+        properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
+        properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
+        properties.put(PropertyKey.ROLES_FILE, "roles.xml");
+        properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
+        properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
+        properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
+
+        shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
+        volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
+        rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
+        emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());
+        eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
+
         try {
-            properties = new ApplicationProperties();
-            properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
-            properties.put(PropertyKey.APPLICATION_VERSION, "3.0 beta");
-            properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2016 its authors.  See the file \"AUTHORS\" for details.");
-            properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
-            properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
-            properties.put(PropertyKey.ROLES_FILE, "roles.xml");
-            properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
-            properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
-            properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
-
-            shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
-            volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
-            rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
-            emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());
-            eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
-
             shifts = shiftsIOLayer.getAll();
-            for (Shift shift : shifts) {
-                shift.setVolunteer(null);
-            }    // for
-            volunteers = volunteersIOLayer.getAll();
-            roles = rolesIOLayer.getAll();
-            List<EmailTemplate> emailTemplates = emailTemplateIOLayer.getAll();
-            emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "");
-            eventProperties = eventPropertiesIOLayer.getAll();
-            
-            shiftsObservers = new LinkedList<>();
-            volunteersObservers = new LinkedList<>();
-            rolesObservers = new LinkedList<>();
-            emailTemplateObservers = new LinkedList<>();
-            eventPropertyObservers = new LinkedList<>();
-            
-            testDialogs = new LinkedList<>();
-
-            currentImportFile = "";
         } catch (IOException e) {    // try
-            throw new ExceptionInInitializerError(e);
+            shifts = new ArrayList<>();
         }    // catch
+        for (Shift shift : shifts) {
+            shift.setVolunteer(null);
+        }    // for
+
+        try {
+            volunteers = volunteersIOLayer.getAll();
+        } catch (IOException e) {    // try
+            volunteers = new ArrayList<>();
+        }    // catch
+
+        try {
+            roles = rolesIOLayer.getAll();
+        } catch (IOException e) {    // try
+            roles = new ArrayList<>();
+        }    // catch
+
+        List<EmailTemplate> emailTemplates;
+        try {
+            emailTemplates = emailTemplateIOLayer.getAll();
+        } catch (IOException e) {    // try
+            emailTemplates = new ArrayList<>();
+        }    // catch
+        emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "");
+
+        try {
+            eventProperties = eventPropertiesIOLayer.getAll();
+        } catch (IOException e) {    // try
+            eventProperties = new ArrayList<>();
+        }    // catch
+
+        shiftsObservers = new LinkedList<>();
+        volunteersObservers = new LinkedList<>();
+        rolesObservers = new LinkedList<>();
+        emailTemplateObservers = new LinkedList<>();
+        eventPropertyObservers = new LinkedList<>();
+
+        testDialogs = new LinkedList<>();
+
+        currentImportFile = "";
         assertInvariant();
     }    // Application()
 
@@ -455,7 +476,6 @@ public class Application {
      * @return the list of defined volunteers
      */
     public List<Volunteer> getVolunteers() {
-        assertInvariant();
         assertInvariant();
         List<Volunteer> clones = new ArrayList<>();
         for (Volunteer volunteer : volunteers) {
