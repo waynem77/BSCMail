@@ -264,18 +264,11 @@ public class Application {
      * The list of test dialogs.
      */
     private final List<JDialog> testDialogs;
-
-    /**
-     * Tracks name of XML file being imported
-     */
-    private String currentImportFile;
     
     /**
      * Constructs a new application.
      */
     public Application() throws ExceptionInInitializerError {
-        currentImportFile = "";
-
         properties = new ApplicationProperties();
         properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
         properties.put(PropertyKey.APPLICATION_VERSION, "3.0");
@@ -336,34 +329,8 @@ public class Application {
 
         testDialogs = new LinkedList<>();
 
-        currentImportFile = "";
         assertInvariant();
     }    // Application()
-
-    /**
-     * Sets the name of the current import file.
-     *
-     * @param fileName the name of the new import file; may not be null
-     * @throws NullPointerException if {@code fileName] is null
-     */
-    public void setImportFileName(String fileName){
-        assertInvariant();
-        if (fileName == null) {
-            throw new NullPointerException("fileName may not be null");
-        }    // if
-        currentImportFile = fileName;
-        assertInvariant();
-    }    // setImportFileName()
-
-    /**
-     * Returns the name of the current import file.
-     *
-     * @return the name of the current import file.
-     */
-    public String getImportFileName(){
-        assertInvariant();
-        return currentImportFile;
-    }    // getImportFileName();
 
     /**
      * Sets or unsets test mode.  If test mode is set, the application will
@@ -843,7 +810,6 @@ public class Application {
         assert (testDialogs != null);
         assert (! testDialogs.contains(null));
         assert (properties.getTestMode() ? true : testDialogs.isEmpty());
-        assert (currentImportFile != null);
     }    // assertInvariant()
 
     /**
