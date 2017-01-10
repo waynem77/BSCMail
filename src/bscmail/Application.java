@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 
 /**
@@ -118,72 +119,11 @@ public class Application {
         boolean isFileName() { return isFileName; }
     }    // PropertyKey
 
-    /**
-     * Maps {@link PropertyKey}s to {@link String}s for the application. This
-     * map has a test mode which may be set or unset. When test mode is enabled,
-     * the values returned by {@link #get(Object)} are altered to special test
-     * values.  Test mode is disabled by default.
-     */
-    private class ApplicationProperties extends EnumMap<PropertyKey, String> {
-
-        /**
-         * True when test mode is enabled.
-         */
-        private boolean testMode = false;
-
-        /**
-         * Constructs a new application properties map.
-         */
-        public ApplicationProperties() {
-            super(PropertyKey.class);
-        }    // ApplicationProperties()
-
-        /**
-         * Returns the value to which the specified key is mapped. If test mode
-         * is enabled and the key denotes a filename, then the return value is
-         * altered to a test value. Otherwise, this method behaves as
-         * {@link EnumMap#get(Object)}.
-         *
-         * @param key the key whose associated value is to be returned
-         * @return the value to which the specified key is mapped
-         */
-        @Override
-        public String get(Object key) {
-            String value = super.get(key);
-            if (key instanceof PropertyKey) {
-                PropertyKey propertyKey = (PropertyKey) key;
-                if (testMode && propertyKey.isFileName()) {
-                    value += ".test";
-                }    // if testMode
-            }    // if key
-            return value;
-        }    // get()
-
-        /**
-         * Sets or unsets test mode. If test mode is set, filenames will be
-         * changed to test values. Test mode is unset by default.
-         *
-         * @param testMode sets test mode if true; unsets test mode if false
-         */
-        public void setTestMode(boolean testMode) {
-            this.testMode = testMode;
-        }    // setTestMode()
-        
-        /**
-         * Returns true if test mode is set, or false otherwise.
-         * 
-         * @return true if test mode is set; false otherwise
-         */
-        public boolean getTestMode() {
-            return testMode;
-        }    // getTestMode()
-
-    }    // ApplicationProperties
     
     /**
      * String properties for the application.
      */
-    private final ApplicationProperties properties;
+    private final Map<PropertyKey, String> properties;
 
     /**
      * The list of defined shifts.
@@ -269,7 +209,7 @@ public class Application {
      * Constructs a new application.
      */
     public Application() throws ExceptionInInitializerError {
-        properties = new ApplicationProperties();
+        properties = new EnumMap<>(PropertyKey.class);
         properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
         properties.put(PropertyKey.APPLICATION_VERSION, "3.0");
         properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.");
@@ -331,19 +271,6 @@ public class Application {
 
         assertInvariant();
     }    // Application()
-
-    /**
-     * Sets or unsets test mode.  If test mode is set, the application will
-     * write any changes to special test files rather than the production files.
-     * Test mode is unset by default.
-     * 
-     * @param testMode sets test mode if true; unsets test mode if false
-     */
-    public void setTestMode(boolean testMode) {
-        assertInvariant();
-        properties.setTestMode(testMode);
-        assertInvariant();
-    }    // setTestMode()
 
     /**
      * Returns the name of the application.
@@ -809,7 +736,6 @@ public class Application {
         assert (! eventPropertyObservers.contains(null));
         assert (testDialogs != null);
         assert (! testDialogs.contains(null));
-        assert (properties.getTestMode() ? true : testDialogs.isEmpty());
     }    // assertInvariant()
 
     /**

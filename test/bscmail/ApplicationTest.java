@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -75,7 +75,6 @@ public class ApplicationTest {
     @Before
     public void setUp() {
         application = new Application();
-        application.setTestMode(true);
     }    // setUp()
 
     /**
@@ -89,30 +88,6 @@ public class ApplicationTest {
     /*
      * Unit tests
      */
-
-    /* setTestMode */
-
-    /**
-     * Tests that {@link Application#setTestMode(boolean)} does not throw an
-     * exception when testMode is true.
-     */
-    public void testSetTestModeTrue() {
-        System.out.println("setTestMode - no exception when arg is true");
-        
-        boolean testMode = true;
-        application.setTestMode(testMode);
-    }    // testSetTestModeTrue()
-
-    /**
-     * Tests that {@link Application#setTestMode(boolean)} does not throw an
-     * exception when testMode is false.
-     */
-    public void testSetTestModeFalse() {
-        System.out.println("setTestMode - no exception when arg is false");
-        
-        boolean testMode = false;
-        application.setTestMode(testMode);
-    }    // testSetTestModeFalse()
     
     /* getApplicationName */
     

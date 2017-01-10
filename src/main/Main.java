@@ -46,7 +46,6 @@ public class Main {
      */
     private void run() {
         Application application = new Application();
-        application.setTestMode(false);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
