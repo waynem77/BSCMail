@@ -33,132 +33,112 @@ public class ApplicationTest {
     /**
      * Observer used in tests.
      */
-    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, EmailTemplateObserver {
+    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, RolesObserver, EmailTemplateObserver, EventPropertyObserver {
         private boolean shiftsChanged = false;
         private boolean volunteersChanged = false;
-        private boolean emailTemplateObserver = false;
-        
+        private boolean rolesChanged = false;
+        private boolean emailTemplateChanged = false;
+        private boolean eventPropertiesChanged = false;
+
         @Override public void shiftsChanged() { shiftsChanged = true; }
         @Override public void volunteersChanged() { volunteersChanged = true; }
-        @Override public void emailTemplateChanged() { emailTemplateObserver = true; }
-        
+        @Override public void rolesChanged() { rolesChanged = true; }
+        @Override public void emailTemplateChanged() { emailTemplateChanged = true; }
+        @Override public void eventPropertiesChanged() { eventPropertiesChanged = true; }
+
         public boolean getShiftsChanged() { return shiftsChanged; }
         public boolean getVolunteersChanged() { return volunteersChanged; }
-        public boolean getEmailTemplateChanged() { return emailTemplateObserver; }
+        public boolean getRolesChanged() { return rolesChanged; }
+        public boolean getEmailTemplateChanged() { return emailTemplateChanged; }
+        public boolean getEventPropertiesChanged() { return eventPropertiesChanged; }
     }    // ApplicationObserver
-
-    /**
-     * The application being tested.
-     */
-    private Application application;
-
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("Application");
-        System.out.println("===========");
-    }    // setUpClass()
-
-    /**
-     * Prints unit test footer.
-     */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
-     * Sets up the test environment before each test.
-     */
-    @Before
-    public void setUp() {
-        application = new Application();
-    }    // setUp()
-
-    /**
-     * Cleans up the test environment after each test.
-     */
-    @After
-    public void tearDown() {
-        application = null;
-    }    // tearDown()
 
     /*
      * Unit tests
      */
-    
+
+    /* constructor */
+
+    /**
+     * Tests that {@link Application#Application()} does not throw an exception.
+     */
+    @Test
+    public void constructorDoesNotThrowException() {
+        Application application = new Application();
+    }    // constructorDoesNotThrowException()
+
     /* getApplicationName */
-    
+
     /**
      * Tests that {@link Application#getApplicationName()} does not throw an
      * exception.
      */
     @Test
-    public void testGetApplicationNameNoException() {
-        System.out.println("getApplicationName - no exception");
-        
+    public void getApplicationNameDoesNotThrowException() {
+        Application application = new Application();
+
         application.getApplicationName();
-    }    // testGetApplicationNameNoException()
-    
+    }    // getApplicationNameDoesNotThrowException()
+
     /**
      * Tests that {@link Application#getApplicationName()} does not return null.
      */
     @Test
-    public void testGetApplicationNameNotNull() {
-        System.out.println("getApplicationName - not null");
-        
+    public void getApplicationNameDoesNotReturnNull() {
+        Application application = new Application();
+
         String received = application.getApplicationName();
         assertNotNull(received);
-    }    // testGetApplicationNameNotNull()
-    
+    }    // getApplicationNameDoesNotReturnNull()
+
     /* getVersion */
-    
+
     /**
      * Tests that {@link Application#getVersion()} does not throw an exception.
      */
     @Test
-    public void testGetVersionNoException() {
-        System.out.println("getVersion - no exception");
+    public void getVersionDoesNotThrowException() {
+        Application application = new Application();
 
         application.getVersion();
-    }    // testGetVersionNoException()
+    }    // getVersionDoesNotThrowException()
 
     /**
      * Tests that {@link Application#getVersion()} does not return null.
      */
     @Test
-    public void testGetVersionNotNull() {
-        System.out.println("getVersion - not null");
+    public void getVersionDoesNotReturnNull() {
+        Application application = new Application();
 
         String received = application.getVersion();
+
         assertNotNull(received);
-    }    // testGetVersionNotNull()
-    
+    }    // getVersionDoesNotReturnNull()
+
     /* getCopyright */
-    
+
     /**
      * Tests that {@link Application#getCopyright()} does not throw an exception.
      */
     @Test
-    public void testGetCopyrightNoException() {
-        System.out.println("getCopyright - no exception");
+    public void getCopyrightDoesNotThrowException() {
+        Application application = new Application();
 
         application.getCopyright();
-    }    // testGetCopyrightNoException()
+    }    // getCopyrightDoesNotThrowException()
 
     /**
      * Tests that {@link Application#getCopyright()} does not return null.
      */
     @Test
-    public void testGetCopyrightNotNull() {
-        System.out.println("getCopyright - not null");
+    public void getCopyrightDoesNotReturnNull() {
+        Application application = new Application();
 
         String received = application.getCopyright();
+
         assertNotNull(received);
-    }    // testGetCopyrightNotNull()
-    
+    }    // getCopyrightDoesNotReturnNull()
+
     /* getUserGuideFilename */
 
     /**
@@ -166,367 +146,746 @@ public class ApplicationTest {
      * exception.
      */
     @Test
-    public void testGetUserGuideFilenameNoException() {
-        System.out.println("getUserGuideFilename - no exception");
+    public void getUserGuideFilenameDoesNotThrowException() {
+        Application application = new Application();
 
         application.getUserGuideFilename();
-    }    // testGetUserGuideFilenameNoException()
+    }    // getUserGuideFilenameDoesNotThrowException()
 
     /**
      * Tests that {@link Application#getUserGuideFilename()} does not return
      * null.
      */
     @Test
-    public void testGetUserGuideFilenameNotNull() {
-        System.out.println("getUserGuideFilename - not null");
+    public void getUserGuideFilenameDoesNotReturnNull() {
+        Application application = new Application();
 
         String received = application.getUserGuideFilename();
+
         assertNotNull(received);
-    }    // testGetUserGuideFilenameNotNull()
+    }    // getUserGuideFilenameDoesNotReturnNull()
 
     /* getShifts / setShifts */
-    
+
     /**
      * Tests that {@link Application#getShifts()} does not throw an exception.
      */
     @Test
-    public void testGetShiftsNoException() {
-        System.out.println("getShifts - no exception");
+    public void getShiftsDoesNotThrowException() {
+        Application application = new Application();
 
         application.getShifts();
-    }    // testGetShiftsNoException()
+    }    // getShiftsDoesNotThrowException()
 
     /**
      * Tests that {@link Application#getShifts()} does not return null.
      */
     @Test
-    public void testGetShiftsNotNull() {
-        System.out.println("getShifts - not null");
+    public void getShiftsDoesNotReturnNull() {
+        Application application = new Application();
 
         List<Shift> received = application.getShifts();
+
         assertNotNull(received);
-    }    // testGetShiftsNotNull()
-    
+    }    // getShiftsDoesNotReturnNull()
+
     /**
      * Tests that {@link Application#setShifts(List)} throws a
      * {@link NullPointerException} when shifts is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testSetShiftsShiftsNull() throws IOException {
-        System.out.println("setShifts - shifts is null");
-
+    public void setShiftsThrowsExceptionWhenShiftsIsNull() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = null;
+
         application.setShifts(shifts);
-    }    // testSetShiftsShiftsNull()
-    
+    }    // setShiftsThrowsExceptionWhenShiftsIsNull()
+
     /**
      * Tests that {@link Application#setShifts(List)} throws a
      * {@link NullPointerException} when shifts is not null but contains a null.
      */
     @Test(expected = NullPointerException.class)
-    public void testSetShiftsShiftsContainsNull() throws IOException {
-        System.out.println("setShifts - shifts contains null");
-
+    public void setShiftsThrowsExceptionWhenShiftsContainsNull() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+
         application.setShifts(shifts);
-    }    // testSetShiftsShiftsContainsNull()
-    
+    }    // setShiftsThrowsExceptionWhenShiftsContainsNull()
+
     /**
      * Tests that {@link Application#setShifts(List)} does not throw an
      * exception when shifts is not null and contains no nulls.
      */
     @Test
-    public void testSetShiftsNoException() throws IOException {
-        System.out.println("setShifts - no exception");
-
+    public void setShiftsDoesNotThrowExceptionWithGoodArgument() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
         application.setShifts(shifts);
-    }    // testSetShiftsNoException()
-    
+    }    // setShiftsDoesNotThrowExceptionWithGoodArgument()
+
     /**
      * Tests that {@link Application#setShifts(List)} does not alter its
      * argument.
      */
     @Test
-    public void testSetShiftsDoesNotAlterArgument() throws IOException {
-        System.out.println("setShifts - does not alter argument");
-
+    public void setShiftsDoesNotAlterArgument() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
-        List<Shift> expected = new LinkedList<>();
+        List<Shift> clonedShifts = new LinkedList<>();
         for (Shift shift : shifts) {
-            expected.add(shift.clone());
+            clonedShifts.add(shift.clone());
         }    // for
+
         application.setShifts(shifts);
+
+        List<Shift> expected = clonedShifts;
         List<Shift> received = shifts;
         assertEquals(expected, received);
-    }    // testSetShiftsDoesNotAlterArgument()
-    
+    }    // setShiftsDoesNotAlterArgument()
+
+    /**
+     * Tests that {@link Application#getShifts()} does not throw an exception
+     * when there are no shifts.
+     */
+    @Test
+    public void getShiftsDoesNotThrowExceptionWhenThereAreNoShifts() throws IOException {
+        Application application = new Application();
+
+        application.getShifts();
+    }    // getShiftsDoesNotThrowExceptionWhenThereAreNoShifts()
+
+    /**
+     * Tests that {@link Application#getShifts()} does not return null when
+     * there are no shifts.
+     */
+    @Test
+    public void getShiftsDoesNotReturnNullWhenThereAreNoShifts() throws IOException {
+        Application application = new Application();
+
+        List<Shift> received = application.getShifts();
+
+        assertNotNull(received);
+    }    // getShiftsDoesNotReturnNullWhenThereAreNoShifts()
+
+    /**
+     * Tests that {@link Application#getShifts()} does not throw an exception
+     * when there are shifts.
+     */
+    @Test
+    public void getShiftsDoesNotThrowExceptionWhenThereAreShifts() throws IOException {
+        Application application = new Application();
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        application.setShifts(shifts);
+
+        application.getShifts();
+    }    // getShiftsDoesNotThrowExceptionWhenThereAreShifts()
+
+    /**
+     * Tests that {@link Application#getShifts()} does not return null when
+     * there are shifts.
+     */
+    @Test
+    public void getShiftsDoesNotReturnNullWhenThereAreShifts() throws IOException {
+        Application application = new Application();
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        application.setShifts(shifts);
+
+        List<Shift> received = application.getShifts();
+
+        assertNotNull(received);
+    }    // getShiftsDoesNotThrowExceptionWhenThereAreShifts()
+
     /**
      * Tests that {@link Application#getShifts()} returns a list equal to that
      * passed to {@link Application#setShifts(List)}, minus any volunteers.
      */
     @Test
-    public void testGetShiftsSetShiftsListsAreEqualMinusVolunteers() throws IOException {
-        System.out.println("getShifts/setShifts - lists are equal minus volunteers");
-
+    public void getShiftsReturnsCorrectValue() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
-        List<Shift> expected = new LinkedList<>();
+        List<Shift> clonedShiftsMinusVolunteers = new LinkedList<>();
         for (Shift shift : shifts) {
             Shift newShift = shift.clone();
             newShift.setVolunteer(null);
-            expected.add(newShift);
+            clonedShiftsMinusVolunteers.add(newShift);
         }    // for
         application.setShifts(shifts);
+
         List<Shift> received = application.getShifts();
+
+        List<Shift> expected = clonedShiftsMinusVolunteers;
         assertEquals(expected, received);
-    }    // testGetShiftsSetShiftsListsAreEqualMinusVolunteers()
-    
+    }    // getShiftsReturnsCorrectValue()
+
     /**
      * Tests that {@link Application#getShifts()} returns a list that is not
      * identical to that passed to {@link Application#setShifts(List)}.
      */
     @Test
-    public void testGetShiftsSetShiftsNoIdentity() throws IOException {
-        System.out.println("getShifts/setShifts - lists are not identical");
-
+    public void getShiftsDoesNotReturnTheIdenticalListThatWasPassedToSetShifts() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        List<Shift> expected = shifts;
         application.setShifts(shifts);
+
         List<Shift> received = application.getShifts();
-        assertFalse(expected == received);
-    }    // testGetShiftsSetShiftsNoIdentity()
-    
+
+        List<Shift> notExpected = shifts;
+        assertFalse(notExpected == received);
+    }    // getShiftsDoesNotReturnTheIdenticalListThatWasPassedToSetShifts()
+
     /**
      * Tests that the elements of the list returned by
      * {@link Application#getShifts()} are not identical identical to those of
      * the list passed to {@link Application#setShifts(List)}.
      */
     @Test
-    public void testGetShiftsSetShiftsNoElementIdentity() throws IOException {
-        System.out.println("getShifts/setShifts - lists elements are not identical");
-
+    public void getShiftsReturnsAListWhoseElementsAreNotIdenticalToThosePassedToSetShifts() throws IOException {
+        Application application = new Application();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         application.setShifts(shifts);
+
         List<Shift> received = application.getShifts();
+
+        List<Shift> notExpected = shifts;
         for (int i = 0; i < shifts.size(); ++i) {
-            assertFalse(shifts.get(i) == received.get(i));
+            assertFalse(notExpected.get(i) == received.get(i));
         }    // for
     }    // testGetShiftsSetShiftsNoElementIdentity()
 
     /* getVolunteers / setVolunteers */
-    
+
     /**
-     * Tests that {@link Application#getVolunteers()} does not throw an exception.
+     * Tests that {@link Application#getVolunteers()} does not throw an
+     * exception when there are no volunteers.
      */
     @Test
-    public void testGetVolunteersNoException() {
-        System.out.println("getVolunteers - no exception");
+    public void getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers() {
+        Application application = new Application();
 
         application.getVolunteers();
-    }    // testGetVolunteersNoException()
+    }    // getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers()
 
     /**
-     * Tests that {@link Application#getVolunteers()} does not return null.
+     * Tests that {@link Application#getVolunteers()} does not return null when
+     * there are no volunteers.
      */
     @Test
-    public void testGetVolunteersNotNull() {
-        System.out.println("getVolunteers - not null");
+    public void getVolunteersDoesNotReturnNullWhenThereAreNoVolunteers() {
+        Application application = new Application();
 
         List<Volunteer> received = application.getVolunteers();
+
         assertNotNull(received);
-    }    // testGetVolunteersNotNull()
-    
+    }    // getVolunteersDoesNotReturnNullWhenThereAreNoVolunteers()
+
+    /**
+     * Tests that {@link Application#getVolunteers()} does not throw an
+     * exception when there are volunteers.
+     */
+    @Test
+    public void getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers() throws IOException {
+        Application application = new Application();
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
+
+        application.getVolunteers();
+    }    // getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers()
+
+    /**
+     * Tests that {@link Application#getVolunteers()} does not return null when
+     * there are volunteers.
+     */
+    @Test
+    public void getVolunteersDoesNotReturnNullWhenThereAreVolunteers() throws IOException {
+        Application application = new Application();
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        application.setVolunteers(volunteers);
+
+        List<Volunteer> received = application.getVolunteers();
+
+        assertNotNull(received);
+    }    // getVolunteersDoesNotReturnNullWhenThereAreVolunteers()
+
     /**
      * Tests that {@link Application#setVolunteers(List)} throws a
      * {@link NullPointerException} when volunteers is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testSetVolunteersVolunteersNull() throws IOException {
-        System.out.println("setVolunteers - volunteers is null");
-
+    public void setVolunteersThrowsExceptionWhenVolunteersIsNull() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = null;
+
         application.setVolunteers(volunteers);
-    }    // testSetVolunteersVolunteersNull()
-    
+    }    // setVolunteersThrowsExceptionWhenVolunteersIsNull()
+
     /**
      * Tests that {@link Application#setVolunteers(List)} throws a
      * {@link NullPointerException} when volunteers is not null but contains a null.
      */
     @Test(expected = NullPointerException.class)
-    public void testSetVolunteersVolunteersContainsNull() throws IOException {
-        System.out.println("setVolunteers - volunteers contains null");
-
+    public void setVolunteersThrowsExceptionWhenVolunteersContainsNull() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), null);
+
         application.setVolunteers(volunteers);
-    }    // testSetVolunteersVolunteersContainsNull()
-    
+    }    // setVolunteersThrowsExceptionWhenVolunteersContainsNull()
+
     /**
      * Tests that {@link Application#setVolunteers(List)} does not throw an
      * exception when volunteers is not null and contains no nulls.
      */
     @Test
-    public void testSetVolunteersNoException() throws IOException {
-        System.out.println("setVolunteers - no exception");
-
+    public void setVolunteersDoesNotThrowExceptionNormally() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
         application.setVolunteers(volunteers);
-    }    // testSetVolunteersNoException()
-    
+    }    // setVolunteersDoesNotThrowExceptionNormally()
+
     /**
      * Tests that {@link Application#setVolunteers(List)} does not alter its
      * argument.
      */
     @Test
-    public void testSetVolunteersDoesNotAlterArgument() throws IOException {
-        System.out.println("setVolunteers - does not alter argument");
-
+    public void setVolunteersDoesNotAlterArgument() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         List<Volunteer> expected = new ArrayList<>(volunteers);
+
         application.setVolunteers(volunteers);
+
         List<Volunteer> received = volunteers;
         assertEquals(expected, received);
-    }    // testSetVolunteersDoesNotAlterArgument()
-    
+    }    // setVolunteersDoesNotAlterArgument()
+
     /**
      * Tests that {@link Application#getVolunteers()} returns a list that is
      * equal to that passed to {@link Application#setVolunteers(List)}.
      */
     @Test
-    public void testGetVolunteersSetVolunteersListsAreEqual() throws IOException {
-        System.out.println("getVolunteers/setVolunteers - lists are equal");
-
+    public void getVolunteersSetVolunteersListsAreEqual() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
-        List<Volunteer> expected = volunteers;
         application.setVolunteers(volunteers);
+
         List<Volunteer> received = application.getVolunteers();
+
+        List<Volunteer> expected = volunteers;
         assertEquals(expected, received);
-    }    // testGetVolunteersSetVolunteersListsAreEqual()
-    
+    }    // getVolunteersSetVolunteersListsAreEqual()
+
     /**
      * Tests that {@link Application#getVolunteers()} returns a list that is not
      * identical to that passed to {@link Application#setVolunteers(List)}.
      */
     @Test
-    public void testGetVolunteersSetVolunteersNoIdentity() throws IOException {
-        System.out.println("getVolunteers/setVolunteers - lists are not identical");
-
+    public void getVolunteersSetVolunteersListsAreNotIdentical() throws IOException {
+        Application application = new Application();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
-        List<Volunteer> expected = volunteers;
         application.setVolunteers(volunteers);
+
         List<Volunteer> received = application.getVolunteers();
-        assertFalse(expected == received);
-    }    // testGetVolunteersSetVolunteersNoIdentity()
-    
-    /* getEmailTemplate / setEmailTemplate */
-    
+
+        List<Volunteer> notExpected = volunteers;
+        assertFalse(notExpected == received);
+    }    // getVolunteersSetVolunteersListsAreNotIdentical()
+
+    /* getRoles / setRoles */
+
     /**
-     * Tests that {@link Application#getEmailTemplate()} does not throw an exception.
+     * Tests that {@link Application#getRoles()} does not throw an
+     * exception when there are no roles.
      */
     @Test
-    public void testGetEmailTemplateNoException() throws IOException {
-        System.out.println("getEmailTemplate - no exception");
+    public void getRolesDoesNotThrowExceptionWhenThereAreNoRoles() {
+        Application application = new Application();
+
+        application.getRoles();
+    }    // getRolesDoesNotThrowExceptionWhenThereAreNoRoles()
+
+    /**
+     * Tests that {@link Application#getRoles()} does not return null when
+     * there are no roles.
+     */
+    @Test
+    public void getRolesDoesNotReturnNullWhenThereAreNoRoles() {
+        Application application = new Application();
+
+        List<Role> received = application.getRoles();
+
+        assertNotNull(received);
+    }    // getRolesDoesNotReturnNullWhenThereAreNoRoles()
+
+    /**
+     * Tests that {@link Application#getRoles()} does not throw an
+     * exception when there are roles.
+     */
+    @Test
+    public void getRolesDoesNotThrowExceptionWhenThereAreRoles() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        application.setRoles(roles);
+
+        application.getRoles();
+    }    // getRolesDoesNotThrowExceptionWhenThereAreRoles()
+
+    /**
+     * Tests that {@link Application#getRoles()} does not return null when
+     * there are roles.
+     */
+    @Test
+    public void getRolesDoesNotReturnNullWhenThereAreRoles() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        application.setRoles(roles);
+
+        List<Role> received = application.getRoles();
+
+        assertNotNull(received);
+    }    // getRolesDoesNotReturnNullWhenThereAreRoles()
+
+    /**
+     * Tests that {@link Application#setRoles(List)} throws a
+     * {@link NullPointerException} when roles is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setRolesThrowsExceptionWhenRolesIsNull() throws IOException {
+        Application application = new Application();
+        List<Role> roles = null;
+
+        application.setRoles(roles);
+    }    // setRolesThrowsExceptionWhenRolesIsNull()
+
+    /**
+     * Tests that {@link Application#setRoles(List)} throws a
+     * {@link NullPointerException} when roles is not null but contains a null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setRolesThrowsExceptionWhenRolesContainsNull() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), null);
+
+        application.setRoles(roles);
+    }    // setRolesThrowsExceptionWhenRolesContainsNull()
+
+    /**
+     * Tests that {@link Application#setRoles(List)} does not throw an
+     * exception when roles is not null and contains no nulls.
+     */
+    @Test
+    public void setRolesDoesNotThrowExceptionNormally() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+    }    // setRolesDoesNotThrowExceptionNormally()
+
+    /**
+     * Tests that {@link Application#setRoles(List)} does not alter its
+     * argument.
+     */
+    @Test
+    public void setRolesDoesNotAlterArgument() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        List<Role> expected = new ArrayList<>(roles);
+
+        application.setRoles(roles);
+
+        List<Role> received = roles;
+        assertEquals(expected, received);
+    }    // setRolesDoesNotAlterArgument()
+
+    /**
+     * Tests that {@link Application#getRoles()} returns a list that is
+     * equal to that passed to {@link Application#setRoles(List)}.
+     */
+    @Test
+    public void getRolesSetRolesListsAreEqual() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        application.setRoles(roles);
+
+        List<Role> received = application.getRoles();
+
+        List<Role> expected = roles;
+        assertEquals(expected, received);
+    }    // getRolesSetRolesListsAreEqual()
+
+    /**
+     * Tests that {@link Application#getRoles()} returns a list that is not
+     * identical to that passed to {@link Application#setRoles(List)}.
+     */
+    @Test
+    public void getRolesSetRolesListsAreNotIdentical() throws IOException {
+        Application application = new Application();
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        application.setRoles(roles);
+
+        List<Role> received = application.getRoles();
+
+        List<Role> notExpected = roles;
+        assertFalse(notExpected == received);
+    }    // getRolesSetRolesListsAreNotIdentical()
+
+    /* getEmailTemplate / setEmailTemplate */
+
+    /**
+     * Tests that {@link Application#getEmailTemplate()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getEmailTemplateDoesNotThrowException() throws IOException {
+        Application application = new Application();
 
         application.getEmailTemplate();
-    }    // testGetEmailTemplateNoException()
+    }    // getEmailTemplateDoesNotThrowException()
 
     /**
      * Tests that {@link Application#getEmailTemplate()} does not return null.
      */
     @Test
-    public void testGetEmailTemplateNotNull() throws IOException {
-        System.out.println("getEmailTemplate - not null");
+    public void getEmailTemplateDoesNotReturnNull() throws IOException {
+        Application application = new Application();
 
         EmailTemplate received = application.getEmailTemplate();
+
         assertNotNull(received);
-    }    // testGetEmailTemplateNotNull()
-    
+    }    // getEmailTemplateDoesNotReturnNull()
+
     /**
-     * Tests that {@link Application#setEmailTemplate(bscmail.EmailTemplate)} throws a
-     * {@link NullPointerException} when templateReader is null.
+     * Tests that {@link Application#setEmailTemplate(bscmail.EmailTemplate)}
+     * throws a {@link NullPointerException} when emailTemplate is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testSetEmailTemplateArgNull() throws IOException {
-        System.out.println("setEmailTemplate - templateReader is null");
-
+    public void setEmailTemplateThrowsExceptionWhenEmailTemplateIsNull() throws IOException {
+        Application application = new Application();
         EmailTemplate emailTemplate = null;
+
         application.setEmailTemplate(emailTemplate);
-    }    // testSetEmailTemplateArgNull()
-    
+    }    // setEmailTemplateThrowsExceptionWhenEmailTemplateIsNull()
+
     /**
      * Tests that {@link Application#setEmailTemplate(bscmail.EmailTemplate)} does not throw an
-     * exception when templateReAder is not null.
+     * exception when emailTemplate is not null.
      */
     @Test
-    public void testSetEmailTemplateArgNotNull() throws IOException {
-        System.out.println("setEmailTemplate - templateReader is not null");
-
+    public void setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull() throws IOException {
+        Application application = new Application();
         EmailTemplate emailTemplate = new EmailTemplate("", "");
+
         application.setEmailTemplate(emailTemplate);
-    }    // testSetEmailTemplateArgNotNull()
-    
+    }    // setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull()
+
     /**
      * Tests that the email template returned by
-     * {@link Application#setEmailTemplate(bscmail.EmailTemplate)} is equal to the email template
-     * passed to {@link Application#setEmailTemplate(List)}.
+     * {@link Application#setEmailTemplate(bscmail.EmailTemplate)} is equal to
+     * the email template passed to {@link Application#setEmailTemplate(List)}.
      */
     @Test
-    public void testGetEmailTemplateSetEmailTemplateContents() throws IOException {
-        System.out.println("getEmailTemplate/setEmailTemplate - character streams have equal contents");
-
+    public void getEmailTemplateReturnsArgumentPassedToSetEmailTemplate() throws IOException {
+        Application application = new Application();
         EmailTemplate emailTemplate = new EmailTemplate("foo", "bar");
         application.setEmailTemplate(emailTemplate);
 
         EmailTemplate received = application.getEmailTemplate();
+
         EmailTemplate expected = emailTemplate;
         assertEquals(expected, received);
-    }    // testGetEmailTemplateSetEmailTemplateContents()
-    
+    }    // getEmailTemplateReturnsArgumentPassedToSetEmailTemplate()
+
+    /* getEventProperties / setEventProperties */
+
+    /**
+     * Tests that {@link Application#getEventProperties()} does not throw an
+     * exception when there are no event properties.
+     */
+    @Test
+    public void getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties() {
+        Application application = new Application();
+
+        application.getEventProperties();
+    }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties()
+
+    /**
+     * Tests that {@link Application#getEventProperties()} does not return null
+     * when there are no event properties.
+     */
+    @Test
+    public void getEventPropertiesDoesNotReturnNullWhenThereAreNoEventProperties() {
+        Application application = new Application();
+
+        List<EventProperty> received = application.getEventProperties();
+
+        assertNotNull(received);
+    }    // getEventPropertiesDoesNotReturnNullWhenThereAreNoEventProperties()
+
+    /**
+     * Tests that {@link Application#getEventProperties()} does not throw an
+     * exception when there are event properties.
+     */
+    @Test
+    public void getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        application.setEventProperties(eventProperties);
+
+        application.getEventProperties();
+    }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties()
+
+    /**
+     * Tests that {@link Application#getEventProperties()} does not return null
+     * when there are event properties.
+     */
+    @Test
+    public void getEventPropertiesDoesNotReturnNullWhenThereAreEventProperties() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        application.setEventProperties(eventProperties);
+
+        List<EventProperty> received = application.getEventProperties();
+
+        assertNotNull(received);
+    }    // getEventPropertiesDoesNotReturnNullWhenThereAreEventProperties()
+
+    /**
+     * Tests that {@link Application#setEventProperties(List)} throws a
+     * {@link NullPointerException} when eventProperties is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setEventPropertiesThrowsExceptionWhenEventPropertiesIsNull() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = null;
+
+        application.setEventProperties(eventProperties);
+    }    // setEventPropertiesThrowsExceptionWhenEventPropertiesIsNull()
+
+    /**
+     * Tests that {@link Application#setEventProperties(List)} throws a
+     * {@link NullPointerException} when eventProperties is not null but
+     * contains a null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setEventPropertiesThrowsExceptionWhenEventPropertiesContainsNull() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), null);
+
+        application.setEventProperties(eventProperties);
+    }    // setEventPropertiesThrowsExceptionWhenEventPropertiesContainsNull()
+
+    /**
+     * Tests that {@link Application#setEventProperties(List)} does not throw an
+     * exception when eventProperties is not null and contains no nulls.
+     */
+    @Test
+    public void setEventPropertiesDoesNotThrowExceptionNormally() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+    }    // setEventPropertiesDoesNotThrowExceptionNormally()
+
+    /**
+     * Tests that {@link Application#setEventProperties(List)} does not alter
+     * its argument.
+     */
+    @Test
+    public void setEventPropertiesDoesNotAlterArgument() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        List<EventProperty> expected = new ArrayList<>(eventProperties);
+
+        application.setEventProperties(eventProperties);
+
+        List<EventProperty> received = eventProperties;
+        assertEquals(expected, received);
+    }    // setEventPropertiesDoesNotAlterArgument()
+
+    /**
+     * Tests that {@link Application#getEventProperties()} returns a list that
+     * is equal to that passed to {@link Application#setEventProperties(List)}.
+     */
+    @Test
+    public void getEventPropertiesSetEventPropertiesListsAreEqual() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        application.setEventProperties(eventProperties);
+
+        List<EventProperty> received = application.getEventProperties();
+
+        List<EventProperty> expected = eventProperties;
+        assertEquals(expected, received);
+    }    // getEventPropertiesSetEventPropertiesListsAreEqual()
+
+    /**
+     * Tests that {@link Application#getEventProperties()} returns a list that
+     * is not identical to that passed to
+     * {@link Application#setEventProperties(List)}.
+     */
+    @Test
+    public void getEventPropertiesSetEventPropertiesListsAreNotIdentical() throws IOException {
+        Application application = new Application();
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        application.setEventProperties(eventProperties);
+
+        List<EventProperty> received = application.getEventProperties();
+
+        List<EventProperty> notExpected = eventProperties;
+        assertFalse(notExpected == received);
+    }    // getEventPropertiesSetEventPropertiesListsAreNotIdentical()
+
     /* registerObserver(ShiftsObserver) */
-    
+
     /**
      * Tests that {@link Application#registerObserver(ShiftsObserver)} throws a
      * {@link NullPointerException} when observer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testRegisterObserverShiftsObserverNull() {
-        System.out.println("registerObserver(ShiftsObserver) - observer is null");
-
+    public void registerObserverShiftsObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = new Application();
         ShiftsObserver observer = null;
+
         application.registerObserver(observer);
-    }    // testRegisterObserverShiftsObserverNull()
-    
+    }    // registerObserverShiftsObserverThrowsExceptionWhenObserverIsNull()
+
     /**
      * Tests that {@link Application#registerObserver(ShiftsObserver)} does not
      * throw an exception when observer is not null.
      */
     @Test
-    public void testRegisterObserverShiftsObserverNotNull() {
-        System.out.println("registerObserver(ShiftsObserver) - observer is null");
-
+    public void registerObserverShiftsObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = new Application();
         ShiftsObserver observer = new ApplicationObserver();
+
         application.registerObserver(observer);
-    }    // testRegisterObserverShiftsObserverNotNull()
-    
+    }    // registerObserverShiftsObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
     /**
      * Tests that {@link Application#registerObserver(ShiftsObserver)} does not
      * throw an exception when called twice with different observers.
      */
     @Test
-    public void testRegisterObserverShiftsTwice() {
-        System.out.println("registerObserver(ShiftsObserver) - called twice");
-
+    public void registerObserverShiftsObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
         for (ShiftsObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-    }    // testRegisterObserverShiftsTwice()
+    }    // registerObserverShiftsObserverDoesNotThrowExceptionWhenCalledTwice()
 
     /**
      * Tests that a call to {@link Application#setShifts(List)} notifies all
@@ -534,22 +893,21 @@ public class ApplicationTest {
      * {@link Application#registerObserver(ShiftsObserver)}.
      */
     @Test
-    public void testSetShiftsRegisterObserverShiftsNotifiesAll() throws IOException {
-        System.out.println("setShifts/registerObserver(ShiftsObserver) - notifies all observers");
-
+    public void setShiftsNotifiesAllShiftsObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (ShiftsObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
         application.setShifts(shifts);
-        
+
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getShiftsChanged());
         }    // for
-    }    // testSetShiftsRegisterObserverShiftsNotifiesAll()
-
+    }    // setShiftsNotifiesAllShiftsObservers()
 
     /**
      * Tests that a call to {@link Application#setVolunteers(List)} does not
@@ -557,16 +915,33 @@ public class ApplicationTest {
      * {@link Application#registerObserver(ShiftsObserver)}.
      */
     @Test
-    public void testSetVolunteersRegisterObserverShiftsNotifiesAll() throws IOException {
-        System.out.println("setVolunteers/registerObserver(ShiftsObserver) - does not notify");
-
+    public void setVolunteersDoesNotNotifyShiftsObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
         application.setVolunteers(volunteers);
-        
+
         assertFalse(observer.getShiftsChanged());
-    }    // testSetVolunteersRegisterObserverShiftsNotifiesAll()
+    }    // setVolunteersDoesNotNotifyShiftsObservers()
+
+    /**
+     * Tests that a call to {@link Application#Roles(List)} does not notify any
+     * observers registered with
+     * {@link Application#registerObserver(ShiftsObserver)}.
+     */
+    @Test
+    public void setRolesDoesNotNotifyShiftsObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((ShiftsObserver)observer);
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
+        assertFalse(observer.getShiftsChanged());
+    }    // setRolesDoesNotNotifyShiftsObservers()
 
     /**
      * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
@@ -574,56 +949,73 @@ public class ApplicationTest {
      * {@link Application#registerObserver(ShiftsObserver)}.
      */
     @Test
-    public void testSetEmailTemplateRegisterObserverShiftsNotifiesAll() throws IOException {
-        System.out.println("setEmailTemplate/registerObserver(ShiftsObserver) - does not notify");
-
+    public void setEmailTemplateDoesNotNotifyShiftObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+
         application.setEmailTemplate(emailTemplate);
-        
+
         assertFalse(observer.getShiftsChanged());
-    }    // testSetEmailTemplateRegisterObserverShiftsNotifiesAll()
+    }    // setEmailTemplateDoesNotNotifyShiftObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(ShiftsObserver)}.
+     */
+    @Test
+    public void setEventPropertiesDoesNotNotifyShiftsObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((ShiftsObserver)observer);
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        assertFalse(observer.getShiftsChanged());
+    }    // setEventPropertiesDoesNotNotifyShiftsObservers()
 
     /* registerObserver(VolunteersObserver) */
-     
+
     /**
      * Tests that {@link Application#registerObserver(VolunteersObserver)} throws a
      * {@link NullPointerException} when observer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testRegisterObserverVolunteersObserverNull() {
-        System.out.println("registerObserver(VolunteersObserver) - observer is null");
-
+    public void registerObserverVolunteersObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = new Application();
         VolunteersObserver observer = null;
+
         application.registerObserver(observer);
-    }    // testRegisterObserverVolunteersObserverNull()
-    
+    }    // registerObserverVolunteersObserverThrowsExceptionWhenObserverIsNull()
+
     /**
      * Tests that {@link Application#registerObserver(VolunteersObserver)} does not
      * throw an exception when observer is not null.
      */
     @Test
-    public void testRegisterObserverVolunteersObserverNotNull() {
-        System.out.println("registerObserver(VolunteersObserver) - observer is null");
-
+    public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = new Application();
         VolunteersObserver observer = new ApplicationObserver();
+
         application.registerObserver(observer);
-    }    // testRegisterObserverVolunteersObserverNotNull()
-    
+    }    // registerObserverVolunteersObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
     /**
      * Tests that {@link Application#registerObserver(VolunteersObserver)} does not
      * throw an exception when called twice with different observers.
      */
     @Test
-    public void testRegisterObserverVolunteersTwice() {
-        System.out.println("registerObserver(VolunteersObserver) - called twice");
-
+    public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
         for (VolunteersObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-    }    // testRegisterObserverVolunteersTwice()
+    }    // registerObserverVolunteersObserverDoesNotThrowExceptionWhenCalledTwice()
 
     /**
      * Tests that a call to {@link Application#setVolunteers(List)} notifies all
@@ -631,20 +1023,20 @@ public class ApplicationTest {
      * {@link Application#registerObserver(VolunteersObserver)}.
      */
     @Test
-    public void testSetVolunteersRegisterObserverVolunteersNotifiesAll() throws IOException {
-        System.out.println("setVolunteers/registerObserver(VolunteersObserver) - notifies all observers");
-
+    public void setVolunteersNotifiesAllVolunteersObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (VolunteersObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
         application.setVolunteers(volunteers);
-        
+
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getVolunteersChanged());
         }    // for
-    }    // testSetVolunteersRegisterObserverVolunteersNotifiesAll()
+    }    // setVolunteersNotifiesAllVolunteersObservers()
 
     /**
      * Tests that a call to {@link Application#setShifts(List)} does not
@@ -652,78 +1044,259 @@ public class ApplicationTest {
      * {@link Application#registerObserver(VolunteersObserver)}.
      */
     @Test
-    public void testSetShiftsRegisterObserverVolunteersNotifiesAll() throws IOException {
-        System.out.println("setShifts/registerObserver(VolunteersObserver) - does not notify");
-
+    public void setShiftsDoesNotNotifyVolunteersObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
         application.setShifts(shifts);
-        
+
         assertFalse(observer.getVolunteersChanged());
-    }    // testSetShiftsRegisterObserverVolunteersNotifiesAll()
+    }    // setShiftsDoesNotNotifyVolunteersObservers()
+
+    /**
+     * Tests that a call to {@link Application#Roles(List)} does not notify any
+     * observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setRolesDoesNotNotifyVolunteersObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((VolunteersObserver)observer);
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setRolesDoesNotNotifyVolunteersObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setEmailTemplateDoesNotNotifyVolunteerObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((VolunteersObserver)observer);
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+
+        application.setEmailTemplate(emailTemplate);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setEmailTemplateDoesNotNotifyVolunteerObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setEventPropertiesDoesNotNotifyVolunteersObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((VolunteersObserver)observer);
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setEventPropertiesDoesNotNotifyVolunteersObservers()
+
+    /* registerObserver(RolesObserver) */
+
+    /**
+     * Tests that {@link Application#registerObserver(RolesObserver)} throws a
+     * {@link NullPointerException} when observer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void registerObserverRolesObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = new Application();
+        RolesObserver observer = null;
+
+        application.registerObserver(observer);
+    }    // registerObserverRolesObserverThrowsExceptionWhenObserverIsNull()
+
+    /**
+     * Tests that {@link Application#registerObserver(RolesObserver)} does not
+     * throw an exception when observer is not null.
+     */
+    @Test
+    public void registerObserverRolesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = new Application();
+        RolesObserver observer = new ApplicationObserver();
+
+        application.registerObserver(observer);
+    }    // registerObserverRolesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
+    /**
+     * Tests that {@link Application#registerObserver(RolesObserver)} does not
+     * throw an exception when called twice with different observers.
+     */
+    @Test
+    public void registerObserverRolesObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = new Application();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
+        for (RolesObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+    }    // registerObserverRolesObserverDoesNotThrowExceptionWhenCalledTwice()
+
+    /**
+     * Tests that a call to {@link Application#setRoles(List)} notifies all
+     * observers registered with
+     * {@link Application#registerObserver(RolesObserver)}.
+     */
+    @Test
+    public void setRolesNotifiesAllRolesObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (RolesObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
+        for (ApplicationObserver observer : observers) {
+            assertTrue(observer.getRolesChanged());
+        }    // for
+    }    // setRolesNotifiesAllRolesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setShifts(List)} does not
+     * notify any observers registered with
+     * {@link Application#registerObserver(RolesObserver)}.
+     */
+    @Test
+    public void setShiftsDoesNotNotifyRolesObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((RolesObserver)observer);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
+        application.setShifts(shifts);
+
+        assertFalse(observer.getRolesChanged());
+    }    // setShiftsDoesNotNotifyRolesObservers()
+
+    /**
+     * Tests that a call to {@link Application#Volunteers(List)} does not notify any
+     * observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setVolunteersDoesNotNotifyRolesObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((RolesObserver)observer);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
+        application.setVolunteers(volunteers);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setVolunteersDoesNotNotifyRolesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(RolesObserver)}.
+     */
+    @Test
+    public void setEmailTemplateDoesNotNotifyRoleObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((RolesObserver)observer);
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+
+        application.setEmailTemplate(emailTemplate);
+
+        assertFalse(observer.getRolesChanged());
+    }    // setEmailTemplateDoesNotNotifyRoleObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(RolesObserver)}.
+     */
+    @Test
+    public void setEventPropertiesDoesNotNotifyRolesObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((RolesObserver)observer);
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        assertFalse(observer.getRolesChanged());
+    }    // setEventPropertiesDoesNotNotifyRolesObservers()
 
     /* registerObserver(EmailTemplateObserver) */
-     
+
     /**
      * Tests that {@link Application#registerObserver(EmailTemplateObserver)}
      * throws a {@link NullPointerException} when observer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testRegisterObserverEmailTemplateObserverNull() {
-        System.out.println("registerObserver(EmailTemplateObserver) - observer is null");
-
+    public void registerObserverEmailTemplateObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = new Application();
         EmailTemplateObserver observer = null;
+
         application.registerObserver(observer);
-    }    // testRegisterObserverEmailTemplateObserverNull()
-    
+    }    // registerObserverEmailTemplateObserverThrowsExceptionWhenObserverIsNull()
+
     /**
      * Tests that {@link Application#registerObserver(EmailTemplateObserver)}
      * does not throw an exception when observer is not null.
      */
     @Test
-    public void testRegisterObserverEmailTemplateObserverNotNull() {
-        System.out.println("registerObserver(EmailTemplateObserver) - observer is null");
-
+    public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = new Application();
         EmailTemplateObserver observer = new ApplicationObserver();
+
         application.registerObserver(observer);
-    }    // testRegisterObserverEmailTemplateObserverNotNull()
-    
+    }    // registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
     /**
-     * Tests that {@link Application#registerObserver(EmailTemplateObserver)}
-     * does not throw an exception when called twice with different observers.
+     * Tests that {@link Application#registerObserver(EmailTemplateObserver)} does not
+     * throw an exception when called twice with different observers.
      */
     @Test
-    public void testRegisterObserverEmailTemplateTwice() {
-        System.out.println("registerObserver(EmailTemplateObserver) - called twice");
-
+    public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
         for (EmailTemplateObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-    }    // testRegisterObserverEmailTemplateTwice()
+    }    // registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenCalledTwice()
 
     /**
-     * Tests that a call to {@link Application#setEmailTemplate(List)} notifies
-     * all observers registered with
+     * Tests that a call to {@link Application#setEmailTemplate(List)} notifies all
+     * observers registered with
      * {@link Application#registerObserver(EmailTemplateObserver)}.
      */
     @Test
-    public void testSetEmailTemplateRegisterObserverEmailTemplateNotifiesAll() throws IOException {
-        System.out.println("setEmailTemplate/registerObserver(EmailTemplateObserver) - notifies all observers");
-
+    public void setEmailTemplateNotifiesAllEmailTemplateObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (EmailTemplateObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+
         application.setEmailTemplate(emailTemplate);
-        
+
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getEmailTemplateChanged());
         }    // for
-    }    // testSetEmailTemplateRegisterObserverEmailTemplateNotifiesAll()
+    }    // setEmailTemplateNotifiesAllEmailTemplateObservers()
 
     /**
      * Tests that a call to {@link Application#setShifts(List)} does not
@@ -731,33 +1304,197 @@ public class ApplicationTest {
      * {@link Application#registerObserver(EmailTemplateObserver)}.
      */
     @Test
-    public void testSetShiftsRegisterObserverEmailTemplateNotifiesAll() throws IOException {
-        System.out.println("setShifts/registerObserver(EmailTemplateObserver) - does not notify");
-
+    public void setShiftsDoesNotNotifyEmailTemplateObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
         application.setShifts(shifts);
-        
+
         assertFalse(observer.getEmailTemplateChanged());
-    }    // testSetShiftsRegisterObserverEmailTemplateNotifiesAll()
+    }    // setShiftsDoesNotNotifyEmailTemplateObservers()
 
     /**
-     * Tests that a call to {@link Application#setVolunteers(List)} does not
-     * notify any observers registered with
-     * {@link Application#registerObserver(EmailTemplateObserver)}.
+     * Tests that a call to {@link Application#Volunteers(List)} does not notify any
+     * observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
      */
     @Test
-    public void testSetVolunteersRegisterObserverEmailTemplateNotifiesAll() throws IOException {
-        System.out.println("setVolunteers/registerObserver(EmailTemplateObserver) - does not notify");
-
+    public void setVolunteersDoesNotNotifyEmailTemplateObservers() throws IOException {
+        Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
         application.setVolunteers(volunteers);
-        
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setVolunteersDoesNotNotifyEmailTemplateObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EmailTemplateObserver)}.
+     */
+    @Test
+    public void setRolesDoesNotNotifyEmailTemplateObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailTemplateObserver)observer);
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
         assertFalse(observer.getEmailTemplateChanged());
-    }    // testSetVolunteersRegisterObserverEmailTemplateNotifiesAll()
-    
+    }    // setRolesDoesNotNotifyEmailTemplateObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EmailTemplateObserver)}.
+     */
+    @Test
+    public void setEventPropertiesDoesNotNotifyEmailTemplateObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailTemplateObserver)observer);
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        assertFalse(observer.getEmailTemplateChanged());
+    }    // setEventPropertiesDoesNotNotifyEmailTemplateObservers()
+
+    /* registerObserver(EventPropertysObserver) */
+
+    /**
+     * Tests that {@link Application#registerObserver(EventPropertysObserver)} throws a
+     * {@link NullPointerException} when observer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void registerObserverEventPropertysObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = new Application();
+        EventPropertyObserver observer = null;
+
+        application.registerObserver(observer);
+    }    // registerObserverEventPropertysObserverThrowsExceptionWhenObserverIsNull()
+
+    /**
+     * Tests that {@link Application#registerObserver(EventPropertysObserver)} does not
+     * throw an exception when observer is not null.
+     */
+    @Test
+    public void registerObserverEventPropertysObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = new Application();
+        EventPropertyObserver observer = new ApplicationObserver();
+
+        application.registerObserver(observer);
+    }    // registerObserverEventPropertysObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
+    /**
+     * Tests that {@link Application#registerObserver(EventPropertysObserver)} does not
+     * throw an exception when called twice with different observers.
+     */
+    @Test
+    public void registerObserverEventPropertysObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = new Application();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
+        for (EventPropertyObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+    }    // registerObserverEventPropertysObserverDoesNotThrowExceptionWhenCalledTwice()
+
+    /**
+     * Tests that a call to {@link Application#setEventPropertys(List)} notifies all
+     * observers registered with
+     * {@link Application#registerObserver(EventPropertyObserver)}.
+     */
+    @Test
+    public void setEventPropertysNotifiesAllEventPropertyObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (EventPropertyObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        for (ApplicationObserver observer : observers) {
+            assertTrue(observer.getEventPropertiesChanged());
+        }    // for
+    }    // setEventPropertysNotifiesAllEventPropertyObservers()
+
+    /**
+     * Tests that a call to {@link Application#setShifts(List)} does not
+     * notify any observers registered with
+     * {@link Application#registerObserver(EventPropertyObserver)}.
+     */
+    @Test
+    public void setShiftsDoesNotNotifyEventPropertyObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EventPropertyObserver)observer);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
+        application.setShifts(shifts);
+
+        assertFalse(observer.getEventPropertiesChanged());
+    }    // setShiftsDoesNotNotifyEventPropertyObservers()
+
+    /**
+     * Tests that a call to {@link Application#Volunteers(List)} does not notify any
+     * observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setVolunteersDoesNotNotifyEventPropertyObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EventPropertyObserver)observer);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+
+        application.setVolunteers(volunteers);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setVolunteersDoesNotNotifyEventPropertyObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EventPropertysObserver)}.
+     */
+    @Test
+    public void setRolesDoesNotNotifyEventPropertyObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EventPropertyObserver)observer);
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
+        assertFalse(observer.getRolesChanged());
+    }    // setRolesDoesNotNotifyEventPropertyObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EventPropertysObserver)}.
+     */
+    @Test
+    public void setEmailTemplateDoesNotNotifyEventPropertyObservers() throws IOException {
+        Application application = new Application();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EventPropertyObserver)observer);
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+
+        application.setEmailTemplate(emailTemplate);
+
+        assertFalse(observer.getEventPropertiesChanged());
+    }    // setEmailTemplateDoesNotNotifyEventPropertyObservers()
+
 }    // ApplicationTest
