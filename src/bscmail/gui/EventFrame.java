@@ -20,7 +20,7 @@
 package bscmail.gui;
 
 import bscmail.Application;
-import bscmail.EventPropertyObserver;
+import bscmail.EventPropertiesObserver;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
 import bscmail.*;
@@ -32,14 +32,14 @@ import java.util.*;
 import javax.swing.*;
 
 /**
- * A graphical interface for an {@link Event}.  
+ * A graphical interface for an {@link Event}.
  * @author Wayne Miller
  */
 public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObserver,
-                                                  EventPropertyObserver {
+                                                  EventPropertiesObserver {
 
     /* Private Classes */
-    
+
     /**
      * Wrapper for a volunteer. When displayed in a combo box, the container
      * displays the name of the volunteer, or "(open)" if the volunteer is null.
@@ -52,22 +52,22 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         /**
          * Constructs a new volunteer container.
-         * 
+         *
          * @param volunteer the volunteer wrapped in the container
          */
         public VolunteerContainer(Volunteer volunteer) {
             this.volunteer = volunteer;
         }    // PersonContainer
-        
+
         /**
          * Returns the volunteer wrapped in the container.
-         * 
+         *
          * @return the volunteer wrapped in the container
          */
         public Volunteer getVolunteer() {
             return volunteer;
         }    // getPerson()
-        
+
         /**
          * Returns the name of the volunteer wrapped in the container, or
          * "(open)" if the volunteer is null.
@@ -136,10 +136,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
          * The shift corresponding to this combo box.
          */
         private final Shift shift;
-        
+
         /**
          * Constructs a new shift combo box.
-         * 
+         *
          * @param shift the shift corresponding to this combo box; may not be
          * null
          * @param volunteers the volunteers used to populate the combo box; may
@@ -154,23 +154,23 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         /**
          * Returns the shift corresponding to this combo box.
-         * 
+         *
          * @return the shift corresponding to this combo box
          */
         public Shift getShift() {
             return shift;
         }    // getShift()
-        
+
         /**
          * Returns the volunteer selected by the user.
-         * 
+         *
          * @return the volunteer selected by the user
          */
         public Volunteer getVolunteer() {
             VolunteerContainer container = (VolunteerContainer)getSelectedItem();
             return container.getVolunteer();
         }    // getVolunteer()
-        
+
         /**
          * Sets the list of volunteers.
          *
@@ -188,27 +188,27 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             }    // if
         }    // setModel()
     }    // ShiftComboBox
-    
+
     /**
      * Represents a paired label and component.
-     * 
+     *
      * @param <E> the type of component paired
      */
     private class LabeledComponent<E extends Component> {
-        
+
         /**
          * The label.
          */
         public final JLabel label;
-        
+
         /**
          * The component.
          */
         public final E component;
-        
+
         /**
          * Constructs a new labeled component.
-         * 
+         *
          * @param label the text of the label; may not be null
          * @param component the component; may not be null
          */
@@ -219,7 +219,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             this.component = component;
         }    // LabeledComponent()
     }    // LabeledComponent
-    
+
     /* Swing controls */
 
     /**
@@ -246,7 +246,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * Shift dropdown controls.
      */
     private final List<LabeledComponent<ShiftComboBox>> shiftControls;
-    
+
     /**
      * Other private variables.
      */
@@ -259,11 +259,11 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * Event Property textField controls.
      */
     private final List<LabeledComponent<EventPropertiesTextField>> eventPropertyControls;
-    
+
     /*
      * Public API
      */
-    
+
     /**
      * Constructs a new EventFrame.
      *
@@ -279,7 +279,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         List<EventProperty> eventProperties = application.getEventProperties();
         List<Shift> shifts = application.getShifts();
         volunteers = application.getVolunteers();
-        
+
         setTitle(application.getApplicationName() + " - Event Setup");
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
@@ -304,16 +304,16 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         shiftControls = new LinkedList<>();
         setShifts(shifts);
 
-        application.registerObserver((EventPropertyObserver)this);
+        application.registerObserver((EventPropertiesObserver)this);
         application.registerObserver((ShiftsObserver)this);
         application.registerObserver((VolunteersObserver)this);
-        
+
         assertInvariant();
     }    // EventFrame()
-    
+
     /**
      * Returns an event whose fields correspond to the controls of the GUI.
-     * 
+     *
      * @return event whose fields correspond to the controls of the GUI
      */
     public Event getEvent() {
@@ -360,11 +360,11 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     public void eventPropertiesChanged() {
         setEventProperties(application.getEventProperties());
     }    // eventPropertiesChanged()
-    
+
     /*
      * Private methods
      */
-    
+
     /**
      * Sets the list of shifts displayed in the frame to the given list. The
      * volunteers selected in the comboboxes remain selected. If the new list
@@ -388,7 +388,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         if (shifts.contains(null)) {
             throw new NullPointerException("shifts may not contain null");
         }    // if
-        
+
         List<String> selections = new LinkedList<>();
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
             Volunteer volunteer = shiftControl.component.getVolunteer();
@@ -440,7 +440,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
-    
+
     /**
      * Sets the selected volunteers in the volunteer comboboxes to the
      * volunteers whose names are the elements of the given list, with the first
@@ -535,7 +535,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // for
         pack();
     }    // setEventProperties()
-    
+
     /**
      * Asserts the correctness of the object's internal state.
      */
@@ -552,12 +552,12 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assert (eventPropertyControls != null);
         assert (! eventPropertyControls.contains(null));
     }    // assertInvariant()
-    
+
     /**
      * Returns true if the given combo box contains null.  The given combo box
      * is required to have a default combo box model; if not, behavior is
      * undefined.
-     * 
+     *
      * @param comboBox the combo box to check; may not be null; must have a
      * default combo box model
      * @return true if {@code comboBox} contains null; false otherwise
@@ -568,7 +568,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assert (model != null);
         return (model.getIndexOf(null) >= 0);
     }    // comboBoxContainsNull()
-    
+
     /**
      * Returns true if the frame is the ancestor of all the components contained
      * within the elements in the given list.
@@ -581,14 +581,14 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         for (LabeledComponent element : list) {
             if (! isAncestorOf(element.label)) {
                 return false;
-            }    // 
+            }    //
             if (! isAncestorOf(element.component)) {
                 return false;
-            }    // 
+            }    //
         }    // for
         return true;
     }    // isAncestorOfAll()
-    
+
     /**
      * Returns true if any of the given combo boxes contains null. The given
      * combo boxes are required to be non-null and have a default combo box
@@ -611,5 +611,5 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // for
         return false;
     }    // anyComboBoxContainsNull()
-    
+
 }    // EventFrame

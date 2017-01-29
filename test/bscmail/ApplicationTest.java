@@ -33,7 +33,7 @@ public class ApplicationTest {
     /**
      * Observer used in tests.
      */
-    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, RolesObserver, EmailTemplateObserver, EventPropertyObserver {
+    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, RolesObserver, EmailTemplateObserver, EventPropertiesObserver {
         private boolean shiftsChanged = false;
         private boolean volunteersChanged = false;
         private boolean rolesChanged = false;
@@ -1367,56 +1367,56 @@ public class ApplicationTest {
         assertFalse(observer.getEmailTemplateChanged());
     }    // setEventPropertiesDoesNotNotifyEmailTemplateObservers()
 
-    /* registerObserver(EventPropertysObserver) */
+    /* registerObserver(EventPropertiesObserver) */
 
     /**
-     * Tests that {@link Application#registerObserver(EventPropertysObserver)} throws a
+     * Tests that {@link Application#registerObserver(EventPropertiesObserver)} throws a
      * {@link NullPointerException} when observer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void registerObserverEventPropertysObserverThrowsExceptionWhenObserverIsNull() {
+    public void registerObserverEventPropertiesObserverThrowsExceptionWhenObserverIsNull() {
         Application application = new Application();
-        EventPropertyObserver observer = null;
+        EventPropertiesObserver observer = null;
 
         application.registerObserver(observer);
-    }    // registerObserverEventPropertysObserverThrowsExceptionWhenObserverIsNull()
+    }    // registerObserverEventPropertiesObserverThrowsExceptionWhenObserverIsNull()
 
     /**
-     * Tests that {@link Application#registerObserver(EventPropertysObserver)} does not
+     * Tests that {@link Application#registerObserver(EventPropertiesObserver)} does not
      * throw an exception when observer is not null.
      */
     @Test
-    public void registerObserverEventPropertysObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+    public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
         Application application = new Application();
-        EventPropertyObserver observer = new ApplicationObserver();
+        EventPropertiesObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
-    }    // registerObserverEventPropertysObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+    }    // registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
-     * Tests that {@link Application#registerObserver(EventPropertysObserver)} does not
+     * Tests that {@link Application#registerObserver(EventPropertiesObserver)} does not
      * throw an exception when called twice with different observers.
      */
     @Test
-    public void registerObserverEventPropertysObserverDoesNotThrowExceptionWhenCalledTwice() {
+    public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenCalledTwice() {
         Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
-        for (EventPropertyObserver observer : observers) {
+        for (EventPropertiesObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-    }    // registerObserverEventPropertysObserverDoesNotThrowExceptionWhenCalledTwice()
+    }    // registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenCalledTwice()
 
     /**
-     * Tests that a call to {@link Application#setEventPropertys(List)} notifies all
+     * Tests that a call to {@link Application#setEventProperties(List)} notifies all
      * observers registered with
      * {@link Application#registerObserver(EventPropertyObserver)}.
      */
     @Test
-    public void setEventPropertysNotifiesAllEventPropertyObservers() throws IOException {
+    public void setEventPropertiesNotifiesAllEventPropertyObservers() throws IOException {
         Application application = new Application();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (EventPropertyObserver observer : observers) {
+        for (EventPropertiesObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
@@ -1426,7 +1426,7 @@ public class ApplicationTest {
         for (ApplicationObserver observer : observers) {
             assertTrue(observer.getEventPropertiesChanged());
         }    // for
-    }    // setEventPropertysNotifiesAllEventPropertyObservers()
+    }    // setEventPropertiesNotifiesAllEventPropertyObservers()
 
     /**
      * Tests that a call to {@link Application#setShifts(List)} does not
@@ -1437,7 +1437,7 @@ public class ApplicationTest {
     public void setShiftsDoesNotNotifyEventPropertyObservers() throws IOException {
         Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertyObserver)observer);
+        application.registerObserver((EventPropertiesObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
@@ -1455,7 +1455,7 @@ public class ApplicationTest {
     public void setVolunteersDoesNotNotifyEventPropertyObservers() throws IOException {
         Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertyObserver)observer);
+        application.registerObserver((EventPropertiesObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
 
         application.setVolunteers(volunteers);
@@ -1466,13 +1466,13 @@ public class ApplicationTest {
     /**
      * Tests that a call to {@link Application#setEventProperties(List)} does
      * not notify any observers registered with
-     * {@link Application#registerObserver(EventPropertysObserver)}.
+     * {@link Application#registerObserver(EventPropertiesObserver)}.
      */
     @Test
     public void setRolesDoesNotNotifyEventPropertyObservers() throws IOException {
         Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertyObserver)observer);
+        application.registerObserver((EventPropertiesObserver)observer);
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
         application.setRoles(roles);
@@ -1483,13 +1483,13 @@ public class ApplicationTest {
     /**
      * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
      * not notify any observers registered with
-     * {@link Application#registerObserver(EventPropertysObserver)}.
+     * {@link Application#registerObserver(EventPropertiesObserver)}.
      */
     @Test
     public void setEmailTemplateDoesNotNotifyEventPropertyObservers() throws IOException {
         Application application = new Application();
         ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertyObserver)observer);
+        application.registerObserver((EventPropertiesObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
 
         application.setEmailTemplate(emailTemplate);

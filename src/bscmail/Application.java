@@ -33,7 +33,7 @@ import javax.swing.*;
 
 /**
  * An application controls application-wide properties and objects.
- * 
+ *
  * @since 2.0
  * @author Wayne Miller
  */
@@ -42,32 +42,32 @@ public class Application {
     /*
      * Private class properties.
      */
-    
+
     /**
      * String property keys for the application.
      */
     private enum PropertyKey {
-        
+
         /**
          * The application name.
          */
         APPLICATION_NAME           (false),
-        
+
         /**
          * The application version.
          */
         APPLICATION_VERSION        (false),
-        
+
         /**
          * The application copyright notice.
          */
         APPLICATION_COPYRIGHT      (false),
-        
+
         /**
          * The name of the defined shifts file.
          */
         SHIFTS_FILE                (true),
-        
+
         /**
          * The name of the defined volunteers file.
          */
@@ -77,7 +77,7 @@ public class Application {
          * The name of the defined roles file.
          */
         ROLES_FILE                 (true),
-        
+
         /**
          * The name of the email template file.
          */
@@ -104,22 +104,22 @@ public class Application {
 
         /**
          * Constructs a new property key.
-         * 
+         *
          * @param isFileName true if the property key denotes a filename; false
          * otherwise
          */
         PropertyKey(boolean isFileName) { this.isFileName = isFileName; }
-        
+
         /**
          * Returns true if the property key denotes a filename; otherwise,
          * returns false.
-         * 
+         *
          * @return true if the property key denotes a filename; false otherwise
          */
         boolean isFileName() { return isFileName; }
     }    // PropertyKey
 
-    
+
     /**
      * String properties for the application.
      */
@@ -174,7 +174,7 @@ public class Application {
      * The shifts I/O layer.
      */
     private final IOLayer<EventProperty> eventPropertiesIOLayer;
-    
+
     /**
      * The list of shifts observers.
      */
@@ -189,7 +189,7 @@ public class Application {
      * The list of volunteers observers.
      */
     private final List<RolesObserver> rolesObservers;
-    
+
     /**
      * The list of email template observers.
      */
@@ -198,13 +198,13 @@ public class Application {
     /**
      * The list of event property observers.
      */
-    private final List<EventPropertyObserver> eventPropertyObservers;
-    
+    private final List<EventPropertiesObserver> eventPropertiesObservers;
+
     /**
      * The list of test dialogs.
      */
     private final List<JDialog> testDialogs;
-    
+
     /**
      * Constructs a new application.
      */
@@ -265,7 +265,7 @@ public class Application {
         volunteersObservers = new LinkedList<>();
         rolesObservers = new LinkedList<>();
         emailTemplateObservers = new LinkedList<>();
-        eventPropertyObservers = new LinkedList<>();
+        eventPropertiesObservers = new LinkedList<>();
 
         testDialogs = new LinkedList<>();
 
@@ -281,7 +281,7 @@ public class Application {
         String property = properties.get(PropertyKey.APPLICATION_NAME);
         return property;
     }    // getApplicationName()
-    
+
     /**
      * Returns the application version.
      * @return the application version
@@ -328,7 +328,7 @@ public class Application {
         }    // for
         return clones;
     }    // getShifts()
-    
+
     /**
      * Sets the list of defined volunteer shifts. Shifts are copied into the
      * application without their volunteers, if any. The original shifts are
@@ -516,7 +516,7 @@ public class Application {
 
     /**
      * Returns the defined email template.
-     * 
+     *
      * @return the defined email template
      */
     public EmailTemplate getEmailTemplate() {
@@ -526,7 +526,7 @@ public class Application {
 
     /**
      * Sets the defined email template.
-     * 
+     *
      * @param emailTemplate the email template to set; may not be null
      * @throws NullPointerException
      * @throws IOException if an I/O error occurs
@@ -587,7 +587,7 @@ public class Application {
             EventProperty clone = eventProperty.clone();
             this.eventProperties.add(clone);
         }    // for
-        for (EventPropertyObserver observer : eventPropertyObservers) {
+        for (EventPropertiesObserver observer : eventPropertiesObservers) {
             observer.eventPropertiesChanged();
         }    // for
 
@@ -598,7 +598,7 @@ public class Application {
 
     /**
      * Registers a shifts observer with this application.
-     * 
+     *
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
@@ -613,7 +613,7 @@ public class Application {
 
     /**
      * Registers a volunteers observer with this application.
-     * 
+     *
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
@@ -644,7 +644,7 @@ public class Application {
 
     /**
      * Registers an email template observer with this application.
-     * 
+     *
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
@@ -663,15 +663,15 @@ public class Application {
      * @param observer the observer to register; may not be null
      * @throws NullPointerException if observer is null
      */
-    public void registerObserver(EventPropertyObserver observer) {
+    public void registerObserver(EventPropertiesObserver observer) {
         assertInvariant();
         if (observer == null) {
             throw new NullPointerException("observer may not be null");
         }    // if
-        eventPropertyObservers.add(observer);
+        eventPropertiesObservers.add(observer);
         assertInvariant();
     }    // registerObserver()
-    
+
     /**
      * Shows an error dialog with the given owner, message, and cause.
      *
@@ -687,7 +687,7 @@ public class Application {
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
     }    // showErrorDialog()
-    
+
     /**
      * Shows an error dialog with the given owner and message.
      *
@@ -699,11 +699,11 @@ public class Application {
         assertInvariant();
         showErrorDialog(owner, message, null);
     }    // showErrorDialog()
-    
+
     /*
      * Private class methods.
      */
-    
+
     /**
      * Asserts the correctness of the object's internal state.
      */
@@ -732,15 +732,15 @@ public class Application {
         assert (emailTemplate != null);
         assert (emailTemplateObservers != null);
         assert (! emailTemplateObservers.contains(null));
-        assert (eventPropertyObservers != null);
-        assert (! eventPropertyObservers.contains(null));
+        assert (eventPropertiesObservers != null);
+        assert (! eventPropertiesObservers.contains(null));
         assert (testDialogs != null);
         assert (! testDialogs.contains(null));
     }    // assertInvariant()
 
     /**
      * Returns true if the elements of {@link shifts} have no volunteers.
-     * 
+     *
      * @return true if the elements of {@link shifts} have no volunteers; false
      * otherwise
      */

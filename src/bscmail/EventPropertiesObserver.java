@@ -28,7 +28,7 @@ package bscmail;
  * @since 3.0
  * @author Chaitra Mayya
  */
-public interface EventPropertyObserver {
+public interface EventPropertiesObserver {
 
   /**
    * This method is called whenever the list of defined event properties
