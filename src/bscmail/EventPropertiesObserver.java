@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -36,4 +36,4 @@ public interface EventPropertiesObserver {
    */
   void eventPropertiesChanged();
 
-}    // ShiftsObserver
+}    // EventPropertiesObserver
