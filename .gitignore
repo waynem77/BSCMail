@@ -24,3 +24,10 @@ hs_err_pid*
 # Build and distribution directories
 build/*
 dist/*
+
+# Local data files removed from source control
+emailTemplate.xml
+eventProperties.xml
+roles.xml
+shifts.xml
+volunteers.xml
