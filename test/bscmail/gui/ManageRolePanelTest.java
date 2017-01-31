@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,6 +21,7 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.ApplicationInfo;
 import org.junit.*;
 
 /**
@@ -47,8 +48,8 @@ public class ManageRolePanelTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        Application application = new Application();
-
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
         ManageRolesFrame frame = new ManageRolesFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 

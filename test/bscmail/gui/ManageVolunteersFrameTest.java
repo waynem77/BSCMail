@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,11 +20,12 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.ApplicationInfo;
 import org.junit.*;
 
 /**
  * Unit tests for {@link ManageVolunteersFrame}.
- * 
+ *
  * @author Wayne Miller
  */
 public class ManageVolunteersFrameTest {
@@ -48,7 +49,8 @@ public class ManageVolunteersFrameTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        Application application = new Application();
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
 
         ManageVolunteersFrame frame = new ManageVolunteersFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()

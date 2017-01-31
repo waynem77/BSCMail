@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,13 +21,14 @@ package bscmail.gui;
 
 import bscmail.Event;
 import bscmail.Application;
+import bscmail.ApplicationInfo;
 import java.io.IOException;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link DisplayEmailFrame}.
- * 
+ *
  * @author Wayne Miller
  */
 public class DisplayEmailFrameTest {
@@ -35,7 +36,7 @@ public class DisplayEmailFrameTest {
     /*
      * Unit tests
      */
-    
+
     /**
      * Tests that
      * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
@@ -48,7 +49,7 @@ public class DisplayEmailFrameTest {
 
         DisplayEmailFrame frame = new DisplayEmailFrame(application, event);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
-    
+
     /**
      * Tests that
      * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
@@ -56,12 +57,13 @@ public class DisplayEmailFrameTest {
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenEventIsNull() throws IOException {
-        Application application = new Application();
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
         Event event = null;
 
         DisplayEmailFrame frame = new DisplayEmailFrame(application, event);
     }    // constructorThrowsExceptionWhenEventIsNull()
-    
+
     /**
      * Tests that
      * {@link DisplayEmailFrame#DisplayEmailFrame(bscmail.Application, bscmail.Event)}
@@ -69,7 +71,8 @@ public class DisplayEmailFrameTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenNoParamIsNull() throws IOException {
-        Application application = new Application();
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
         Event event = new Event();
 
         DisplayEmailFrame frame = new DisplayEmailFrame(application, event);

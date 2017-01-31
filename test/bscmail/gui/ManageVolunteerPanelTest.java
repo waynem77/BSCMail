@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,17 +20,18 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.ApplicationInfo;
 import bscmail.Volunteer;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link ManageVolunteerPanel}.
- * 
+ *
  * @author Wayne Miller
  */
 public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> {
-    
+
     /**
      * Prints unit test header.
      */
@@ -49,27 +50,20 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     }    // tearDownClass(
 
     /**
-     * Returns an application object to be used in testing.
-     *
-     * @return Returns an application object to be used in testing
-     */
-    private Application getApplication() {
-        return new Application();
-    }    // getApplication()
-
-    /**
      * Returns the manage volunteer panel to be tested.
-     * 
+     *
      * @return the manage volunteer panel to be tested
      */
     @Override
     protected ManageVolunteerPanel getPanel() {
-        return new ManageVolunteerPanel(getApplication());
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
+        return new ManageVolunteerPanel(application);
     }    // getPanel()
 
     /**
      * Returns an invalid volunteer to use in testing.
-     * 
+     *
      * @return an invalid volunteer to use in testing
      */
     @Override
@@ -79,7 +73,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
 
     /**
      * Returns a valid volunteer to use in testing.
-     * 
+     *
      * @return a valid volunteer to use in testing
      */
     @Override
@@ -102,7 +96,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
 
         ManageVolunteerPanel panel = new ManageVolunteerPanel(application);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
-    
+
     /**
      * Tests that
      * {@link ManageVolunteerPanel#ManageVolunteerPanel(bscmail.Application)}
@@ -110,12 +104,13 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        Application application = getApplication();
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        Application application = new Application(applicationInfo);
         assert (application != null);
 
         ManageVolunteerPanel panel = new ManageVolunteerPanel(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
-    
+
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} does not throw an
      * exception when the panel is not loaded.
@@ -123,12 +118,12 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     @Test
     public void testCreateElementNotLoadedNoException() {
         System.out.println("createElement - not loadeed, no exception");
-        
+
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
         panel.createElement();
     }    // testCreateElementNotLoadedNoException()
-    
+
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} does not return null
      * when the panel is not loaded.
@@ -136,13 +131,13 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     @Test
     public void testCreateElementNotLoadedNotNull() {
         System.out.println("createElement - not loadeed, not null");
-        
+
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
         Volunteer received = panel.createElement();
         assertNotNull(received);
     }    // testCreateElementNotLoadedNotNull()
-    
+
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} returns an "empty"
      * volunteer when the panel is not loaded.
@@ -150,12 +145,12 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     @Test
     public void testCreateElementNotLoaded() {
         System.out.println("createElement - not loadeed");
-        
+
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
         Volunteer expected = new Volunteer("", "", "", "");
         Volunteer received = panel.createElement();
         assertEquals(expected, received);
     }    // testCreateElementNotLoaded()
-    
+
 }    // ManageVolunteerPanelTest

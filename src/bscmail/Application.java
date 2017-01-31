@@ -49,21 +49,6 @@ public class Application {
     private enum PropertyKey {
 
         /**
-         * The application name.
-         */
-        APPLICATION_NAME           (false),
-
-        /**
-         * The application version.
-         */
-        APPLICATION_VERSION        (false),
-
-        /**
-         * The application copyright notice.
-         */
-        APPLICATION_COPYRIGHT      (false),
-
-        /**
          * The name of the defined shifts file.
          */
         SHIFTS_FILE                (true),
@@ -124,6 +109,11 @@ public class Application {
      * String properties for the application.
      */
     private final Map<PropertyKey, String> properties;
+
+    /**
+     * The application info.
+     */
+    private final ApplicationInfo applicationInfo;
 
     /**
      * The list of defined shifts.
@@ -207,12 +197,18 @@ public class Application {
 
     /**
      * Constructs a new application.
+     *
+     * @param applicationInfo the application info object for this application;
+     * may not be null
+     * @throws NullPointerException if {@code applicationInfo} is null
      */
-    public Application() throws ExceptionInInitializerError {
+    public Application(ApplicationInfo applicationInfo) throws ExceptionInInitializerError {
+        if (applicationInfo == null) {
+            throw new NullPointerException("applicationInfo may not be null");
+        }    // if
+        this.applicationInfo = applicationInfo;
+
         properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.APPLICATION_NAME, "BSCMail");
-        properties.put(PropertyKey.APPLICATION_VERSION, "3.0");
-        properties.put(PropertyKey.APPLICATION_COPYRIGHT, "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.");
         properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
         properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
         properties.put(PropertyKey.ROLES_FILE, "roles.xml");
@@ -278,8 +274,7 @@ public class Application {
      */
     public String getApplicationName() {
         assertInvariant();
-        String property = properties.get(PropertyKey.APPLICATION_NAME);
-        return property;
+        return applicationInfo.getName();
     }    // getApplicationName()
 
     /**
@@ -288,8 +283,7 @@ public class Application {
      */
     public String getVersion() {
         assertInvariant();
-        String property = properties.get(PropertyKey.APPLICATION_VERSION);
-        return property;
+        return applicationInfo.getVersion();
     }    // getVersion()
 
     /**
@@ -298,8 +292,7 @@ public class Application {
      */
     public String getCopyright() {
         assertInvariant();
-        String property = properties.get(PropertyKey.APPLICATION_COPYRIGHT);
-        return property;
+        return applicationInfo.getCopyright();
     }    // getCopyright()
 
     /**

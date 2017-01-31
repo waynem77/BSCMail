@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,15 +20,31 @@
 package main;
 
 import bscmail.Application;
+import bscmail.ApplicationInfo;
 import bscmail.gui.MainFrame;
 import javax.swing.JFrame;
 
 /**
  * Main program.
- * 
+ *
  * @author Wayne Miller
  */
 public class Main {
+
+    /**
+     * The name of this application.
+     */
+    private final String APPLICATION_NAME = "BSCMail";
+
+    /**
+     * The version of this application.
+     */
+    private final String APPLICATION_VERSION = "3.0";
+
+    /**
+     * The copyright info for this application.
+     */
+    private final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
 
     /**
      * Main program.  This method just executes {@link Main#run()}.
@@ -45,7 +61,8 @@ public class Main {
      * Runs and tests the system.
      */
     private void run() {
-        Application application = new Application();
+        ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
+        Application application = new Application(applicationInfo);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
