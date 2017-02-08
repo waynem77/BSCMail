@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © ${date?date?string("yyyy")} its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
