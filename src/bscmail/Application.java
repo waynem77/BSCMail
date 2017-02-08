@@ -49,11 +49,6 @@ public class Application {
     private enum PropertyKey {
 
         /**
-         * The name of the defined shifts file.
-         */
-        SHIFTS_FILE                (true),
-
-        /**
          * The name of the defined volunteers file.
          */
         VOLUNTEERS_FILE            (true),
@@ -200,23 +195,28 @@ public class Application {
      *
      * @param applicationInfo the application info object for this application;
      * may not be null
-     * @throws NullPointerException if {@code applicationInfo} is null
+     * @param shiftsIOLayer the I/O layer used for storing this list of shifts;
+     * may not be null
+     * @throws NullPointerException if either parameter is null
      */
-    public Application(ApplicationInfo applicationInfo) throws ExceptionInInitializerError {
+    public Application(ApplicationInfo applicationInfo,
+            IOLayer<Shift> shiftsIOLayer) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if
         this.applicationInfo = applicationInfo;
+        if (shiftsIOLayer == null) {
+            throw new NullPointerException("shiftsIOLayer may not be null");
+        }    // if
+        this.shiftsIOLayer = shiftsIOLayer;
 
         properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.SHIFTS_FILE, "shifts.xml");
         properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
         properties.put(PropertyKey.ROLES_FILE, "roles.xml");
         properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
         properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
         properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
 
-        shiftsIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.SHIFTS_FILE), Shift.getShiftFactory());
         volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
         rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
         emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());

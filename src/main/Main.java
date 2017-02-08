@@ -21,7 +21,10 @@ package main;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.Shift;
 import bscmail.gui.MainFrame;
+import iolayer.IOLayer;
+import iolayer.XMLIOLayer;
 import javax.swing.JFrame;
 
 /**
@@ -30,21 +33,6 @@ import javax.swing.JFrame;
  * @author Wayne Miller
  */
 public class Main {
-
-    /**
-     * The name of this application.
-     */
-    private final String APPLICATION_NAME = "BSCMail";
-
-    /**
-     * The version of this application.
-     */
-    private final String APPLICATION_VERSION = "3.0";
-
-    /**
-     * The copyright info for this application.
-     */
-    private final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
 
     /**
      * Main program.  This method just executes {@link Main#run()}.
@@ -61,8 +49,15 @@ public class Main {
      * Runs and tests the system.
      */
     private void run() {
+        final String APPLICATION_NAME = "BSCMail";
+        final String APPLICATION_VERSION = "3.0";
+        final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
         ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
-        Application application = new Application(applicationInfo);
+
+        final String SHIFTS_FILE = "shifts.xml";
+        IOLayer<Shift> shiftsIOLayer = new XMLIOLayer(SHIFTS_FILE, Shift.getShiftFactory());
+
+        Application application = new Application(applicationInfo, shiftsIOLayer);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

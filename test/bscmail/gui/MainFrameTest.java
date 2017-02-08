@@ -21,6 +21,9 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.Shift;
+import bscmail.TestIOLayer;
+import iolayer.IOLayer;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -30,6 +33,15 @@ import static org.junit.Assert.*;
  * @author Wayne Miller
  */
 public class MainFrameTest {
+
+    /**
+     * Returns an application that can be used in tests.
+     */
+    private Application getTestApplication()  {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer);
+    }    // getTestApplication()
 
     /**
      * Tests that {@link MainFrame#MainFrame(bscmail.Application)} throws a
@@ -48,8 +60,7 @@ public class MainFrameTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         MainFrame frame = new MainFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 

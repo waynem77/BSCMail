@@ -21,7 +21,10 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.Shift;
+import bscmail.TestIOLayer;
 import bscmail.Volunteer;
+import iolayer.IOLayer;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -50,14 +53,22 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     }    // tearDownClass(
 
     /**
+     * Returns an application that can be used in tests.
+     */
+    private Application getTestApplication()  {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer);
+    }    // getTestApplication()
+
+    /**
      * Returns the manage volunteer panel to be tested.
      *
      * @return the manage volunteer panel to be tested
      */
     @Override
     protected ManageVolunteerPanel getPanel() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         return new ManageVolunteerPanel(application);
     }    // getPanel()
 
@@ -104,8 +115,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         assert (application != null);
 
         ManageVolunteerPanel panel = new ManageVolunteerPanel(application);

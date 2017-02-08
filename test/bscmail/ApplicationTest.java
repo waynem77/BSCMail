@@ -19,6 +19,7 @@
 
 package bscmail;
 
+import iolayer.IOLayer;
 import java.io.*;
 import java.util.*;
 import org.junit.*;
@@ -53,6 +54,15 @@ public class ApplicationTest {
         public boolean getEventPropertiesChanged() { return eventPropertiesChanged; }
     }    // ApplicationObserver
 
+    /**
+     * Returns an application that can be used in tests.
+     */
+    private Application getTestApplication()  {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer);
+    }    // getTestApplication()
+
     /*
      * Unit tests
      */
@@ -66,20 +76,34 @@ public class ApplicationTest {
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenApplicationInfoIsNull() {
         ApplicationInfo applicationInfo = null;
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo);
+        Application application = new Application(applicationInfo, shiftsIOLayer);
     }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
      * Tests that {@link Application#Application(bscmail.ApplicationInfo)}
-     * does not throw an exception when applicationInfo is not null.
+     * throws a {@link NullPointerException} when shiftsIOLayer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenShiftsIoLayerIsNull() {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = null;
+
+        Application application = new Application(applicationInfo, shiftsIOLayer);
+    }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
+
+    /**
+     * Tests that {@link Application#Application(bscmail.ApplicationInfo)}
+     * does not throw an exception when no parameter is not null.
      */
     @Test
-    public void constructorDoesNotThrowExceptionWhenApplicationInfoIsNotNull() {
+    public void constructorDoesNotThrowExceptionWhenNoparameterIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo);
-    }    // constructorDoesNotThrowExceptionWhenApplicationInfoIsNotNull()
+        Application application = new Application(applicationInfo, shiftsIOLayer);
+    }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
 
     /* getApplicationName */
 
@@ -89,8 +113,7 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationNameDoesNotThrowException() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getApplicationName();
     }    // getApplicationNameDoesNotThrowException()
@@ -100,8 +123,7 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationNameDoesNotReturnNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         String received = application.getApplicationName();
         assertNotNull(received);
@@ -114,7 +136,8 @@ public class ApplicationTest {
     @Test
     public void getApplicationNameReturnsCorrectValue() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer);
 
         String received = application.getApplicationName();
 
@@ -129,8 +152,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVersionDoesNotThrowException() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getVersion();
     }    // getVersionDoesNotThrowException()
@@ -140,8 +162,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVersionDoesNotReturnNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         String received = application.getVersion();
 
@@ -155,7 +176,8 @@ public class ApplicationTest {
     @Test
     public void getApplicationVersionReturnsCorrectValue() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer);
 
         String received = application.getVersion();
 
@@ -171,8 +193,7 @@ public class ApplicationTest {
      */
     @Test
     public void getCopyrightDoesNotThrowException() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getCopyright();
     }    // getCopyrightDoesNotThrowException()
@@ -182,8 +203,7 @@ public class ApplicationTest {
      */
     @Test
     public void getCopyrightDoesNotReturnNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         String received = application.getCopyright();
 
@@ -197,7 +217,8 @@ public class ApplicationTest {
     @Test
     public void getApplicationCopyrightReturnsCorrectValue() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer);
 
         String received = application.getCopyright();
 
@@ -213,8 +234,7 @@ public class ApplicationTest {
      */
     @Test
     public void getUserGuideFilenameDoesNotThrowException() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getUserGuideFilename();
     }    // getUserGuideFilenameDoesNotThrowException()
@@ -225,8 +245,7 @@ public class ApplicationTest {
      */
     @Test
     public void getUserGuideFilenameDoesNotReturnNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         String received = application.getUserGuideFilename();
 
@@ -240,8 +259,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowException() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getShifts();
     }    // getShiftsDoesNotThrowException()
@@ -251,8 +269,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         List<Shift> received = application.getShifts();
 
@@ -265,8 +282,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setShiftsThrowsExceptionWhenShiftsIsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = null;
 
         application.setShifts(shifts);
@@ -278,8 +294,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setShiftsThrowsExceptionWhenShiftsContainsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
 
         application.setShifts(shifts);
@@ -291,8 +306,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotThrowExceptionWithGoodArgument() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
@@ -305,8 +319,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotAlterArgument() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
@@ -328,8 +341,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowExceptionWhenThereAreNoShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getShifts();
     }    // getShiftsDoesNotThrowExceptionWhenThereAreNoShifts()
@@ -340,8 +352,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNullWhenThereAreNoShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         List<Shift> received = application.getShifts();
 
@@ -354,8 +365,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowExceptionWhenThereAreShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
@@ -370,8 +380,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNullWhenThereAreShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
@@ -388,8 +397,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsReturnsCorrectValue() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
@@ -413,8 +421,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnTheIdenticalListThatWasPassedToSetShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         application.setShifts(shifts);
@@ -432,8 +439,7 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsReturnsAListWhoseElementsAreNotIdenticalToThosePassedToSetShifts() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
         application.setShifts(shifts);
@@ -454,8 +460,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getVolunteers();
     }    // getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers()
@@ -466,8 +471,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotReturnNullWhenThereAreNoVolunteers() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         List<Volunteer> received = application.getVolunteers();
 
@@ -480,8 +484,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         application.setVolunteers(volunteers);
 
@@ -494,8 +497,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotReturnNullWhenThereAreVolunteers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         application.setVolunteers(volunteers);
 
@@ -510,8 +512,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setVolunteersThrowsExceptionWhenVolunteersIsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = null;
 
         application.setVolunteers(volunteers);
@@ -523,8 +524,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setVolunteersThrowsExceptionWhenVolunteersContainsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), null);
 
         application.setVolunteers(volunteers);
@@ -536,8 +536,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotThrowExceptionNormally() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
 
         application.setVolunteers(volunteers);
@@ -549,8 +548,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotAlterArgument() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         List<Volunteer> expected = new ArrayList<>(volunteers);
 
@@ -566,8 +564,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersSetVolunteersListsAreEqual() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         application.setVolunteers(volunteers);
 
@@ -583,8 +580,7 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersSetVolunteersListsAreNotIdentical() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
         application.setVolunteers(volunteers);
 
@@ -602,8 +598,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotThrowExceptionWhenThereAreNoRoles() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getRoles();
     }    // getRolesDoesNotThrowExceptionWhenThereAreNoRoles()
@@ -614,8 +609,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotReturnNullWhenThereAreNoRoles() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         List<Role> received = application.getRoles();
 
@@ -628,8 +622,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotThrowExceptionWhenThereAreRoles() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
         application.setRoles(roles);
 
@@ -642,8 +635,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotReturnNullWhenThereAreRoles() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
         application.setRoles(roles);
 
@@ -658,8 +650,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setRolesThrowsExceptionWhenRolesIsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = null;
 
         application.setRoles(roles);
@@ -671,8 +662,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setRolesThrowsExceptionWhenRolesContainsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), null);
 
         application.setRoles(roles);
@@ -684,8 +674,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotThrowExceptionNormally() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
         application.setRoles(roles);
@@ -697,8 +686,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotAlterArgument() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
         List<Role> expected = new ArrayList<>(roles);
 
@@ -714,8 +702,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesSetRolesListsAreEqual() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
         application.setRoles(roles);
 
@@ -731,8 +718,7 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesSetRolesListsAreNotIdentical() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
         application.setRoles(roles);
 
@@ -750,8 +736,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateDoesNotThrowException() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getEmailTemplate();
     }    // getEmailTemplateDoesNotThrowException()
@@ -761,8 +746,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateDoesNotReturnNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         EmailTemplate received = application.getEmailTemplate();
 
@@ -775,8 +759,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEmailTemplateThrowsExceptionWhenEmailTemplateIsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EmailTemplate emailTemplate = null;
 
         application.setEmailTemplate(emailTemplate);
@@ -788,8 +771,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EmailTemplate emailTemplate = new EmailTemplate("", "");
 
         application.setEmailTemplate(emailTemplate);
@@ -802,8 +784,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateReturnsArgumentPassedToSetEmailTemplate() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EmailTemplate emailTemplate = new EmailTemplate("foo", "bar");
         application.setEmailTemplate(emailTemplate);
 
@@ -821,8 +802,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         application.getEventProperties();
     }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties()
@@ -833,8 +813,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotReturnNullWhenThereAreNoEventProperties() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
 
         List<EventProperty> received = application.getEventProperties();
 
@@ -847,8 +826,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
         application.setEventProperties(eventProperties);
 
@@ -861,8 +839,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotReturnNullWhenThereAreEventProperties() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
         application.setEventProperties(eventProperties);
 
@@ -877,8 +854,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEventPropertiesThrowsExceptionWhenEventPropertiesIsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = null;
 
         application.setEventProperties(eventProperties);
@@ -891,8 +867,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEventPropertiesThrowsExceptionWhenEventPropertiesContainsNull() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), null);
 
         application.setEventProperties(eventProperties);
@@ -904,8 +879,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotThrowExceptionNormally() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
         application.setEventProperties(eventProperties);
@@ -917,8 +891,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotAlterArgument() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
         List<EventProperty> expected = new ArrayList<>(eventProperties);
 
@@ -934,8 +907,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesSetEventPropertiesListsAreEqual() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
         application.setEventProperties(eventProperties);
 
@@ -952,8 +924,7 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesSetEventPropertiesListsAreNotIdentical() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
         application.setEventProperties(eventProperties);
 
@@ -971,8 +942,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverShiftsObserverThrowsExceptionWhenObserverIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ShiftsObserver observer = null;
 
         application.registerObserver(observer);
@@ -984,8 +954,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverShiftsObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ShiftsObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
@@ -997,8 +966,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverShiftsObserverDoesNotThrowExceptionWhenCalledTwice() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
         for (ShiftsObserver observer : observers) {
@@ -1013,8 +981,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsNotifiesAllShiftsObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (ShiftsObserver observer : observers) {
             application.registerObserver(observer);
@@ -1036,8 +1003,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyShiftsObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
@@ -1054,8 +1020,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyShiftsObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
@@ -1072,8 +1037,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyShiftObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
@@ -1090,8 +1054,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyShiftsObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
@@ -1109,8 +1072,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverVolunteersObserverThrowsExceptionWhenObserverIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         VolunteersObserver observer = null;
 
         application.registerObserver(observer);
@@ -1122,8 +1084,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         VolunteersObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
@@ -1135,8 +1096,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenCalledTwice() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
         for (VolunteersObserver observer : observers) {
@@ -1151,8 +1111,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersNotifiesAllVolunteersObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (VolunteersObserver observer : observers) {
             application.registerObserver(observer);
@@ -1173,8 +1132,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyVolunteersObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
@@ -1192,8 +1150,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyVolunteersObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
@@ -1210,8 +1167,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyVolunteerObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
@@ -1228,8 +1184,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyVolunteersObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
@@ -1247,8 +1202,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverRolesObserverThrowsExceptionWhenObserverIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         RolesObserver observer = null;
 
         application.registerObserver(observer);
@@ -1260,8 +1214,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverRolesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         RolesObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
@@ -1273,8 +1226,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverRolesObserverDoesNotThrowExceptionWhenCalledTwice() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
         for (RolesObserver observer : observers) {
@@ -1289,8 +1241,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesNotifiesAllRolesObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (RolesObserver observer : observers) {
             application.registerObserver(observer);
@@ -1311,8 +1262,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyRolesObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
@@ -1330,8 +1280,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyRolesObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
@@ -1348,8 +1297,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyRoleObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
@@ -1366,8 +1314,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyRolesObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
@@ -1385,8 +1332,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverEmailTemplateObserverThrowsExceptionWhenObserverIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EmailTemplateObserver observer = null;
 
         application.registerObserver(observer);
@@ -1398,8 +1344,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EmailTemplateObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
@@ -1411,8 +1356,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenCalledTwice() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
         for (EmailTemplateObserver observer : observers) {
@@ -1427,8 +1371,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateNotifiesAllEmailTemplateObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (EmailTemplateObserver observer : observers) {
             application.registerObserver(observer);
@@ -1449,8 +1392,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyEmailTemplateObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
@@ -1468,8 +1410,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyEmailTemplateObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
@@ -1486,8 +1427,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyEmailTemplateObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
@@ -1504,8 +1444,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyEmailTemplateObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
@@ -1523,8 +1462,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverEventPropertiesObserverThrowsExceptionWhenObserverIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EventPropertiesObserver observer = null;
 
         application.registerObserver(observer);
@@ -1536,8 +1474,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         EventPropertiesObserver observer = new ApplicationObserver();
 
         application.registerObserver(observer);
@@ -1549,8 +1486,7 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenCalledTwice() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
 
         for (EventPropertiesObserver observer : observers) {
@@ -1565,8 +1501,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesNotifiesAllEventPropertyObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
         for (EventPropertiesObserver observer : observers) {
             application.registerObserver(observer);
@@ -1587,8 +1522,7 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyEventPropertyObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
@@ -1606,8 +1540,7 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyEventPropertyObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
         List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
@@ -1624,8 +1557,7 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyEventPropertyObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
         List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
@@ -1642,8 +1574,7 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyEventPropertyObservers() throws IOException {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
         EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");

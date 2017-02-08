@@ -22,6 +22,9 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.Shift;
+import bscmail.TestIOLayer;
+import iolayer.IOLayer;
 import org.junit.*;
 
 /**
@@ -29,6 +32,16 @@ import org.junit.*;
  * @author Wayne Miller
  */
 public class ManageRolePanelTest {
+
+    /**
+     * Returns an application that can be used in tests.
+     */
+    private Application getTestApplication()  {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer);
+    }    // getTestApplication()
+
     /**
      * Tests that
      * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} throws a
@@ -48,8 +61,7 @@ public class ManageRolePanelTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        Application application = new Application(applicationInfo);
+        Application application = getTestApplication();
         ManageRolesFrame frame = new ManageRolesFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
