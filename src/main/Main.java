@@ -22,6 +22,7 @@ package main;
 import bscmail.Application;
 import bscmail.ApplicationInfo;
 import bscmail.Shift;
+import bscmail.Volunteer;
 import bscmail.gui.MainFrame;
 import iolayer.IOLayer;
 import iolayer.XMLIOLayer;
@@ -57,7 +58,10 @@ public class Main {
         final String SHIFTS_FILE = "shifts.xml";
         IOLayer<Shift> shiftsIOLayer = new XMLIOLayer(SHIFTS_FILE, Shift.getShiftFactory());
 
-        Application application = new Application(applicationInfo, shiftsIOLayer);
+        final String VOLUNTEERS_FILE = "volunteers.xml";
+        IOLayer<Volunteer> volunteersIOLayer = new XMLIOLayer(VOLUNTEERS_FILE, Volunteer.getVolunteerFactory());
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

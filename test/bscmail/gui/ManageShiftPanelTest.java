@@ -24,6 +24,7 @@ import bscmail.ApplicationInfo;
 import bscmail.Role;
 import bscmail.Shift;
 import bscmail.TestIOLayer;
+import bscmail.Volunteer;
 import iolayer.IOLayer;
 import java.util.Collections;
 import org.junit.*;
@@ -59,7 +60,8 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
     private Application getTestApplication()  {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer);
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
     }    // getTestApplication()
 
     /**

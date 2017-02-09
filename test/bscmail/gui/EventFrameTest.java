@@ -61,7 +61,8 @@ public class EventFrameTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         TestIOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         shiftsIOLayer.setAll(getTestShifts());
-        return new Application(applicationInfo, shiftsIOLayer);
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
     }    // getTestApplication()
 
     /**

@@ -58,7 +58,8 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
     private Application getTestApplication()  {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer);
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
     }    // getTestApplication()
 
     /**

@@ -49,11 +49,6 @@ public class Application {
     private enum PropertyKey {
 
         /**
-         * The name of the defined volunteers file.
-         */
-        VOLUNTEERS_FILE            (true),
-
-        /**
          * The name of the defined roles file.
          */
         ROLES_FILE                 (true),
@@ -195,12 +190,15 @@ public class Application {
      *
      * @param applicationInfo the application info object for this application;
      * may not be null
-     * @param shiftsIOLayer the I/O layer used for storing this list of shifts;
-     * may not be null
+     * @param shiftsIOLayer the I/O layer used for storing shifts; may not be
+     * null
+     * @param volunteersIOLayer the I/O layer used for storing volunteers; may
+     * not be null
      * @throws NullPointerException if either parameter is null
      */
     public Application(ApplicationInfo applicationInfo,
-            IOLayer<Shift> shiftsIOLayer) throws ExceptionInInitializerError {
+            IOLayer<Shift> shiftsIOLayer,
+            IOLayer<Volunteer> volunteersIOLayer) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if
@@ -209,15 +207,17 @@ public class Application {
             throw new NullPointerException("shiftsIOLayer may not be null");
         }    // if
         this.shiftsIOLayer = shiftsIOLayer;
+        if (volunteersIOLayer == null) {
+            throw new NullPointerException("volunteersIOLayer may not be null");
+        }    // if
+        this.volunteersIOLayer = volunteersIOLayer;
 
         properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.VOLUNTEERS_FILE, "volunteers.xml");
         properties.put(PropertyKey.ROLES_FILE, "roles.xml");
         properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
         properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
         properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
 
-        volunteersIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.VOLUNTEERS_FILE), Volunteer.getVolunteerFactory());
         rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
         emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());
         eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
