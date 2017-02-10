@@ -49,11 +49,6 @@ public class Application {
     private enum PropertyKey {
 
         /**
-         * The name of the defined roles file.
-         */
-        ROLES_FILE                 (true),
-
-        /**
          * The name of the email template file.
          */
         EMAIL_TEMPLATE_FILE        (true),
@@ -194,11 +189,13 @@ public class Application {
      * null
      * @param volunteersIOLayer the I/O layer used for storing volunteers; may
      * not be null
-     * @throws NullPointerException if either parameter is null
+     * @param rolesIOLayer the I/O layer used for storing roles; may not be null
+     * @throws NullPointerException if any parameter is null
      */
     public Application(ApplicationInfo applicationInfo,
             IOLayer<Shift> shiftsIOLayer,
-            IOLayer<Volunteer> volunteersIOLayer) throws ExceptionInInitializerError {
+            IOLayer<Volunteer> volunteersIOLayer,
+            IOLayer<Role> rolesIOLayer) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if
@@ -211,14 +208,16 @@ public class Application {
             throw new NullPointerException("volunteersIOLayer may not be null");
         }    // if
         this.volunteersIOLayer = volunteersIOLayer;
+        if (rolesIOLayer == null) {
+            throw new NullPointerException("rolesIOLayer may not be null");
+        }    // if
+        this.rolesIOLayer = rolesIOLayer;
 
         properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.ROLES_FILE, "roles.xml");
         properties.put(PropertyKey.EMAIL_TEMPLATE_FILE, "emailTemplate.xml");
         properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
         properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
 
-        rolesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.ROLES_FILE), Role.getRoleFactory());
         emailTemplateIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EMAIL_TEMPLATE_FILE), EmailTemplate.getEmailTemplateFactory());
         eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
 

@@ -61,7 +61,8 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // getTestApplication()
 
     /**

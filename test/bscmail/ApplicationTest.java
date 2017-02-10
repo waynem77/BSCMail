@@ -61,7 +61,8 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // getTestApplication()
 
     /*
@@ -72,7 +73,7 @@ public class ApplicationTest {
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer)}
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
      * throws a {@link NullPointerException} when applicationInfo is null.
      */
     @Test(expected = NullPointerException.class)
@@ -80,13 +81,14 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = null;
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer)}
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
      * throws a {@link NullPointerException} when shiftsIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -94,13 +96,14 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = null;
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer)}
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
      * throws a {@link NullPointerException} when volunteersIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -108,21 +111,38 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = null;
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // constructorThrowsExceptionWhenVolunteersIoLayerIsNull()
 
     /**
-     * Tests that {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer)}
-     * does not throw an exception when no parameter is not null.
+     * Tests that
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * throws a {@link NullPointerException} when rolesIOLayer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenRolesIoLayerIsNull() {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = null;
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
+    }    // constructorThrowsExceptionWhenRolesIoLayerIsNull()
+
+    /**
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * does not throw an exception when no parameter is null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenNoparameterIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
 
     /* getApplicationName */
@@ -158,7 +178,8 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
 
         String received = application.getApplicationName();
 
@@ -199,7 +220,8 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
 
         String received = application.getVersion();
 
@@ -241,7 +263,8 @@ public class ApplicationTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
 
         String received = application.getCopyright();
 

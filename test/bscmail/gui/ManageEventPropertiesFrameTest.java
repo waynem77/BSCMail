@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.Role;
 import bscmail.Shift;
 import bscmail.TestIOLayer;
 import bscmail.Volunteer;
@@ -41,7 +42,8 @@ public class ManageEventPropertiesFrameTest {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer);
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
     }    // getTestApplication()
 
     /**
