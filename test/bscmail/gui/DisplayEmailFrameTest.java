@@ -22,6 +22,7 @@ package bscmail.gui;
 import bscmail.Event;
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.EmailTemplate;
 import bscmail.Role;
 import bscmail.Shift;
 import bscmail.TestIOLayer;
@@ -46,7 +47,8 @@ public class DisplayEmailFrameTest {
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer);
     }    // getTestApplication()
 
     /*

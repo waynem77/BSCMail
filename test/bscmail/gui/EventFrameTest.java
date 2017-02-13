@@ -63,7 +63,8 @@ public class EventFrameTest {
         shiftsIOLayer.setAll(getTestShifts());
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer);
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer);
     }    // getTestApplication()
 
     /**
