@@ -49,11 +49,6 @@ public class Application {
     private enum PropertyKey {
 
         /**
-         * The name of the defined event properties file.
-         */
-        EVENT_PROPERTY_FILE        (true),
-
-        /**
          * The name of the user guide file.
          */
         USER_GUIDE_FILE            (true);
@@ -187,13 +182,16 @@ public class Application {
      * @param rolesIOLayer the I/O layer used for storing roles; may not be null
      * @param emailTemplateIOLayer the I/O layer used for storing the email
      * template; may not be null
+     * @param eventPropertiesIOLayer the I/O layer used for storing the event
+     * properties; may not be null
      * @throws NullPointerException if any parameter is null
      */
     public Application(ApplicationInfo applicationInfo,
             IOLayer<Shift> shiftsIOLayer,
             IOLayer<Volunteer> volunteersIOLayer,
             IOLayer<Role> rolesIOLayer,
-            IOLayer<EmailTemplate> emailTemplateIOLayer) throws ExceptionInInitializerError {
+            IOLayer<EmailTemplate> emailTemplateIOLayer,
+            IOLayer<EventProperty> eventPropertiesIOLayer) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if
@@ -214,12 +212,13 @@ public class Application {
             throw new NullPointerException("emailTemplateIOLayer may not be null");
         }    // if
         this.emailTemplateIOLayer = emailTemplateIOLayer;
+        if (eventPropertiesIOLayer == null) {
+            throw new NullPointerException("eventPropertiesIOLayer may not be null");
+        }    // if
+        this.eventPropertiesIOLayer = eventPropertiesIOLayer;
 
         properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.EVENT_PROPERTY_FILE, "eventProperties.xml");
         properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
-
-        eventPropertiesIOLayer = new XMLIOLayer<>(properties.get(PropertyKey.EVENT_PROPERTY_FILE), EventProperty.getEventPropertyFactory());
 
         try {
             shifts = shiftsIOLayer.getAll();

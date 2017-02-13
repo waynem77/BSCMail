@@ -22,6 +22,7 @@ package main;
 import bscmail.Application;
 import bscmail.ApplicationInfo;
 import bscmail.EmailTemplate;
+import bscmail.EventProperty;
 import bscmail.Role;
 import bscmail.Shift;
 import bscmail.Volunteer;
@@ -67,9 +68,12 @@ public class Main {
         IOLayer<Role> rolesIOLayer = new XMLIOLayer(ROLES_FILE, Role.getRoleFactory());
 
         final String EMAIL_TEMPLATE_FILE = "emailTemplate.xml";
-        IOLayer<EmailTemplate> emailTemplateIOLayerIOLayer = new XMLIOLayer(EMAIL_TEMPLATE_FILE, EmailTemplate.getEmailTemplateFactory());
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new XMLIOLayer(EMAIL_TEMPLATE_FILE, EmailTemplate.getEmailTemplateFactory());
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayerIOLayer);
+        final String EVENT_PROPERTIES_FILE = "eventProperties.xml";
+        IOLayer<EventProperty> eventPropertiesIOLayer = new XMLIOLayer(EVENT_PROPERTIES_FILE, EventProperty.getEventPropertyFactory());
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
