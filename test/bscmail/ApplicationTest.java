@@ -19,6 +19,7 @@
 
 package bscmail;
 
+import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
 import java.io.*;
 import java.util.*;
@@ -55,6 +56,13 @@ public class ApplicationTest {
     }    // ApplicationObserver
 
     /**
+     * Help displayer used in tests.
+     */
+    private class TestHelpDisplay implements HelpDisplay {
+        @Override public void displayHelp() { }
+    }    // TestHelpDisplay
+
+    /**
      * Returns an application that can be used in tests.
      */
     private Application getTestApplication()  {
@@ -64,7 +72,8 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /*
@@ -75,7 +84,7 @@ public class ApplicationTest {
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when applicationInfo is null.
      */
     @Test(expected = NullPointerException.class)
@@ -86,13 +95,14 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when shiftsIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -103,13 +113,14 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when volunteersIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -120,13 +131,14 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenVolunteersIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when rolesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -137,13 +149,14 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = null;
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenRolesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when emailTemplateIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -154,13 +167,14 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = null;
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEmailTemplateIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when eventPropertiesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -171,13 +185,32 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = null;
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEventPropertiesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * throws a {@link NullPointerException} when helpDisplay is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenHelpDisplayIsNull() {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = null;
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+    }    // constructorThrowsExceptionWhenHelpDisplayIsNull()
+
+    /**
+     * Tests that
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * does not throw an exception when no parameter is null.
      */
     @Test
@@ -188,8 +221,9 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
 
     /* getApplicationName */
@@ -228,7 +262,8 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getApplicationName();
 
@@ -272,7 +307,8 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getVersion();
 
@@ -317,7 +353,8 @@ public class ApplicationTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getCopyright();
 
@@ -325,31 +362,17 @@ public class ApplicationTest {
         assertEquals(expected, received);
     }    // getApplicationCopyrightReturnsCorrectValue()
 
-    /* getUserGuideFilename */
+    /* displayHelp */
 
     /**
-     * Tests that {@link Application#getUserGuideFilename()} does not throw an
-     * exception.
+     * Tests that {@link Application#displayHelp()} does not throw an exception.
      */
     @Test
-    public void getUserGuideFilenameDoesNotThrowException() {
+    public void displayHelpDoesNotThrowException() {
         Application application = getTestApplication();
 
-        application.getUserGuideFilename();
-    }    // getUserGuideFilenameDoesNotThrowException()
-
-    /**
-     * Tests that {@link Application#getUserGuideFilename()} does not return
-     * null.
-     */
-    @Test
-    public void getUserGuideFilenameDoesNotReturnNull() {
-        Application application = getTestApplication();
-
-        String received = application.getUserGuideFilename();
-
-        assertNotNull(received);
-    }    // getUserGuideFilenameDoesNotReturnNull()
+        application.displayHelp();
+    }    // displayHelpDoesNotThrowException()
 
     /* getShifts / setShifts */
 

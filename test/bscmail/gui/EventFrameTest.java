@@ -23,6 +23,7 @@ import bscmail.*;
 import java.io.IOException;
 import java.util.*;
 import bscmail.Application;
+import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -65,7 +66,8 @@ public class EventFrameTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /**

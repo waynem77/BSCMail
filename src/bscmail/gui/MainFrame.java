@@ -30,7 +30,7 @@ import javax.swing.*;
 
 /**
  * The main window for BSCMail.
- * 
+ *
  * @since 2.0
  * @author Wayne Miller
  */
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
      * A frame to manage event properties.
      */
     private final ManageEventPropertiesFrame manageEventPropertiesFrame;
-    
+
     /**
      * A frame to create an event.
      */
@@ -96,7 +96,7 @@ public class MainFrame extends JFrame {
 
         setTitle(application.getApplicationName());
         setLayout(new GridLayout(1, LAYOUT_COLUMNS));
-        
+
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Manage"));
         panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
@@ -139,7 +139,7 @@ public class MainFrame extends JFrame {
         });    // addActionListever()
         panel.add(button);
         add(panel);
-        
+
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Create"));
         panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
@@ -158,7 +158,7 @@ public class MainFrame extends JFrame {
         });    // addActionListener()
         panel.add(button);
         add(panel);
-        
+
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Help"));
         panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
@@ -178,9 +178,9 @@ public class MainFrame extends JFrame {
         panel.add(button);
         panel.add(button);
         add(panel);
-        
+
         pack();
-        
+
         manageShiftsFrame = new ManageShiftsFrame(application);
         manageShiftsFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -200,7 +200,7 @@ public class MainFrame extends JFrame {
 
         assertInvariant();
     }    // MainFrame()
-    
+
     /**
      * Event fired when the manage shifts button is clicked.
      */
@@ -254,7 +254,7 @@ public class MainFrame extends JFrame {
         eventFrame.setVisible(true);
         assertInvariant();
     }    // createEventButtonClicked()
-    
+
     /**
      * Event fired when the create email button is clicked.
      */
@@ -272,14 +272,7 @@ public class MainFrame extends JFrame {
      */
     private void helpHelpButtonClicked() {
         assertInvariant();
-        Desktop desktop = Desktop.getDesktop();
-        String userGuideFilename = application.getUserGuideFilename();
-        File userGuide = new File(userGuideFilename);
-        try {
-            desktop.open(userGuide);
-        } catch (IOException e) {    // try
-            application.showErrorDialog(this, "Error opening user guide", e);
-        }    // catch
+        application.displayHelp();
     }    // helpHelpButtonClicked()
 
     /**

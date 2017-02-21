@@ -20,6 +20,7 @@
 package bscmail;
 
 import bscmail.gui.error.ErrorDialog;
+import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
 import iolayer.XMLIOLayer;
 import java.awt.Frame;
@@ -29,7 +30,8 @@ import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JDialog;
 
 /**
  * An application controls application-wide properties and objects.
@@ -42,48 +44,6 @@ public class Application {
     /*
      * Private class properties.
      */
-
-    /**
-     * String property keys for the application.
-     */
-    private enum PropertyKey {
-
-        /**
-         * The name of the user guide file.
-         */
-        USER_GUIDE_FILE            (true);
-
-        /*
-         * Class methods and properties
-         */
-
-        /**
-         * True if the property key denotes a filename.
-         */
-        private final boolean isFileName;
-
-        /**
-         * Constructs a new property key.
-         *
-         * @param isFileName true if the property key denotes a filename; false
-         * otherwise
-         */
-        PropertyKey(boolean isFileName) { this.isFileName = isFileName; }
-
-        /**
-         * Returns true if the property key denotes a filename; otherwise,
-         * returns false.
-         *
-         * @return true if the property key denotes a filename; false otherwise
-         */
-        boolean isFileName() { return isFileName; }
-    }    // PropertyKey
-
-
-    /**
-     * String properties for the application.
-     */
-    private final Map<PropertyKey, String> properties;
 
     /**
      * The application info.
@@ -166,9 +126,9 @@ public class Application {
     private final List<EventPropertiesObserver> eventPropertiesObservers;
 
     /**
-     * The list of test dialogs.
+     * The help displayer.
      */
-    private final List<JDialog> testDialogs;
+    private final HelpDisplay helpDisplay;
 
     /**
      * Constructs a new application.
@@ -184,6 +144,7 @@ public class Application {
      * template; may not be null
      * @param eventPropertiesIOLayer the I/O layer used for storing the event
      * properties; may not be null
+     * @param helpDisplay the help displayer; may not be null
      * @throws NullPointerException if any parameter is null
      */
     public Application(ApplicationInfo applicationInfo,
@@ -191,7 +152,8 @@ public class Application {
             IOLayer<Volunteer> volunteersIOLayer,
             IOLayer<Role> rolesIOLayer,
             IOLayer<EmailTemplate> emailTemplateIOLayer,
-            IOLayer<EventProperty> eventPropertiesIOLayer) throws ExceptionInInitializerError {
+            IOLayer<EventProperty> eventPropertiesIOLayer,
+            HelpDisplay helpDisplay) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if
@@ -216,9 +178,10 @@ public class Application {
             throw new NullPointerException("eventPropertiesIOLayer may not be null");
         }    // if
         this.eventPropertiesIOLayer = eventPropertiesIOLayer;
-
-        properties = new EnumMap<>(PropertyKey.class);
-        properties.put(PropertyKey.USER_GUIDE_FILE, "userguide.pdf");
+        if (helpDisplay == null) {
+            throw new NullPointerException("helpDisplay may not be null");
+        }    // if
+        this.helpDisplay = helpDisplay;
 
         try {
             shifts = shiftsIOLayer.getAll();
@@ -261,8 +224,6 @@ public class Application {
         emailTemplateObservers = new LinkedList<>();
         eventPropertiesObservers = new LinkedList<>();
 
-        testDialogs = new LinkedList<>();
-
         assertInvariant();
     }    // Application()
 
@@ -294,15 +255,16 @@ public class Application {
     }    // getCopyright()
 
     /**
-     * Returns the filename of the user guide.
-     *
-     * @return the filename of the user guide
+     * Displays application help
      */
-    public String getUserGuideFilename() {
+    public void displayHelp() {
         assertInvariant();
-        String property = properties.get(PropertyKey.USER_GUIDE_FILE);
-        return property;
-    }    // getUserGuideFilename()
+        try {
+            helpDisplay.displayHelp();
+        } catch (IOException e) {    // try
+            showErrorDialog(null, "Error opening user guide", e);
+        }    // catch
+    }    // displayHelp()
 
     /**
      * Returns the list of defined volunteer shifts. The list returned is a copy
@@ -699,9 +661,6 @@ public class Application {
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
-        assert (properties != null);
-        assert (properties.size() == PropertyKey.values().length);
-        assert (! properties.containsValue(null));
         assert (shiftsIOLayer != null);
         assert (volunteersIOLayer != null);
         assert (rolesIOLayer != null);
@@ -725,8 +684,6 @@ public class Application {
         assert (! emailTemplateObservers.contains(null));
         assert (eventPropertiesObservers != null);
         assert (! eventPropertiesObservers.contains(null));
-        assert (testDialogs != null);
-        assert (! testDialogs.contains(null));
     }    // assertInvariant()
 
     /**

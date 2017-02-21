@@ -27,6 +27,8 @@ import bscmail.Role;
 import bscmail.Shift;
 import bscmail.Volunteer;
 import bscmail.gui.MainFrame;
+import bscmail.help.HelpDisplay;
+import bscmail.help.HelpFileDisplay;
 import iolayer.IOLayer;
 import iolayer.XMLIOLayer;
 import javax.swing.JFrame;
@@ -73,7 +75,10 @@ public class Main {
         final String EVENT_PROPERTIES_FILE = "eventProperties.xml";
         IOLayer<EventProperty> eventPropertiesIOLayer = new XMLIOLayer(EVENT_PROPERTIES_FILE, EventProperty.getEventPropertyFactory());
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        final String USER_GUIDE_FILE = "userguide.pdf";
+        HelpDisplay helpDisplay = new HelpFileDisplay(USER_GUIDE_FILE);
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
         JFrame frame = new MainFrame(application);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

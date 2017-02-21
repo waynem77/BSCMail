@@ -27,6 +27,7 @@ import bscmail.Role;
 import bscmail.Shift;
 import bscmail.TestIOLayer;
 import bscmail.Volunteer;
+import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
 import org.junit.*;
 
@@ -46,7 +47,8 @@ public class ManageEmailTemplateFrameTest {
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer);
+        HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /**

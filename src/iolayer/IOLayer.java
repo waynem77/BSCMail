@@ -54,5 +54,5 @@ public interface IOLayer<T extends ReadWritable> {
      * @throws IOException if an I/O error occurs
      */
     public void setAll(List<T> list) throws IOException;
-    
+
 }    // IOLayer
