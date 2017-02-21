@@ -22,16 +22,12 @@ package bscmail;
 import bscmail.gui.error.ErrorDialog;
 import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
-import iolayer.XMLIOLayer;
 import java.awt.Frame;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JFrame;
-import javax.swing.JDialog;
 
 /**
  * An application controls application-wide properties and objects.
@@ -363,35 +359,6 @@ public class Application {
     }    // setVolunteers()
 
     /**
-     * Imports volunteers from a file and adds them to the list of defined volunteers.
-     *
-     * @param fileName the filename of the file to import
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    public void importVolunteers(String fileName) throws IOException, ClassNotFoundException {
-        assertInvariant();
-        if (fileName == null) {
-            throw new NullPointerException("file name may not be null");
-        }    // if
-
-        IOLayer<Volunteer> importIOLayer = new XMLIOLayer<>(fileName, Volunteer.getVolunteerFactory());
-        List<Volunteer> importedVolunteers = importIOLayer.getAll();
-
-        if (!importedVolunteers.contains(null)) {
-            for (Volunteer volunteer : importedVolunteers) {
-                volunteers.add(volunteer.clone());
-            }    // for
-            for (VolunteersObserver observer : volunteersObservers) {
-                observer.volunteersChanged();
-            }    // for
-
-            volunteersIOLayer.setAll(volunteers);
-            assertInvariant();
-        }
-    }   // importVolunteers()
-
-    /**
      * Returns the list of defined roles. The list returned is a copy of
      * the master, so changes to it do not affect the master and vice-versa.
      *
@@ -436,36 +403,6 @@ public class Application {
         rolesIOLayer.setAll(roles);
         assertInvariant();
     }    // setRoles()
-
-    /**
-     * Imports roles from a file and adds them to the list of defined roles.
-     *
-     * @param fileName the filename of the file to import
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if a serialization failure occurs
-     */
-    public void importRoles(String fileName) throws IOException, ClassNotFoundException {
-        assertInvariant();
-        if (fileName == null) {
-            throw new NullPointerException("file name may not be null");
-        }    // if
-
-        IOLayer<Role> importIOLayer = new XMLIOLayer<>(fileName, Role.getRoleFactory());
-        List<Role> importedRoles = importIOLayer.getAll();
-
-        if(!importedRoles.contains(null)) {
-            for (Role role : importedRoles) {
-                if (! roles.contains(role))
-                    roles.add(role.clone());
-            }    // for
-            for (RolesObserver observer : rolesObservers) {
-                observer.rolesChanged();
-            }    // for
-
-            rolesIOLayer.setAll(roles);
-            assertInvariant();
-        }
-    }   // importRoles()
 
     /**
      * Returns the defined email template.
