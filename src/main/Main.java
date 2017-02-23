@@ -36,6 +36,10 @@ import javax.swing.JFrame;
 /**
  * Main program.
  *
+ * Note to developers: This class defines the application information used by
+ * the application. Any changes to the name, version, copyright, or datafiles
+ * should occur in {@link Main#getApplication()}.
+ *
  * @author Wayne Miller
  */
 public class Main {
@@ -55,6 +59,23 @@ public class Main {
      * Runs and tests the system.
      */
     private void run() {
+        Application application = getApplication();
+        JFrame frame = new MainFrame(application);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }    // run()
+
+    /**
+     * Returns the application used in this program.
+     *
+     * Note to developers: This method defines the application information used
+     * by the application. Any changes to the name, version, copyright, or
+     * datafiles should occur here.
+     *
+     * @return the application used in this program
+     * @since 3.1
+     */
+    private Application getApplication() {
         final String APPLICATION_NAME = "BSCMail";
         final String APPLICATION_VERSION = "3.0";
         final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
@@ -78,10 +99,6 @@ public class Main {
         final String USER_GUIDE_FILE = "userguide.pdf";
         HelpDisplay helpDisplay = new HelpFileDisplay(USER_GUIDE_FILE);
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
-        JFrame frame = new MainFrame(application);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }    // run()
-
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+    }    // getApplication()
 }
