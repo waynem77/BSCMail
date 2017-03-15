@@ -30,7 +30,7 @@ import main.*;
  * @author Wayne Miller, Anthony Adams
  */
 public class Shift implements Cloneable, Serializable, ReadWritable {
-    
+
     /*
      * Static class properties and methods.
      */
@@ -71,6 +71,9 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
          * <li>The shift's description is given by the string value of the value
          * corresponding to "description". If such a value does not exist or is
          * null, the shift's description is empty.</li>
+         * <li>The shift's list of roles is given by the string value of the value
+         * corresponding to "roles", interpreted as a comma-delimited list.  If such
+         * a value does not exist or is null, the shift's lists of roles is empty.
          * <li>The shift's "display volunteer email" flag is given by the
          * boolean value of the value corresponding to "displayVolunteerEmail".
          * If such a value does not exist or is null, the shift's "display
@@ -90,7 +93,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
          * </ul>
          * If a property is missing or null, a suitable default value will be
          * used in its place.
-         * 
+         *
          * This method effectively acts as the reverse of
          * {@link Shift#getReadWritableProperties()}.
          *
