@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,9 +19,9 @@
 
 package bscmail;
 
-import bscmail.Role.Factory;
 import java.util.HashMap;
 import java.util.Map;
+import main.ReadWritableFactoryTest;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -30,218 +30,59 @@ import static org.junit.Assert.*;
  *
  * @author Wayne Miller
  */
-public class RoleFactoryTest {
+public class RoleFactoryTest extends ReadWritableFactoryTest<Role> {
 
     /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)}
-     * throws a {@link NullPointerException} when properties is null.
+     * Returns the role name used in {@link #getTestProperties()}.
+     *
+     * @return the role name used in {@link #getTestProperties()}
      */
-    @Test(expected = NullPointerException.class)
-    public void constructReadWritableThrowsExceptionWhenPropertiesIsNull() {
-        Factory factory = Role.getRoleFactory();
-        Map<String, Object> properties = null;
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableThrowsExceptionWhenPropertiesIsNull()
+    private String getTestName() {
+        return "foo";
+    }    // getTestName()
 
     /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties is an empty map.
+     * Returns the role factory being tested.
+     *
+     * @return the role factory being tested
      */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsEmpty() {
-        Factory factory = Role.getRoleFactory();
-        Map<String, Object> properties = new HashMap<>();
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsEmpty()
+    @Override
+    protected Role.Factory getTestFactory() {
+        return Role.getRoleFactory();
+    }    // getTestFactory()
 
     /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not return null when properties is an empty map.
+     * Returns a properties map appropriate for testing.
+     *
+     * @return a properties map appropriate for testing
      */
-    @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsEmpty() {
-        Factory factory = Role.getRoleFactory();
-        Map<String, Object> properties = new HashMap<>();
+    @Override
+    protected Map<String, Object> getTestProperties() {
+        String name = getTestName();
 
-        Role received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsEmpty()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties has a null value for "name".
-     */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullName() {
-        Factory factory = Role.getRoleFactory();
-        String name = null;
         Map<String, Object> properties = new HashMap<>();
         properties.put("name", name);
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullName()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not return null when properties has a null value for "name".
-     */
-    @Test
-    public void constructReadWritableDoesNotReturnNullhenPropertiesHasNullName() {
-        Factory factory = Role.getRoleFactory();
-        String name = null;
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-
-        Role received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullName()
+        return properties;
+    }    // getTestProperties()
 
     /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties all required values.
+     * Returns the role that ought to be created from the given properties. This
+     * method is guaranteed never to return null.
+     *
+     * @param properties the properties; should be the (possibly modified)
+     * return value of {@link #getTestProperties()}
+     * @return the volunteer that ought to be created from the given properties
      */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasAllValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
+    @Override
+    protected Role getReadWritableFromProperties(Map<String, Object> properties) {
+        assert (properties != null);
 
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasAllValues()
+        Object nameObject = properties.get("name");
+        String name = (nameObject == null) ? "" : nameObject.toString();
 
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not return null when properties all required values.
-     */
-    @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasAllValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-
-        Role received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasAllValues()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)}
-     * returns the correct value when properties all required values.
-     */
-    @Test
-    public void constructReadWritableReturnsCorrectValueWhenPropertiesHasAllValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-
-        Role received = factory.constructReadWritable(properties);
-
-        Role expected = new Role(name);
-        assertEquals(expected, received);
-    }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasAllValues()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties has extraneous values.
-     */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasExtraneousValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-        properties.put("extra", "baz");
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasExtraneousValues()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not return null when properties has extraneous values.
-     */
-    @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasExtraneousValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-        properties.put("extra", "baz");
-
-        Role received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasExtraneousValues()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)}
-     * returns the correct value when properties has extraneous values.
-     */
-    @Test
-    public void constructReadWritableReturnsCorrectValueWhenPropertiesHasExtraneousValues() {
-        Factory factory = Role.getRoleFactory();
-        String name = "foo";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-        properties.put("extra", "baz");
-
-        Role received = factory.constructReadWritable(properties);
-
-        Role expected = new Role(name);
-        assertEquals(expected, received);
-    }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasExtraneousValues()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not throw an exception when the values are the wrong objects.
-     */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasWrongObjects() {
-        Factory factory = Role.getRoleFactory();
-        Object name = 1;
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasWrongObjects()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} does
-     * not returns null when the values are the wrong objects.
-     */
-    @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasWrongObjects() {
-        Factory factory = Role.getRoleFactory();
-        Object name = 1;
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("name", name);
-
-        Role received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasWrongObjects()
-
-    /**
-     * Tests that {@link Role.Factory#constructReadWritable(Map)} acts
-     * as the reverse of {@link Role#getReadWritableProperties()}.
-     */
-    @Test
-    public void constructReadWritableWorksReflexively() {
-        String name = "foo";
-        Role originalRole = new Role(name);
-
-        Map<String, Object> properties = originalRole.getReadWritableProperties();
-        Factory factory = Role.getRoleFactory();
-        Role received = factory.constructReadWritable(properties);
-
-        Role expected = originalRole;
-        assertEquals(expected, received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasWrongObjects()
+        Role role = new Role(name);
+        assert (role != null);
+        return role;
+    }    // getReadWritableFromProperties()
 
 }    // RoleFactoryTest
