@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,17 +19,13 @@
 
 package bscmail.gui;
 
-import bscmail.Application;
 import bscmail.EventProperty;
-import bscmail.Role;
-import bscmail.Shift;
-import java.util.Collections;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link ManageEventPropertiesPanel}.
- * 
+ *
  * @author Wayne Miller
  */
 public class ManageEventPropertiesPanelTest extends ManageElementPanelTest<EventProperty> {
@@ -40,7 +36,7 @@ public class ManageEventPropertiesPanelTest extends ManageElementPanelTest<Event
 
     /**
      * Returns the manage event properties panel to be tested.
-     * 
+     *
      * @return the manage event properties panel to be tested
      */
     @Override
@@ -50,7 +46,7 @@ public class ManageEventPropertiesPanelTest extends ManageElementPanelTest<Event
 
     /**
      * Returns an invalid event property to use in testing.
-     * 
+     *
      * @return an invalid event property to use in testing
      */
     @Override
@@ -60,7 +56,7 @@ public class ManageEventPropertiesPanelTest extends ManageElementPanelTest<Event
 
     /**
      * Returns a valid event property to use in testing.
-     * 
+     *
      * @return a valid event property to use in testing
      */
     @Override
@@ -124,5 +120,5 @@ public class ManageEventPropertiesPanelTest extends ManageElementPanelTest<Event
         EventProperty expected = new EventProperty("", "");
         assertEquals(expected, received);
     }    // createElementReturnsCorrectValueWhenPanelIsNotLoaded()
-    
+
 }    // ManageEventPropertiesPanelTest

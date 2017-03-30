@@ -41,23 +41,6 @@ import static org.junit.Assert.*;
 public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
 
     /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("ManageShiftPanel");
-        System.out.println("================");
-    }    // setUpClass()
-
-    /**
-     * Prints unit test footer.
-     */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
      * Returns an application that can be used in tests.
      */
     private Application getTestApplication()  {
@@ -111,65 +94,62 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
      * throws a {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorApplicationNullException() {
-        System.out.println("constructor - application null, exception");
-
+    public void constructorThrowsExceptionWhenApplicationIsNull() {
         Application application = null;
+
         ManageShiftPanel panel = new ManageShiftPanel(application);
-    }    // testConstructorApplicationNullException()
+    }    // constructorThrowsExceptionWhenApplicationIsNull()
 
     /**
      * Tests that {@link ManageShiftPanel#ManageShiftPanel(bscmail.Application)}
      * does not throw an exception when application is not null.
      */
     @Test
-    public void testConstructorApplicationNotNullNoException() {
-        System.out.println("constructor - application not null, no exception");
-
+    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
         Application application = getTestApplication();
+
         ManageShiftPanel panel = new ManageShiftPanel(application);
-    }    // testConstructorApplicationNotNullNoException()
+    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
     /**
      * Tests that {@link ManageShiftPanel#createElement()} does not throw an
-     * exception when the panel is not loaded.
+     * exception when the panel has not been loaded.
      */
     @Test
-    public void testCreateElementNotLoadedNoException() {
-        System.out.println("createElement - not loadeed, no exception");
-
+    public void createElementDoesNotThrowExceptionWhenPanelHasNotBeenLoaded() {
         ManageShiftPanel panel = getPanel();
         panel.loadElement(null);
+
         panel.createElement();
-    }    // testCreateElementNotLoadedNoException()
+    }    // createElementDoesNotThrowExceptionWhenPanelHasNotBeenLoaded()
 
     /**
      * Tests that {@link ManageShiftPanel#createElement()} does not return null
-     * when the panel is not loaded.
+     * when the panel has not been loaded.
      */
     @Test
-    public void testCreateElementNotLoadedNotNull() {
-        System.out.println("createElement - not loadeed, not null");
-
+    public void createElementDoesNotReturnNullWhenPanelHasNotBeenLoaded() {
         ManageShiftPanel panel = getPanel();
         panel.loadElement(null);
+
         Shift received = panel.createElement();
+
         assertNotNull(received);
-    }    // testCreateElementNotLoadedNotNull()
+    }    // createElementDoesNotReturnNullWhenPanelHasNotBeenLoaded()
 
     /**
      * Tests that {@link ManageShiftPanel#createElement()} returns an "empty"
-     * shift when the panel is not loaded.
+     * shift when the panel has not been loaded.
      */
     @Test
-    public void testCreateElementNotLoaded() {
-        System.out.println("createElement - not loadeed");
-
+    public void createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded() {
         ManageShiftPanel panel = getPanel();
         panel.loadElement(null);
-        Shift expected = new Shift("", Collections.<Role>emptyList(), false, false, false);
+
         Shift received = panel.createElement();
+
+        Shift expected = new Shift("", Collections.<Role>emptyList(), false, false, false);
         assertEquals(expected, received);
-    }    // testCreateElementNotLoaded()
+    }    // createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded()
 
 }    // ManageShiftPanelTest

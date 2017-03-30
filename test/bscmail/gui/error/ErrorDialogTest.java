@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,7 +19,7 @@
 
 package bscmail.gui.error;
 
-import java.awt.*;
+import java.awt.Frame;
 import javax.swing.JFrame;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -31,19 +31,6 @@ import static org.junit.Assert.*;
  */
 public class ErrorDialogTest {
 
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("ErrorDialog");
-        System.out.println("===========");
-    }    // setUpClass()
-
-    /*
-     * Unit tests
-     */
-
     /* constructors */
 
     /**
@@ -53,7 +40,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void fourArgConstructorDoesNotThrowExceptionWhenOwnerIsNull() {
-
         Frame owner = null;
         String title = "Foo";
         String message = "Bar";
@@ -69,7 +55,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void fourArgConstructorDoesNotThrowExceptionWhenTitleIsNull() {
-
         Frame owner = new JFrame();
         String title = null;
         String message = "Bar";
@@ -85,7 +70,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void fourArgConstructorDoesNotThrowExceptionWhenMessageIsNull() {
-
         Frame owner = new JFrame();
         String title = "Foo";
         String message = null;
@@ -101,7 +85,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void fourArgConstructorDoesNotThrowExceptionWhenCauseIsNull() {
-
         Frame owner = new JFrame();
         String title = "Foo";
         String message = "Bar";
@@ -117,7 +100,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void threeArgConstructorDoesNotThrowExceptionWhenOwnerIsNull() {
-
         Frame owner = null;
         String title = "Foo";
         String message = "Bar";
@@ -132,7 +114,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void threeArgConstructorDoesNotThrowExceptionWhenTitleIsNull() {
-
         Frame owner = new JFrame();
         String title = null;
         String message = "Bar";
@@ -147,7 +128,6 @@ public class ErrorDialogTest {
      */
     @Test
     public void threeArgConstructorDoesNotThrowExceptionWhenMessageIsNull() {
-
         Frame owner = new JFrame();
         String title = "Foo";
         String message = null;

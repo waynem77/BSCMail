@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,16 +19,12 @@
 
 package bscmail;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import main.ReadWritableFactory;
 import main.ReadWritableTest;
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Unit tests for {@link Role}.
@@ -43,7 +39,7 @@ public class RoleTest extends ReadWritableTest {
 
     /**
      * Returns the event property to be tested.
-     * 
+     *
      * @return the event property to be tested
      */
     @Override
@@ -121,7 +117,7 @@ public class RoleTest extends ReadWritableTest {
     }    // getNameReturnsCorrectValue()
 
     /* getReadWritableProperties */
-    
+
     /**
      * Tests that {@link Role#getReadWritableProperties()} returns the correct
      * value.
@@ -152,7 +148,7 @@ public class RoleTest extends ReadWritableTest {
         Object obj = null;
         role.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link Role#equals(Object)} returns false when the argument is
      * null.
@@ -167,7 +163,7 @@ public class RoleTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link Role#equals(Object)} does not throw an exception when
      * the argument is not a role.
@@ -180,7 +176,7 @@ public class RoleTest extends ReadWritableTest {
         Object obj = 1;
         role.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNotRole()
-    
+
     /**
      * Tests that {@link Role#equals(Object)} returns false when the argument is
      * not a role.
@@ -195,7 +191,7 @@ public class RoleTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNotRole()
-    
+
     /**
      * Tests that {@link Role#equals(Object)} does not throw an exception when
      * the argument is a role.
@@ -258,7 +254,7 @@ public class RoleTest extends ReadWritableTest {
     }    // equalsReturnsTrueWhenArgumentIsIdentical()
 
     /* hashCode */
-    
+
     /**
      * Tests that {@link Role#hashCode()} does not throw an exception.
      */
@@ -285,7 +281,7 @@ public class RoleTest extends ReadWritableTest {
     }    // hashCodeReturnsEqualValuesForEquivalentRoles()
 
     /* clone */
-    
+
     /**
      * Tests that {@link Role#clone()} does not throw an exception.
      */
@@ -296,7 +292,7 @@ public class RoleTest extends ReadWritableTest {
 
         role.clone();
     }    // cloneDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link Role#clone()} is not null.
      */
@@ -309,7 +305,7 @@ public class RoleTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // testCloneNcloneDoesNotReturnNullotNull()
-    
+
     /**
      * Tests that the return value of {@link Role#clone()} is equal to the
      * argument.
@@ -324,7 +320,7 @@ public class RoleTest extends ReadWritableTest {
         Role expected = role;
         assertEquals(expected, received);
     }    // returnValueOfCloneIsEqualToOriginal()
-    
+
     /**
      * Tests that the return value of {@link Role#clone()} is not identical to
      * the argument.
@@ -340,7 +336,7 @@ public class RoleTest extends ReadWritableTest {
     }    // returnValueOfCloneIsNotIdenticalToOriginal()
 
     /* toString */
-    
+
     /**
      * Tests that {@link Role#toString()} does not throw an exception.
      */
@@ -351,7 +347,7 @@ public class RoleTest extends ReadWritableTest {
 
         role.toString();
     }    // toStringDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link Role#toString()} is not null.
      */
@@ -364,7 +360,7 @@ public class RoleTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // toStringDoesNotReturnNull()
-    
+
     /**
      * Tests that {@link Role#toString()} returns the role's name.
      */
@@ -380,7 +376,7 @@ public class RoleTest extends ReadWritableTest {
     }    // toStringReturnsName()
 
     /* getRoleFactory */
-    
+
     /**
      * Tests that {@link Role#getRoleFactory()} does not throw
      * an exception.
@@ -389,7 +385,7 @@ public class RoleTest extends ReadWritableTest {
     public void roleFactoryDoesNotThrowException() {
         Role.getRoleFactory();
     }    // roleFactoryDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of
      * {@link Role#getRoleFactory()} is not null.

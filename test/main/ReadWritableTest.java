@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -25,19 +25,19 @@ import static org.junit.Assert.*;
 
 /**
  * Abstract base class for unit tests for {@link ReadWritable} implementations.
- * 
+ *
  * @author Wayne Miller
  */
 @Ignore
 public abstract class ReadWritableTest {
-    
+
     /*
      * Helper classes and methods.
      */
-    
+
     /**
      * Returns the read-writable to be tested.
-     * 
+     *
      * @return the read-writable to be tested
      */
     protected abstract ReadWritable getReadWritable();
@@ -45,68 +45,66 @@ public abstract class ReadWritableTest {
     /*
      * Unit tests
      */
-    
+
     /**
      * Tests that {@link ReadWritable#getReadWritableProperties()} does not
      * throw an exception.
      */
     @Test
-    public void testGetReadWritablePropertiesNoException() {
-        System.out.println("(ReadWritable) getReadWritableProperties - no exception");
-        
+    public void getReadWritablePropertiesDoesNotThrowException() {
         ReadWritable readWritable = getReadWritable();
+
         readWritable.getReadWritableProperties();
-    }    // testGetReadWritablePropertiesNoException()
-    
+    }    // getReadWritablePropertiesDoesNotThrowException()
+
     /**
      * Tests that {@link ReadWritable#getReadWritableProperties()} does not
      * return null.
      */
     @Test
-    public void testGetReadWritablePropertiesDoesNotReturnNull() {
-        System.out.println("(ReadWritable) getReadWritableProperties - does not return null");
-        
+    public void getReadWritablePropertiesDoesNotReturnNull() {
         ReadWritable readWritable = getReadWritable();
+
         Map<String, Object> properties = readWritable.getReadWritableProperties();
+
         assertNotNull(properties);
-    }    // testGetReadWritablePropertiesDoesNotReturnNull()
-    
+    }    // getReadWritablePropertiesDoesNotReturnNull()
+
     /**
      * Tests that {@link ReadWritable#getReadWritableProperties()} does not
      * contain any null keys.
      */
     @Test
-    public void testGetReadWritablePropertiesDoesNotHaveNullKey() {
-        System.out.println("(ReadWritable) getReadWritableProperties - does not contain a null key");
-        
+    public void getReadWritablePropertiesDoesNotReturnMapWithNullKeys() {
         ReadWritable readWritable = getReadWritable();
+
         Map<String, Object> properties = readWritable.getReadWritableProperties();
+
         assertFalse(properties.containsKey(null));
-    }    // testGetReadWritablePropertiesDoesNotHaveNullKey()
-    
+    }    // getReadWritablePropertiesDoesNotReturnMapWithNullKeys()
+
     /**
      * Tests that {@link ReadWritable#getReadWritableFactory()} does not throw
      * an exception.
      */
     @Test
-    public void testGetReadWritableFactoryNoException() {
-        System.out.println("(ReadWritable) getReadWritableFactory - no exception");
-        
+    public void getReadWritableFactoryDoesNotThrowException() {
         ReadWritable readWritable = getReadWritable();
+
         readWritable.getReadWritableFactory();
-    }    // testGetReadWritableFactoryNoException()
-    
+    }    // getReadWritableFactoryDoesNotThrowException()
+
     /**
      * Tests that {@link ReadWritable#getReadWritableFactory()} does not return
      * null.
      */
     @Test
-    public void testGetReadWritableFactoryNotNull() {
-        System.out.println("(ReadWritable) getReadWritableFactory - does not return null");
-        
+    public void getReadWritableFactoryDoesNotReturnNull() {
         ReadWritable readWritable = getReadWritable();
+
         ReadWritableFactory received = readWritable.getReadWritableFactory();
+
         assertNotNull(received);
-    }    // testGetReadWritableFactoryNotNull()
-    
+    }    // getReadWritableFactoryDoesNotReturnNull()
+
 }    // ReadWritableTest

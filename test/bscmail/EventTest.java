@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,331 +19,321 @@
 
 package bscmail;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link Event}.
- * 
+ *
  * @author Wayne Miller
  */
 public class EventTest {
 
-    /**
-     * Variable used to hold the event being tested.
-     */
-    Event event;
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("Event");
-        System.out.println("=====");
-    }    // setUpClass()
-
-    /**
-     * Prints unit test footer.
-     */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
-     * Sets up the test environment before each test.
-     */
-    @Before
-    public void setUp() {
-        event = new Event();
-    }    // setUp()
-
-    /**
-     * Cleans up the test environment after each test.
-     */
-    @After
-    public void tearDown() {
-        event = null;
-    }    // tearDown()
-    
     /* constructor */
-    
+
     /**
      * Tests that {@link Event#Event()} does not throw an exception.
      */
     @Test
-    public void testConstructor() {
-        System.out.println("constructor");
-
-        event = new Event();
-    }    // testConstructor()
+    public void constructorDoesNotThrowException() {
+        Event event = new Event();
+    }    // constructorDoesNotThrowException()
 
     /* hasDate / getDate / setDate */
-    
+
     /**
      * Tests that {@link Event#hasDate()} does not throw an exception.
      */
     @Test
-    public void testHasDateNoException() {
-        System.out.println("hasDate - no exception");
-        
+    public void hasDateDoesNotThrowException() {
+        Event event = new Event();
+
         event.hasDate();
-    }    // testHasDateNoException()
-    
+    }    // hasDateDoesNotThrowException()
+
     /**
      * Tests that {@link Event#hasDate()} returns false when called before
      * {@link Event#setDate(Date)}.
      */
     @Test
-    public void testHasDateBeforeSetDate() {
-        System.out.println("hasDate - before setDate");
-        
-        boolean expected = false;
+    public void hasDateReturnsFalseWhenDateHasNotBeenSet() {
+        Event event = new Event();
+
         boolean received = event.hasDate();
+
+        boolean expected = false;
         assertEquals(expected, received);
-    }    // testHasDateBeforeSetDate()
-    
+    }    // hasDateReturnsFalseWhenDateHasNotBeenSet()
+
     /**
      * Tests that {@link Event#hasDate()} returns true when called after
      * {@link Event#setDate(Date)}.
      */
     @Test
-    public void testHasDateAfterSetDate() {
-        System.out.println("hasDate - after setDate");
-
+    public void hasDateReturnsTrueWhenDateHasBeenSet() {
+        Event event = new Event();
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, 11, 28);
         Date date = calendar.getTime();
+
         event.setDate(date);
-        boolean expected = true;
         boolean received = event.hasDate();
+
+        boolean expected = true;
         assertEquals(expected, received);
-    }    // testHasDateAfterSetDate()
-    
+    }    // hasDateReturnsTrueWhenDateHasBeenSet()
+
     /**
      * Tests that {@link Event#hasDate()} returns false when called after
      * {@link Event#setDate(Date)}, called with null.
      */
     @Test
-    public void testHasDateAfterSetDateNull() {
-        System.out.println("hasDate - after setDate, null");
-        
+    public void hasDateReturnsFalseWhenDateHasBeenSetToNull() {
+        Event event = new Event();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2014, 11, 28);
-        Date date = calendar.getTime();
+        Date date = null;
+
         event.setDate(date);
-        date = null;
-        event.setDate(date);
-        boolean expected = false;
         boolean received = event.hasDate();
+
+        boolean expected = false;
         assertEquals(expected, received);
-    }    // testHasDateAfterSetDateNull()
-    
+    }    // hasDateReturnsFalseWhenDateHasBeenSetToNull()
+
     /**
      * Tests that {@link Event#getDate()} does not throw an exception.
      */
     @Test
-    public void testGetDateNoException() {
-        System.out.println("getDate - no exception");
-        
+    public void getDateDoesNotThrowException() {
+        Event event = new Event();
+
         event.getDate();
-    }    // testGetDateNoException()
-    
+    }    // getDateDoesNotThrowException()
+
     /**
      * Tests that {@link Event#getDate()} returns null when called before
      * {@link Event#setDate(Date)}.
      */
     @Test
-    public void testGetDateBeforeSetDate() {
-        System.out.println("getDate - before setDate");
-        
-        Date expected = null;
+    public void getDateReturnsNullWhenDateHasNotBeenSet() {
+        Event event = new Event();
+
         Date received = event.getDate();
+
+        Date expected = null;
         assertEquals(expected, received);
-    }    // testGetDateBeforeSetDate()
-    
+    }    // getDateReturnsNullWhenDateHasNotBeenSet()
+
     /**
      * Tests that {@link Event#getDate()} returns the correct value when
      * called after {@link Event#setDate(Date)}.
      */
     @Test
-    public void testGetDateAfterSetDate() {
-        System.out.println("getDate - after setDate");
-        
+    public void getDateReturnsValuePassedToSetDate() {
+        Event event = new Event();
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, 11, 28);
         Date date = calendar.getTime();
+
         event.setDate(date);
-        Date expected = date;
         Date received = event.getDate();
+
+        Date expected = date;
         assertEquals(expected, received);
-    }    // testGetDateAfterSetDate()
-    
+    }    // getDateReturnsValuePassedToSetDate()
+
     /**
      * Tests that {@link Event#getDate()} returns null when called after
      * {@link Event#setDate(Date)}, called with null.
      */
     @Test
-    public void testGetDateAfterSetDateNull() {
-        System.out.println("getDate - after setDate, null");
-        
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2014, 11, 28);
-        Date date = calendar.getTime();
+    public void getDateReturnsNullWhenDateHasBeenSetToNull() {
+        Event event = new Event();
+        Date date = null;
+
         event.setDate(date);
-        date = null;
-        event.setDate(date);
-        Date expected = null;
         Date received = event.getDate();
+
+        Date expected = null;
         assertEquals(expected, received);
     }    // testGetDateAfterSetDateNull()
-    
+
     /**
-     * Tests that {@link Event#setDate(Date)} does not throw an exception.
+     * Tests that {@link Event#setDate(Date)} does not throw an exception when
+     * date is null.
      */
     @Test
-    public void testSetDateNoException() {
-        System.out.println("setDate - no exception");
-        
+    public void setDateDoesNotThrowAnExceptionWhenDateIsNull() {
+        Event event = new Event();
+        Date date = null;
+
+        event.setDate(date);
+    }    // setDateDoesNotThrowAnExceptionWhenDateIsNull()
+
+    /**
+     * Tests that {@link Event#setDate(Date)} does not throw an exception when
+     * date is not null.
+     */
+    @Test
+    public void setDateDoesNotThrowAnExceptionWhenDateIsNotNull() {
+        Event event = new Event();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, 11, 28);
+        Date date = calendar.getTime();
+
+        event.setDate(date);
+    }    // setDateDoesNotThrowAnExceptionWhenDateIsNotNull()
+
+    /**
+     * Tests that {@link Event#setDate(Date)} does not throw an exception when
+     * called twice with different arguments.
+     */
+    @Test
+    public void setDateDoesNotThrowAnExceptionWhenCalledTwiceWithDifferentArguments() {
+        Event event = new Event();
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, 11, 28);
         Date date = calendar.getTime();
         event.setDate(date);
-    }    // testSetDateNoException()
-    
-    /**
-     * Tests that {@link Event#setDate(Date)} does not throw an exception
-     * when the parameter is null, for an event with no date assigned.
-     */
-    @Test
-    public void testSetDateNullNoDateNoException() {
-        System.out.println("setDate - null, no previous date, no exception");
-        
-        Date date = null;
+        calendar.add(Calendar.DATE, 1);
+
         event.setDate(date);
-    }    // testSetDateNullNoDateNoException()
-    
+    }    // setDateDoesNotThrowAnExceptionWhenCalledTwiceWithDifferentArguments()
+
     /**
-     * Tests that {@link Event#setDate(Date)} does not throw an exception
-     * when the parameter is null.
+     * Tests that {@link Event#setDate(Date)} unsets the existing date when
+     * called with null.
      */
     @Test
-    public void testSetDateNullNoException() {
-        System.out.println("setDate - null, no exception");
-        
+    public void setDateUnsetsExistingDateWhenCalledWithNull() {
+        Event event = new Event();
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, 11, 28);
         Date date = calendar.getTime();
         event.setDate(date);
         date = null;
+
         event.setDate(date);
-    }    // testSetDateNullNoException()
+
+        boolean expectedFlag = false;
+        boolean receivedFlag = event.hasDate();
+        assertEquals(expectedFlag, receivedFlag);
+
+        Date expectedDate = date;
+        Date receivedDate = event.getDate();
+        assertEquals(expectedDate, receivedDate);
+    }    // setDateUnsetsExistingDateWhenCalledWithNull()
 
     /* addEventProperty / getEventProperties */
 
     /**
      * Tests that {@link Event#addEventProperty(EventProperty)} throws a
-     * {@link NullPointerException} when the parameter is null.
+     * {@link NullPointerException} when eventProperty is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testAddEventPropertyNull() {
-        System.out.println("addEventProperty - null");
-        
+    public void addEventPropertyThrowsExceptionWhenEventPropertyIsNull() {
+        Event event = new Event();
         EventProperty eventProperty = null;
+
         event.addEventProperty(eventProperty);
-    }    // testAddEventPropertyNull()
-    
+    }    // addEventPropertyThrowsExceptionWhenEventPropertyIsNull()
+
     /**
      * Tests that {@link Event#addEventProperty(EventProperty)} does not throw
-     * an exception when the parameter is not null.
+     * an exception when eventProperty is not null.
      */
     @Test
-    public void testAddEventProperty() {
-        System.out.println("addEventProperty");
-        
+    public void addEvenetPropertyDoesNotThrowExceptionWhenEventPropertyIsNotNull() {
+        Event event = new Event();
         String name = "foo";
         String defaultValue = "bar";
         EventProperty eventProperty = new EventProperty(name, defaultValue);
+
         event.addEventProperty(eventProperty);
-    }
-    
+    }    // addEvenetPropertyDoesNotThrowExceptionWhenEventPropertyIsNotNull
+
     /**
      * Tests that {@link Event#getEventProperties()} does not throw an exception
      * when no eventProperties have been added.
      */
     @Test
-    public void testGetEventPropertiesEmptyNoException() {
-        System.out.println("getEventProperties - empty, no exception");
-        
+    public void getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties() {
+        Event event = new Event();
+
         event.getEventProperties();
-    }    // testGetEventPropertiesEmptyNoException()
-    
+    }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties()
+
     /**
      * Tests that {@link Event#getEventProperties()} returns an empty list when
      * no eventProperties have been added.
      */
     @Test
-    public void testGetEventPropertiesEmpty() {
-        System.out.println("getEventProperties - empty");
-        
-        List<EventProperty> expected = Collections.emptyList();
+    public void getEventPropertiesReturnsEmptyListWhenThereAreNoEventProperties() {
+        Event event = new Event();
+
         List<EventProperty> received = event.getEventProperties();
+
+        List<EventProperty> expected = Collections.emptyList();
         assertEquals(expected, received);
-    }    // testGetEventPropertiesEmpty()
-        
+    }    // getEventPropertiesReturnsEmptyListWhenThereAreNoEventProperties()
+
     /**
      * Tests that {@link Event#getEventProperties()} does not throw an exception
      * after eventProperties have been added.
      */
     @Test
-    public void testGetEventPropertiesNoException() {
-        System.out.println("getEventProperties - no exception");
-        
-        
+    public void getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties() {
+        Event event = new Event();
         String name = "foo";
         String defaultValue = "bar";
         EventProperty eventProperty = new EventProperty(name, defaultValue);
         event.addEventProperty(eventProperty);
+
         event.getEventProperties();
-    }    // testGetEventPropertiesNoException()
-        
+    }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties()
+
     /**
      * Tests that {@link Event#getEventProperties()} returns the correct value
      * after eventProperties have been added.
      */
     @Test
-    public void testGetEventProperties() {
-        System.out.println("getEventProperties");
-        
+    public void getEventPropertiesReturnsCorrectValueWhenThereAreEventProperties() {
+        Event event = new Event();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
                 new EventProperty("bar", "two"),
                 new EventProperty("baz", "three"));
         for (EventProperty eventProperty : eventProperties) {
             event.addEventProperty(eventProperty);
         }    // for
-        List<EventProperty> expected = eventProperties;
+
         List<EventProperty> received = event.getEventProperties();
+
+        List<EventProperty> expected = eventProperties;
         assertEquals(expected, received);
-    }    // testGetEventProperties()
-        
+    }    // getEventPropertiesReturnsCorrectValueWhenThereAreEventProperties()
+
     /**
      * Tests that the list returned from {@link Event#getEventProperties()} is
      * unmodifiable.
      */
     @Test
-    public void testGetEventPropertiesUnmodifiable() {
-        System.out.println("getEventProperties - return value is unmodifiable");
-        
+    public void getEventPropertiesReturnsImmutableList() {
+        Event event = new Event();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
                 new EventProperty("bar", "two"),
                 new EventProperty("baz", "three"));
         for (EventProperty eventProperty : eventProperties) {
             event.addEventProperty(eventProperty);
         }    // for
+
         List<EventProperty> list = event.getEventProperties();
-        
+
         EventProperty eventProperty = new EventProperty("smurf", "four");
         try {
             list.add(eventProperty);
@@ -360,118 +350,118 @@ public class EventTest {
             fail("able to replace eventProperties in return value");
         } catch (RuntimeException e) {    // try
         }    // catch
-    }    // testGetEventPropertiesUnmodifiable()
-        
+    }    // getEventPropertiesReturnsImmutableList()
+
     /**
      * Tests that the elements of the list returned from
      * {@link Event#getEventProperties()} are modifiable.
      */
     @Test
-    public void testGetEventPropertiesElementsModifiable() {
-        System.out.println("getEventProperties - elements of return value are modifiable");
-        
+    public void getEventPropertiesReturnsListWhoseElementsAreMutable() {
+        Event event = new Event();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
                 new EventProperty("bar", "two"),
                 new EventProperty("baz", "three"));
         for (EventProperty eventProperty : eventProperties) {
             event.addEventProperty(eventProperty);
         }    // for
+
         List<EventProperty> list = event.getEventProperties();
+
         int index = 0;
         String value = "smurf";
         list.get(index).setValue(value);
-    }    // testGetEventPropertiesElementsModifiable()
-        
+    }    // getEventPropertiesReturnsListWhoseElementsAreMutable()
+
     /**
      * Tests that changes to the elements of the list returned from
-     * {@link Event#getEventProperties()} are persistent.
+     * {@link Event#getEventProperties()} do not affect the event.
      */
     @Test
-    public void testGetEventPropertiesPersistence() {
-        System.out.println("getEventProperties - persistence");
-        
+    public void changesToReturnValueOfGetEventPropertiesDoNotAffectEvent() {
+        Event event = new Event();
         List<EventProperty> eventProperties = Arrays.asList(new EventProperty("foo", "one"),
                 new EventProperty("bar", "two"),
                 new EventProperty("baz", "three"));
         for (EventProperty eventProperty : eventProperties) {
             event.addEventProperty(eventProperty);
         }    // for
+
         List<EventProperty> list = event.getEventProperties();
+
         int index = 0;
         String value = "smurf";
         list.get(index).setValue(value);
-        list = null;
-        
+
         list = event.getEventProperties();
         String expected = value;
         String received = list.get(index).getValue();
         assertEquals(expected, received);
-    }    // testGetEventPropertiesPersistence()
-    
+    }    // changesToReturnValueOfGetEventPropertiesDoNotAffectEvent()
+
     /* addShift / getShifts */
-    
+
     /**
      * Tests that {@link Event#addShift(Shift)} throws a
-     * {@link NullPointerException} when the parameter is null.
+     * {@link NullPointerException} when shift is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testAddShiftNull() {
-        System.out.println("addShift - null");
-        
+    public void addShiftThrowsExceptionWhenShiftIsNull() {
+        Event event = new Event();
         Shift shift = null;
+
         event.addShift(shift);
-    }    // testAddShiftNull()
-    
+    }    // addShiftThrowsExceptionWhenShiftIsNull()
+
     /**
      * Tests that {@link Event#addShift(Shift)} does not throw an exception
-     * when the parameter is not null.
+     * when shift is not null.
      */
     @Test
-    public void testAddShift() {
-        System.out.println("addShift");
-        
+    public void addShiftDoesNotThrowExceptionWhenShiftIsNotNull() {
+        Event event = new Event();
         String description = "foo";
         List<Role> roles = new LinkedList<>();
         boolean displayVolunteerEmail = true;
         boolean displayVolunteerPhone = true;
         boolean displayVolunteerNotes = true;
         Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+
         event.addShift(shift);
-    }
-    
+    }    // addShiftDoesNotThrowExceptionWhenShiftIsNotNull
+
     /**
      * Tests that {@link Event#getShifts()} does not throw an exception when no
      * shifts have been added.
      */
     @Test
-    public void testGetShiftsEmptyNoException() {
-        System.out.println("getShifts - empty, no exception");
-        
+    public void getShiftsDoesNotThrowExceptionWhenThereAreNoShifts() {
+        Event event = new Event();
+
         event.getShifts();
-    }    // testGetShiftsEmptyNoException()
-    
+    }    // getShiftsDoesNotThrowExceptionWhenThereAreNoShifts()
+
     /**
      * Tests that {@link Event#getShifts()} returns an empty list when no shifts
      * have been added.
      */
     @Test
-    public void testGetShiftsEmpty() {
-        System.out.println("getShifts - empty");
-        
-        List<Shift> expected = Collections.emptyList();
+    public void getShiftsReturnsEmptyListWhenThereAreNoShifts() {
+        Event event = new Event();
+
         List<Shift> received = event.getShifts();
+
+        List<Shift> expected = Collections.emptyList();
         assertEquals(expected, received);
-    }    // testGetShiftsEmpty()
-        
+    }    // getShiftsReturnsEmptyListWhenThereAreNoShifts()
+
     /**
      * Tests that {@link Event#getShifts()} does not throw an exception after
      * shifts have been added.
      */
     @Test
-    public void testGetShiftsNoException() {
-        System.out.println("getShifts - no exception");
-        
-        
+    public void getShiftsDoesNotThrowExceptionWhenThereAreShifts() {
+        Event event = new Event();
         String description = "foo";
         List<Role> roles = new LinkedList<>();
         boolean displayVolunteerEmail = true;
@@ -479,44 +469,46 @@ public class EventTest {
         boolean displayVolunteerNotes = true;
         Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         event.addShift(shift);
+
         event.getShifts();
-    }    // testGetShiftsNoException()
-        
+    }    // getShiftsDoesNotThrowExceptionWhenThereAreShifts()
+
     /**
      * Tests that {@link Event#getShifts()} returns the correct value after
      * shifts have been added.
      */
     @Test
-    public void testGetShifts() {
-        System.out.println("getShifts");
-        
+    public void getShiftsReturnsCorrectValueWhenThereAreShifts() {
+        Event event = new Event();
         List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
                 new Shift("bar", new LinkedList<Role>(), true, true, true),
                 new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
-        List<Shift> expected = shifts;
+
         List<Shift> received = event.getShifts();
+
+        List<Shift> expected = shifts;
         assertEquals(expected, received);
-    }    // testGetShifts()
-        
+    }    // getShiftsReturnsCorrectValueWhenThereAreShifts()
+
     /**
      * Tests that the list returned from {@link Event#getShifts()} is
      * unmodifiable.
      */
     @Test
-    public void testGetShiftsUnmodifiable() {
-        System.out.println("getShifts - return value is unmodifiable");
-        
+    public void getShiftsReturnsImmutableList() {
+        Event event = new Event();
         List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
                 new Shift("bar", new LinkedList<Role>(), true, true, true),
                 new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
+
         List<Shift> list = event.getShifts();
-        
+
         Shift shift = new Shift("smurf", new LinkedList<Role>(), true, true, true);
         try {
             list.add(shift);
@@ -533,52 +525,53 @@ public class EventTest {
             fail("able to replace shifts in return value");
         } catch (RuntimeException e) {    // try
         }    // catch
-    }    // testGetShiftsUnmodifiable()
-        
+    }    // getShiftsReturnsImmutableList()
+
     /**
      * Tests that the elements of the list returned from
      * {@link Event#getShifts()} are modifiable.
      */
     @Test
-    public void testGetShiftsElementsModifiable() {
-        System.out.println("getShifts - elements of return value are modifiable");
-        
+    public void getShiftsReturnsListWhoseElementsAreMutable() {
+        Event event = new Event();
         List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
                 new Shift("bar", new LinkedList<Role>(), true, true, true),
                 new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
+
         List<Shift> list = event.getShifts();
+
         int index = 0;
         Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
         list.get(index).setVolunteer(volunteer);
-    }    // testGetShiftsElementsModifiable()
-        
+    }    // getShiftsReturnsListWhoseElementsAreMutable()
+
     /**
      * Tests that changes to the elements of the list returned from
-     * {@link Event#getShifts()} are persistent.
+     * {@link Event#getShifts()} do not affect the event.
      */
     @Test
-    public void testGetShiftsPersistence() {
-        System.out.println("getShifts - persistence");
-        
+    public void changesToReturnValueOfGetShiftsDoNotAffectEvent() {
+        Event event = new Event();
         List<Shift> shifts = Arrays.asList(new Shift("foo", new LinkedList<Role>(), true, true, true),
                 new Shift("bar", new LinkedList<Role>(), true, true, true),
                 new Shift("baz", new LinkedList<Role>(), true, true, true));
         for (Shift shift : shifts) {
             event.addShift(shift);
         }    // for
+
         List<Shift> list = event.getShifts();
+
         int index = 0;
         Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
         list.get(index).setVolunteer(volunteer);
-        list = null;
-        
+
         list = event.getShifts();
         Volunteer expected = volunteer;
         Volunteer received = list.get(index).getVolunteer();
         assertEquals(expected, received);
-    }    // testGetShiftsPersistence()
+    }    // changesToReturnValueOfGetShiftsDoNotAffectEvent()
 
 }    // EventTest

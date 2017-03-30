@@ -40,23 +40,6 @@ import static org.junit.Assert.*;
 public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> {
 
     /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("ManageVolunteerPanel");
-        System.out.println("================");
-    }    // setUpClass()
-
-    /**
-     * Prints unit test footer.
-     */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
      * Returns an application that can be used in tests.
      */
     private Application getTestApplication()  {
@@ -135,41 +118,40 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      * exception when the panel is not loaded.
      */
     @Test
-    public void testCreateElementNotLoadedNoException() {
-        System.out.println("createElement - not loadeed, no exception");
-
+    public void createElementDoesNotThrowExceptionWhenPanelHasNotBeenLoaded() {
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
+
         panel.createElement();
-    }    // testCreateElementNotLoadedNoException()
+    }    // createElementDoesNotThrowExceptionWhenPanelHasNotBeenLoaded()
 
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} does not return null
      * when the panel is not loaded.
      */
     @Test
-    public void testCreateElementNotLoadedNotNull() {
-        System.out.println("createElement - not loadeed, not null");
-
+    public void createElementDoesNotReturnNullWhenPanelHasNotBeenLoaded() {
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
+
         Volunteer received = panel.createElement();
+
         assertNotNull(received);
-    }    // testCreateElementNotLoadedNotNull()
+    }    // createElementDoesNotReturnNullWhenPanelHasNotBeenLoaded()
 
     /**
      * Tests that {@link ManageVolunteerPanel#createElement()} returns an "empty"
      * volunteer when the panel is not loaded.
      */
     @Test
-    public void testCreateElementNotLoaded() {
-        System.out.println("createElement - not loadeed");
-
+    public void createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded() {
         ManageVolunteerPanel panel = getPanel();
         panel.loadElement(null);
-        Volunteer expected = new Volunteer("", "", "", "");
+
         Volunteer received = panel.createElement();
+
+        Volunteer expected = new Volunteer("", "", "", "");
         assertEquals(expected, received);
-    }    // testCreateElementNotLoaded()
+    }    // createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded()
 
 }    // ManageVolunteerPanelTest

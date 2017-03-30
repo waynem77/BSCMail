@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,204 +19,164 @@
 
 package bscmail.gui;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.util.Arrays;
+import java.util.Collection;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link ManageElementPanelLayoutHelper}.
- * 
+ *
  * @author Wayne Miller
  */
 public class ManageElementPanelLayoutHelperTest {
-    
-    /**
-     * Variable used to hold the layout manager being tested.
-     */
-    ManageElementPanelLayoutHelper layoutHelper;
-    
-    /**
-     * Variable used to hold the container used in testing.
-     */
-    Container container;
-    
-    /**
-     * Variable used to hold the string used in testing.
-     */
-    String name;
-    
-    /**
-     * Variable used to hold the component used in testing.
-     */
-    Component component;
-    
-    /**
-     * Prints unit test header.
-     */
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("ManageElementPanelLayoutHelper");
-        System.out.println("==============================");
-    }    // setUpClass()
 
-    /**
-     * Prints unit test footer.
-     */
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println();
-    }    // tearDownClass(
-
-    /**
-     * Sets up the test environment before each test.
-     */
-    @Before
-    public void setUp() {
-        container = new JPanel();
-        layoutHelper = new ManageElementPanelLayoutHelper(container);
-        name = "Foo";
-        component = new JTextField();
-    }    // setUp()
-
-    /**
-     * Cleans up the test environment after each test.
-     */
-    @After
-    public void tearDown() {
-        layoutHelper = null;
-        container = null;
-        name = null;
-        component = null;
-    }    // tearDown()
-    
-    /*
-     * Unit tests.
-     */
-    
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#ManageElementPanelLayoutHelper(Container)}
      * throws a {@link NullPointerException} when container is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testConstructorContainerNull() {
-        System.out.println("constructor - container is null");
-        
-        container = null;
-        layoutHelper = new ManageElementPanelLayoutHelper(container);
-    }    // testConstructorContainerNull()
-    
+    public void constructorThrowsExceptionWhenContainerIsNull() {
+        Container container = null;
+
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+    }    // constructorThrowsExceptionWhenContainerIsNull()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#ManageElementPanelLayoutHelper(Container)}
      * does not throw an exception when the container is not null.
      */
     @Test
-    public void testConstructorContainerNoException() {
-        System.out.println("constructor - no exception");
-        
-        layoutHelper = new ManageElementPanelLayoutHelper(container);
-    }    // testConstructorContainerNoException()
-    
+    public void constructorDoesNotThrowExceptionWhenContainerIsNotNull() {
+        Container container = new JPanel();
+
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+    }    // constructorDoesNotThrowExceptionWhenContainerIsNotNull()
+
     /**
      * Tests that {@link ManageElementPanelLayoutHelper#setLayoutManager()} does
      * not throw an exception.
      */
     @Test
-    public void testSetLayoutManagerContainerNoException() {
-        System.out.println("setLayoutManager - no exception");
+    public void setLayoutManagerDoesNotThrowException() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
 
         layoutHelper.setLayoutManager();
-    }    // testSetLayoutManagerContainerNoException()
-    
+    }    // setLayoutManagerDoesNotThrowException()
+
     /**
      * Tests that {@link ManageElementPanelLayoutHelper#setLayoutManager()} sets
      * the appropriate layout manager.
      */
     @Test
-    public void testSetLayoutManager() {
-        System.out.println("setLayoutManager");
-
+    public void setLayoutManagerSetsLayoutManagerProperly() {
+        Container container = new JPanel();
         container.setLayout(new FlowLayout());
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+
         layoutHelper.setLayoutManager();
+
         Class expected = GridBagLayout.class;
         Class received = container.getLayout().getClass();
         assertEquals(expected, received);
-    }    // testSetLayoutManager()
-    
+    }    // setLayoutManagerSetsLayoutManagerProperly()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * throws a {@link NullPointerException} when the name is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testAddComponentNameNull() {
-        System.out.println("addComponent - name is null");
-        
+    public void addComponentThrowsExceptionWhenNameIsNull() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
-        name = null;
+        String name = null;
+        Component component = new JTextField();
+
         layoutHelper.addComponent(name, component);
-    }    // testAddComponentNameNull()
-    
+    }    // addComponentThrowsExceptionWhenNameIsNull()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * throws a {@link NullPointerException} when the component is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testAddComponentComponentNull() {
-        System.out.println("addComponent - component is null");
-        
+    public void addComponentThrowsExceptionWhenComponentIsNull() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
-        component = null;
+        String name = "Foo";
+        Component component = null;
+
         layoutHelper.addComponent(name, component);
-    }    // testAddComponentComponentNull()
-    
+    }    // addComponentThrowsExceptionWhenComponentIsNull()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * does not throw an exception when neither parameter is null.
      */
     @Test
-    public void testAddComponentNoException() {
-        System.out.println("addComponent - no exception");
-        
+    public void addComponentDoesNotThrowExceptionWhenNoParameterIsNull() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
+        String name = "Foo";
+        Component component = new JTextField();
+
         layoutHelper.addComponent(name, component);
-    }    // testAddComponentNoException()
-    
+    }    // addComponentDoesNotThrowExceptionWhenNoParameterIsNull()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * adds exactly two components to the container.
      */
     @Test
-    public void testAddComponentAddsTwoComponents() {
-        System.out.println("addComponent - adds exactly two components");
-        
+    public void addComponentAddsExactlyTwoComponentsToTheContainer() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
         container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+
         layoutHelper.addComponent(name, component);
+
         Component[] components = container.getComponents();
         int expected = 2;
         int received = components.length;
         assertEquals(expected, received);
-    }    // testAddComponentAddsTwoComponents()
-    
+    }    // addComponentAddsExactlyTwoComponentsToTheContainer()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * adds a label to the container.
      */
     @Test
-    public void testAddComponentAddsLabel() {
-        System.out.println("addComponent - adds label");
-        
+    public void addComponentAddsALabelToTheContainer() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
         container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+
         layoutHelper.addComponent(name, component);
+
         boolean hasLabel = false;
         Component[] components = container.getComponents();
         for (Component c : components) {
@@ -226,20 +186,24 @@ public class ManageElementPanelLayoutHelperTest {
             }    // if
         }    // for
         assertTrue(hasLabel);
-    }    // testAddComponentAddsLabel()
-    
+    }    // addComponentAddsALabelToTheContainer()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * adds the correct label to the container.
      */
     @Test
-    public void testAddComponentAddsCorrectLabel() {
-        System.out.println("addComponent - adds correct label");
-        
+    public void addComponentAddsTheCorrectLabelToTheContainer() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
         container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+
         layoutHelper.addComponent(name, component);
+
         Component[] components = container.getComponents();
         String expected = name;
         String received = null;
@@ -251,18 +215,24 @@ public class ManageElementPanelLayoutHelperTest {
             }    // if
         }    // for
         assertEquals(expected, received);
-    }    // testAddComponentAddsCorrectLabel()
-    
+    }    // addComponentAddsTheCorrectLabelToTheContainer()
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * adds the component to the container.
      */
     @Test
-    public void testAddComponentAddsComponent() {
-        System.out.println("addComponent - adds component");
-        
+    public void addComponentAddsTheComponentToTheContainer() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+
+        layoutHelper.addComponent(name, component);
+
         container.removeAll();
         layoutHelper.addComponent(name, component);
         Collection<Component> components = Arrays.asList(container.getComponents());
@@ -270,4 +240,4 @@ public class ManageElementPanelLayoutHelperTest {
         assertTrue(hasContainer);
     }    // testAddComponentAddsComponent()
 
-}    // ManageElementPanelLayoutHelperTest
+}    // addComponentAddsTheComponentToTheContainer

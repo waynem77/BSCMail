@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,14 +19,15 @@
 
 package bscmail.gui;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  * Abstract base class for unit tests for implementations of
  * {@link ManageElementPanel}.
- * 
+ *
  * @param <E> the type of element being manipulated
  * @since 2.0
  * @author Wayne Miller
@@ -39,310 +40,316 @@ public abstract class ManageElementPanelTest<E> {
         @Override public void elementValidityChanged() { changed = true; }
         public boolean panelChanged() { return changed; }
     }    // TestObserver
-    
+
     /**
      * Returns the manage element panel to be tested.
-     * 
+     *
      * @return the manage element panel to be tested
      */
     protected abstract ManageElementPanel getPanel();
 
     /**
      * Returns an invalid element to use in testing.
-     * 
+     *
      * @return an invalid element to use in testing
      */
     protected abstract E getInvalidElement();
-    
+
     /**
      * Returns a valid element to use in testing.
-     * 
+     *
      * @return a valid element to use in testing
      */
     protected abstract E getElement();
-    
+
     /*
      * Unit tests
      */
-    
+
     /* loadElement */
-    
+
     /**
      * Tests that {@link ManageElementPanel#loadElement(Object)} does not throw
      * an exception when element is null.
      */
     @Test
-    public void testLoadElementNullNoException() {
-        System.out.println("loadElement - null, no exception");
-        
+    public void loadElementDoesNotThrowExceptionWhenElementIsNull() {
         ManageElementPanel<E> panel = getPanel();
         E element = null;
+
         panel.loadElement(element);
-    }    // testLoadElementNullNoException()
-    
+    }    // loadElementDoesNotThrowExceptionWhenElementIsNull()
+
     /**
      * Tests that {@link ManageElementPanel#loadElement(Object)} does not throw
      * an exception when element is not null.
      */
     @Test
-    public void testLoadElementNotNullNoException() {
-        System.out.println("loadElement - no exception");
-        
+    public void loadElementDoesNotThrowExceptionWhenElementIsNotNull() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
+
         panel.loadElement(element);
-    }    // testLoadElementNotNullNoException()
+    }    // loadElementDoesNotThrowExceptionWhenElementIsNotNull()
 
     /* createElement */
-    
+
     /**
      * Tests that {@link ManageElementPanel#createElement()} does not throw
      * an exception when the panel is loaded.
      */
     @Test
-    public void testCreateElementNoException() {
-        System.out.println("createElement - no exception");
-        
+    public void createElementDoesNotThrowExceptionWhenPanelIsLoaded() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
         panel.loadElement(element);
+
         panel.createElement();
-    }    // testCreateElementNoException()
-    
+    }    // createElementDoesNotThrowExceptionWhenPanelIsLoaded()
+
     /**
      * Tests that {@link ManageElementPanel#createElement()} does not return
      * null when the panel is loaded.
      */
     @Test
-    public void testCreateElementNotNull() {
-        System.out.println("createElement - not null");
-        
+    public void createElementDoesNotReturnNullWhenPanelIsLoaded() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
         panel.loadElement(element);
+
         E received = panel.createElement();
+
         assertNotNull(received);
-    }    // testCreateElementNotNull()
-    
+    }    // createElementDoesNotReturnNullWhenPanelIsLoaded()
+
     /**
      * Tests that {@link ManageElementPanel#createElement()} returns the correct
      * value when the panel is loaded.
      */
     @Test
-    public void testCreateElement() {
-        System.out.println("createElement");
-        
+    public void createElementReturnsCorrectValueWhenPanelIsLoaded() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
         panel.loadElement(element);
-        E expected = element;
+
         E received = panel.createElement();
+
+        E expected = element;
         assertEquals(expected, received);
-    }    // testCreateElement()
+    }    // createElementReturnsCorrectValueWhenPanelIsLoaded()
 
     /* elementIsValid */
-    
+
     /**
      * Tests that {@link ManageElementPanel#elementIsValid()} does not throw an
-     * exception when the element is null.
+     * exception when the loaded element is null.
      */
     @Test
-    public void testElementIsValidNullNoException() {
-        System.out.println("elementIsValid - element is null, no exception");
-        
+    public void elementIsValidDoesNotThrowExceptionWhenLoadedElementIsNull() {
         ManageElementPanel<E> panel = getPanel();
         E element = null;
         panel.loadElement(element);
+
         panel.elementIsValid();
-    }    // testElementIsValidNullNoException()
-    
-    /**
-     * Tests that {@link ManageElementPanel#elementIsValid()} does not throw an
-     * exception when the element is invalid.
-     */
-    @Test
-    public void testElementIsValidInvalidNoException() {
-        System.out.println("elementIsValid - element is invalid, no exception");
-        
-        ManageElementPanel<E> panel = getPanel();
-        E element = getInvalidElement();
-        panel.loadElement(element);
-        panel.elementIsValid();
-    }    // testElementIsValidInvalidNoException()
-    
+    }    // elementIsValidDoesNotThrowExceptionWhenLoadedElementIsNull()
+
     /**
      * Tests that {@link ManageElementPanel#elementIsValid()} returns false when
-     * when the element is invalid.
+     * when the loaded element is null.
      */
     @Test
-    public void testElementIsValidInvalid() {
-        System.out.println("elementIsValid - element is invalid");
-        
+    public void elementIsValidReturnsFalseWhenLoadedElementIsNull() {
+        ManageElementPanel<E> panel = getPanel();
+        E element = null;
+        panel.loadElement(element);
+
+        boolean received = panel.elementIsValid();
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // elementIsValidReturnsFalseWhenLoadedElementIsNull()
+
+    /**
+     * Tests that {@link ManageElementPanel#elementIsValid()} does not throw an
+     * exception when the loaded element is invalid.
+     */
+    @Test
+    public void elementIsValidDoesNotThrowExceptionWhenLoadedElementIsInvalid() {
         ManageElementPanel<E> panel = getPanel();
         E element = getInvalidElement();
         panel.loadElement(element);
-        boolean expected = false;
+
+        panel.elementIsValid();
+    }    // elementIsValidDoesNotThrowExceptionWhenLoadedElementIsInvalid()
+
+    /**
+     * Tests that {@link ManageElementPanel#elementIsValid()} returns false when
+     * when the loaded element is invalid.
+     */
+    @Test
+    public void elementIsValidReturnsFalseWhenLoadedElementIsInvalid() {
+        ManageElementPanel<E> panel = getPanel();
+        E element = getInvalidElement();
+        panel.loadElement(element);
+
         boolean received = panel.elementIsValid();
+
+        boolean expected = false;
         assertEquals(expected, received);
-    }    // testElementIsValidInvalid()
-    
+    }    // elementIsValidReturnsFalseWhenLoadedElementIsInvalid()
+
     /**
      * Tests that {@link ManageElementPanel#elementIsValid()} does not throw an
-     * exception when the element is valid.
+     * exception when the loaded element is valid.
      */
     @Test
-    public void testElementIsValidValidNoException() {
-        System.out.println("elementIsValid - element is valid, no exception");
-        
+    public void elementIsValidDoesNotThrowExceptionWhenLoadedElementIsValid() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
         panel.loadElement(element);
+
         panel.elementIsValid();
-    }    // testElementIsValidValidNoException()
-    
+    }    // elementIsValidDoesNotThrowExceptionWhenLoadedElementIsValid()
+
     /**
      * Tests that {@link ManageElementPanel#elementIsValid()} returns true when
-     * when the element is valid.
+     * when the loaded element is valid.
      */
     @Test
-    public void testElementIsValidValid() {
-        System.out.println("elementIsValid - element is invalid");
-        
+    public void elementIsValidReturnsTrueWhenLoadedElementIsValid() {
         ManageElementPanel<E> panel = getPanel();
         E element = getElement();
         panel.loadElement(element);
-        boolean expected = true;
+
         boolean received = panel.elementIsValid();
+
+        boolean expected = true;
         assertEquals(expected, received);
-    }    // testElementIsValidValid()
-    
+    }    // elementIsValidReturnsTrueWhenLoadedElementIsValid()
+
     /* addObserver */
-    
+
     /**
      * Tests that
      * {@link ManageElementPanel#addObserver(ManageElementPanelObserver)} throws
      * a {@link NullPointerException} when observer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void testAddObsercerNull() {
-        System.out.println("addObserver - observer is null");
-        
+    public void addObserverThrowsExceptionWhenObserverIsNull() {
         ManageElementPanel<E> panel = getPanel();
         TestObserver observer = null;
+
         panel.addObserver(observer);
-    }    // testAddObsercerNull()
-    
+    }    // addObserverThrowsExceptionWhenObserverIsNull()
+
     /**
      * Tests that
      * {@link ManageElementPanel#addObserver(ManageElementPanelObserver)} does
      * not throw an exception when observer is not null.
      */
     @Test
-    public void testAddObsercerNoException() {
-        System.out.println("addObserver - no exception");
-        
+    public void addObserverDoesThrowsExceptionWhenObserverIsNotNull() {
         ManageElementPanel<E> panel = getPanel();
         TestObserver observer = new TestObserver();
+
         panel.addObserver(observer);
-    }    // testAddObsercerNoException()
+    }    // addObserverDoesThrowsExceptionWhenObserverIsNotNull()
 
     /* notifyObservers */
-    
+
     /**
      * Tests that {@link ManageElementPanel#notifyObservers()} does not throw an
      * exception when there are no observers.
      */
     @Test
-    public void testNotifyObserversNoObserversNoException() {
-        System.out.println("notifyObservers - no observers, no exception");
-        
+    public void notifyObserversDoesNotThrowExceptionWhenThereAreNoObservers() {
         ManageElementPanel<E> panel = getPanel();
+
         panel.notifyObservers();
-    }    // testNotifyObserversNoObserversNoException()
-    
+    }    // notifyObserversDoesNotThrowExceptionWhenThereAreNoObservers()
+
     /**
      * Tests that {@link ManageElementPanel#notifyObservers()} does not throw an
-     * exception when there is one observers.
+     * exception when there is one observer.
      */
     @Test
-    public void testNotifyObserversOneObserverNoException() {
-        System.out.println("notifyObservers - one observer, no exception");
-        
+    public void notifyObserversDoesNotThrowExceptionWhenThereIsOneObserver() {
         ManageElementPanel<E> panel = getPanel();
         panel.addObserver(new TestObserver());
+
         panel.notifyObservers();
-    }    // testNotifyObserversOneObserverNoException()
-    
+    }    // notifyObserversDoesNotThrowExceptionWhenThereIsOneObserver()
+
     /**
      * Tests that {@link ManageElementPanel#notifyObservers()} does not throw an
      * exception when there are multiple observers.
      */
     @Test
-    public void testNotifyObserversMultipleObserversNoException() {
-        System.out.println("notifyObservers - multiple observers, no exception");
-        
+    public void notifyObserversDoesNotThrowExceptionWhenThereAreMultipleObservers() {
         ManageElementPanel<E> panel = getPanel();
         panel.addObserver(new TestObserver());
         panel.addObserver(new TestObserver());
+
         panel.notifyObservers();
-    }    // testNotifyObserversMultipleObserversNoException()
-    
+    }    // notifyObserversDoesNotThrowExceptionWhenThereAreMultipleObservers()
+
     /**
-     * Tests that {@link ManageElementPanel#notifyObservers()} works properly.
+     * Tests that {@link ManageElementPanel#notifyObservers()} notifies the
+     * observers.
      */
     @Test
-    public void testNotifyObservers() {
-        System.out.println("notifyObservers");
-        
+    public void notifyObserversNotifiesAllObservers() {
         ManageElementPanel<E> panel = getPanel();
         List<TestObserver> observers = Arrays.asList(new TestObserver(), new TestObserver());
         for (TestObserver observer : observers) {
             panel.addObserver(observer);
         }    // for
+
         panel.notifyObservers();
+
         for (TestObserver observer : observers) {
             assertTrue(observer.panelChanged());
         }    // for
-    }    // testNotifyObservers()
-    
+    }    // notifyObserversNotifiesAllObservers()
+
     /**
      * Tests that {@link ManageElementPanel#notifyObservers()} is called automatically
      * when the validity of the object changes from invalid to valid.
      */
     @Test
-    public void testNotifyObserversAutoInvalidToValid() {
-        System.out.println("notifyObservers - called automatically when element changes from invalid to valid");
-        
+    public void notifyObserversIsCalledWhenObjectChangesFromInvalidToValid() {
         ManageElementPanel<E> panel = getPanel();
         panel.loadElement(getInvalidElement());
         List<TestObserver> observers = Arrays.asList(new TestObserver(), new TestObserver());
         for (TestObserver observer : observers) {
             panel.addObserver(observer);
         }    // for
+
         panel.loadElement(getElement());
+
         for (TestObserver observer : observers) {
             assertTrue(observer.panelChanged());
         }    // for
-    }    // testNotifyObserversAutoInvalidToValid()
-    
+    }    // notifyObserversIsCalledWhenObjectChangesFromInvalidToValid()
+
     /**
      * Tests that {@link ManageElementPanel#notifyObservers()} is called automatically
      * when the validity of the object changes from valid to invalid.
      */
     @Test
-    public void testNotifyObserversAutoValidToInvalid() {
-        System.out.println("notifyObservers - called automatically when element changes from invalid to valid");
-        
+    public void notifyObserversIsCalledWhenObjectChangesFromValidToInvalid() {
         ManageElementPanel<E> panel = getPanel();
         panel.loadElement(getElement());
         List<TestObserver> observers = Arrays.asList(new TestObserver(), new TestObserver());
         for (TestObserver observer : observers) {
             panel.addObserver(observer);
         }    // for
+
         panel.loadElement(getInvalidElement());
+
         for (TestObserver observer : observers) {
             assertTrue(observer.panelChanged());
         }    // for
-    }    // testNotifyObserversAutoValidToInvalid()
-    
+    }    // notifyObserversIsCalledWhenObjectChangesFromValidToInvalid()
+
 }    // ManageElementPanelTest

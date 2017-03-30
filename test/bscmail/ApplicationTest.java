@@ -21,8 +21,11 @@ package bscmail;
 
 import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -1153,8 +1156,9 @@ public class ApplicationTest {
     }    // setRolesDoesNotNotifyShiftsObservers()
 
     /**
-     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
-     * not notify any observers registered with
+     * Tests that a call to
+     * {@link Application#setEmailTemplate(bscmail.EmailTemplate)} does not
+     * notify any observers registered with
      * {@link Application#registerObserver(ShiftsObserver)}.
      */
     @Test

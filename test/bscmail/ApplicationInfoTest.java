@@ -21,7 +21,6 @@ package bscmail;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Unit tests for {@link ApplicationInfo}.

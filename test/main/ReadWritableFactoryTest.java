@@ -33,6 +33,7 @@ import static org.junit.Assert.*;
  * @param <T> The implementation of ReadWritable whose factory is being tested
  * @since 3.1
  */
+@Ignore
 abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
 
     /**
@@ -41,7 +42,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
      * @return the ReadWritableFactory implementation being tested
      */
     abstract protected ReadWritableFactory<T> getTestFactory();
-    
+
     /**
      * Returns a properties map appropriate for testing. It is important that
      * the map returned by this method contain all the properties that the
@@ -53,7 +54,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
      * @return a properties map appropriate for testing
      */
     abstract protected Map<String, Object> getTestProperties();
-    
+
     /**
      * Returns the ReadWriteable that ought to be created from the given
      * properties.  This method must never return null.
@@ -64,7 +65,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
      * properties
      */
     abstract protected T getReadWritableFromProperties(Map<String, Object> properties);
-    
+
     /*
      * Unit tests
      */
@@ -80,7 +81,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
 
         factory.constructReadWritable(properties);
     }    // constructReadWritableMapThrowsExceptionWhenPropertiesIsNull()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when properties is an empty map.
@@ -92,7 +93,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
 
         factory.constructReadWritable(properties);
     }    // constructReadWritableMapDoesNotThrowExceptionWhenPropertiesIsEmpty()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not return null when properties is an empty map.
@@ -115,13 +116,13 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
     public void constructReadWritableMapReturnsCorrectValueWhenPropertiesIsEmpty() {
         ReadWritableFactory<T> factory = getTestFactory();
         Map<String, Object> properties = new HashMap<>();
-        
+
         T received = factory.constructReadWritable(properties);
 
         T expected = getReadWritableFromProperties(properties);
         assertEquals(expected, received);
     }    // constructReadWritableMapReturnsCorrectValueWhenPropertiesIsEmpty()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when any property is missing.
@@ -156,7 +157,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             properties.remove(propertyKey);
 
             T received = factory.constructReadWritable(properties);
-            
+
             if (received == null) {
                 fail("Return value was null when key: " + propertyKey + " was missing.");
             }    // if
@@ -184,7 +185,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             }    // if
         }    // for
     }    // constructReadWritableMapReturnsCorrectValueWhenAnyPropertyIsMissing()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when any property is null.
@@ -219,7 +220,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             properties.put(propertyKey, null);
 
             T received = factory.constructReadWritable(properties);
-            
+
             if (received == null) {
                 fail("Return value was null when key: " + propertyKey + " was missing.");
             }    // if
@@ -238,7 +239,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
         for (String propertyKey : propertyKeys) {
             Map<String, Object> properties = getTestProperties();
             properties.put(propertyKey, null);
-            
+
             T received = factory.constructReadWritable(properties);
 
             T expected = getReadWritableFromProperties(properties);
@@ -247,7 +248,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             }    // if
         }    // for
     }    // constructReadWritableMapReturnsCorrectValueWhenAnyPropertyIsNull()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when any property is of an unexpected type.
@@ -286,7 +287,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             properties.put(propertyKey, newValue);
 
             T received = factory.constructReadWritable(properties);
-            
+
             if (received == null) {
                 fail("Return value was null when key: " + propertyKey + " was missing.");
             }    // if
@@ -316,7 +317,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             }    // if
         }    // for
     }    // constructReadWritableMapReturnsCorrectValueWhenAnyPropertyIsOfUnexpectedType()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when properties has all the necessary properties.
@@ -357,7 +358,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
         T expected = getReadWritableFromProperties(properties);
         assertEquals(expected, received);
     }    // constructReadWritableMapReturnsCorrectValueWhenPropertiesIsCorrect()
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when properties has extraneous properties.
@@ -372,7 +373,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
             newKey += "x";
         }    // while
         properties.put(newKey, -1.0);
-        
+
         factory.constructReadWritable(properties);
     }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasExtraneousProperties()
 
@@ -418,7 +419,7 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
     }    // constructReadWritableMapReturnsCorrectValueWhenPropertiesHasExtraneousProperties()
 
     // Still needed: has all properties, has extraneous properties, unexpected objects, inverseness
-    
+
     /**
      * Tests that {@link ReadWritableFactory#constructReadWritable(Map)} does
      * not throw an exception when properties is created by the appropriate
@@ -465,5 +466,5 @@ abstract public class ReadWritableFactoryTest<T extends ReadWritable> {
         T expected = original;
         assertEquals(expected, received);
     }    // constructReadWritableMapReturnsCorrectValueWhenPropertiesComesFromRW()
-    
+
 }    // ReadWritableFactoryTest
