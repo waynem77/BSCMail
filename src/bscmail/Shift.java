@@ -21,8 +21,8 @@ package bscmail;
 
 import java.io.Serializable;
 import java.util.*;
-
-import main.*;
+import main.ReadWritable;
+import main.ReadWritableFactory;
 
 /**
  * Represents a BSC volunteer shift.
