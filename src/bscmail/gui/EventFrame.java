@@ -20,16 +20,32 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.Event;
 import bscmail.EventPropertiesObserver;
+import bscmail.EventProperty;
+import bscmail.Shift;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
-import bscmail.*;
-import java.awt.Component;
+import bscmail.Volunteer;
+import bscmail.gui.util.LabeledComponent;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.text.*;
-import java.util.*;
-import javax.swing.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+
 
 /**
  * A graphical interface for an {@link Event}.
@@ -189,37 +205,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // setModel()
     }    // ShiftComboBox
 
-    /**
-     * Represents a paired label and component.
-     *
-     * @param <E> the type of component paired
-     */
-    private class LabeledComponent<E extends Component> {
-
-        /**
-         * The label.
-         */
-        public final JLabel label;
-
-        /**
-         * The component.
-         */
-        public final E component;
-
-        /**
-         * Constructs a new labeled component.
-         *
-         * @param label the text of the label; may not be null
-         * @param component the component; may not be null
-         */
-        public LabeledComponent(String label, E component) {
-            assert (label != null);
-            assert (component != null);
-            this.label = new JLabel(label);
-            this.component = component;
-        }    // LabeledComponent()
-    }    // LabeledComponent
-
     /* Swing controls */
 
     /**
@@ -321,13 +306,13 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            EventProperty eventProperty = eventPropertyControl.component.getEventProperty();
-            eventProperty.setValue(eventPropertyControl.component.getValue());
+            EventProperty eventProperty = eventPropertyControl.getComponent().getEventProperty();
+            eventProperty.setValue(eventPropertyControl.getComponent().getValue());
             event.addEventProperty(eventProperty);
         }    // for
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Shift shift = shiftControl.component.getShift();
-            shift.setVolunteer(shiftControl.component.getVolunteer());
+            Shift shift = shiftControl.getComponent().getShift();
+            shift.setVolunteer(shiftControl.getComponent().getVolunteer());
             event.addShift(shift);
         }    // for
 
@@ -391,16 +376,16 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         List<String> selections = new LinkedList<>();
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Volunteer volunteer = shiftControl.component.getVolunteer();
+            Volunteer volunteer = shiftControl.getComponent().getVolunteer();
             selections.add((volunteer == null) ? null : volunteer.getName());
-            container.remove(shiftControl.label);
-            container.remove(shiftControl.component);
+            container.remove(shiftControl.getLabel());
+            container.remove(shiftControl.getComponent());
         }    // component
         shiftControls.clear();
         for (Shift shift : shifts) {
             LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
-            container.add(shiftControl.label);
-            container.add(shiftControl.component);
+            container.add(shiftControl.getLabel());
+            container.add(shiftControl.getComponent());
             shiftControls.add(shiftControl);
         }    // for
         pack();
@@ -433,10 +418,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // if
         List<String> selectedVolunteers = new LinkedList<>();
         for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Volunteer selectedVolunteer = shiftControl.component.getVolunteer();
+            Volunteer selectedVolunteer = shiftControl.getComponent().getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
-            shiftControl.component.setModel(this.getQualifiedVolunteers(shiftControl.component.getShift(), this.volunteers));
+            shiftControl.getComponent().setModel(this.getQualifiedVolunteers(shiftControl.getComponent().getShift(), this.volunteers));
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
@@ -462,7 +447,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // if
         final int NULL_INDEX = 0;
         for (int controlIndex = 0; controlIndex < shiftControls.size(); ++controlIndex) {
-            ShiftComboBox shiftControl = shiftControls.get(controlIndex).component;
+            ShiftComboBox shiftControl = shiftControls.get(controlIndex).getComponent();
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
@@ -522,15 +507,15 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         List<String> selections = new LinkedList<>();
         for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            container.remove(eventPropertyControl.label);
-            container.remove(eventPropertyControl.component);
+            container.remove(eventPropertyControl.getLabel());
+            container.remove(eventPropertyControl.getComponent());
         }    // component
         eventPropertyControls.clear();
         for (EventProperty eventProperty : eventProperties) {
             LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
                 .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
-            container.add(eventPropertyControl.label);
-            container.add(eventPropertyControl.component);
+            container.add(eventPropertyControl.getLabel());
+            container.add(eventPropertyControl.getComponent());
             eventPropertyControls.add(eventPropertyControl);
         }    // for
         pack();
@@ -579,10 +564,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     private boolean isAncestorOfAll(List<LabeledComponent<ShiftComboBox>> list) {
         for (LabeledComponent element : list) {
-            if (! isAncestorOf(element.label)) {
+            if (! isAncestorOf(element.getLabel())) {
                 return false;
             }    //
-            if (! isAncestorOf(element.component)) {
+            if (! isAncestorOf(element.getComponent())) {
                 return false;
             }    //
         }    // for
@@ -604,8 +589,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assert (labeledComboBoxes != null);
         for (LabeledComponent<ShiftComboBox> labeledComboBoxe : labeledComboBoxes) {
             assert (labeledComboBoxe != null);
-            assert (labeledComboBoxe.component != null);
-            if (comboBoxContainsNull(labeledComboBoxe.component)) {
+            assert (labeledComboBoxe.getComponent() != null);
+            if (comboBoxContainsNull(labeledComboBoxe.getComponent())) {
                 return true;
             }    // if
         }    // for
