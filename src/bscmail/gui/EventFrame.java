@@ -27,12 +27,13 @@ import bscmail.Shift;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
 import bscmail.Volunteer;
+import bscmail.gui.util.GroupedGrid;
 import bscmail.gui.util.LabeledComponent;
-import java.awt.Container;
-import java.awt.GridLayout;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,8 +41,6 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -54,7 +53,7 @@ import javax.swing.SpinnerDateModel;
 public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObserver,
                                                   EventPropertiesObserver {
 
-    /* Private Classes */
+    /* Private classes */
 
     /**
      * Wrapper for a volunteer. When displayed in a combo box, the container
@@ -208,42 +207,49 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     /* Swing controls */
 
     /**
-     * The panel that contains the "standard" event controls.
+     * The grid of controls.
      */
-    private final JPanel standardPanel;
-
-    /**
-     * The panel that contains the dynamic event properties.
-     */
-    private final JPanel eventPropertiesPanel;
-
-    /**
-     * The panel that contains the shifts.
-     */
-    private final JPanel shiftsPanel;
+    private final GroupedGrid controlGrid;
 
     /**
      * Date selector control.
      */
     private final JSpinner dateControl;
 
-    /**
-     * Shift dropdown controls.
-     */
-    private final List<LabeledComponent<ShiftComboBox>> shiftControls;
+    /* Other private variables. */
 
     /**
-     * Other private variables.
+     * The calling application.
      */
-
     private final Application application;
 
+    /**
+     * The list of volunteers.
+     */
     private final List<Volunteer> volunteers;
 
+
+    /* "Enums" representing the groups for the grid */
+
     /**
-     * Event Property textField controls.
+     * The standard control group.
      */
-    private final List<LabeledComponent<EventPropertiesTextField>> eventPropertyControls;
+    private static final int STANDARD_GROUP = 0;
+
+    /**
+     * The event properties group.
+     */
+    private static final int EVENT_PROPERTIES_GROUP = 1;
+
+    /**
+     * The shifts group.
+     */
+    private static final int SHIFTS_GROUP = 2;
+
+    /**
+     * The total number of groups.
+     */
+    private static final int GROUPS = 3;
 
     /*
      * Public API
@@ -257,7 +263,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     public EventFrame(Application application) {
         if (application == null) {
-            throw new NullPointerException("applicaiton may not be null");
+            throw new NullPointerException("application may not be null");
         }    // if
         this.application = application;
 
@@ -268,25 +274,20 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         setTitle(application.getApplicationName() + " - Event Setup");
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        standardPanel = new JPanel();
-        add(standardPanel);
-        eventPropertiesPanel = new JPanel();
-        add(eventPropertiesPanel);
-        shiftsPanel = new JPanel();
-        add(shiftsPanel);
+        controlGrid = new GroupedGrid(GROUPS);
+        add(controlGrid);
 
-        standardPanel.setLayout(new GridLayout(0, 2));
-        standardPanel.add(new JLabel("Date:"));
         dateControl = new JSpinner(new SpinnerDateModel());
         SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
-        standardPanel.add(dateControl);
-        eventPropertiesPanel.setLayout(new GridLayout(0, 2));
-        eventPropertyControls = new LinkedList<>();
+        List<LabeledComponent> components = Arrays.asList(new LabeledComponent("Date:", dateControl));
+        controlGrid.setComponents(components, STANDARD_GROUP);
+
+        controlGrid.setComponents(new LinkedList<LabeledComponent>(), EVENT_PROPERTIES_GROUP);
+        controlGrid.setComponents(new LinkedList<LabeledComponent>(), SHIFTS_GROUP);
+
         setEventProperties(eventProperties);
 
-        shiftsPanel.setLayout(new GridLayout(0, 2));
-        shiftControls = new LinkedList<>();
         setShifts(shifts);
 
         application.registerObserver((EventPropertiesObserver)this);
@@ -305,14 +306,14 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assertInvariant();
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
-        for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            EventProperty eventProperty = eventPropertyControl.getComponent().getEventProperty();
-            eventProperty.setValue(eventPropertyControl.getComponent().getValue());
+        for (EventPropertiesTextField eventPropertyControl : getEventPropertyControls()) {
+            EventProperty eventProperty = eventPropertyControl.getEventProperty();
+            eventProperty.setValue(eventPropertyControl.getValue());
             event.addEventProperty(eventProperty);
         }    // for
-        for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Shift shift = shiftControl.getComponent().getShift();
-            shift.setVolunteer(shiftControl.getComponent().getVolunteer());
+        for (ShiftComboBox shiftControl : getShiftControls()) {
+            Shift shift = shiftControl.getShift();
+            shift.setVolunteer(shiftControl.getVolunteer());
             event.addShift(shift);
         }    // for
 
@@ -351,6 +352,38 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
 
     /**
+     * Returns the list of event property controls.
+     *
+     * @since 3.1
+     * @return the list of event property controls
+     */
+    private List<EventPropertiesTextField> getEventPropertyControls() {
+        List<Component> rawComponents = controlGrid.getComponents(EVENT_PROPERTIES_GROUP);
+        List<EventPropertiesTextField> eventPropertyControls = new LinkedList<>();
+        for (Component component : rawComponents) {
+            assert (component instanceof EventPropertiesTextField);
+            eventPropertyControls.add((EventPropertiesTextField)component);
+        }    // for
+        return eventPropertyControls;
+    }    // getEventPropertyControls()
+
+    /**
+     * Returns the list of shift controls.
+     *
+     * @since 3.1
+     * @return the list of shift controls
+     */
+    private List<ShiftComboBox> getShiftControls() {
+        List<Component> rawComponents = controlGrid.getComponents(SHIFTS_GROUP);
+        List<ShiftComboBox> shiftControls = new LinkedList<>();
+        for (Component component : rawComponents) {
+            assert (component instanceof ShiftComboBox);
+            shiftControls.add((ShiftComboBox)component);
+        }    // for
+        return shiftControls;
+    }    // getShiftControls()
+
+    /**
      * Sets the list of shifts displayed in the frame to the given list. The
      * volunteers selected in the comboboxes remain selected. If the new list
      * of shifts is smaller than the existing list, the "extra" comboboxes
@@ -365,8 +398,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @throws NullPointerException if {@code shifts} contains any null elements
      */
     final void setShifts(List<Shift> shifts) {
-        final Container container = shiftsPanel;
-
         if (shifts == null) {
             shifts = new ArrayList<>();
         }    // if
@@ -375,19 +406,17 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // if
 
         List<String> selections = new LinkedList<>();
-        for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Volunteer volunteer = shiftControl.getComponent().getVolunteer();
+        for (ShiftComboBox shiftControl : getShiftControls()) {
+            Volunteer volunteer = shiftControl.getVolunteer();
             selections.add((volunteer == null) ? null : volunteer.getName());
-            container.remove(shiftControl.getLabel());
-            container.remove(shiftControl.getComponent());
-        }    // component
-        shiftControls.clear();
+        }    // for
+
+        List<LabeledComponent> components = new LinkedList<>();
         for (Shift shift : shifts) {
             LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
-            container.add(shiftControl.getLabel());
-            container.add(shiftControl.getComponent());
-            shiftControls.add(shiftControl);
+            components.add(shiftControl);
         }    // for
+        controlGrid.setComponents(components, SHIFTS_GROUP);
         pack();
         setSelectedVolunteers(selections);
     }    // setShifts()
@@ -417,11 +446,11 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             this.volunteers.addAll(volunteers);
         }    // if
         List<String> selectedVolunteers = new LinkedList<>();
-        for (LabeledComponent<ShiftComboBox> shiftControl : shiftControls) {
-            Volunteer selectedVolunteer = shiftControl.getComponent().getVolunteer();
+        for (ShiftComboBox shiftControl : getShiftControls()) {
+            Volunteer selectedVolunteer = shiftControl.getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
-            shiftControl.getComponent().setModel(this.getQualifiedVolunteers(shiftControl.getComponent().getShift(), this.volunteers));
+            shiftControl.setModel(this.getQualifiedVolunteers(shiftControl.getShift(), this.volunteers));
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
@@ -446,8 +475,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             volunteers = new ArrayList<>();
         }    // if
         final int NULL_INDEX = 0;
+        List<ShiftComboBox> shiftControls = getShiftControls();
         for (int controlIndex = 0; controlIndex < shiftControls.size(); ++controlIndex) {
-            ShiftComboBox shiftControl = shiftControls.get(controlIndex).getComponent();
+            ShiftComboBox shiftControl = shiftControls.get(controlIndex);
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
@@ -496,8 +526,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @throws NullPointerException if {@code eventProperties} contains any null elements
      */
     final void setEventProperties(List<EventProperty> eventProperties) {
-        final Container container = eventPropertiesPanel;
-
         if (eventProperties == null) {
             eventProperties = new ArrayList<>();
         }    // if
@@ -505,19 +533,13 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             throw new NullPointerException("event properties may not contain null");
         }    // if
 
-        List<String> selections = new LinkedList<>();
-        for (LabeledComponent<EventPropertiesTextField> eventPropertyControl : eventPropertyControls) {
-            container.remove(eventPropertyControl.getLabel());
-            container.remove(eventPropertyControl.getComponent());
-        }    // component
-        eventPropertyControls.clear();
+        List<LabeledComponent> components = new LinkedList<>();
         for (EventProperty eventProperty : eventProperties) {
             LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
                 .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
-            container.add(eventPropertyControl.getLabel());
-            container.add(eventPropertyControl.getComponent());
-            eventPropertyControls.add(eventPropertyControl);
+            components.add(eventPropertyControl);
         }    // for
+        controlGrid.setComponents(components, EVENT_PROPERTIES_GROUP);
         pack();
     }    // setEventProperties()
 
@@ -527,74 +549,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     private void assertInvariant() {
         assert (application != null);
         assert (dateControl != null);
-        assert (isAncestorOf(dateControl));
-        assert (shiftControls != null);
-        assert (! shiftControls.contains(null));
-        assert (isAncestorOfAll(shiftControls));
-        assert (! anyComboBoxContainsNull(shiftControls));
+        assert (isAncestorOf(controlGrid));
         assert (volunteers != null);
         assert (! volunteers.contains(null));
-        assert (eventPropertyControls != null);
-        assert (! eventPropertyControls.contains(null));
     }    // assertInvariant()
-
-    /**
-     * Returns true if the given combo box contains null.  The given combo box
-     * is required to have a default combo box model; if not, behavior is
-     * undefined.
-     *
-     * @param comboBox the combo box to check; may not be null; must have a
-     * default combo box model
-     * @return true if {@code comboBox} contains null; false otherwise
-     */
-    private boolean comboBoxContainsNull(JComboBox comboBox) {
-        assert (comboBox != null);
-        DefaultComboBoxModel model = (DefaultComboBoxModel)comboBox.getModel();
-        assert (model != null);
-        return (model.getIndexOf(null) >= 0);
-    }    // comboBoxContainsNull()
-
-    /**
-     * Returns true if the frame is the ancestor of all the components contained
-     * within the elements in the given list.
-     *
-     * @param list the labeled components to check
-     * @return true if the frame is the ancestor of all the components contained
-     * within the elements in {@code list}; false otherwise
-     */
-    private boolean isAncestorOfAll(List<LabeledComponent<ShiftComboBox>> list) {
-        for (LabeledComponent element : list) {
-            if (! isAncestorOf(element.getLabel())) {
-                return false;
-            }    //
-            if (! isAncestorOf(element.getComponent())) {
-                return false;
-            }    //
-        }    // for
-        return true;
-    }    // isAncestorOfAll()
-
-    /**
-     * Returns true if any of the given combo boxes contains null. The given
-     * combo boxes are required to be non-null and have a default combo box
-     * model; if not, behavior is undefined.
-     *
-     * @param labeledComboBoxes the labeled combo boxes to check; may not be
-     * null; may not contain null; all elements must have a default combo box
-     * model
-     * @return true if any combobox contained within any element of
-     * {@code comboBoxes} contains null; false otherwise
-     */
-    private boolean anyComboBoxContainsNull(List<LabeledComponent<ShiftComboBox>> labeledComboBoxes) {
-        assert (labeledComboBoxes != null);
-        for (LabeledComponent<ShiftComboBox> labeledComboBoxe : labeledComboBoxes) {
-            assert (labeledComboBoxe != null);
-            assert (labeledComboBoxe.getComponent() != null);
-            if (comboBoxContainsNull(labeledComboBoxe.getComponent())) {
-                return true;
-            }    // if
-        }    // for
-        return false;
-    }    // anyComboBoxContainsNull()
 
 }    // EventFrame
