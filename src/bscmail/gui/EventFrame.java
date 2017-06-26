@@ -29,6 +29,7 @@ import bscmail.ShiftsObserver;
 import bscmail.Volunteer;
 import bscmail.gui.util.GroupedGrid;
 import bscmail.gui.util.LabeledComponent;
+import bscmail.gui.util.VolunteerDisplayWrapper;
 import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,7 +39,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -54,47 +54,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
                                                   EventPropertiesObserver {
 
     /* Private classes */
-
-    /**
-     * Wrapper for a volunteer. When displayed in a combo box, the container
-     * displays the name of the volunteer, or "(open)" if the volunteer is null.
-     */
-    private class VolunteerContainer {
-        /**
-         * The volunteer being wrapped.
-         */
-        private final Volunteer volunteer;
-
-        /**
-         * Constructs a new volunteer container.
-         *
-         * @param volunteer the volunteer wrapped in the container
-         */
-        public VolunteerContainer(Volunteer volunteer) {
-            this.volunteer = volunteer;
-        }    // PersonContainer
-
-        /**
-         * Returns the volunteer wrapped in the container.
-         *
-         * @return the volunteer wrapped in the container
-         */
-        public Volunteer getVolunteer() {
-            return volunteer;
-        }    // getPerson()
-
-        /**
-         * Returns the name of the volunteer wrapped in the container, or
-         * "(open)" if the volunteer is null.
-         *
-         * @return name of the volunteer wrapped in the container, or "(open)"
-         * if the volunteer is null
-         */
-        @Override
-        public String toString() {
-            return (volunteer == null) ? "(open)" : volunteer.getName();
-        }    // toString()
-    }    // VolunteerContainer
 
     /**
      * A text field that allows the user to select event properties. This class extends
@@ -146,7 +105,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * volunteers. This class extends {@code JComboBox} to contain extra data
      * (the shift) and easily convert person containers to volunteers.
      */
-    private class ShiftComboBox extends JComboBox<VolunteerContainer> {
+    private class ShiftComboBox extends JComboBox<VolunteerDisplayWrapper> {
         /**
          * The shift corresponding to this combo box.
          */
@@ -182,7 +141,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
          * @return the volunteer selected by the user
          */
         public Volunteer getVolunteer() {
-            VolunteerContainer container = (VolunteerContainer)getSelectedItem();
+            VolunteerDisplayWrapper container = (VolunteerDisplayWrapper)getSelectedItem();
             return container.getVolunteer();
         }    // getVolunteer()
 
@@ -195,10 +154,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         public final void setModel(List<Volunteer> volunteers) {
             assert ((volunteers == null) || (!volunteers.contains(null)));
             removeAllItems();
-            addItem(new VolunteerContainer(null));
+            addItem(new VolunteerDisplayWrapper(null));
             if (volunteers != null) {
                 for (Volunteer volunteer : volunteers) {
-                    addItem(new VolunteerContainer(volunteer));
+                    addItem(new VolunteerDisplayWrapper(volunteer));
                 }    // for
             }    // if
         }    // setModel()
@@ -481,9 +440,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
-                VolunteerContainer item = shiftControl.getItemAt(volunteerIndex);
+                VolunteerDisplayWrapper item = shiftControl.getItemAt(volunteerIndex);
                 assert (item != null);
-                Volunteer itemVolunteer = item.volunteer;
+                Volunteer itemVolunteer = item.getVolunteer();
                 if ((itemVolunteer != null) && (itemVolunteer.getName().equals(volunteer))) {
                     newIndex = volunteerIndex;
                     break;
