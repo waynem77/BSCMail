@@ -30,6 +30,7 @@ import bscmail.Volunteer;
 import bscmail.gui.util.EventPropertyControl;
 import bscmail.gui.util.GroupedGrid;
 import bscmail.gui.util.LabeledComponent;
+import bscmail.gui.util.ShiftControl;
 import bscmail.gui.util.VolunteerDisplayWrapper;
 import java.awt.Component;
 import java.text.DateFormat;
@@ -40,7 +41,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -52,71 +52,6 @@ import javax.swing.SpinnerDateModel;
  */
 public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObserver,
                                                   EventPropertiesObserver {
-
-    /* Private classes */
-
-    /**
-     * A combo box that contains a shift and allows the user to select
-     * volunteers. This class extends {@code JComboBox} to contain extra data
-     * (the shift) and easily convert person containers to volunteers.
-     */
-    private class ShiftComboBox extends JComboBox<VolunteerDisplayWrapper> {
-        /**
-         * The shift corresponding to this combo box.
-         */
-        private final Shift shift;
-
-        /**
-         * Constructs a new shift combo box.
-         *
-         * @param shift the shift corresponding to this combo box; may not be
-         * null
-         * @param volunteers the volunteers used to populate the combo box; may
-         * not be null, nor contain any null elements
-         */
-        public ShiftComboBox(Shift shift, List<Volunteer> volunteers) {
-            assert (shift != null);
-            assert (volunteers != null);
-            this.shift = shift;
-            setModel(volunteers);
-        }    // ShiftComboBox()
-
-        /**
-         * Returns the shift corresponding to this combo box.
-         *
-         * @return the shift corresponding to this combo box
-         */
-        public Shift getShift() {
-            return shift;
-        }    // getShift()
-
-        /**
-         * Returns the volunteer selected by the user.
-         *
-         * @return the volunteer selected by the user
-         */
-        public Volunteer getVolunteer() {
-            VolunteerDisplayWrapper container = (VolunteerDisplayWrapper)getSelectedItem();
-            return container.getVolunteer();
-        }    // getVolunteer()
-
-        /**
-         * Sets the list of volunteers.
-         *
-         * @param volunteers the volunteers used to populate the combo box; may
-         * not contain any null elements
-         */
-        public final void setModel(List<Volunteer> volunteers) {
-            assert ((volunteers == null) || (!volunteers.contains(null)));
-            removeAllItems();
-            addItem(new VolunteerDisplayWrapper(null));
-            if (volunteers != null) {
-                for (Volunteer volunteer : volunteers) {
-                    addItem(new VolunteerDisplayWrapper(volunteer));
-                }    // for
-            }    // if
-        }    // setModel()
-    }    // ShiftComboBox
 
     /* Swing controls */
 
@@ -225,7 +160,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             eventProperty.setValue(eventPropertyControl.getValue());
             event.addEventProperty(eventProperty);
         }    // for
-        for (ShiftComboBox shiftControl : getShiftControls()) {
+        for (ShiftControl shiftControl : getShiftControls()) {
             Shift shift = shiftControl.getShift();
             shift.setVolunteer(shiftControl.getVolunteer());
             event.addShift(shift);
@@ -287,12 +222,12 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @since 3.1
      * @return the list of shift controls
      */
-    private List<ShiftComboBox> getShiftControls() {
+    private List<ShiftControl> getShiftControls() {
         List<Component> rawComponents = controlGrid.getComponents(SHIFTS_GROUP);
-        List<ShiftComboBox> shiftControls = new LinkedList<>();
+        List<ShiftControl> shiftControls = new LinkedList<>();
         for (Component component : rawComponents) {
-            assert (component instanceof ShiftComboBox);
-            shiftControls.add((ShiftComboBox)component);
+            assert (component instanceof ShiftControl);
+            shiftControls.add((ShiftControl)component);
         }    // for
         return shiftControls;
     }    // getShiftControls()
@@ -320,14 +255,14 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         }    // if
 
         List<String> selections = new LinkedList<>();
-        for (ShiftComboBox shiftControl : getShiftControls()) {
+        for (ShiftControl shiftControl : getShiftControls()) {
             Volunteer volunteer = shiftControl.getVolunteer();
             selections.add((volunteer == null) ? null : volunteer.getName());
         }    // for
 
         List<LabeledComponent> components = new LinkedList<>();
         for (Shift shift : shifts) {
-            LabeledComponent<ShiftComboBox> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftComboBox(shift, getQualifiedVolunteers(shift, volunteers)));
+            LabeledComponent<ShiftControl> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftControl(shift, getQualifiedVolunteers(shift, volunteers)));
             components.add(shiftControl);
         }    // for
         controlGrid.setComponents(components, SHIFTS_GROUP);
@@ -360,7 +295,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             this.volunteers.addAll(volunteers);
         }    // if
         List<String> selectedVolunteers = new LinkedList<>();
-        for (ShiftComboBox shiftControl : getShiftControls()) {
+        for (ShiftControl shiftControl : getShiftControls()) {
             Volunteer selectedVolunteer = shiftControl.getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
@@ -389,9 +324,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             volunteers = new ArrayList<>();
         }    // if
         final int NULL_INDEX = 0;
-        List<ShiftComboBox> shiftControls = getShiftControls();
+        List<ShiftControl> shiftControls = getShiftControls();
         for (int controlIndex = 0; controlIndex < shiftControls.size(); ++controlIndex) {
-            ShiftComboBox shiftControl = shiftControls.get(controlIndex);
+            ShiftControl shiftControl = shiftControls.get(controlIndex);
             String volunteer = (controlIndex < volunteers.size()) ? volunteers.get(controlIndex) : null;
             int newIndex = NULL_INDEX;
             for (int volunteerIndex = 0; volunteerIndex < shiftControl.getItemCount(); ++volunteerIndex) {
