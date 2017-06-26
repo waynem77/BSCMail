@@ -27,6 +27,7 @@ import bscmail.Shift;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
 import bscmail.Volunteer;
+import bscmail.gui.util.EventPropertyControl;
 import bscmail.gui.util.GroupedGrid;
 import bscmail.gui.util.LabeledComponent;
 import bscmail.gui.util.VolunteerDisplayWrapper;
@@ -42,7 +43,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
 
@@ -54,51 +54,6 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
                                                   EventPropertiesObserver {
 
     /* Private classes */
-
-    /**
-     * A text field that allows the user to select event properties. This class extends
-     * {@code JTextField}.
-     */
-    private class EventPropertiesTextField extends JTextField {
-        /**
-         * The event property corresponding to this text field.
-         */
-        private final EventProperty eventProperty;
-
-        /**
-         * Constructs a new event Property text field.
-         *
-         * @param eventProperty the event property corresponding to this text field; may not be
-         * null
-         */
-        public EventPropertiesTextField(EventProperty eventProperty) {
-            super(eventProperty.getDefaultValue());
-            assert (eventProperty != null);
-            this.eventProperty = eventProperty;
-            //new JTextField(eventProperty.getDefaultValue());
-            //add();
-
-        }    // EventPropertiesTextField()
-
-        /**
-         * Returns the event property corresponding to this text field.
-         *
-         * @return the event property corresponding to this text field
-         */
-        public EventProperty getEventProperty() {
-            return eventProperty;
-        }    // getEventProperty()
-
-        /**
-         * Returns the value entered by the user.
-         *
-         * @return the value entered by the user
-         */
-        public String getValue() {
-            return getText();
-        }    // getVolunteer()
-
-    }    // EventPropertiesTextField
 
     /**
      * A combo box that contains a shift and allows the user to select
@@ -265,7 +220,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assertInvariant();
         Event event = new Event();
         event.setDate((Date)dateControl.getValue());
-        for (EventPropertiesTextField eventPropertyControl : getEventPropertyControls()) {
+        for (EventPropertyControl eventPropertyControl : getEventPropertyControls()) {
             EventProperty eventProperty = eventPropertyControl.getEventProperty();
             eventProperty.setValue(eventPropertyControl.getValue());
             event.addEventProperty(eventProperty);
@@ -316,12 +271,12 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @since 3.1
      * @return the list of event property controls
      */
-    private List<EventPropertiesTextField> getEventPropertyControls() {
+    private List<EventPropertyControl> getEventPropertyControls() {
         List<Component> rawComponents = controlGrid.getComponents(EVENT_PROPERTIES_GROUP);
-        List<EventPropertiesTextField> eventPropertyControls = new LinkedList<>();
+        List<EventPropertyControl> eventPropertyControls = new LinkedList<>();
         for (Component component : rawComponents) {
-            assert (component instanceof EventPropertiesTextField);
-            eventPropertyControls.add((EventPropertiesTextField)component);
+            assert (component instanceof EventPropertyControl);
+            eventPropertyControls.add((EventPropertyControl)component);
         }    // for
         return eventPropertyControls;
     }    // getEventPropertyControls()
@@ -494,8 +449,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         List<LabeledComponent> components = new LinkedList<>();
         for (EventProperty eventProperty : eventProperties) {
-            LabeledComponent<EventPropertiesTextField> eventPropertyControl = new LabeledComponent<>(eventProperty
-                .getPropertyName() + ":", new EventPropertiesTextField(eventProperty));
+            LabeledComponent<EventPropertyControl> eventPropertyControl = new LabeledComponent<>(eventProperty
+                .getPropertyName() + ":", new EventPropertyControl(eventProperty));
             components.add(eventPropertyControl);
         }    // for
         controlGrid.setComponents(components, EVENT_PROPERTIES_GROUP);
