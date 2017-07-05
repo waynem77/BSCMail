@@ -406,7 +406,7 @@ public class EventFrameTest {
      * correctly.
      */
     @Test
-    public void setShiftsRetainsVolunteerSelections() {
+    public void setShiftsRetainsVolunteerSelections() throws IOException {
         Application application = getTestApplication();
         EventFrame eventFrame = new EventFrame(application);
         List<Shift> original = Arrays.asList(
@@ -415,6 +415,7 @@ public class EventFrameTest {
                 new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(original);
         List<Volunteer> volunteers = getTestVolunteers();
+        application.setVolunteers(volunteers);
         eventFrame.setVolunteers(volunteers);
         List<Volunteer> selections = volunteers.subList(0, original.size() - 1);
         eventFrame.setSelectedVolunteers(getVolunteerNames(selections));
@@ -442,7 +443,7 @@ public class EventFrameTest {
      * when the shift roles change.
      */
     @Test
-    public void setShiftsSetsVolunteerSelectionsWhenShiftRolesChange() {
+    public void setShiftsSetsVolunteerSelectionsWhenShiftRolesChange() throws IOException {
         Application application = getTestApplication();
         EventFrame eventFrame = new EventFrame(application);
         List<Shift> original = Arrays.asList(
@@ -458,6 +459,7 @@ public class EventFrameTest {
         volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!");
         volunteer.addRole(ANGEL_ROLE);
         volunteers.add(volunteer);
+        application.setVolunteers(volunteers);
         eventFrame.setVolunteers(volunteers);
         eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Shift> shifts = Arrays.asList(
@@ -480,18 +482,18 @@ public class EventFrameTest {
     /* setVolunteers */
 
     /**
-     * Tests that {@link EventFrame#setVolunteers(List)} does not throw an
-     * exception when volunteers is null.
+     * Tests that {@link EventFrame#setVolunteers(List)} throws a
+     * {@link NullPointerException} when volunteers is null.
      */
-    @Test
-    public void setVolunteersDoesNotThrowExceptionWhenVolunteersIsNull() {
+    @Test(expected = NullPointerException.class)
+    public void setVolunteersThrowsExceptionWhenVolunteersIsNull() {
         Application application = getTestApplication();
         EventFrame eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = null;
 
         eventFrame.setVolunteers(volunteers);
-    }    // setVolunteersDoesNotThrowExceptionWhenVolunteersIsNull()
+    }    // setVolunteersThrowsExceptionWhenVolunteersIsNull()
 
     /**
      * Tests that {@link EventFrame#setVolunteers(List)} throws a

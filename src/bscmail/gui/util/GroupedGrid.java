@@ -64,8 +64,6 @@ public class GroupedGrid extends JPanel {
      */
     private final List<List<LabeledComponent>> componentGroups;
 
-//    private final GridBagConstraints constraints;
-
     /**
      * Constructs a new grouped grid component with the specified number of
      * groups and columns.

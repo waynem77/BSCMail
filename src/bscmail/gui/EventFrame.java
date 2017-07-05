@@ -27,23 +27,17 @@ import bscmail.Shift;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
 import bscmail.Volunteer;
+import bscmail.gui.util.EventFrameGrid;
 import bscmail.gui.util.EventPropertyControl;
-import bscmail.gui.util.GroupedGrid;
-import bscmail.gui.util.LabeledComponent;
 import bscmail.gui.util.ShiftControl;
 import bscmail.gui.util.VolunteerDisplayWrapper;
-import java.awt.Component;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
 
 
 /**
@@ -53,52 +47,15 @@ import javax.swing.SpinnerDateModel;
 public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObserver,
                                                   EventPropertiesObserver {
 
-    /* Swing controls */
-
     /**
      * The grid of controls.
      */
-    private final GroupedGrid controlGrid;
-
-    /**
-     * Date selector control.
-     */
-    private final JSpinner dateControl;
-
-    /* Other private variables. */
+    private final EventFrameGrid eventFrameGrid;
 
     /**
      * The calling application.
      */
     private final Application application;
-
-    /**
-     * The list of volunteers.
-     */
-    private final List<Volunteer> volunteers;
-
-
-    /* "Enums" representing the groups for the grid */
-
-    /**
-     * The standard control group.
-     */
-    private static final int STANDARD_GROUP = 0;
-
-    /**
-     * The event properties group.
-     */
-    private static final int EVENT_PROPERTIES_GROUP = 1;
-
-    /**
-     * The shifts group.
-     */
-    private static final int SHIFTS_GROUP = 2;
-
-    /**
-     * The total number of groups.
-     */
-    private static final int GROUPS = 3;
 
     /*
      * Public API
@@ -118,25 +75,14 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
 
         List<EventProperty> eventProperties = application.getEventProperties();
         List<Shift> shifts = application.getShifts();
-        volunteers = application.getVolunteers();
 
         setTitle(application.getApplicationName() + " - Event Setup");
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        controlGrid = new GroupedGrid(GROUPS);
-        add(controlGrid);
-
-        dateControl = new JSpinner(new SpinnerDateModel());
-        SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
-        dateControl.setEditor(new JSpinner.DateEditor(dateControl, dateFormat.toPattern()));
-        List<LabeledComponent> components = Arrays.asList(new LabeledComponent("Date:", dateControl));
-        controlGrid.setComponents(components, STANDARD_GROUP);
-
-        controlGrid.setComponents(new LinkedList<LabeledComponent>(), EVENT_PROPERTIES_GROUP);
-        controlGrid.setComponents(new LinkedList<LabeledComponent>(), SHIFTS_GROUP);
+        eventFrameGrid = new EventFrameGrid();
+        add(eventFrameGrid);
 
         setEventProperties(eventProperties);
-
         setShifts(shifts);
 
         application.registerObserver((EventPropertiesObserver)this);
@@ -154,6 +100,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     public Event getEvent() {
         assertInvariant();
         Event event = new Event();
+        JSpinner dateControl = eventFrameGrid.getDateControl();
         event.setDate((Date)dateControl.getValue());
         for (EventPropertyControl eventPropertyControl : getEventPropertyControls()) {
             EventProperty eventProperty = eventPropertyControl.getEventProperty();
@@ -207,13 +154,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @return the list of event property controls
      */
     private List<EventPropertyControl> getEventPropertyControls() {
-        List<Component> rawComponents = controlGrid.getComponents(EVENT_PROPERTIES_GROUP);
-        List<EventPropertyControl> eventPropertyControls = new LinkedList<>();
-        for (Component component : rawComponents) {
-            assert (component instanceof EventPropertyControl);
-            eventPropertyControls.add((EventPropertyControl)component);
-        }    // for
-        return eventPropertyControls;
+        return eventFrameGrid.getEventPropertyControls();
     }    // getEventPropertyControls()
 
     /**
@@ -223,13 +164,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * @return the list of shift controls
      */
     private List<ShiftControl> getShiftControls() {
-        List<Component> rawComponents = controlGrid.getComponents(SHIFTS_GROUP);
-        List<ShiftControl> shiftControls = new LinkedList<>();
-        for (Component component : rawComponents) {
-            assert (component instanceof ShiftControl);
-            shiftControls.add((ShiftControl)component);
-        }    // for
-        return shiftControls;
+        return eventFrameGrid.getShiftControls();
     }    // getShiftControls()
 
     /**
@@ -260,12 +195,13 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             selections.add((volunteer == null) ? null : volunteer.getName());
         }    // for
 
-        List<LabeledComponent> components = new LinkedList<>();
+        List<Volunteer> volunteers = application.getVolunteers();
+        List<ShiftControl> shiftControls = new LinkedList<>();
         for (Shift shift : shifts) {
-            LabeledComponent<ShiftControl> shiftControl = new LabeledComponent<>(shift.getDescription() + ":", new ShiftControl(shift, getQualifiedVolunteers(shift, volunteers)));
-            components.add(shiftControl);
+            ShiftControl shiftControl = new ShiftControl(shift, getQualifiedVolunteers(shift, volunteers));
+            shiftControls.add(shiftControl);
         }    // for
-        controlGrid.setComponents(components, SHIFTS_GROUP);
+        eventFrameGrid.setShiftControls(shiftControls);
         pack();
         setSelectedVolunteers(selections);
     }    // setShifts()
@@ -278,7 +214,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * retained.) Otherwise, the selection is cleared. If the given list is
      * null, it is treated as an empty list.
      *
-     * The list of volunteers may not contain any null elements.
+     * The list of volunteers may not be null nor contain any null elements.
      *
      * @since 2.0
      * @param volunteers the new list of volunteers; may not contain any null
@@ -287,19 +223,18 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      * elements
      */
     void setVolunteers(List<Volunteer> volunteers) {
-        if ((volunteers != null) && volunteers.contains(null)) {
-            throw new NullPointerException("volunteers may not contain null");
+        if (volunteers == null) {
+            throw new NullPointerException("volunteers may not be null");
         }    // if
-        this.volunteers.clear();
-        if (volunteers != null) {
-            this.volunteers.addAll(volunteers);
+        if (volunteers.contains(null)) {
+            throw new NullPointerException("volunteers may not contain null");
         }    // if
         List<String> selectedVolunteers = new LinkedList<>();
         for (ShiftControl shiftControl : getShiftControls()) {
             Volunteer selectedVolunteer = shiftControl.getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
-            shiftControl.setModel(this.getQualifiedVolunteers(shiftControl.getShift(), this.volunteers));
+            shiftControl.setModel(this.getQualifiedVolunteers(shiftControl.getShift(), volunteers));
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
@@ -382,13 +317,12 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             throw new NullPointerException("event properties may not contain null");
         }    // if
 
-        List<LabeledComponent> components = new LinkedList<>();
+        List<EventPropertyControl> eventPropertyControls = new LinkedList<>();
         for (EventProperty eventProperty : eventProperties) {
-            LabeledComponent<EventPropertyControl> eventPropertyControl = new LabeledComponent<>(eventProperty
-                .getPropertyName() + ":", new EventPropertyControl(eventProperty));
-            components.add(eventPropertyControl);
+            EventPropertyControl eventPropertyControl = new EventPropertyControl(eventProperty);
+            eventPropertyControls.add(eventPropertyControl);
         }    // for
-        controlGrid.setComponents(components, EVENT_PROPERTIES_GROUP);
+        eventFrameGrid.setEventPropertyControls(eventPropertyControls);
         pack();
     }    // setEventProperties()
 
@@ -397,10 +331,8 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
      */
     private void assertInvariant() {
         assert (application != null);
-        assert (dateControl != null);
-        assert (isAncestorOf(controlGrid));
-        assert (volunteers != null);
-        assert (! volunteers.contains(null));
+        assert (eventFrameGrid != null);
+        assert (isAncestorOf(eventFrameGrid));
     }    // assertInvariant()
 
 }    // EventFrame
