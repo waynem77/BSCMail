@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,8 +20,12 @@
 package bscmail;
 
 import java.io.Serializable;
-import java.util.*;
-import main.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import main.ReadWritable;
+import main.ReadWritableFactory;
 
 /**
  * Represents an event volunteer. Volunteers have the following properties.
@@ -32,16 +36,18 @@ import main.*;
  * <li>Notes, represented as a {@link String}.</li>
  * <li>Zero or more user roles, represented as a {@link List} of {@link Role}s.
  * Volunteers are initialized with zero roles.</li>
+ * <li>A flag indicating whether or not the volunteer is active or not,
+ * represented as a boolean.</li>
  * </ul>
  *
  * @author Wayne Miller, github.com/acadams
  */
 public class Volunteer implements Cloneable, Serializable, ReadWritable {
-    
+
     /*
      * Static class properties and methods.
      */
-    
+
     /**
      * Class version number.
      */
@@ -66,6 +72,11 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * Read-writable key corresponding to volunteer notes.
      */
     private static final String RW_NOTES_KEY = "notes";
+
+    /**
+     * Read-writable key corresponding to volunteer notes.
+     */
+    private static final String RW_ACTIVE_KEY = "active";
 
     /**
      * Read-writable key corresponding to volunteer roles.
@@ -97,29 +108,32 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
          * Constructs a volunteer from the given read-writable properties. If
          * the factory is unable to create a volunteer from the given
          * properties, this method returns null.
-         * <p>
+         *
          * The volunteer factory constructs a volunteer using the following
          * information from the given properties.
          * <ul>
          * <li>The volunteer's name is given by the string value of the value
-         * corresponding to "name".  If such a value does not exist or is null,
+         * corresponding to "name". If such a value does not exist or is null,
          * the volunteer's name is empty.</li>
-         * <li>The volunteer's email address is given by the string value of
-         * the value corresponding to "email".  If such a value does not exist
-         * or is null, the volunteer's email address is empty.</li>
-         *   <li>The volunteer's phone number is given by the string value of
-         * the value corresponding to "phone".  If such a value does not exist
-         * or is null, the volunteer's phone number is empty.</li>
-         *   <li>The volunteer's notes are given by the string value of
-         * the value corresponding to "notes".  If such a value does not exist
-         * or is null, the volunteer's notes are empty.</li>
+         * <li>The volunteer's email address is given by the string value of the
+         * value corresponding to "email". If such a value does not exist or is
+         * null, the volunteer's email address is empty.</li>
+         * <li>The volunteer's phone number is given by the string value of the
+         * value corresponding to "phone". If such a value does not exist or is
+         * null, the volunteer's phone number is empty.</li>
+         * <li>The volunteer's notes are given by the string value of the value
+         * corresponding to "notes". If such a value does not exist or is null,
+         * the volunteer's notes are empty.</li>
+         * <li>The volunteer's active status is given by the boolean value of
+         * the value corresponding to "active". If such a value does not exist
+         * or is null, the volunteer's active status is true.</li>
          * </ul>
          * This method effectively acts as the reverse of
          * {@link Volunteer#getReadWritableProperties()}.
          *
          * @param properties the read-writable properties; may not be null
-         * @return a volunteer constructed from the given properties, or
-         * null if the factory is unable to construct a volunteer
+         * @return a volunteer constructed from the given properties, or null if
+         * the factory is unable to construct a volunteer
          * @throws NullPointerException if {@code properties} is null
          */
         @Override
@@ -129,14 +143,22 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
             }    // if
 
             Object nameObject = properties.get(RW_NAME_KEY);
-            Object emailObject = properties.get(RW_EMAIL_KEY);
-            Object phoneObject = properties.get(RW_PHONE_KEY);
-            Object notesObject = properties.get(RW_NOTES_KEY);
             String name = (nameObject != null) ? nameObject.toString() : "";
+
+            Object emailObject = properties.get(RW_EMAIL_KEY);
             String email = (emailObject != null) ? emailObject.toString() : "";
+
+            Object phoneObject = properties.get(RW_PHONE_KEY);
             String phone = (phoneObject != null) ? phoneObject.toString() : "";
+
+            Object notesObject = properties.get(RW_NOTES_KEY);
             String notes = (notesObject != null) ? notesObject.toString() : "";
-            Volunteer volunteer = new Volunteer(name, email, phone, notes);
+
+            Object activeObject = properties.get(RW_ACTIVE_KEY);
+            Boolean activeBooleanObject = (Boolean)activeObject;
+            boolean active = (activeBooleanObject == null) ? true : activeBooleanObject;
+
+            Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
             Object rolesObject = properties.get(RW_ROLES_KEY);
             if (rolesObject != null) {
                 String roles = rolesObject.toString();
@@ -161,7 +183,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     public static Factory getVolunteerFactory() {
         return new Factory();
     }    // getVolunteerFactory();
-    
+
     /*
      * Instance properties and methods.
      */
@@ -187,6 +209,11 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     private String notes;
 
     /**
+     * The volunteer's active status.
+     */
+    private boolean active;
+
+    /**
      * The volunteer's list of roles
      */
     private final List<Role> roles;
@@ -198,9 +225,11 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * @param email the volunteer's email address
      * @param phone the volunteer's phone number
      * @param notes the volunteer's notes
+     * @param active true if the volunteer is active, false if the volunteer is
+     * inactive
      * @throws NullPointerException if any parameter is null
      */
-    public Volunteer(String name, String email, String phone, String notes) {
+    public Volunteer(String name, String email, String phone, String notes, boolean active) {
         if (name == null) {
             throw new NullPointerException("name may not be null");
         }    // if
@@ -218,6 +247,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         this.email = email;
         this.phone = phone;
         this.notes = notes;
+        this.active = active;
         this.roles = new LinkedList<>();
         assertInvariant();
     }    // Volunteer()
@@ -234,7 +264,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Sets the volunteer's name to the given string.
-     * 
+     *
      * @param name the new name; may not be null
      * @throws NullPointerException if {@code name} is null
      */
@@ -260,7 +290,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Sets the volunteer's email address to the given string.
-     * 
+     *
      * @param email the new email address; may not be null
      * @throws NullPointerException if {@code email} is null
      */
@@ -286,7 +316,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Sets the volunteer's phone number to the given string.
-     * 
+     *
      * @param phone the new phone number; may not be null
      * @throws NullPointerException if {@code phone} is null
      */
@@ -312,7 +342,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Sets the volunteer notes to the given string.
-     * 
+     *
      * @param notes the new notes; may not be null
      * @throws NullPointerException if {@code notes} is null
      */
@@ -327,8 +357,31 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     }    // setNotes()
 
     /**
+     * Returns true if the volunteer is active, or false if the volunteer is inactive.
+     *
+     * @return true if the volunteer is active; false otherwise
+     * @since 3.1
+     */
+    public boolean isActive() {
+        assertInvariant();
+        return active;
+    }    // isActive()
+
+    /**
+     * Sets the active state of the volunteer.
+     *
+     * @param active true if the volunteer is active, false if inactive
+     * @since 3.1
+     */
+    public void setActive(boolean active) {
+        assertInvariant();
+        this.active = active;
+        assertInvariant();
+    }    // setActive()
+
+    /**
      * Returns an unmodifiable list of the roles added to the volunteer.
-     * 
+     *
      * @return the roles added to the volunteer
      */
     public List<Role> getRoles(){
@@ -338,7 +391,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Adds the given role to the volunteer.
-     * 
+     *
      * @param role the role to add; may not be null
      * @throws NullPointerException if {@code role} is null
      */
@@ -357,7 +410,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Removes the given role from the volunteer.
-     * 
+     *
      * @param role the role to remove; may not be null
      * @throws NullPointerException if {@code role} is null
      */
@@ -376,23 +429,25 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * The map returned by this method is guaranteed to have the following
      * properties.
      * <ul>
-     *   <li>The map has four keys: "name", "email", "phone", and "notes".</li>
-     *   <li>No value is null.
-     *   <li>The value of "name" is a non-null {@link String} equal to the value
+     * <li>The map has five keys: "name", "email", "phone", and "notes".</li>
+     * <li>No value is null.
+     * <li>The value of "name" is a non-null {@link String} equal to the value
      * of {@link #getName()}.</li>
-     *   <li>The value of "email" is a non-null {@link String} equal to the
-     * value of {@link #getName()}.</li>
-     *   <li>The value of "phone" is a non-null {@link String} equal to the
-     * value of {@link #getPhone()}.</li>
-     *   <li>The value of "notes" is a non-null {@link String} equal to the
-     * value of {@link #getNotes()}.</li>
-     *   <li>The value of "roles" is a non-null {@link String} equal to a
+     * <li>The value of "email" is a non-null {@link String} equal to the value
+     * of {@link #getName()}.</li>
+     * <li>The value of "phone" is a non-null {@link String} equal to the value
+     * of {@link #getPhone()}.</li>
+     * <li>The value of "notes" is a non-null {@link String} equal to the value
+     * of {@link #getNotes()}.</li>
+     * <li>The value of "active" is a non-null {@link Boolean} equal to the
+     * value of {@link #isActive(){.</li>
+     * <li>The value of "roles" is a non-null {@link String} equal to a
      * comma-separated list of the names of each role returned by
      * {@link #getRoles()}.</li>
-     *   <li>The iteration order of the elements is fixed in the order the keys
+     * <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
-     * 
+     *
      * @return a map containing the read-writable properties of the volunteer
      * @since 2.1
      */
@@ -403,6 +458,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         properties.put(RW_EMAIL_KEY, email);
         properties.put(RW_PHONE_KEY, phone);
         properties.put(RW_NOTES_KEY, notes);
+        properties.put(RW_ACTIVE_KEY, active);
         String roleNames = "";
         for (Role role : roles){
             roleNames += role.getName() +",";
@@ -412,28 +468,29 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         properties.put(RW_ROLES_KEY, roleNames);
         return properties;
     }    // getReadWritableProperties()
-    
+
     /**
      * Returns a factory that creates volunteers from read-writable property maps.
-     * 
+     *
      * @return a factory that creates volunteers from read-writable property maps
      */
     @Override
     public Factory getReadWritableFactory() {
         return Volunteer.getVolunteerFactory();
     }    // getReadWritableFactory()
-    
+
     /**
      * Indicates whether some other object is "equal to" this one.  An object is
      * equal to this volunteer only if all the following conditions hold:
      * <ol>
      *   <li>the object is another volunteer,</li>
      *   <li>both volunteers have the same name,</li>
-     *   <li>both volunteers have the same email address</li>
-     *   <li>both volunteers have the same phone number, and</li>
-     *   <li>both volunteers have the same notes.</li>
+     *   <li>both volunteers have the same email address,</li>
+     *   <li>both volunteers have the same phone number,</li>
+     *   <li>both volunteers have the same notes, and</li>
+     *   <li>both volunteers have the same active status.</li>
      * </ol>
-     * 
+     *
      * @param obj the object with which to compare
      * @return true if the objects are equal; false otherwise
      */
@@ -445,11 +502,15 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         if (!(obj instanceof Volunteer)) {
             return false;
         }    // if
-        
+
         Volunteer rhs = (Volunteer)obj;
-        return name.equals(rhs.name) && email.equals(rhs.email) && phone.equals(rhs.phone) && notes.equals(rhs.notes);
+        return name.equals(rhs.name)
+                && email.equals(rhs.email)
+                && phone.equals(rhs.phone)
+                && notes.equals(rhs.notes)
+                && (active == rhs.active);
     }    // equals()
-    
+
     @Override
     public int hashCode() {
         final int SEED = 5;
@@ -459,12 +520,13 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         code = code * MULTIPLIER + email.hashCode();
         code = code * MULTIPLIER + phone.hashCode();
         code = code * MULTIPLIER + notes.hashCode();
+        code = code * MULTIPLIER + Boolean.hashCode(active);
         return code;
     }    // hashCode()
-    
+
     /**
      * Creates and returns a copy of this volunteer.
-     * 
+     *
      * @return a copy of this volunteer
      * @since 2.0
      */
@@ -492,7 +554,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         assertInvariant();
         return name;
     }    // toString()
-    
+
     /**
      * Asserts the correctness of the object's internal state.
      */

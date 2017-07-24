@@ -43,7 +43,8 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        return new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        return new Volunteer(name, email, phone, notes, active);
     }    // getVolunteer()
 
     /**
@@ -642,11 +643,12 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
         Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
         name += "X";
-        volunteer = new Volunteer(name, email, phone, notes);
+        volunteer = new Volunteer(name, email, phone, notes, active);
         obj.setVolunteer(volunteer);
 
         boolean received = shift.equals(obj);
@@ -754,10 +756,11 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
         Shift obj = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
-        volunteer = new Volunteer(name, email, phone, notes);
+        volunteer = new Volunteer(name, email, phone, notes, active);
         obj.setVolunteer(volunteer);
 
         boolean received = shift.equals(obj);
@@ -839,10 +842,11 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
         Shift experimental = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
-        volunteer = new Volunteer(name, email, phone, notes);
+        volunteer = new Volunteer(name, email, phone, notes, active);
         experimental.setVolunteer(volunteer);
 
         int first = shift.hashCode();
@@ -885,7 +889,8 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
 
         shift.clone();
@@ -925,7 +930,8 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
 
         Shift received = shift.clone();
@@ -968,7 +974,8 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
 
         Shift received = shift.clone();
@@ -1011,7 +1018,8 @@ public class ShiftTest extends ReadWritableTest {
         String email = "bar";
         String phone = "baz";
         String notes = "smurf";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         shift.setVolunteer(volunteer);
 
         Shift received = shift.clone();

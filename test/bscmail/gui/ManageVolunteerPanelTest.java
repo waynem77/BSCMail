@@ -81,7 +81,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      */
     @Override
     protected Volunteer getElement() {
-        return new Volunteer("foo", "bar", "baz", "smurf");
+        return new Volunteer("foo", "bar", "baz", "smurf", false);
     }    // getElement()
 
     /*
@@ -150,7 +150,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
 
         Volunteer received = panel.createElement();
 
-        Volunteer expected = new Volunteer("", "", "", "");
+        Volunteer expected = new Volunteer("", "", "", "", false);
         assertEquals(expected, received);
     }    // createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded()
 

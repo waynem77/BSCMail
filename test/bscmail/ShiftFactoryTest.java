@@ -49,7 +49,7 @@ public class ShiftFactoryTest extends ReadWritableFactoryTest<Shift> {
      * @return the shift volunteer used in {@link #getTestProperties()}
      */
     private Volunteer getTestVolunteer() {
-        return new Volunteer("foo", "bar", "baz", "smurf");
+        return new Volunteer("foo", "bar", "baz", "smurf", true);
     }    // getTestVolunteer()
 
     /**

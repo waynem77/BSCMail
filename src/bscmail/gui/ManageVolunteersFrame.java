@@ -32,12 +32,12 @@ import bscmail.VolunteersObserver;
 /**
  * A graphical interface to manage the defined list of volunteers in
  * {@link Application}.
- * 
+ *
  * @since 2.0
  * @author Wayne Miller
  */
 public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements RolesObserver, VolunteersObserver {
-    
+
     /**
      * Constructs a new manage volunteers frame.
      *
@@ -59,13 +59,13 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
         );
         application.registerObserver((RolesObserver)this);
         application.registerObserver((VolunteersObserver)this);
-        
+
         setTitle(application.getApplicationName() + " - Manage Volunteers");
     }    // ManageVolunteersFrame()
-    
+
     /**
      * Saves the given list as the defined list of volunteers.
-     * 
+     *
      * @param volunteers the volunteers to save; may not be null
      * @throws IOException if an I/O error occurs
      */
@@ -87,10 +87,13 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
             Volunteer volunteer = volunteers.get(i);
             List<Role> roles = volunteer.getRoles();
             roles.retainAll(canonicalRoles);
-            Volunteer newVolunteer = new Volunteer(volunteer.getName(),
+            Volunteer newVolunteer = new Volunteer(
+                    volunteer.getName(),
                     volunteer.getEmail(),
                     volunteer.getPhone(),
-                    volunteer.getNotes());
+                    volunteer.getNotes(),
+                    false
+            );
             for (Role role : roles) {
                 newVolunteer.addRole(role);
             }    // for

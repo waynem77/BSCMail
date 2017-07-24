@@ -544,7 +544,7 @@ public class EventTest {
         List<Shift> list = event.getShifts();
 
         int index = 0;
-        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
+        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat", true);
         list.get(index).setVolunteer(volunteer);
     }    // getShiftsReturnsListWhoseElementsAreMutable()
 
@@ -565,7 +565,7 @@ public class EventTest {
         List<Shift> list = event.getShifts();
 
         int index = 0;
-        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat");
+        Volunteer volunteer = new Volunteer("smurf", "snork", "gummibear", "thundercat", true);
         list.get(index).setVolunteer(volunteer);
 
         list = event.getShifts();

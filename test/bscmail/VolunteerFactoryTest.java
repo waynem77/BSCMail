@@ -69,6 +69,17 @@ public class VolunteerFactoryTest extends ReadWritableFactoryTest<Volunteer> {
     }    // getTestNotes()
 
     /**
+     * Returns the volunteer notes active status used in
+     * {@link #getTestProperties()}.
+     *
+     * @return the volunteer notes active status used in
+     * {@link #getTestProperties()}
+     */
+    private boolean getActive() {
+        return true;
+    }    // getActive()
+
+    /**
      * Returns the volunteer factory being tested.
      *
      * @return the volunteer factory being tested
@@ -123,7 +134,11 @@ public class VolunteerFactoryTest extends ReadWritableFactoryTest<Volunteer> {
         Object notesObject = properties.get("notes");
         String notes = (notesObject == null) ? "" : notesObject.toString();
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Object activeObject = properties.get("active");
+        Boolean activeObjectAsBoolean = (Boolean)activeObject;
+        boolean active = (activeObject == null) ? true : activeObjectAsBoolean;
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         assert (volunteer != null);
         return volunteer;
     }    // getReadWritableFromProperties()

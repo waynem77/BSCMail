@@ -179,8 +179,13 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      */
     @Override
     public Volunteer createElement() {
-        currentVolunteer = new Volunteer(nameTextField.getText(), emailTextField.getText(),
-                                                         phoneTextField.getText(),notesTextArea.getText());
+        currentVolunteer = new Volunteer(
+                nameTextField.getText(),
+                emailTextField.getText(),
+                phoneTextField.getText(),
+                notesTextArea.getText(),
+                false
+        );
         for (Role role : getSelectedRoles()) {
             currentVolunteer.addRole(role);
         }    // for
@@ -257,6 +262,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         }
         return selectedRoles;
     }
-    
+
 }    // ManageVolunteerPanel
 

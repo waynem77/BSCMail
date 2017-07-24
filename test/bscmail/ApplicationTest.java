@@ -447,7 +447,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true));
         List<Shift> clonedShifts = new LinkedList<>();
         for (Shift shift : shifts) {
             clonedShifts.add(shift.clone());
@@ -493,7 +493,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true));
         application.setShifts(shifts);
 
         application.getShifts();
@@ -508,7 +508,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true));
         application.setShifts(shifts);
 
         List<Shift> received = application.getShifts();
@@ -525,7 +525,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
                 new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", ""));
+        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true));
         List<Shift> clonedShiftsMinusVolunteers = new LinkedList<>();
         for (Shift shift : shifts) {
             Shift newShift = shift.clone();
@@ -610,7 +610,7 @@ public class ApplicationTest {
     @Test
     public void getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
         application.setVolunteers(volunteers);
 
         application.getVolunteers();
@@ -623,7 +623,7 @@ public class ApplicationTest {
     @Test
     public void getVolunteersDoesNotReturnNullWhenThereAreVolunteers() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
         application.setVolunteers(volunteers);
 
         List<Volunteer> received = application.getVolunteers();
@@ -650,7 +650,7 @@ public class ApplicationTest {
     @Test(expected = NullPointerException.class)
     public void setVolunteersThrowsExceptionWhenVolunteersContainsNull() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), null);
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), null);
 
         application.setVolunteers(volunteers);
     }    // setVolunteersThrowsExceptionWhenVolunteersContainsNull()
@@ -662,7 +662,7 @@ public class ApplicationTest {
     @Test
     public void setVolunteersDoesNotThrowExceptionNormally() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
     }    // setVolunteersDoesNotThrowExceptionNormally()
@@ -674,7 +674,7 @@ public class ApplicationTest {
     @Test
     public void setVolunteersDoesNotAlterArgument() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
         List<Volunteer> expected = new ArrayList<>(volunteers);
 
         application.setVolunteers(volunteers);
@@ -690,7 +690,7 @@ public class ApplicationTest {
     @Test
     public void getVolunteersSetVolunteersListsAreEqual() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
         application.setVolunteers(volunteers);
 
         List<Volunteer> received = application.getVolunteers();
@@ -706,7 +706,7 @@ public class ApplicationTest {
     @Test
     public void getVolunteersSetVolunteersListsAreNotIdentical() throws IOException {
         Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
         application.setVolunteers(volunteers);
 
         List<Volunteer> received = application.getVolunteers();
@@ -1131,7 +1131,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
 
@@ -1242,7 +1242,7 @@ public class ApplicationTest {
         for (VolunteersObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
 
@@ -1409,7 +1409,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
 
@@ -1539,7 +1539,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
 
@@ -1669,7 +1669,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", ""), new Volunteer("Bar", "bar", "", ""));
+        List<Volunteer> volunteers = Arrays.asList(new Volunteer("Foo", "foo", "", "", true), new Volunteer("Bar", "bar", "", "", true));
 
         application.setVolunteers(volunteers);
 

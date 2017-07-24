@@ -38,17 +38,17 @@ public class VolunteerTest extends ReadWritableTest {
 
     /**
      * Returns the volunteer to be tested.
-     * 
+     *
      * @return the volunteer to be tested
      */
     @Override
     protected Volunteer getReadWritable() {
-        return new Volunteer("foo", "bar", "baz", "smurf");
+        return new Volunteer("foo", "bar", "baz", "smurf", true);
     }    // getReadWritable()
 
     /**
      * Returns a comparator for roles.
-     * 
+     *
      * @return a comparator for roles
      */
     protected Comparator<Role> getRoleComparator() {
@@ -61,27 +61,12 @@ public class VolunteerTest extends ReadWritableTest {
     /*
      * Unit tests
      */
- 
+
     /* constructor */
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
-     * does not throw an exception when no parameter is null.
-     */
-    @Test
-    public void constructorDoesNotThrowExceptionWhenNoParameterIsNull() {
-        String name = "Foo Bar";
-        String email = "foo@bar";
-        String phone = "555-FOO";
-        String notes = "baz";
-
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
-    }    // constructorDoesNotThrowExceptionWhenNoParameterIsNull()
-
-    /**
-     * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * does not throw an exception when name is empty.
      */
     @Test
@@ -90,13 +75,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorDoesNotThrowExceptionWhenNameIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * throws a {@link NullPointerException} when name is null.
      */
     @Test(expected = NullPointerException.class)
@@ -105,13 +91,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorThrowsExceptionWhenNameIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * does not throw an exception when email is empty.
      */
     @Test
@@ -120,13 +107,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "";
         String phone = "555-FOO";
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorDoesNotThrowExceptionWhenEmailIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * throws a {@link NullPointerException} when email is null.
      */
     @Test(expected = NullPointerException.class)
@@ -135,13 +123,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = null;
         String phone = "555-FOO";
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorThrowsExceptionWhenEmailIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * does not throw an exception when phone is empty.
      */
     @Test
@@ -150,13 +139,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "";
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorDoesNotThrowExceptionWhenPhoneIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * throws a {@link NullPointerException} when phone is null.
      */
     @Test(expected = NullPointerException.class)
@@ -165,13 +155,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = null;
         String notes = "baz";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorThrowsExceptionWhenPhoneIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * does not throw an exception when notes is empty.
      */
     @Test
@@ -180,13 +171,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "";
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorDoesNotThrowExceptionWhenNotesIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
      * throws a {@link NullPointerException} when notes is null.
      */
     @Test(expected = NullPointerException.class)
@@ -195,13 +187,46 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = null;
+        boolean active = true;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
     }    // constructorThrowsExceptionWhenNotesIsNull()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * does not throw an exception when no active is true.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenActiveIsTrue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+    }    // constructorDoesNotThrowExceptionWhenActiveIsTrue()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * does not throw an exception when no active is false.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenActiveIsFalse() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = false;
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+    }    // constructorDoesNotThrowExceptionWhenActiveIsFalse()
 
 
     /* getName */
-    
+
     /**
      * Tests that {@link Volunteer#getName()} does not throw an exception.
      */
@@ -211,7 +236,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         volunteer.getName();
     }    // getNameDoesNotThrowException()
@@ -225,7 +251,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String received = volunteer.getName();
 
@@ -246,7 +273,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         name = "Smurf";
 
         volunteer.setName(name);
@@ -262,7 +290,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         name = "";
 
         volunteer.setName(name);
@@ -278,8 +307,9 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
- 
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
         volunteer.setName(name);
     }    // setNameDoesNotThrowExceptionWhenNameIsIdentical()
 
@@ -293,9 +323,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         name = null;
- 
+
         volunteer.setName(name);
     }    // setNameThrowsExceptionWhenNameIsNull()
 
@@ -309,9 +340,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         name = "Smurf";
- 
+
         volunteer.setName(name);
         String received = volunteer.getName();
 
@@ -321,7 +353,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* getEmail */
-    
+
     /**
      * Tests that {@link Volunteer#getEmail()} does not throw an exception.
      */
@@ -331,7 +363,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         volunteer.getEmail();
     }    // getEmailDoesNotThrowException()
@@ -345,7 +378,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String received = volunteer.getEmail();
 
@@ -366,7 +400,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         email = "Smurf";
 
         volunteer.setEmail(email);
@@ -382,7 +417,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         email = "";
 
         volunteer.setEmail(email);
@@ -398,8 +434,9 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
- 
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
         volunteer.setEmail(email);
     }    // setEmailDoesNotThrowExceptionWhenEmailIsIdentical()
 
@@ -413,9 +450,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         email = null;
- 
+
         volunteer.setEmail(email);
     }    // setEmailThrowsExceptionWhenEmailIsNull()
 
@@ -429,9 +467,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         email = "Smurf";
- 
+
         volunteer.setEmail(email);
         String received = volunteer.getEmail();
 
@@ -441,7 +480,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* getPhone */
-    
+
     /**
      * Tests that {@link Volunteer#getPhone()} does not throw an exception.
      */
@@ -451,7 +490,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         volunteer.getPhone();
     }    // getPhoneDoesNotThrowException()
@@ -465,7 +505,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String received = volunteer.getPhone();
 
@@ -486,7 +527,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         phone = "Smurf";
 
         volunteer.setPhone(phone);
@@ -502,7 +544,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         phone = "";
 
         volunteer.setPhone(phone);
@@ -518,8 +561,9 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
- 
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
         volunteer.setPhone(phone);
     }    // setPhoneDoesNotThrowExceptionWhenPhoneIsIdentical()
 
@@ -533,9 +577,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         phone = null;
- 
+
         volunteer.setPhone(phone);
     }    // setPhoneThrowsExceptionWhenPhoneIsNull()
 
@@ -549,9 +594,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         phone = "Smurf";
- 
+
         volunteer.setPhone(phone);
         String received = volunteer.getPhone();
 
@@ -561,7 +607,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* getNotes */
-    
+
     /**
      * Tests that {@link Volunteer#getNotes()} does not throw an exception.
      */
@@ -571,7 +617,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         volunteer.getNotes();
     }    // getNotesDoesNotThrowException()
@@ -585,7 +632,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String received = volunteer.getNotes();
 
@@ -606,7 +654,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         notes = "Smurf";
 
         volunteer.setNotes(notes);
@@ -622,7 +671,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         notes = "";
 
         volunteer.setNotes(notes);
@@ -638,8 +688,9 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
- 
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
         volunteer.setNotes(notes);
     }    // setNotesDoesNotThrowExceptionWhenNotesIsIdentical()
 
@@ -653,9 +704,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         notes = null;
- 
+
         volunteer.setNotes(notes);
     }    // setNotesThrowsExceptionWhenNotesIsNull()
 
@@ -669,9 +721,10 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         notes = "Smurf";
- 
+
         volunteer.setNotes(notes);
         String received = volunteer.getNotes();
 
@@ -691,7 +744,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         volunteer.getRoles();
     }    // getRolesDoesNotThrowAnException()
@@ -706,7 +760,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         List<Role> received = volunteer.getRoles();
 
@@ -726,7 +781,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         Role role = new Role("smurf");
         volunteer.addRole(role);
@@ -742,7 +798,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         Role role = new Role("smurf");
         volunteer.addRole(role);
 
@@ -759,7 +816,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         String roleName = "smurf";
         Role role = new Role(roleName);
         volunteer.addRole(role);
@@ -778,7 +836,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         Role role = null;
         volunteer.addRole(role);
@@ -794,7 +853,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String roleName = "smurf";
         Role role = new Role(roleName);
@@ -815,7 +875,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         List<Role> roles = Arrays.asList(new Role("first"), new Role("second"), new Role("third"));
         for (Role role : roles) {
@@ -839,7 +900,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String roleName = "smurf";
         Role role = new Role(roleName);
@@ -861,7 +923,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
 
         String roleName = "smurf";
         Role role = new Role(roleName);
@@ -887,7 +950,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         Role role = new Role("smurf");
         volunteer.addRole(role);
 
@@ -904,7 +968,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         Role role = new Role("smurf");
 
         volunteer.removeRole(role);
@@ -920,7 +985,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         String roleName = "smurf";
         Role role = new Role(roleName);
         volunteer.addRole(role);
@@ -940,7 +1006,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         Role role = new Role("smurf");
         volunteer.addRole(role);
 
@@ -957,7 +1024,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -983,7 +1051,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1000,8 +1069,102 @@ public class VolunteerTest extends ReadWritableTest {
     }    // removeRoleDoesNotRemoveTheRoleWhenItHasNotBeenAdded()
 
 
+    /* isActive */
+
+    /**
+     * Tests that {@link Volunteer#isActive()} does not throw an exception.
+     */
+    @Test
+    public void isActiveDoesNotThrowException() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
+        volunteer.isActive();
+    }    // isActiveDoesNotThrowException()
+
+    /**
+     * Tests that {@link Volunteer#isActive()} returns the correct value.
+     */
+    @Test
+    public void isActiveReturnsTheCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+
+        boolean received = volunteer.isActive();
+
+        boolean expected = active;
+        assertEquals(expected, received);
+    }    // isActiveReturnsTheCorrectValue()
+
+
+    /* setActive */
+
+    /**
+     * Tests that {@link Volunteer#setActive(boolean)} does not throw an
+     * exception when active is true.
+     */
+    @Test
+    public void setActiveDoesNotThrowExceptionWhenActiveIsTrue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = false;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        active = true;
+
+        volunteer.setActive(active);
+    }    // setActiveDoesNotThrowExceptionWhenActiveIsTrue()
+
+    /**
+     * Tests that {@link Volunteer#setActive(boolean)} does not throw an
+     * exception when active is false.
+     */
+    @Test
+    public void setActiveDoesNotThrowExceptionWhenActiveIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        active = false;
+
+        volunteer.setActive(active);
+    }    // setActiveDoesNotThrowExceptionWhenActiveIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#setActive(boolean)} correctly sets
+     * the active state.
+     */
+    @Test
+    public void setActiveActuallySetsActiveState() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        active = false;
+
+        volunteer.setActive(active);
+        boolean received = volunteer.isActive();
+
+        boolean expected = active;
+        assertEquals(expected, received);
+    }    // setActiveActuallySetsActiveState()
+
+
     /* getReadWritableProperties */
-    
+
     /**
      * Tests that {@link Volunteer#getReadWritableProperties()} returns the
      * correct value.
@@ -1012,7 +1175,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1034,9 +1198,10 @@ public class VolunteerTest extends ReadWritableTest {
         expected.put("email", email);
         expected.put("phone", phone);
         expected.put("notes", notes);
+        expected.put("active", active);
         assertEquals(expected, received);
     }    // Test()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#getReadWritableProperties()}
      * has the correct iteration order.
@@ -1047,7 +1212,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1059,13 +1225,13 @@ public class VolunteerTest extends ReadWritableTest {
             received.add(entry.getKey());
         }    // for
 
-        List<String> expected = Arrays.asList("name", "email", "phone", "notes", "roles");
+        List<String> expected = Arrays.asList("name", "email", "phone", "notes", "active", "roles");
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
 
     /* equals */
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} does not throw an exception
      * when the argument is null.
@@ -1076,7 +1242,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1085,7 +1252,7 @@ public class VolunteerTest extends ReadWritableTest {
         Object obj = null;
         volunteer.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument is null.
@@ -1096,7 +1263,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1107,7 +1275,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} does not throw an exception
      * when the argument is not a volunteer.
@@ -1118,7 +1286,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1127,7 +1296,7 @@ public class VolunteerTest extends ReadWritableTest {
         Object obj = 1;
         volunteer.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNotVolunteer()
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument is not a volunteer.
@@ -1138,7 +1307,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1149,7 +1319,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNotVolunteer()
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} does not throw an exception
      * when the argument is a volunteer.
@@ -1160,16 +1330,17 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Object obj = new Volunteer(name, email, notes, phone);
+        Object obj = new Volunteer(name, email, phone, notes, active);
         volunteer.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsVolunteer()
-    
+
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
      * argument has a different name than the caller.
@@ -1180,13 +1351,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name + "X", email, phone, notes);
+        Volunteer obj = new Volunteer(name + "X", email, phone, notes, active);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1206,13 +1378,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email + "X", phone, notes);
+        Volunteer obj = new Volunteer(name, email + "X", phone, notes, active);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1224,7 +1397,7 @@ public class VolunteerTest extends ReadWritableTest {
 
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
-     * argument has a different phone number.
+     * argument has a different phone number than the caller.
      */
     @Test
     public void equalsReturnsFalseWhenArgumentHasDifferentPhone() {
@@ -1232,13 +1405,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone + "X", notes);
+        Volunteer obj = new Volunteer(name, email, phone + "X", notes, active);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1250,7 +1424,7 @@ public class VolunteerTest extends ReadWritableTest {
 
     /**
      * Tests that {@link Volunteer#equals(Object)} returns false when the
-     * argument has different notes.
+     * argument has different notes than the caller.
      */
     @Test
     public void equalsReturnsFalseWhenArgumentHasDifferentNotes() {
@@ -1258,13 +1432,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes + "X");
+        Volunteer obj = new Volunteer(name, email, phone, notes + "X", active);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1275,8 +1450,35 @@ public class VolunteerTest extends ReadWritableTest {
     }    // equalsReturnsFalseWhenArgumentHasDifferentNotes()
 
     /**
+     * Tests that {@link Volunteer#equals(Object)} returns false when the
+     * argument has a different active status than the caller.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentActiveState() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
+        for (Role role : roles) {
+            volunteer.addRole(role);
+        }    // for
+
+        Volunteer obj = new Volunteer(name, email, phone, notes, !active);
+        for (Role role : roles) {
+            obj.addRole(role);
+        }    // for
+        boolean received = volunteer.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentActiveState()
+
+    /**
      * Tests that {@link Volunteer#equals(Object)} returns true when the
-     * argument has different roles.
+     * argument has different roles than the caller.
      */
     @Test
     public void equalsReturnsTrueWhenArgumentHasDifferentRoles() {
@@ -1284,13 +1486,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes);
+        Volunteer obj = new Volunteer(name, email, phone, notes, active);
         for (int i = 1; i < roles.size(); ++i) {    // Deliberately skipping index 0
             obj.addRole(roles.get(i));
         }    // for
@@ -1310,13 +1513,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes);
+        Volunteer obj = new Volunteer(name, email, phone, notes, active);
         for (Role role : roles) {
             obj.addRole(role);
         }    // for
@@ -1337,13 +1541,14 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
         }    // for
 
-        Volunteer obj = new Volunteer(name, email, phone, notes);
+        Volunteer obj = new Volunteer(name, email, phone, notes, active);
         Collections.reverse(roles);
         for (Role role : roles) {
             obj.addRole(role);
@@ -1364,7 +1569,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1379,7 +1585,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* hashCode */
-    
+
     /**
      * Tests that {@link Volunteer#hashCode()} does not throw an exception.
      */
@@ -1389,7 +1595,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1408,12 +1615,13 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer1 = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer1 = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer1.addRole(role);
         }    // for
-        Volunteer volunteer2 = new Volunteer(name, email, phone, notes);
+        Volunteer volunteer2 = new Volunteer(name, email, phone, notes, active);
         for (Role role : roles) {
             volunteer2.addRole(role);
         }    // for
@@ -1425,7 +1633,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* clone */
-    
+
     /**
      * Tests that {@link Volunteer#clone()} does not throw an exception.
      */
@@ -1435,7 +1643,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1443,7 +1652,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         volunteer.clone();
     }    // cloneDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#clone()} is not null.
      */
@@ -1453,7 +1662,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1463,7 +1673,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // testCloneNcloneDoesNotReturnNullotNull()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#clone()} is equal to the
      * argument.
@@ -1474,7 +1684,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1485,7 +1696,7 @@ public class VolunteerTest extends ReadWritableTest {
         Volunteer expected = volunteer;
         assertEquals(expected, received);
     }    // returnValueOfCloneIsEqualToOriginal()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#clone()} is not identical
      * to the argument.
@@ -1496,7 +1707,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1506,9 +1718,9 @@ public class VolunteerTest extends ReadWritableTest {
 
         assertFalse(volunteer == received);
     }    // returnValueOfCloneIsNotIdenticalToOriginal()
-    
+
     /* toString */
-    
+
     /**
      * Tests that {@link Volunteer#toString()} does not throw an exception.
      */
@@ -1518,7 +1730,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1526,7 +1739,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         volunteer.toString();
     }    // toStringDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#toString()} is not null.
      */
@@ -1536,7 +1749,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1546,7 +1760,7 @@ public class VolunteerTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // toStringDoesNotReturnNull()
-    
+
     /**
      * Tests that {@link Volunteer#toString()} returns the volunteer's name.
      */
@@ -1556,7 +1770,8 @@ public class VolunteerTest extends ReadWritableTest {
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
-        Volunteer volunteer = new Volunteer(name, email, phone, notes);
+        boolean active = true;
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         List<Role> roles = Arrays.asList(new Role("A"), new Role("B"), new Role("C"));
         for (Role role : roles) {
             volunteer.addRole(role);
@@ -1570,7 +1785,7 @@ public class VolunteerTest extends ReadWritableTest {
 
 
     /* getVolunteerFactory */
-    
+
     /**
      * Tests that {@link Volunteer#getVolunteerFactory()} does not throw an exception.
      */
@@ -1578,7 +1793,7 @@ public class VolunteerTest extends ReadWritableTest {
     public void volunteerFactoryDoesNotThrowException() {
         Volunteer.getVolunteerFactory();
     }    // volunteerFactoryDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link Volunteer#getVolunteerFactory()} is not
      * null.

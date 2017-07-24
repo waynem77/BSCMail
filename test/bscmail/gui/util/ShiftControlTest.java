@@ -35,6 +35,17 @@ import static org.junit.Assert.*;
  */
 public class ShiftControlTest {
 
+    /* utility functions */
+    /**
+     * Returns a volunteer to be used in testing.
+     *
+     * @param i volunteer number
+     * @return a volunteer to be used in testing
+     */
+    private Volunteer getTestVolunteer(int i) {
+        return new Volunteer("volunteerName" + i, "volunteerEmail" + i, "volunteerPhone" + i, "volunteerNotes" + i, true);
+    }    // getTestVolunteer()
+
     /* constructor */
 
     /**
@@ -46,8 +57,8 @@ public class ShiftControlTest {
     public void constructorThrowsExceptionWhenShiftIsNull() {
         Shift shift = null;
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
     }    // constructorThrowsExceptionWhenShiftIsNull()
@@ -74,9 +85,9 @@ public class ShiftControlTest {
     public void constructorThrowsExceptionWhenVolunteersContainssNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
+                getTestVolunteer(1),
                 null,
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
     }    // constructorThrowsExceptionWhenVolunteersContainssNull()
@@ -91,8 +102,8 @@ public class ShiftControlTest {
     public void constructorDoesNotThrowExceptionWhenShiftIsNotNullAndVolunteersIsNotNullAndDoesNotContainNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
     }    // constructorDoesNotThrowExceptionWhenShiftIsNotNullAndVolunteersIsNotNullAndDoesNotContainNull()
@@ -106,8 +117,8 @@ public class ShiftControlTest {
     public void constructorSetsVolunteerListToCorrectSize() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
@@ -126,8 +137,8 @@ public class ShiftControlTest {
     public void constructorSetsFirstEntryInVolunteerListToNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
@@ -145,8 +156,8 @@ public class ShiftControlTest {
     public void constuctorSetsLatterEntriesInVolunteerListCorrectly() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
 
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
@@ -167,8 +178,8 @@ public class ShiftControlTest {
     public void getShiftDoesNotThrowException() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
         shiftControl.getShift();
@@ -181,8 +192,8 @@ public class ShiftControlTest {
     public void getShiftDoesNotReturnNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
         Shift received = shiftControl.getShift();
@@ -198,8 +209,8 @@ public class ShiftControlTest {
     public void getShiftReturnsCorrectValue() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
 
         Shift received = shiftControl.getShift();
@@ -218,8 +229,8 @@ public class ShiftControlTest {
     public void getVolunteerDoesNotThrowExceptionWhenNoVolunteerIsSelected() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         int selectedIndex = 0;
         shiftControl.setSelectedIndex(selectedIndex);
@@ -235,8 +246,8 @@ public class ShiftControlTest {
     public void getVolunteerDoesNotThrowExceptionWhenVolunteerIsSelected() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         int selectedIndex = 1;
         shiftControl.setSelectedIndex(selectedIndex);
@@ -252,8 +263,8 @@ public class ShiftControlTest {
     public void getVolunteerReturnsNullWhenNoVolunteerIsSelected() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         int selectedIndex = 0;
         shiftControl.setSelectedIndex(selectedIndex);
@@ -272,8 +283,8 @@ public class ShiftControlTest {
     public void getVolunteerDoesNotReturnNullWhenVolunteerIsSelected() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         int selectedIndex = 1;
         shiftControl.setSelectedIndex(selectedIndex);
@@ -291,8 +302,8 @@ public class ShiftControlTest {
     public void getVolunteerReturnsTheSelectedVolunteer() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         int selectedIndex = 1;
         shiftControl.setSelectedIndex(selectedIndex);
@@ -312,8 +323,8 @@ public class ShiftControlTest {
     public void setModelThrowsExceptionWhenVolunteersIsNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = null;
 
@@ -328,13 +339,13 @@ public class ShiftControlTest {
     public void setModelThrowsExceptionWhenVolunteersContainsNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = Arrays.asList(
-                new Volunteer("volunteerName3", "volunteerEmail3", "volunteerPhone3", "volunteerNotes3"),
+                getTestVolunteer(3),
                 null,
-                new Volunteer("volunteerName5", "volunteerEmail5", "volunteerPhone5", "volunteerNotes5"));
+                getTestVolunteer(5));
 
         shiftControl.setModel(volunteers);
     }    // setModelThrowsExceptionWhenVolunteersContainsNull()
@@ -347,13 +358,13 @@ public class ShiftControlTest {
     public void setModelDoesNotThrowExceptionWhenVolunteersIsCorrect() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = Arrays.asList(
-                new Volunteer("volunteerName3", "volunteerEmail3", "volunteerPhone3", "volunteerNotes3"),
-                new Volunteer("volunteerName4", "volunteerEmail4", "volunteerPhone4", "volunteerNotes4"),
-                new Volunteer("volunteerName5", "volunteerEmail5", "volunteerPhone5", "volunteerNotes5"));
+                getTestVolunteer(3),
+                getTestVolunteer(4),
+                getTestVolunteer(5));
 
         shiftControl.setModel(volunteers);
     }    // setModelDoesNotThrowExceptionWhenVolunteersIsCorrect()
@@ -366,13 +377,13 @@ public class ShiftControlTest {
     public void setModelSetsVolunteerListToCorrectSize() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = Arrays.asList(
-                new Volunteer("volunteerName3", "volunteerEmail3", "volunteerPhone3", "volunteerNotes3"),
-                new Volunteer("volunteerName4", "volunteerEmail4", "volunteerPhone4", "volunteerNotes4"),
-                new Volunteer("volunteerName5", "volunteerEmail5", "volunteerPhone5", "volunteerNotes5"));
+                getTestVolunteer(3),
+                getTestVolunteer(4),
+                getTestVolunteer(5));
 
         shiftControl.setModel(volunteers);
 
@@ -390,13 +401,13 @@ public class ShiftControlTest {
     public void setModelSetsFirstEntryInVolunteerListToNull() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = Arrays.asList(
-                new Volunteer("volunteerName3", "volunteerEmail3", "volunteerPhone3", "volunteerNotes3"),
-                new Volunteer("volunteerName4", "volunteerEmail4", "volunteerPhone4", "volunteerNotes4"),
-                new Volunteer("volunteerName5", "volunteerEmail5", "volunteerPhone5", "volunteerNotes5"));
+                getTestVolunteer(3),
+                getTestVolunteer(4),
+                getTestVolunteer(5));
 
         shiftControl.setModel(volunteers);
 
@@ -413,13 +424,13 @@ public class ShiftControlTest {
     public void setModelSetsLatterEntriesInVolunteerListCorrectly() {
         Shift shift = new Shift("shiftName", Arrays.<Role>asList(), false, false, false);
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("volunteerName1", "volunteerEmail1", "volunteerPhone1", "volunteerNotes1"),
-                new Volunteer("volunteerName2", "volunteerEmail2", "volunteerPhone2", "volunteerNotes2"));
+                getTestVolunteer(1),
+                getTestVolunteer(2));
         ShiftControl shiftControl = new ShiftControl(shift, volunteers);
         volunteers = Arrays.asList(
-                new Volunteer("volunteerName3", "volunteerEmail3", "volunteerPhone3", "volunteerNotes3"),
-                new Volunteer("volunteerName4", "volunteerEmail4", "volunteerPhone4", "volunteerNotes4"),
-                new Volunteer("volunteerName5", "volunteerEmail5", "volunteerPhone5", "volunteerNotes5"));
+                getTestVolunteer(3),
+                getTestVolunteer(4),
+                getTestVolunteer(5));
         assertTrue("Invalid test", volunteers.size() > 0);
 
         shiftControl.setModel(volunteers);
