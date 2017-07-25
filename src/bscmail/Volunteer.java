@@ -155,8 +155,9 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
             String notes = (notesObject != null) ? notesObject.toString() : "";
 
             Object activeObject = properties.get(RW_ACTIVE_KEY);
-            Boolean activeBooleanObject = (Boolean)activeObject;
-            boolean active = (activeBooleanObject == null) ? true : activeBooleanObject;
+            String activeStringObject = (activeObject != null) ? activeObject.toString() : null;
+            Boolean activeBooleanObject = (activeStringObject != null) ? Boolean.valueOf(activeStringObject) : null;
+            boolean active = (activeBooleanObject != null) ? activeBooleanObject : true;
 
             Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
             Object rolesObject = properties.get(RW_ROLES_KEY);

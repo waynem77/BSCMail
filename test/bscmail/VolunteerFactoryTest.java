@@ -100,12 +100,14 @@ public class VolunteerFactoryTest extends ReadWritableFactoryTest<Volunteer> {
         String email = getTestEmail();
         String phone = getTestPhone();
         String notes = getTestNotes();
+        String active = Boolean.TRUE.toString();
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("name", name);
         properties.put("email", email);
         properties.put("phone", phone);
         properties.put("notes", notes);
+        properties.put("active", active);
         return properties;
     }    // getTestProperties()
 
@@ -135,8 +137,9 @@ public class VolunteerFactoryTest extends ReadWritableFactoryTest<Volunteer> {
         String notes = (notesObject == null) ? "" : notesObject.toString();
 
         Object activeObject = properties.get("active");
-        Boolean activeObjectAsBoolean = (Boolean)activeObject;
-        boolean active = (activeObject == null) ? true : activeObjectAsBoolean;
+        String activeObjectAsString = (activeObject == null) ? null : activeObject.toString();
+        Boolean activeObjectAsBoolean = (activeObjectAsString == null) ? null : Boolean.valueOf(activeObjectAsString);
+        boolean active = (activeObjectAsBoolean == null) ? true : activeObjectAsBoolean;
 
         Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
         assert (volunteer != null);
