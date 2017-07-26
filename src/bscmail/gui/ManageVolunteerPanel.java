@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.Box;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -70,6 +71,11 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      * The text field displaying the volunteer notes.
      */
     private final JTextArea notesTextArea;
+
+    /**
+     * The check box displaying the volunteer's active state.
+     */
+    private final JCheckBox activeCheckBox;
 
     /**
      * The selection panel for displaying a volunteer's roles
@@ -140,6 +146,8 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         layoutHelper.addComponent("Notes: ", new JScrollPane(notesTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        activeCheckBox = new JCheckBox();
+        layoutHelper.addComponent("Active: ", activeCheckBox);
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         rolesSelectList.setListData(new Vector<>(application.getRoles()));
@@ -165,6 +173,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
         phoneTextField.setText((volunteer == null) ? "" : volunteer.getPhone());
         notesTextArea.setText((volunteer == null) ? "" : volunteer.getNotes());
+        activeCheckBox.setSelected((volunteer == null) ? true : volunteer.isActive());
         if (volunteer != null) {
             loadSelectedRoles(volunteer);
         }    // if
@@ -184,7 +193,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 emailTextField.getText(),
                 phoneTextField.getText(),
                 notesTextArea.getText(),
-                false
+                activeCheckBox.isSelected()
         );
         for (Role role : getSelectedRoles()) {
             currentVolunteer.addRole(role);
