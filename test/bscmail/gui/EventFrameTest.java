@@ -543,7 +543,7 @@ public class EventFrameTest {
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", !oldVolunteer.isActive());
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive());
         newVolunteers.set(INDEX, newVolunteer);
 
         eventFrame.setVolunteers(newVolunteers);
@@ -570,7 +570,7 @@ public class EventFrameTest {
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", !oldVolunteer.isActive());
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive());
         newVolunteers.set(INDEX, newVolunteer);
 
         eventFrame.setVolunteers(newVolunteers);
@@ -584,10 +584,10 @@ public class EventFrameTest {
     /**
      * Tests that, after a call to {@link EventFrame#setVolunteers(List)}, the
      * selection is cleared if no element of the argument has the same name as
-     * the selection.
+     * the selection due to volunteer name changing.
      */
     @Test
-    public void setVolunteersClearsSelectedVolunteersWhenNeeded() {
+    public void setVolunteersClearsSelectedVolunteersWhenNeededDueToNameChange() {
         Application application = getTestApplication();
         EventFrame eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
@@ -618,7 +618,84 @@ public class EventFrameTest {
         List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
         Volunteer received = receivedVolunteers.get(INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER);
         assertNull(received);
-    }    // setVolunteersClearsSelectedVolunteersWhenNeeded()
+    }    // setVolunteersClearsSelectedVolunteersWhenNeededDueToNameChange()
+
+    /**
+     * Tests that, after a call to {@link EventFrame#setVolunteers(List)}, the
+     * selection is cleared if no element of the argument has the same name as
+     * the selection due to volunteer roles changing.
+     */
+    @Test
+    public void setVolunteersClearsSelectedVolunteersWhenNeededDueToRoleChange() {
+        Application application = getTestApplication();
+        EventFrame eventFrame = new EventFrame(application);
+        eventFrame.setShifts(getTestShifts());
+        List<Volunteer> volunteers = new LinkedList<>();
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        eventFrame.setVolunteers(volunteers);
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
+        List<Volunteer> newVolunteers = new LinkedList<>();
+        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
+        newVolunteers.add(volunteer);
+        final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 2;
+
+        eventFrame.setVolunteers(newVolunteers);
+
+        List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
+        Volunteer received = receivedVolunteers.get(INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER);
+        assertNull(received);
+    }    // setVolunteersClearsSelectedVolunteersWhenNeededDueToRoleChange()
+
+    /**
+     * Tests that, after a call to {@link EventFrame#setVolunteers(List)}, the
+     * selection is cleared if no element of the argument has the same name as
+     * the selection due to volunteer active status changing.
+     */
+    @Test
+    public void setVolunteersClearsSelectedVolunteersWhenNeededDueToActiveChange() {
+        Application application = getTestApplication();
+        EventFrame eventFrame = new EventFrame(application);
+        eventFrame.setShifts(getTestShifts());
+        List<Volunteer> volunteers = new LinkedList<>();
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        volunteers.add(volunteer);
+        eventFrame.setVolunteers(volunteers);
+        eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
+        List<Volunteer> newVolunteers = new LinkedList<>();
+        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", false);
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        newVolunteers.add(volunteer);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
+        volunteer.addRole(ANGEL_ROLE);
+        newVolunteers.add(volunteer);
+        final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 0;
+
+        eventFrame.setVolunteers(newVolunteers);
+
+        List<Volunteer> receivedVolunteers = getSelectedVolunteers(eventFrame);
+        Volunteer received = receivedVolunteers.get(INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER);
+        assertNull(received);
+    }    // setVolunteersClearsSelectedVolunteersWhenNeededDueToActiveChange()
 
     /* setSelectedVolunteers */
 
@@ -947,7 +1024,7 @@ public class EventFrameTest {
         expected.set(INDEX, null);
         expected = expected.subList(0, SIZE);
         List<Volunteer> received = getSelectedVolunteers(eventFrame);
-        assertEquals(expected, received);
+         assertEquals(expected, received);
     }    // setSelectedVolunteersSetsSelectionsCorrectlyWhenVolunteersElementsDoNotExistInEvent()
 
     /**

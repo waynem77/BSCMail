@@ -234,7 +234,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             Volunteer selectedVolunteer = shiftControl.getVolunteer();
             String volunteerName = (selectedVolunteer == null) ? null : selectedVolunteer.getName();
             selectedVolunteers.add(volunteerName);
-            shiftControl.setModel(this.getQualifiedVolunteers(shiftControl.getShift(), volunteers));
+            shiftControl.setModel(getQualifiedVolunteers(shiftControl.getShift(), volunteers));
         }    // for
         setSelectedVolunteers(selectedVolunteers);
     }    // setVolunteers()
@@ -278,21 +278,29 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     }    // setVolunteers()
 
     /**
-     * Obtains the volunteers that are qualified to work a given shift
-     * @param shift shift to work
-     * @param volunteers set of volunteers to check
+     * Obtains the volunteers that are qualified to work a given shift.
+     *
+     * Qualified volunteers are defined as:
+     * <ul>
+     * <li>having all the roles required by the shift, and
+     * <li>being active.
+     * </ul>
+     *
+     * @param shift shift to work; may not be null
+     * @param volunteers set of volunteers to check; may not be null nor contain
+     * null
      * @return a filtered list of qualified volunteers
      */
     private List<Volunteer> getQualifiedVolunteers(Shift shift, List<Volunteer> volunteers) {
+        assert (shift != null);
+        assert (volunteers != null);
+        assert (!volunteers.contains(null));
         List<Volunteer> filteredList = new ArrayList<>();
-        if (shift.getRoles().isEmpty()) {
-            return volunteers;
-        }
         for (Volunteer volunteer : volunteers) {
-            if (!volunteer.getRoles().isEmpty() && volunteer.getRoles().containsAll(shift.getRoles())) {
+            if (volunteer.isActive() && shift.rolesAreCompatible(volunteer)) {
                 filteredList.add(volunteer);
-            }
-        }
+            }    // if
+        }    // for
         return filteredList;
     }
     /**
