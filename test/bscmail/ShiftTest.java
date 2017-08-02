@@ -367,6 +367,287 @@ public class ShiftTest extends ReadWritableTest {
         shift.setVolunteer(volunteer);
     }    // setVolunteerDoesNotThrowExceptionWhenVolunteerIsNull()
 
+    /* rolesAreCompatible */
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} throws a
+     * {@code NullPointerException} when volunteer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void rolesAreCompatibleThrowsExceptionWhenVolunteerIsNull() {
+        String description = "foo";
+        List<Role> roles = Arrays.asList(new Role("bar"), new Role("baz"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        Volunteer volunteer = null;
+
+        shift.rolesAreCompatible(volunteer);
+    }    // rolesAreCompatibleThrowsExceptionWhenVolunteerIsNull()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} does not
+     * throws an exception when volunteer is not null.
+     */
+    @Test
+    public void rolesAreCompatibleDoesNotThrowExceptionWhenVolunteerIsNotNull() {
+        String description = "foo";
+        List<Role> roles = Arrays.asList(new Role("bar"), new Role("baz"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        shift.rolesAreCompatible(volunteer);
+    }    // rolesAreCompatibleDoesNotThrowExceptionWhenVolunteerIsNotNull()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * true when the shift has no roles and the volunteer has no roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsTrueWhenShiftHasNoRolesAndVolunteerHasNoRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleDoesNotThrowExceptionWhenVolunteerIsNotNull()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * true when the shift has no roles and the volunteer has roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsTrueWhenShiftHasNoRolesAndVolunteerHasRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList();
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsTrueWhenShiftHasNoRolesAndVolunteerHasRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * false when the shift has roles and the volunteer has no roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasNoRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasNoRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * false when the shift has roles and the volunteer has completely different
+     * roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasCompletelyDifferentRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role3"), new Role("role4"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasCompletelyDifferentRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * false when the shift has roles and the volunteer has some but not all of
+     * the roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasSomeButNotAllRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role2"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsFalseWhenShiftHasRolesAndVolunteerHasSomeButNotAllRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * true when the shift has roles and the volunteer has the same roles.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSameRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSameRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * true when the shift has roles and the volunteer has the same roles plus
+     * additions.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSamePlusAdditionalRoles() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role1"), new Role("role2"), new Role("role3"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSamePlusAdditionalRoles()
+
+    /**
+     * Tests that {@link Shift#rolesAreCompatible(bscmail.Volunteer)} returns
+     * true when the shift has roles and the volunteer has the same roles in a
+     * different order.
+     */
+    @Test
+    public void rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSameRolesInDifferentOrder() {
+        String description = "foo";
+        List<Role> shiftRoles = Arrays.asList(new Role("role1"), new Role("role2"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, shiftRoles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String name = "bar";
+        String email = "";
+        String phone = "";
+        String notes = "";
+        boolean active = true;
+        List<Role> volunteerRoles = Arrays.asList(new Role("role2"), new Role("role1"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        for (Role role : volunteerRoles) {
+            volunteer.addRole(role);
+        }    // for
+
+        boolean received = shift.rolesAreCompatible(volunteer);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // rolesAreCompatibleReturnsTrueWhenShiftHasRolesAndVolunteerHasSameRolesInDifferentOrder()
+
     /* getReadWritableProperties */
 
     /**

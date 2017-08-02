@@ -323,6 +323,24 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     }
 
     /**
+     * Returns true if the given volunteer has all the roles necessary for
+     * assignment to the shift.
+     *
+     * @param volunteer the volunteer to check; may not be null
+     * @return true if the given volunteer has all the roles necessary for
+     * assignment to the shift; false otherwise
+     * @throws NullPointerException if {@code volunteer} is null
+     */
+    public boolean rolesAreCompatible(Volunteer volunteer) {
+        if (volunteer == null) {
+            throw new NullPointerException("volunteer may not be null");
+        }    // if
+        List<Role> volunteerRoles = volunteer.getRoles();
+        assert (volunteerRoles != null);
+        return volunteerRoles.containsAll(roles);
+    }    // rolesAreCompatible()
+
+    /**
      * Returns a map containing the read-writable properties of the shift. The
      * map returned by this method is guaranteed to have the following
      * properties.
