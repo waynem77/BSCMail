@@ -147,6 +147,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         activeCheckBox = new JCheckBox();
+        activeCheckBox.setSelected(true);
         layoutHelper.addComponent("Active: ", activeCheckBox);
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
