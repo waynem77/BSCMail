@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -66,7 +66,7 @@ public class VolunteerTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when name is empty.
      */
     @Test
@@ -76,13 +76,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenNameIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * throws a {@link NullPointerException} when name is null.
      */
     @Test(expected = NullPointerException.class)
@@ -92,13 +93,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorThrowsExceptionWhenNameIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when email is empty.
      */
     @Test
@@ -108,13 +110,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenEmailIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * throws a {@link NullPointerException} when email is null.
      */
     @Test(expected = NullPointerException.class)
@@ -124,13 +127,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorThrowsExceptionWhenEmailIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when phone is empty.
      */
     @Test
@@ -140,13 +144,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenPhoneIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * throws a {@link NullPointerException} when phone is null.
      */
     @Test(expected = NullPointerException.class)
@@ -156,13 +161,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = null;
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorThrowsExceptionWhenPhoneIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when notes is empty.
      */
     @Test
@@ -172,13 +178,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenNotesIsEmpty()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * throws a {@link NullPointerException} when notes is null.
      */
     @Test(expected = NullPointerException.class)
@@ -188,13 +195,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = null;
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorThrowsExceptionWhenNotesIsNull()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when no active is true.
      */
     @Test
@@ -204,13 +212,14 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenActiveIsTrue()
 
     /**
      * Tests that
-     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)}
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
      * does not throw an exception when no active is false.
      */
     @Test
@@ -220,10 +229,61 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = false;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
     }    // constructorDoesNotThrowExceptionWhenActiveIsFalse()
 
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
+     * does not throw an exception when roles is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenRolesIsEmpty() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList();
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+    }    // constructorDoesNotThrowExceptionWhenRolesIsEmpty()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
+     * throws an exception when roles is null;
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenRolesIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = null;
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+    }    // constructorThrowsExceptionWhenRolesIsNull()
+
+    /**
+     * Tests that
+     * {@link Volunteer#Volunteer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.util.List)}
+     * throws an exception when roles contains is null;
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenRolesContainsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), null, new Role("bar"));
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+    }    // constructorThrowsExceptionWhenRolesContainsNull()
 
     /* getName */
 
@@ -745,29 +805,150 @@ public class VolunteerTest extends ReadWritableTest {
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
 
         volunteer.getRoles();
     }    // getRolesDoesNotThrowAnException()
 
     /**
-     * Tests that {@link Volunteer#getRoles()} returns an empty list if no roles
-     * have been added.
+     * Tests that {@link Volunteer#getRoles()} does not return null.
      */
     @Test
-    public void getRolesReturnsEmptyListForNewObject() {
+    public void getRolesDoesNotReturnNull() {
         String name = "Foo Bar";
         String email = "foo@bar";
         String phone = "555-FOO";
         String notes = "baz";
         boolean active = true;
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
 
         List<Role> received = volunteer.getRoles();
 
-        assertTrue(received.isEmpty());
-    }    // getRolesReturnsEmptyListForNewObject()
+        assertNotNull(received);
+    }    // getRolesDoesNotReturnNull()
 
+    /**
+     * Tests that {@link Volunteer#getRoles()} returns the correct value.
+     */
+    @Test
+    public void getRolesReturnsCorrectValue() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+
+        List<Role> received = volunteer.getRoles();
+
+        List<Role> expected = roles;
+        assertEquals(expected, received);
+    }    // getRolesReturnsCorrectValue()
+
+    /**
+     * Tests that the list returned by {@link Volunteer#getRoles()} is
+     * independent from the volunteer; that is, edits to the return value are
+     * not reflected within the volunteer.
+     */
+    @Test
+    public void getRolesReturnsListIndependentOfVolunteer() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("foo"), new Role("bar"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+
+        List<Role> receivedFirst = volunteer.getRoles();
+        receivedFirst.add(new Role("baz"));
+        List<Role> receivedSecond = volunteer.getRoles();
+
+        List<Role> expected = roles;
+        assertEquals(expected, receivedSecond);
+    }    // getRolesDoesNotReturnIdenticalListToThatPassedToSetList()
+
+
+    /* setRoles */
+
+    /**
+     * Tests that {@link Volunteer#setRoles(java.util.List)} throws an exception
+     * when roles is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setRolesThrowsExceptionWhenRolesIsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        roles = null;
+
+        volunteer.setRoles(roles);
+    }    // setRolesThrowsExceptionWhenRolesIsNull()
+
+    /**
+     * Tests that {@link Volunteer#setRoles(java.util.List)} throws an exception
+     * when roles contains null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setRolesThrowsExceptionWhenRolesContainsNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        roles = Arrays.asList(new Role("foo"), null, new Role("bar"));
+
+        volunteer.setRoles(roles);
+    }    // setRolesThrowsExceptionWhenRolesContainsNull()
+
+    /**
+     * Tests that {@link Volunteer#setRoles(java.util.List)} does not throw an
+     * exception when roles is not null and does not contain null.
+     */
+    @Test
+    public void setRolesDoesNotThrowExceptionWhenRolesIsNotNullAndDoesNotContainNull() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList();
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        roles = Arrays.asList(new Role("foo"), new Role("bar"));
+
+        volunteer.setRoles(roles);
+    }    // setRolesDoesNotThrowExceptionWhenRolesIsNotNullAndDoesNotContainNull()
+
+    /**
+     * Tests that {@link Volunteer#setRoles(java.util.List)} correctly sets the
+     * roles.
+     */
+    @Test
+    public void setRolesSetsRoles() {
+        String name = "Foo Bar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "baz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        roles = Arrays.asList(new Role("foo"), new Role("bar"));
+
+        volunteer.setRoles(roles);
+
+        List<Role> expected = roles;
+        List<Role> received = volunteer.getRoles();
+        assertEquals(expected, received);
+    }    // setRolesSetsRoles()
 
     /* addRole*/
 

@@ -20,6 +20,7 @@
 package bscmail;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,6 +128,10 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
          * <li>The volunteer's active status is given by the boolean value of
          * the value corresponding to "active". If such a value does not exist
          * or is null, the volunteer's active status is true.</li>
+         * <li>The volunteer's list of shift roles is given by the string value
+         * of the value corresponding to "roles", interpreted as a
+         * comma-delimited list. If such a value does not exist or is null, the
+         * volunteer's lists of roles is empty.
          * </ul>
          * This method effectively acts as the reverse of
          * {@link Volunteer#getReadWritableProperties()}.
@@ -222,13 +227,14 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     /**
      * Constructs a new volunteer.
      *
-     * @param name the volunteer's name
-     * @param email the volunteer's email address
-     * @param phone the volunteer's phone number
-     * @param notes the volunteer's notes
+     * @param name the volunteer's name; may not be null
+     * @param email the volunteer's email address; may not be null
+     * @param phone the volunteer's phone number; may not be null
+     * @param notes the volunteer's notes; may not be null
      * @param active true if the volunteer is active, false if the volunteer is
      * inactive
      * @throws NullPointerException if any parameter is null
+     * @deprecated
      */
     public Volunteer(String name, String email, String phone, String notes, boolean active) {
         if (name == null) {
@@ -250,6 +256,49 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         this.notes = notes;
         this.active = active;
         this.roles = new LinkedList<>();
+        assertInvariant();
+    }    // Volunteer()
+
+    /**
+     * Constructs a new volunteer.
+     *
+     * @param name the volunteer's name; may not be null
+     * @param email the volunteer's email address; may not be null
+     * @param phone the volunteer's phone number; may not be null
+     * @param notes the volunteer's notes; may not be null
+     * @param active true if the volunteer is active, false if the volunteer is
+     * inactive
+     * @param roles the roles the volunteer can perform; may not be null nor
+     * contain null
+     * @throws NullPointerException if any parameter is null or if {@code roles}
+     * contains null
+     */
+    public Volunteer(String name, String email, String phone, String notes, boolean active, List<Role> roles) {
+        if (name == null) {
+            throw new NullPointerException("name may not be null");
+        }    // if
+        if (email == null) {
+            throw new NullPointerException("email may not be null");
+        }    // if
+        if (phone == null) {
+            throw new NullPointerException("phone may not be null");
+        }    // if
+        if (notes == null) {
+            throw new NullPointerException("notes may not be null");
+        }    // if
+        if (roles == null) {
+            throw new NullPointerException("roles may not be null");
+        }    // if
+        if (roles.contains(null)) {
+            throw new NullPointerException("roles may not contain null");
+        }    // if
+
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.notes = notes;
+        this.active = active;
+        this.roles = new ArrayList<>(roles);
         assertInvariant();
     }    // Volunteer()
 
@@ -387,14 +436,37 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      */
     public List<Role> getRoles(){
         assertInvariant();
-        return roles;
+        return new ArrayList<>(roles);
     }    // getRoles()
+
+    /**
+     * Sets the list of roles the volunteer can perform to the given list.
+     *
+     * @param roles the roles the volunteer can perform; may not be null nor
+     * contain null
+     * @throws NullPointerException if {@code roles} is null or contains null
+     * @since 3.2
+     */
+    public void setRoles(List<Role> roles) {
+        assertInvariant();
+        if (roles == null) {
+            throw new NullPointerException("roles may not be null");
+        }    // if
+        if (roles.contains(null)) {
+            throw new NullPointerException("roles may not contain null");
+        }    // if
+        this.roles.clear();
+        this.roles.addAll(roles);
+        assertInvariant();
+    }    // setRoles()
 
     /**
      * Adds the given role to the volunteer.
      *
      * @param role the role to add; may not be null
      * @throws NullPointerException if {@code role} is null
+     * @deprecated Deprecated since 3.2. Use {@link #setRoles(java.util.List)}
+     * instead.
      */
     public void addRole(Role role){
         assertInvariant();
@@ -414,6 +486,8 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      *
      * @param role the role to remove; may not be null
      * @throws NullPointerException if {@code role} is null
+     * @deprecated Deprecated since 3.2. Use {@link #setRoles(java.util.List)}
+     * instead.
      */
     public void removeRole(Role role){
         assertInvariant();
