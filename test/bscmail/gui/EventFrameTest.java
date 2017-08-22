@@ -102,18 +102,16 @@ public class EventFrameTest {
     private List<Volunteer> getTestVolunteers() {
         List<Volunteer> volunteers = new LinkedList<>();
 
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
 
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList());
         volunteers.add(volunteer);
 
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
 
-        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!", true);
+        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!", true, Arrays.asList());
         volunteers.add(volunteer);
 
         return volunteers;
@@ -452,12 +450,11 @@ public class EventFrameTest {
                 new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
         eventFrame.setShifts(original);
         List<Volunteer> volunteers = new LinkedList<>();
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
         application.setVolunteers(volunteers);
         eventFrame.setVolunteers(volunteers);
@@ -543,7 +540,7 @@ public class EventFrameTest {
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive());
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive(), Arrays.asList());
         newVolunteers.set(INDEX, newVolunteer);
 
         eventFrame.setVolunteers(newVolunteers);
@@ -570,7 +567,7 @@ public class EventFrameTest {
         List<Volunteer> newVolunteers = getTestVolunteers();
         final int INDEX = 0;
         Volunteer oldVolunteer = newVolunteers.get(INDEX);
-        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive());
+        Volunteer newVolunteer = new Volunteer(oldVolunteer.getName(), oldVolunteer.getEmail() + "X", oldVolunteer.getPhone() + "X", oldVolunteer.getNotes() + "X", oldVolunteer.isActive(), Arrays.asList());
         newVolunteers.set(INDEX, newVolunteer);
 
         eventFrame.setVolunteers(newVolunteers);
@@ -592,24 +589,20 @@ public class EventFrameTest {
         EventFrame eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = new LinkedList<>();
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
         eventFrame.setVolunteers(volunteers);
         eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Volunteer> newVolunteers = new LinkedList<>();
-        volunteer = new Volunteer("Foor", "val@unteer", "555-VAL", "Val!", true);
+        volunteer = new Volunteer("Foor", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         newVolunteers.add(volunteer);
         final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 0;
 
@@ -631,23 +624,20 @@ public class EventFrameTest {
         EventFrame eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = new LinkedList<>();
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
         eventFrame.setVolunteers(volunteers);
         eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Volunteer> newVolunteers = new LinkedList<>();
-        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList());
         newVolunteers.add(volunteer);
         final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 2;
 
@@ -669,24 +659,20 @@ public class EventFrameTest {
         EventFrame eventFrame = new EventFrame(application);
         eventFrame.setShifts(getTestShifts());
         List<Volunteer> volunteers = new LinkedList<>();
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
         eventFrame.setVolunteers(volunteers);
         eventFrame.setSelectedVolunteers(getVolunteerNames(volunteers));
         List<Volunteer> newVolunteers = new LinkedList<>();
-        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", false);
+        volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", false, Arrays.asList());
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList(ANGEL_ROLE));
         newVolunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         newVolunteers.add(volunteer);
         final int INDEX_AT_WHICH_VOLUNTEER_LISTS_DIFFER = 0;
 
@@ -1064,14 +1050,13 @@ public class EventFrameTest {
                 new Shift("Angel", Arrays.asList(ANGEL_ROLE), false, false, false));
 
         List<Volunteer> volunteers = new LinkedList<>();
-        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true);
+        Volunteer volunteer = new Volunteer("Val Unteer", "val@unteer", "555-VAL", "Val!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true);
+        volunteer = new Volunteer("Halva Ticket", "halva@ticket", "555-HALVA", "Halva!", true, Arrays.asList());
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true);
-        volunteer.addRole(ANGEL_ROLE);
+        volunteer = new Volunteer("Ang El", "ang@el", "555-ANG", "Ang!", true, Arrays.asList(ANGEL_ROLE));
         volunteers.add(volunteer);
-        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!", true);
+        volunteer = new Volunteer("Colleen Up", "colleen@up", "555-COLLEEN", "Colleen!", true, Arrays.asList());
         volunteers.add(volunteer);
         eventFrame.setShifts(shifts);
         eventFrame.setVolunteers(volunteers);

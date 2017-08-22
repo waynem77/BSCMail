@@ -320,8 +320,8 @@ public class EventFrameGridTest {
     public void setShiftControlsThrowsExceptionWhenShiftControlsContainsNull() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -342,8 +342,8 @@ public class EventFrameGridTest {
     public void setShiftControlsDoesNotThrowExceptionWhenShiftControlsIsCorrect() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -375,8 +375,8 @@ public class EventFrameGridTest {
     public void getShiftControlsDoesNotThrowExceptionWhenThereAreControls() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -409,8 +409,8 @@ public class EventFrameGridTest {
     public void getShiftControlsDoesNotReturnNullWhenThereAreControls() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -432,8 +432,8 @@ public class EventFrameGridTest {
     public void getShiftControlsDoesNotReturnAListContainingNull() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -455,8 +455,8 @@ public class EventFrameGridTest {
     public void getShiftControlsReturnsControlsOnTheGrid() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -485,8 +485,8 @@ public class EventFrameGridTest {
     public void getShiftControlsReturnsControlsEqualToThosePassedToSetShiftControls() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),
@@ -511,8 +511,8 @@ public class EventFrameGridTest {
     public void getShiftControlsReturnsControlsPassedToSetShiftControls() {
         EventFrameGrid eventFrameGrid = new EventFrameGrid();
         List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("one", "", "", "", true),
-                new Volunteer("two", "", "", "", true)
+                new Volunteer("one", "", "", "", true, Arrays.asList()),
+                new Volunteer("two", "", "", "", true, Arrays.asList())
         );
         List<ShiftControl> shiftControls = Arrays.asList(
                 new ShiftControl(new Shift("foo", Arrays.<Role>asList(), false, false, false), volunteers),

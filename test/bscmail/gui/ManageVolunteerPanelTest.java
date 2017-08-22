@@ -29,6 +29,7 @@ import bscmail.TestIOLayer;
 import bscmail.Volunteer;
 import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
+import java.util.Arrays;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -81,7 +82,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
      */
     @Override
     protected Volunteer getElement() {
-        return new Volunteer("foo", "bar", "baz", "smurf", true);
+        return new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
     }    // getElement()
 
     /*
@@ -150,7 +151,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
 
         Volunteer received = panel.createElement();
 
-        Volunteer expected = new Volunteer("", "", "", "", true);
+        Volunteer expected = new Volunteer("", "", "", "", true, Arrays.asList());
         assertEquals(expected, received);
     }    // createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded()
 

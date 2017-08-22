@@ -20,6 +20,7 @@
 package bscmail.gui.util;
 
 import bscmail.Volunteer;
+import java.util.Arrays;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -51,7 +52,7 @@ public class VolunteerDisplayWrapperTest {
      */
     @Test
     public void constructorDoesNotThrowNullWhenVolunteerIsNotNull() {
-        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true);
+        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
 
         VolunteerDisplayWrapper wrapper = new VolunteerDisplayWrapper(volunteer);
     }    // constructorDoesNotThrowNullWhenVolunteerIsNotNull()
@@ -91,7 +92,7 @@ public class VolunteerDisplayWrapperTest {
      */
     @Test
     public void getVolunteerDoesNotThrowNullWhenVolunteerIsNotNull() {
-        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true);
+        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
         VolunteerDisplayWrapper wrapper = new VolunteerDisplayWrapper(volunteer);
 
         wrapper.getVolunteer();
@@ -103,7 +104,7 @@ public class VolunteerDisplayWrapperTest {
      */
     @Test
     public void getVolunteerReturnsCorrectValueWhenVolunteerIsNotNull() {
-        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true);
+        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
         VolunteerDisplayWrapper wrapper = new VolunteerDisplayWrapper(volunteer);
 
         Volunteer received = wrapper.getVolunteer();
@@ -147,7 +148,7 @@ public class VolunteerDisplayWrapperTest {
      */
     @Test
     public void toStringDoesNotThrowNullWhenVolunteerIsNotNull() {
-        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true);
+        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
         VolunteerDisplayWrapper wrapper = new VolunteerDisplayWrapper(volunteer);
 
         wrapper.toString();
@@ -159,7 +160,7 @@ public class VolunteerDisplayWrapperTest {
      */
     @Test
     public void toStringReturnsCorrectValueWhenVolunteerIsNotNull() {
-        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true);
+        Volunteer volunteer = new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
         VolunteerDisplayWrapper wrapper = new VolunteerDisplayWrapper(volunteer);
 
         String received = wrapper.toString();

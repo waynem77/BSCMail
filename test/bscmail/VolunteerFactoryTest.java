@@ -20,6 +20,8 @@
 package bscmail;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import main.ReadWritableFactoryTest;
 import org.junit.*;
@@ -141,7 +143,15 @@ public class VolunteerFactoryTest extends ReadWritableFactoryTest<Volunteer> {
         Boolean activeObjectAsBoolean = (activeObjectAsString == null) ? null : Boolean.valueOf(activeObjectAsString);
         boolean active = (activeObjectAsBoolean == null) ? true : activeObjectAsBoolean;
 
-        Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
+        Object rolesObject = properties.get("roles");
+        String rolesString = (rolesObject == null) ? "" : rolesObject.toString();
+        String[] rolesStrings = rolesString.isEmpty() ? new String[0] : rolesString.split(",");
+        List<Role> roles = new LinkedList<>();
+        for (String role : rolesStrings) {
+            roles.add(new Role(role));
+        }    // for
+
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
         assert (volunteer != null);
         return volunteer;
     }    // getReadWritableFromProperties()

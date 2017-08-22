@@ -43,7 +43,7 @@ public class ShiftControlTest {
      * @return a volunteer to be used in testing
      */
     private Volunteer getTestVolunteer(int i) {
-        return new Volunteer("volunteerName" + i, "volunteerEmail" + i, "volunteerPhone" + i, "volunteerNotes" + i, true);
+        return new Volunteer("volunteerName" + i, "volunteerEmail" + i, "volunteerPhone" + i, "volunteerNotes" + i, true, Arrays.asList());
     }    // getTestVolunteer()
 
     /* constructor */

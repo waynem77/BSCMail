@@ -19,6 +19,7 @@
 
 package bscmail;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ShiftFactoryTest extends ReadWritableFactoryTest<Shift> {
      * @return the shift volunteer used in {@link #getTestProperties()}
      */
     private Volunteer getTestVolunteer() {
-        return new Volunteer("foo", "bar", "baz", "smurf", true);
+        return new Volunteer("foo", "bar", "baz", "smurf", true, Arrays.asList());
     }    // getTestVolunteer()
 
     /**
