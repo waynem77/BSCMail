@@ -164,16 +164,17 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
             Boolean activeBooleanObject = (activeStringObject != null) ? Boolean.valueOf(activeStringObject) : null;
             boolean active = (activeBooleanObject != null) ? activeBooleanObject : true;
 
-            Volunteer volunteer = new Volunteer(name, email, phone, notes, active);
             Object rolesObject = properties.get(RW_ROLES_KEY);
+            List<Role> roles = new LinkedList<>();
             if (rolesObject != null) {
-                String roles = rolesObject.toString();
-                String[] roleNames = roles.split(",");
+                String rolesStringObject = rolesObject.toString();
+                String[] roleNames = rolesStringObject.split(",");
                 for (String roleName : roleNames) {
-                    Role role = new Role(roleName);
-                    volunteer.addRole(role);
+                    roles.add(new Role(roleName));
                 }
             }
+            Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+
             return volunteer;
         }    // constructReadWritable()
     }

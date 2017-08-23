@@ -194,11 +194,9 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 emailTextField.getText(),
                 phoneTextField.getText(),
                 notesTextArea.getText(),
-                activeCheckBox.isSelected()
+                activeCheckBox.isSelected(),
+                getSelectedRoles()
         );
-        for (Role role : getSelectedRoles()) {
-            currentVolunteer.addRole(role);
-        }    // for
         return currentVolunteer;
     }    // createElement()
 

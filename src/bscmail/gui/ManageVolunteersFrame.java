@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -92,11 +92,9 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
                     volunteer.getEmail(),
                     volunteer.getPhone(),
                     volunteer.getNotes(),
-                    false
+                    false,
+                    roles
             );
-            for (Role role : roles) {
-                newVolunteer.addRole(role);
-            }    // for
             volunteers.set(i, newVolunteer);
         }    // for
 
