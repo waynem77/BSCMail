@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -356,11 +356,11 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
      * <li>The value of "roles" is a comma-delimited {@link String} containing
      * the names of all the roles returned by {@link #getRoles()}.</li>
      * <li>The value of "displayVolunteerEmail" is a boolean equal to the return
-     * value of {@link #displayVolunteerEmail()}.</li>
+     * value of {@link #getDisplayVolunteerEmail()}.</li>
      * <li>The value of "displayVolunteerPhone" is a boolean equal to the return
-     * value of {@link #displayVolunteerPhone()}.</li>
+     * value of {@link #getDisplayVolunteerPhone()}.</li>
      * <li>The value of "displayVolunteerNotes" is a boolean equal to the return
-     * value of {@link #displayVolunteerNotes()}.</li>
+     * value of {@link #getDisplayVolunteerNotes()}.</li>
      * <li>If the shift has a volunteer, then the map has a key "volunteer". The
      * value for this key is a non-null {@link Volunteer} equal to the return
      * value of {@link #getVolunteer()}. If the shift has no volunteer, then the

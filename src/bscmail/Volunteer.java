@@ -442,7 +442,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * <li>The value of "notes" is a non-null {@link String} equal to the value
      * of {@link #getNotes()}.</li>
      * <li>The value of "active" is a non-null {@link Boolean} equal to the
-     * value of {@link #isActive(){.</li>
+     * value of {@link #isActive()}.</li>
      * <li>The value of "roles" is a non-null {@link String} equal to a
      * comma-separated list of the names of each role returned by
      * {@link #getRoles()}.</li>

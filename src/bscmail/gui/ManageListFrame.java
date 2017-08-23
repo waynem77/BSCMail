@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -30,7 +30,7 @@ import javax.swing.event.*;
 
 /**
  * Abstract base class for frames used to manage a list of elements.
- * 
+ *
  * @param <E> the type of element contained in the list
  * @since 2.0
  * @author Wayne Miller
@@ -51,27 +51,27 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * A button that moves the selected item up in the list.
      */
     private final JButton upButton;
-    
+
     /**
      * A button that moves the selected item down in the list.
      */
     private final JButton downButton;
-    
+
     /**
      * The panel used to manipulate individual elements.
      */
     protected final ManageElementPanel<E> managerPanel;
-    
+
     /**
      * A button that overwrites a shift with new values.
      */
     private final JButton saveButton;
-    
+
     /**
      * A button that deletes a shift.
      */
     private final JButton deleteButton;
-    
+
     /**
      * A button that adds a shift.
      */
@@ -81,15 +81,15 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * A copy of the data in {@link #list}.
      */
     private Vector<E> listData;
-    
+
     /**
      * An element comparator.
      */
     private final Comparator<E> elementComparator;
-    
+
     /**
      * Constructs a new manage list frame.
-     * 
+     *
      * @param application the calling application; may not be null
      * @param managerPanel the panel used to manipulate individual elements; may not be null
      * @param initialData the initial data for the list control; may not be null
@@ -123,7 +123,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
             }    // valueChanged()
         });    // addListSelectionListener()
         add(new JScrollPane(list));
-        
+
         final int STRUT_WIDTH = 10;
         final int HALF_STRUT_WIDTH = STRUT_WIDTH / 2;
         add(Box.createHorizontalStrut(HALF_STRUT_WIDTH));
@@ -156,15 +156,15 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         add(Box.createHorizontalStrut(STRUT_WIDTH));
         add(new JSeparator(SwingConstants.VERTICAL));
         add(Box.createHorizontalStrut(STRUT_WIDTH));
-        
+
         JPanel actionPanel = new JPanel();
         add(actionPanel);
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
-        
+
         this.managerPanel = managerPanel;
         actionPanel.add(this.managerPanel);
         managerPanel.addObserver(this);
-        
+
         JPanel commandPanel = new JPanel();
         commandPanel.setLayout(new FlowLayout());
         saveButton = new JButton("Save");
@@ -181,7 +181,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
             }    // actionPerformed()
         });    // addActionListener
         commandPanel.add(deleteButton);
-        
+
         addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
@@ -190,12 +190,12 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         });    // addActionListener
         commandPanel.add(addButton);
         actionPanel.add(commandPanel);
-        
+
         pack();
         setButtonStates();
 
         this.elementComparator = elementComparator;
-        
+
         assertInvariant();
     }    // ManageListFrame()
 
@@ -230,14 +230,15 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     protected void setListDataHook(java.util.List<E> elements) throws IOException {
     }    // setListDataHook()
-    
+
     /**
      * Sets the list data in {@link #list} to the given data.  This method also
      * enables or disables buttons (by calling {@link #setButtonStates()} and
-     * runs any hook defined in {@link #saveListData(java.util.List)}.
-     * 
+     * runs any hook defined with {@link #setListDataHook(java.util.List)}.
+     *
      * @param data the new list data; may not be null
      * @throws IOException if an I/O error occurs
+     * @see #updateListData(java.util.Vector)
      */
     private void setListData(Vector<E> data) throws IOException {
         assert (data != null);
@@ -247,9 +248,14 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     }    // setListData()
 
     /**
-     * Essentially does the above, but without the data hook
-     * @param data
-     * @throws IOException
+     * Sets the list data in {@link #list} to the given data. This method also
+     * enables or disables buttons (by calling {@link #setButtonStates()}, but
+     * does not run any hook defined with
+     * {@link #setListDataHook(java.util.List)}.
+     *
+     * @param data the new list data; may not be null
+     * @throws IOException if an I/O error occurs
+     * @see #setListData(java.util.Vector)
      */
     protected void updateListData(Vector<E> data) throws IOException {
         assert (data != null);
@@ -257,7 +263,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         listData = data;
         setButtonStates();
     }
-    
+
     /**
      * Enables or disables buttons depending on the state of the list box.
      */
@@ -273,10 +279,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         addButton.setEnabled(elementIsValid);
         deleteButton.setEnabled(hasSelection);
     }    // setButtonStates()
-        
+
     /**
      * Event that fires when a selection is changed in the list box.
-     * 
+     *
      * @param event the event data
      */
     private void listSelectionValueChanged(ListSelectionEvent event) {
@@ -285,10 +291,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         setButtonStates();
         pack();
     }    // listSelectionValueChanged(ListSelectionEvent e)
-    
+
     /**
      * Event that fires when the up button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void upButtonClicked(ActionEvent event) {
@@ -305,10 +311,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // upButtonClicked()
-    
+
     /**
      * Event that fires when the down button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void downButtonClicked(ActionEvent event) {
@@ -325,10 +331,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // downButtonClicked()
-    
+
     /**
      * Event that fires when the sort button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void sortButtonClicked(ActionEvent event) {
@@ -341,10 +347,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // sortButtonClicked()
-    
+
     /**
      * Event that fires when the save button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void saveButtonClicked(ActionEvent event) {
@@ -364,7 +370,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
 
     /**
      * Event that fires when the delete button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void deleteButtonClicked(ActionEvent event) {
@@ -379,10 +385,10 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // deleteButtonClicked()
-    
+
     /**
      * Event that fires when the add button is clicked.
-     * 
+     *
      * @param event the event data
      */
     private void addButtonClicked(ActionEvent event) {
@@ -397,7 +403,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // catch
         assertInvariant();
     }    // addButtonClicked()
-    
+
     /**
      * Displays a message box indicating that the frame is unable to save data.
      */
@@ -428,11 +434,11 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (listDataEquals(list, listData));
         assert (elementComparator != null);
     }    // assertInvariant()
-    
+
     /**
      * Returns true if the list data in the given list control exactly matches
      * the given list.
-     * 
+     *
      * @param list the list control; may not be null
      * @param listData the expected list data; may not be null
      * @return true if the list data in {@code list} exactly matches
@@ -448,5 +454,5 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         }    // for
         return actualData.equals(listData);
     }    // listDataEquals()
-    
+
 }    // ManageListFrame

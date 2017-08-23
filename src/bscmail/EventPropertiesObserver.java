@@ -24,7 +24,6 @@ package bscmail;
  * be informed of changes to the list of defined event properties.
  *
  * @see Application
- * @see bscmail.EventPropertyList
  * @since 3.0
  * @author Chaitra Mayya
  */

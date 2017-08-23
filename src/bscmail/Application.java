@@ -418,7 +418,7 @@ public class Application {
      * Sets the defined email template.
      *
      * @param emailTemplate the email template to set; may not be null
-     * @throws NullPointerException
+     * @throws NullPointerException if {@code emailTemplate} is null
      * @throws IOException if an I/O error occurs
      */
     public void setEmailTemplate(EmailTemplate emailTemplate) throws IOException {

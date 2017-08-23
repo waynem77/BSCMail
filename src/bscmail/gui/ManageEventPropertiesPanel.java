@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -24,7 +24,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- * A panel that displays and manages an {@link Event Property}.
+ * A panel that displays and manages an {@link EventProperty}.
  *
  * @since 3.0
  * @author Chaitra Mayya
