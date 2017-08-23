@@ -234,41 +234,6 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
      * @param notes the volunteer's notes; may not be null
      * @param active true if the volunteer is active, false if the volunteer is
      * inactive
-     * @throws NullPointerException if any parameter is null
-     * @deprecated
-     */
-    public Volunteer(String name, String email, String phone, String notes, boolean active) {
-        if (name == null) {
-            throw new NullPointerException("name may not be null");
-        }    // if
-        if (email == null) {
-            throw new NullPointerException("email may not be null");
-        }    // if
-        if (phone == null) {
-            throw new NullPointerException("phone may not be null");
-        }    // if
-        if (notes == null) {
-            throw new NullPointerException("notes may not be null");
-        }    // if
-
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.notes = notes;
-        this.active = active;
-        this.roles = new LinkedList<>();
-        assertInvariant();
-    }    // Volunteer()
-
-    /**
-     * Constructs a new volunteer.
-     *
-     * @param name the volunteer's name; may not be null
-     * @param email the volunteer's email address; may not be null
-     * @param phone the volunteer's phone number; may not be null
-     * @param notes the volunteer's notes; may not be null
-     * @param active true if the volunteer is active, false if the volunteer is
-     * inactive
      * @param roles the roles the volunteer can perform; may not be null nor
      * contain null
      * @throws NullPointerException if any parameter is null or if {@code roles}
@@ -460,45 +425,6 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         this.roles.addAll(roles);
         assertInvariant();
     }    // setRoles()
-
-    /**
-     * Adds the given role to the volunteer.
-     *
-     * @param role the role to add; may not be null
-     * @throws NullPointerException if {@code role} is null
-     * @deprecated Deprecated since 3.2. Use {@link #setRoles(java.util.List)}
-     * instead.
-     */
-    public void addRole(Role role){
-        assertInvariant();
-        if (role == null) {
-            throw new NullPointerException("role may not be null");
-        }    // if
-
-        if (roles.contains(role)) {
-            return;
-        }    // if
-        roles.add(role);
-        assertInvariant();
-    }    // addRole()
-
-    /**
-     * Removes the given role from the volunteer.
-     *
-     * @param role the role to remove; may not be null
-     * @throws NullPointerException if {@code role} is null
-     * @deprecated Deprecated since 3.2. Use {@link #setRoles(java.util.List)}
-     * instead.
-     */
-    public void removeRole(Role role){
-        assertInvariant();
-        if (role == null) {
-            throw new NullPointerException("role may not be null");
-        }    // if
-
-        roles.remove(role);
-        assertInvariant();
-    }    // removeRole()
 
     /**
      * Returns a map containing the read-writable properties of the volunteer.
