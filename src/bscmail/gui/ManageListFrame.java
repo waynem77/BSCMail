@@ -299,16 +299,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void upButtonClicked(ActionEvent event) {
         assertInvariant();
-        int index = list.getSelectedIndex();
-        assert (index > 0);
-        int swapIndex = index - 1;
-        Collections.swap(listData, swapIndex, index);
-        try {
-            setListData(listData);
-            list.setSelectedIndex(swapIndex);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+        int offset = -1;
+        moveSelectedItem(offset);
         assertInvariant();
     }    // upButtonClicked()
 
@@ -319,18 +311,34 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void downButtonClicked(ActionEvent event) {
         assertInvariant();
+        int offset = 1;
+        moveSelectedItem(offset);
+        assertInvariant();
+    }    // downButtonClicked()
+
+    /**
+     * Shifts the selected item up or down according to the offset. The item
+     * remains selected and visible after the shift.
+     *
+     * @param offset the amount to shift; positive values indicate downward
+     * motion, negative values indicate upward motion; must indicate a valid
+     * index
+     */
+    private void moveSelectedItem(int offset) {
+        assert (offset != 0);
         int index = list.getSelectedIndex();
         assert ((index >= 0) && (index < listData.size() - 1));
-        int swapIndex = index + 1;
+        int swapIndex = index + offset;
+        assert ((swapIndex >= 0) && (swapIndex < listData.size() - 1));
         Collections.swap(listData, swapIndex, index);
         try {
             setListData(listData);
-            list.setSelectedIndex(swapIndex);
         } catch (IOException e) {    // try
             unableToSave(e);
         }    // catch
-        assertInvariant();
-    }    // downButtonClicked()
+        list.setSelectedIndex(swapIndex);
+        list.ensureIndexIsVisible(swapIndex);
+    }    // swapItems
 
     /**
      * Event that fires when the sort button is clicked.
