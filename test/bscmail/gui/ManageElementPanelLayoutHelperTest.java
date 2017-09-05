@@ -38,6 +38,8 @@ import static org.junit.Assert.*;
  */
 public class ManageElementPanelLayoutHelperTest {
 
+    /* constructor */
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#ManageElementPanelLayoutHelper(Container)}
@@ -61,6 +63,8 @@ public class ManageElementPanelLayoutHelperTest {
 
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
     }    // constructorDoesNotThrowExceptionWhenContainerIsNotNull()
+
+    /* setLayoutManager */
 
     /**
      * Tests that {@link ManageElementPanelLayoutHelper#setLayoutManager()} does
@@ -91,13 +95,15 @@ public class ManageElementPanelLayoutHelperTest {
         assertEquals(expected, received);
     }    // setLayoutManagerSetsLayoutManagerProperly()
 
+    /* addComponent (2 parameters) */
+
     /**
      * Tests that
      * {@link ManageElementPanelLayoutHelper#addComponent(String, Component)}
      * throws a {@link NullPointerException} when the name is null.
      */
     @Test(expected = NullPointerException.class)
-    public void addComponentThrowsExceptionWhenNameIsNull() {
+    public void addComponent2ParametersThrowsExceptionWhenNameIsNull() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -105,7 +111,7 @@ public class ManageElementPanelLayoutHelperTest {
         Component component = new JTextField();
 
         layoutHelper.addComponent(name, component);
-    }    // addComponentThrowsExceptionWhenNameIsNull()
+    }    // addComponent2ParametersThrowsExceptionWhenNameIsNull()
 
     /**
      * Tests that
@@ -113,7 +119,7 @@ public class ManageElementPanelLayoutHelperTest {
      * throws a {@link NullPointerException} when the component is null.
      */
     @Test(expected = NullPointerException.class)
-    public void addComponentThrowsExceptionWhenComponentIsNull() {
+    public void addComponent2ParametersThrowsExceptionWhenComponentIsNull() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -121,7 +127,7 @@ public class ManageElementPanelLayoutHelperTest {
         Component component = null;
 
         layoutHelper.addComponent(name, component);
-    }    // addComponentThrowsExceptionWhenComponentIsNull()
+    }    // addComponent2ParametersThrowsExceptionWhenComponentIsNull()
 
     /**
      * Tests that
@@ -129,7 +135,7 @@ public class ManageElementPanelLayoutHelperTest {
      * does not throw an exception when neither parameter is null.
      */
     @Test
-    public void addComponentDoesNotThrowExceptionWhenNoParameterIsNull() {
+    public void addComponent2ParametersDoesNotThrowExceptionWhenNoParameterIsNull() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -137,7 +143,7 @@ public class ManageElementPanelLayoutHelperTest {
         Component component = new JTextField();
 
         layoutHelper.addComponent(name, component);
-    }    // addComponentDoesNotThrowExceptionWhenNoParameterIsNull()
+    }    // addComponent2ParametersDoesNotThrowExceptionWhenNoParameterIsNull()
 
     /**
      * Tests that
@@ -145,7 +151,7 @@ public class ManageElementPanelLayoutHelperTest {
      * adds exactly two components to the container.
      */
     @Test
-    public void addComponentAddsExactlyTwoComponentsToTheContainer() {
+    public void addComponent2ParametersAddsExactlyTwoComponentsToTheContainer() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -159,7 +165,7 @@ public class ManageElementPanelLayoutHelperTest {
         int expected = 2;
         int received = components.length;
         assertEquals(expected, received);
-    }    // addComponentAddsExactlyTwoComponentsToTheContainer()
+    }    // addComponent2ParametersAddsExactlyTwoComponentsToTheContainer()
 
     /**
      * Tests that
@@ -167,7 +173,7 @@ public class ManageElementPanelLayoutHelperTest {
      * adds a label to the container.
      */
     @Test
-    public void addComponentAddsALabelToTheContainer() {
+    public void addComponent2ParametersAddsALabelToTheContainer() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -186,7 +192,7 @@ public class ManageElementPanelLayoutHelperTest {
             }    // if
         }    // for
         assertTrue(hasLabel);
-    }    // addComponentAddsALabelToTheContainer()
+    }    // addComponent2ParametersAddsALabelToTheContainer()
 
     /**
      * Tests that
@@ -194,7 +200,7 @@ public class ManageElementPanelLayoutHelperTest {
      * adds the correct label to the container.
      */
     @Test
-    public void addComponentAddsTheCorrectLabelToTheContainer() {
+    public void addComponent2ParametersAddsTheCorrectLabelToTheContainer() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -215,7 +221,7 @@ public class ManageElementPanelLayoutHelperTest {
             }    // if
         }    // for
         assertEquals(expected, received);
-    }    // addComponentAddsTheCorrectLabelToTheContainer()
+    }    // addComponent2ParametersAddsTheCorrectLabelToTheContainer()
 
     /**
      * Tests that
@@ -223,7 +229,7 @@ public class ManageElementPanelLayoutHelperTest {
      * adds the component to the container.
      */
     @Test
-    public void addComponentAddsTheComponentToTheContainer() {
+    public void addComponent2ParametersAddsTheComponentToTheContainer() {
         Container container = new JPanel();
         ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
         layoutHelper.setLayoutManager();
@@ -233,11 +239,285 @@ public class ManageElementPanelLayoutHelperTest {
 
         layoutHelper.addComponent(name, component);
 
-        container.removeAll();
-        layoutHelper.addComponent(name, component);
         Collection<Component> components = Arrays.asList(container.getComponents());
         boolean hasContainer = components.contains(component);
         assertTrue(hasContainer);
-    }    // testAddComponentAddsComponent()
+    }    // addComponent2ParametersAddsTheComponentToTheContainer()
 
-}    // addComponentAddsTheComponentToTheContainer
+    /* addComponent (3 parameters) */
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * throws a {@link NullPointerException} when the name is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void addComponent3ParametersThrowsExceptionWhenNameIsNull() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        String name = null;
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+    }    // addComponent3ParametersThrowsExceptionWhenNameIsNull()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * throws a {@link NullPointerException} when the component is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void addComponent3ParametersThrowsExceptionWhenComponentIsNull() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        String name = "Foo";
+        Component component = null;
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+    }    // addComponent3ParametersThrowsExceptionWhenComponentIsNull()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * does not throw an exception when sticky is false.
+     */
+    @Test
+    public void addComponent3ParametersDoesNotThrowExceptionWhenStickyIsFalse() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = false;
+
+        layoutHelper.addComponent(name, component, sticky);
+    }    // addComponent3ParametersDoesNotThrowExceptionWhenStickyIsFalse()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * does not throw an exception when sticky is true.
+     */
+    @Test
+    public void addComponent3ParametersDoesNotThrowExceptionWhenStickyIsTrue() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+    }    // addComponent3ParametersDoesNotThrowExceptionWhenStickyIsTrue()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds exactly two components to the container when sticky is true.
+     */
+    @Test
+    public void addComponent3ParametersAddsExactlyTwoComponentsToTheContainerWhenStickyIsTrue() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Component[] components = container.getComponents();
+        int expected = 2;
+        int received = components.length;
+        assertEquals(expected, received);
+    }    // addComponent3ParametersAddsExactlyTwoComponentsToTheContainerWhenStickyIsTrue()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds exactly two components to the container when sticky is false.
+     */
+    @Test
+    public void addComponent3ParametersAddsExactlyTwoComponentsToTheContainerWhenStickyIsFalse() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = false;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Component[] components = container.getComponents();
+        int expected = 2;
+        int received = components.length;
+        assertEquals(expected, received);
+    }    // addComponent3ParametersAddsExactlyTwoComponentsToTheContainerWhenStickyIsFalse()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds a label to the container when sticky is true.
+     */
+    @Test
+    public void addComponent3ParametersAddsALabelToTheContainerWhenStickyIsTrue() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        boolean hasLabel = false;
+        Component[] components = container.getComponents();
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                hasLabel = true;
+                break;
+            }    // if
+        }    // for
+        assertTrue(hasLabel);
+    }    // addComponent3ParametersAddsALabelToTheContainerWhenStickyIsTrue()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds a label to the container when sticky is false.
+     */
+    @Test
+    public void addComponent3ParametersAddsALabelToTheContainerWhenStickyIsFalse() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = false;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        boolean hasLabel = false;
+        Component[] components = container.getComponents();
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                hasLabel = true;
+                break;
+            }    // if
+        }    // for
+        assertTrue(hasLabel);
+    }    // addComponent3ParametersAddsALabelToTheContainerWhenStickyIsFalse()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds the correct label to the container when sticky is true.
+     */
+    @Test
+    public void addComponent3ParametersAddsTheCorrectLabelToTheContainerWhenStickyIsTrue() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Component[] components = container.getComponents();
+        String expected = name;
+        String received = null;
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                JLabel label = (JLabel)c;
+                received = label.getText();
+                break;
+            }    // if
+        }    // for
+        assertEquals(expected, received);
+    }    // addComponent3ParametersAddsTheCorrectLabelToTheContainerWhenStickyIsTrue()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds the correct label to the container when sticky is false.
+     */
+    @Test
+    public void addComponent3ParametersAddsTheCorrectLabelToTheContainerWhenStickyIsFalse() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = false;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Component[] components = container.getComponents();
+        String expected = name;
+        String received = null;
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                JLabel label = (JLabel)c;
+                received = label.getText();
+                break;
+            }    // if
+        }    // for
+        assertEquals(expected, received);
+    }    // addComponent3ParametersAddsTheCorrectLabelToTheContainerWhenStickyIsFalse()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds the component to the container when sticky is true.
+     */
+    @Test
+    public void addComponent3ParametersAddsTheComponentToTheContainerWhenStickyIsTrue() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = true;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Collection<Component> components = Arrays.asList(container.getComponents());
+        boolean hasContainer = components.contains(component);
+        assertTrue(hasContainer);
+    }    // addComponent3ParametersAddsTheComponentToTheContainerWhenStickyIsTrue()
+
+    /**
+     * Tests that
+     * {@link ManageElementPanelLayoutHelper#addComponent(String, Component, boolean)}
+     * adds the component to the container when sticky is false.
+     */
+    @Test
+    public void addComponent3ParametersAddsTheComponentToTheContainerWhenStickyIsFalse() {
+        Container container = new JPanel();
+        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(container);
+        layoutHelper.setLayoutManager();
+        container.removeAll();
+        String name = "Foo";
+        Component component = new JTextField();
+        boolean sticky = false;
+
+        layoutHelper.addComponent(name, component, sticky);
+
+        Collection<Component> components = Arrays.asList(container.getComponents());
+        boolean hasContainer = components.contains(component);
+        assertTrue(hasContainer);
+    }    // addComponent3ParametersAddsTheComponentToTheContainerWhenStickyIsFalse()
+
+}    // ManageElementPanelLayoutHelperTest

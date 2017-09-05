@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,7 +19,10 @@
 
 package bscmail.gui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 
 /**
@@ -44,15 +47,15 @@ class ManageElementPanelLayoutHelper {
      * The container to which to add components.
      */
     private final Container container;
-    
+
     /**
      * The constraints used in laying out components.
      */
     private final GridBagConstraints constraints;
-    
+
     /**
      * Constructs a new layout helper on the given container.
-     * 
+     *
      * @param container the container using the layout manager; may not be null
      * @throws NullPointerException if {@code container} is null
      */
@@ -77,15 +80,34 @@ class ManageElementPanelLayoutHelper {
         container.setLayout(new GridBagLayout());
         container.validate();
     }    // setLayoutManager()
-    
+
     /**
-     * Adds a component with an identifying label to the container.
-     * 
+     * Adds a component with an identifying label to the container. Components
+     * added using this method are not "sticky"; that is, they will not
+     * automatically resize vertically when the frame is resized.
+     *
      * @param name the name that appears in the label; may not be null
      * @param component the component to add; may not be null
      * @throws NullPointerException if either parameter is null
+     * @see #addComponent(java.lang.String, java.awt.Component, boolean)
      */
     public void addComponent(String name, Component component) {
+        addComponent(name, component, false);
+    }    // addComponent()
+
+    /**
+     * Adds a component with an identifying label to the container.
+     *
+     * @param name the name that appears in the label; may not be null
+     * @param component the component to add; may not be null
+     * @param sticky true if the component should automatically resize
+     * vertically when the frame is resized; false otherwise
+     * @throws NullPointerException if either {@code name} or {@code component}
+     * is null
+     * @since 3.2
+     * @see #addComponent(java.lang.String, java.awt.Component)
+     */
+    public void addComponent(String name, Component component, boolean sticky) {
         if (name == null) {
             throw new NullPointerException("name may not be null");
         }    // if
@@ -93,9 +115,12 @@ class ManageElementPanelLayoutHelper {
             throw new NullPointerException("component may not be null");
         }    // if
         constraints.weightx = 0.0;
+        constraints.weighty = sticky ? 1.0 : 0.0;
+        constraints.fill = GridBagConstraints.NONE;
         container.add(new JLabel(name), constraints);
         ++constraints.gridx;
         constraints.weightx = 1.0;
+        constraints.fill = GridBagConstraints.BOTH;
         container.add(component, constraints);
         constraints.gridx = 0;
         ++constraints.gridy;

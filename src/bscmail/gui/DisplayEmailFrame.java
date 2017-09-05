@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -19,28 +19,32 @@
 
 package bscmail.gui;
 
+import bscmail.Application;
 import bscmail.EmailTemplate;
 import bscmail.Event;
 import bscmail.EventProperty;
 import bscmail.Shift;
 import bscmail.Volunteer;
-
-import java.awt.*;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import bscmail.Application;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 
 /**
  * Constructs and displays an email.  The email is constructed from an email
  * template, with values filled in from an {@link Event}.
- * 
+ *
  * @author Wayne Miller
  */
 public class DisplayEmailFrame extends JFrame {
@@ -52,16 +56,25 @@ public class DisplayEmailFrame extends JFrame {
      */
     private final JTextArea textArea;
 
+    /**
+     * The text field managing the list of recipients.
+     */
     private final JTextField recipientLine;
 
+    /**
+     * The text field managing the subject.
+     */
     private final JTextField subjectLine;
 
+    /**
+     * The send email button.
+     */
     private final JButton sendEmail;
-    
+
     /**
      * Constructs a new display email frame displaying an email constructed from
      * the given template and list of shifts.
-     * 
+     *
      * @param application the calling application; may not be null
      * @param event the event; may not be null
      * @throws NullPointerException if either parameter is null
@@ -73,7 +86,7 @@ public class DisplayEmailFrame extends JFrame {
         if (event == null) {
             throw new NullPointerException("event may not be null");
         }    // if
-        
+
         setTitle(application.getApplicationName() + " - Event Email Text");
 
         final int ROWS = 24;
@@ -99,7 +112,7 @@ public class DisplayEmailFrame extends JFrame {
 
         layoutHelper.addComponent("To: ", recipientLine);
         layoutHelper.addComponent("Subject: ", subjectLine);
-        layoutHelper.addComponent("Text: ", new JScrollPane(textArea));
+        layoutHelper.addComponent("Text: ", new JScrollPane(textArea), true);
         layoutHelper.addComponent("Actions: ", sendEmail);
 
         add(mainPanel);
@@ -183,7 +196,7 @@ public class DisplayEmailFrame extends JFrame {
             Volunteer volunteer = shift.getVolunteer();
             if (volunteer != null) {
                 shiftLine += " " + volunteer.getName();
-                
+
                 String extraInfo = null;
                 if (shift.getDisplayVolunteerEmail()) {
                     extraInfo = (extraInfo == null) ? volunteer.getEmail() : (extraInfo + ", " + volunteer.getEmail());
@@ -194,7 +207,7 @@ public class DisplayEmailFrame extends JFrame {
                 if (shift.getDisplayVolunteerNotes()) {
                     extraInfo = (extraInfo == null) ? volunteer.getNotes() : (extraInfo + ", " + volunteer.getNotes());
                 }    // if
-                
+
                 if (extraInfo != null) {
                     shiftLine += " (" + extraInfo + ")";
                 }    // if
@@ -302,5 +315,5 @@ public class DisplayEmailFrame extends JFrame {
     }    // assertInvariant()
 
 
-    
+
 }    // DisplayEmailFrame
