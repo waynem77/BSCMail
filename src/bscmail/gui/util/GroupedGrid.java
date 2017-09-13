@@ -26,6 +26,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.Box;
 import javax.swing.JPanel;
 
 /**
@@ -65,6 +66,13 @@ public class GroupedGrid extends JPanel {
     private final List<List<LabeledComponent>> componentGroups;
 
     /**
+     * The glue (spacing) at the bottom of the grid. This glue is only visible
+     * when the frame is resized, and allows the other components to "float" to
+     * the top of the frame.
+     */
+    private final Component bottomGlue;
+
+    /**
      * Constructs a new grouped grid component with the specified number of
      * groups and columns.
      *
@@ -80,6 +88,7 @@ public class GroupedGrid extends JPanel {
         for (int i = 0; i < groups; ++i) {
             componentGroups.add(new LinkedList<LabeledComponent>());
         }    // for
+        bottomGlue = Box.createVerticalGlue();
 
         setLayout(new GridBagLayout());
 
@@ -116,6 +125,7 @@ public class GroupedGrid extends JPanel {
                 remove(labeledComponent.getComponent());
             }    // for
         }    // for
+        remove(bottomGlue);
 
         List<LabeledComponent> componentGroup = componentGroups.get(group);
         componentGroup.clear();
@@ -126,11 +136,8 @@ public class GroupedGrid extends JPanel {
         for (int i = 0; i < group; ++i) {
             yindex += componentGroups.get(i).size();
         }    // for
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-        constraints.gridy = yindex;
+        int gridx = 0;
+        int gridy = yindex;
 
         for (int i = 0; i < components.size(); ++i) {
             LabeledComponent labeledComponent = components.get(i);
@@ -138,27 +145,30 @@ public class GroupedGrid extends JPanel {
             if ((i == 0) && (group != 0)) {
                 insets.top += GROUP_VERTICAL_PADDING;
             }    // if
+            GridBagConstraints constraints = getDefaultConstraints(gridx, gridy);
             constraints.insets = insets;
             add(labeledComponent.getLabel(), constraints);
-            ++constraints.gridx;
+            ++gridx;
+
+            constraints = getDefaultConstraints(gridx, gridy);
+            constraints.insets = insets;
+            constraints.weightx = 1.0;
             add(labeledComponent.getComponent(), constraints);
-            ++constraints.gridy;
-            constraints.gridx = 0;
+            ++gridy;
+            gridx = 0;
         }    // for
 
         if (group + 1 < componentGroups.size()) {
             setComponents(new LinkedList<>(componentGroups.get(group + 1)), group + 1);
-        }    // if
+        } else {    // if
+            GridBagConstraints constraints = getDefaultConstraints(0, gridy);
+            constraints.fill = GridBagConstraints.VERTICAL;
+            constraints.weighty = 1.0;
+            add(bottomGlue, constraints);
+        }    // else
 
         assertInvariant();
     }    // setComponents()
-
-    private void addComponents(List<LabeledComponent> components, int group) {
-        assert (components != null);
-        assert (! components.contains(null));
-        assert ((group >= 0) && (group < groups));
-
-    }    // addComponents()
 
     /**
      * Returns the list of components in the given group. The return value is
@@ -196,6 +206,29 @@ public class GroupedGrid extends JPanel {
     }    // getNumberOfGroups()
 
     /**
+     * Creates and returns a "default" {@link GridBagConstraints} object. The
+     * constraints object has the following properties.
+     * <ul>
+     * <li>{@code anchor} is set to {@link GridBagConstraints.NORTHWEST}.</li>
+     * <li>{@code fill} is set to {@link GridBagConstraints.HORIZONTAL}.</li>
+     * <li>{@code gridx} and {@code gridy} are set to the given arguments.</li>
+     * </ul>
+     *
+     * @param gridx the {@code gridx} property for the constraints
+     * @param gridy the {@code gridy} property for the constraints
+     * @return
+     */
+    private GridBagConstraints getDefaultConstraints(int gridx, int gridy) {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = gridx;
+        constraints.gridy = gridy;
+
+        return constraints;
+    }    // getDefaultConstraints()
+
+    /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
@@ -204,6 +237,7 @@ public class GroupedGrid extends JPanel {
         assert (componentGroups.size() == groups);
         assert (! componentGroups.contains(null));
         assert (componentGroupsElementsDoNotContainNull());
+        assert (bottomGlue != null);
     }    // assertInvariant()
 
     /**

@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 
 
@@ -80,7 +81,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         eventFrameGrid = new EventFrameGrid();
-        add(eventFrameGrid);
+        add(new JScrollPane(eventFrameGrid));
 
         setEventProperties(eventProperties);
         setShifts(shifts);
