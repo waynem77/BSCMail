@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,6 +20,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.EmailTemplate;
+import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
@@ -33,7 +34,7 @@ import javax.swing.event.DocumentListener;
 /**
  * A graphical interface to manage email template defined in
  * {@link Application}.
- * 
+ *
  * @since 3.0
  * @author Wayne Miller
  */
@@ -132,6 +133,11 @@ public class ManageEmailTemplateFrame extends JFrame {
                 textAreasChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
+
+        Dimension minimumSize = getSize();
+        minimumSize.height = (int)(minimumSize.height * 0.5);
+        minimumSize.width = (int)(minimumSize.width * 0.67);
+        setMinimumSize(minimumSize);
     }    // ManageEmailTemplateFrame()
 
     /**
