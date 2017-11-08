@@ -77,7 +77,7 @@ public class Main {
      */
     private Application getApplication() {
         final String APPLICATION_NAME = "BSCMail";
-        final String APPLICATION_VERSION = "3.1";
+        final String APPLICATION_VERSION = "3.2";
         final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
         ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
 
