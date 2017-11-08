@@ -20,13 +20,29 @@
 package bscmail.gui;
 
 import bscmail.Application;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Vector;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Abstract base class for frames used to manage a list of elements.
@@ -56,6 +72,11 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * A button that moves the selected item down in the list.
      */
     private final JButton downButton;
+
+    /**
+     * A button that sorts the list.
+     */
+    private final JButton sortButton;
 
     /**
      * The panel used to manipulate individual elements.
@@ -109,95 +130,178 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         if (elementComparator == null) {
             throw new NullPointerException("elementComparator may not be null");
         }    // if
+
+        /*
+         * Set private variables
+         */
+
         this.application = application;
-
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-
         listData = new Vector<>(initialData);
-        list = new JList<>(listData);
+        this.managerPanel = managerPanel;
+        managerPanel.addObserver(this);
+        this.elementComparator = elementComparator;
 
+        /*
+         * Create GUI controls
+         */
+
+        list = new JList<>(listData);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        upButton = new JButton("▲");
+        downButton = new JButton("▼");
+        sortButton = new JButton("Sort");
+        saveButton = new JButton("Save");
+        deleteButton = new JButton("Delete");
+        addButton = new JButton("Add");
+
+        /*
+         * Set event handlers for controls
+         */
+
         list.addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 listSelectionValueChanged(e);
             }    // valueChanged()
         });    // addListSelectionListener()
-        add(new JScrollPane(list));
-
-        final int STRUT_WIDTH = 10;
-        final int HALF_STRUT_WIDTH = STRUT_WIDTH / 2;
-        add(Box.createHorizontalStrut(HALF_STRUT_WIDTH));
-
-        JPanel movementPanel = new JPanel();
-        add(movementPanel);
-        movementPanel.setLayout(new BoxLayout(movementPanel, BoxLayout.Y_AXIS));
-        upButton = new JButton("▲");
         upButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 upButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        movementPanel.add(upButton);
-        downButton = new JButton("▼");
         downButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 downButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        movementPanel.add(downButton);
-        JButton sortButton = new JButton("Sort");
         sortButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 sortButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        movementPanel.add(sortButton);
-
-        add(Box.createHorizontalStrut(STRUT_WIDTH));
-        add(new JSeparator(SwingConstants.VERTICAL));
-        add(Box.createHorizontalStrut(STRUT_WIDTH));
-
-        JPanel actionPanel = new JPanel();
-        add(actionPanel);
-        actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
-
-        this.managerPanel = managerPanel;
-        actionPanel.add(this.managerPanel);
-        managerPanel.addObserver(this);
-
-        JPanel commandPanel = new JPanel();
-        commandPanel.setLayout(new FlowLayout());
-        saveButton = new JButton("Save");
         saveButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 saveButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        commandPanel.add(saveButton);
-        deleteButton = new JButton("Delete");
         deleteButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 deleteButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        commandPanel.add(deleteButton);
-
-        addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 addButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        commandPanel.add(addButton);
-        actionPanel.add(commandPanel);
+
+        /*
+         * Create GUI
+         */
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0.0;
+        constraints.weighty = 1.0;
+        final int STRUT_WIDTH = 10;
+        final int HALF_STRUT_WIDTH = STRUT_WIDTH / 2;
+
+        JScrollPane scrollPane = new JScrollPane(list);
+        add(scrollPane, constraints);
+
+        constraints.gridx++;
+        add(Box.createHorizontalStrut(HALF_STRUT_WIDTH), constraints);
+
+        JPanel movementPanel = createMovementPanel();
+        constraints.gridx++;
+        add(movementPanel, constraints);
+
+        constraints.gridx++;
+        add(Box.createHorizontalStrut(STRUT_WIDTH), constraints);
+
+        constraints.gridx++;
+        add(new JSeparator(SwingConstants.VERTICAL), constraints);
+
+        constraints.gridx++;
+        add(Box.createHorizontalStrut(STRUT_WIDTH), constraints);
+
+        JPanel actionPanel = createActionPanel();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.gridx++;
+        add(actionPanel, constraints);
 
         pack();
+        scrollPane.setMinimumSize(scrollPane.getSize());
+        actionPanel.setMinimumSize(actionPanel.getSize());
         setButtonStates();
-
-        this.elementComparator = elementComparator;
-
         assertInvariant();
     }    // ManageListFrame()
+
+    private JPanel createMovementPanel() {
+        JPanel movementPanel = new JPanel();
+        movementPanel.setLayout(new BoxLayout(movementPanel, BoxLayout.Y_AXIS));
+        movementPanel.add(upButton);
+        movementPanel.add(downButton);
+        movementPanel.add(sortButton);
+
+        return movementPanel;
+    }    // createMovementPanel()
+
+    private JPanel createActionPanel() {
+        JPanel actionPanel = new JPanel();
+        actionPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTH;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
+
+        actionPanel.add(managerPanel, constraints);
+        constraints.gridy++;
+
+        JPanel commandPanel = createCommandPanel();
+        constraints.weighty = 0.0;
+        actionPanel.add(commandPanel, constraints);
+        constraints.gridy++;
+
+        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.weighty = 1.0;
+        Component glue = Box.createVerticalGlue();
+        actionPanel.add(glue, constraints);
+
+        return actionPanel;
+    }    // createActionPanel()
+
+    private JPanel createCommandPanel() {
+        JPanel commandPanel = new JPanel();
+        commandPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0.0;
+        constraints.weighty = 1.0;
+
+        commandPanel.add(saveButton, constraints);
+
+        constraints.gridx++;
+        commandPanel.add(deleteButton);
+
+        constraints.gridx++;
+        commandPanel.add(addButton);
+
+        return commandPanel;
+    }    // createCommandPanel()
 
     /**
      * This method is called when the validity of the element of the
