@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.Event;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -184,6 +185,8 @@ public class MainFrame extends JFrame {
         add(panel);
 
         pack();
+        Dimension packedSize = this.getSize();
+        setMinimumSize(packedSize);
 
         manageShiftsFrame = new ManageShiftsFrame(application);
         manageShiftsFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
