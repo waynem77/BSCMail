@@ -236,8 +236,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         add(actionPanel, constraints);
 
         pack();
-        scrollPane.setMinimumSize(scrollPane.getSize());
-        actionPanel.setMinimumSize(actionPanel.getSize());
+        setMinimumSize(getPreferredSize());
+
         setButtonStates();
         assertInvariant();
     }    // ManageListFrame()
