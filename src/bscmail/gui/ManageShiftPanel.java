@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,10 +23,12 @@ import bscmail.Application;
 import bscmail.Role;
 import bscmail.RolesObserver;
 import bscmail.Shift;
+import bscmail.gui.util.LabeledGrid;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -96,8 +98,10 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
         }    // if
         this.application = application;
 
-        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
-        layoutHelper.setLayoutManager();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        LabeledGrid labeledGrid = new LabeledGrid();
+        add(labeledGrid);
+
         descriptionTextField = new JTextField(TEXT_COLS);
         descriptionTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -119,19 +123,19 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         rolesSelectList.setListData(new Vector<>(application.getRoles()));
 
-        layoutHelper.addComponent("Description: ", descriptionTextField);
+        labeledGrid.addLabelAndComponent("Description: ", descriptionTextField);
 
-        layoutHelper.addComponent("Roles Required: ", rolesSelectList);
-        layoutHelper.addComponent("", new JLabel(ROLE_INSTRUCTIONS));
+        labeledGrid.addLabelAndComponent("Roles Required: ", rolesSelectList);
+        labeledGrid.addLabelAndComponent("", new JLabel(ROLE_INSTRUCTIONS));
 
         displayVolunteerEmailCheckBox = new JCheckBox();
-        layoutHelper.addComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);
+        labeledGrid.addLabelAndComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);
 
         displayVolunteerPhoneCheckBox = new JCheckBox();
-        layoutHelper.addComponent("Display volunteer phone: ", displayVolunteerPhoneCheckBox);
+        labeledGrid.addLabelAndComponent("Display volunteer phone: ", displayVolunteerPhoneCheckBox);
 
         displayVolunteerNotesCheckBox = new JCheckBox();
-        layoutHelper.addComponent("Display volunteer notes: ", displayVolunteerNotesCheckBox);
+        labeledGrid.addLabelAndComponent("Display volunteer notes: ", displayVolunteerNotesCheckBox);
 
         shiftIsValid = elementIsValid();
 

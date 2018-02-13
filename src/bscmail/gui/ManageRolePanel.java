@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,9 +21,12 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.Role;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import bscmail.gui.util.LabeledGrid;
+import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * Created by nathan.cordner on 10/19/16.
@@ -57,15 +60,17 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
         }    // if
         this.application = application;
 
-        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
-        layoutHelper.setLayoutManager();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        LabeledGrid labeledGrid = new LabeledGrid();
+        add(labeledGrid);
+
         nameTextField = new JTextField();
         nameTextField.getDocument().addDocumentListener(new DocumentListener(){
             @Override public void insertUpdate(DocumentEvent e) { nameTextFieldChanged(); }
             @Override public void removeUpdate(DocumentEvent e) { nameTextFieldChanged(); }
             @Override public void changedUpdate(DocumentEvent e) { nameTextFieldChanged(); }
         });    // addDocumentListener()
-        layoutHelper.addComponent("Name: ", nameTextField);
+        labeledGrid.addLabelAndComponent("Name: ", nameTextField);
 
         roleIsValid = elementIsValid();
     }    // ManageShiftPanel()

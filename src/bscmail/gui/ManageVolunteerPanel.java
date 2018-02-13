@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,11 +23,13 @@ import bscmail.Application;
 import bscmail.Role;
 import bscmail.RolesObserver;
 import bscmail.Volunteer;
+import bscmail.gui.util.LabeledGrid;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -116,8 +118,10 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         }    // if
         this.application = application;
 
-        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
-        layoutHelper.setLayoutManager();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        LabeledGrid labeledGrid = new LabeledGrid();
+        add(labeledGrid);
+
         nameTextField = new JTextField();
         nameTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -135,26 +139,26 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 nameTextFieldChanged();
             }
         });
-        layoutHelper.addComponent("Name: ", nameTextField);
+        labeledGrid.addLabelAndComponent("Name: ", nameTextField);
         emailTextField = new JTextField();
-        layoutHelper.addComponent("Email: ", emailTextField);
+        labeledGrid.addLabelAndComponent("Email: ", emailTextField);
         phoneTextField = new JTextField();
-        layoutHelper.addComponent("Phone: ", phoneTextField);
+        labeledGrid.addLabelAndComponent("Phone: ", phoneTextField);
         notesTextArea = new JTextArea(NOTES_ROWS, NOTES_COLS);
         notesTextArea.setLineWrap(true);
         notesTextArea.setWrapStyleWord(true);
-        layoutHelper.addComponent("Notes: ", new JScrollPane(notesTextArea,
+        labeledGrid.addLabelAndComponent("Notes: ", new JScrollPane(notesTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         activeCheckBox = new JCheckBox();
         activeCheckBox.setSelected(true);
-        layoutHelper.addComponent("Active: ", activeCheckBox);
+        labeledGrid.addLabelAndComponent("Active: ", activeCheckBox);
         rolesSelectList = new JList();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         rolesSelectList.setListData(new Vector<>(application.getRoles()));
-        layoutHelper.addComponent("Roles: ", rolesSelectList);
-        layoutHelper.addComponent("", new JLabel(ROLE_INSTRUCTIONS));
-        layoutHelper.addComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
+        labeledGrid.addLabelAndComponent("Roles: ", rolesSelectList);
+        labeledGrid.addLabelAndComponent("", new JLabel(ROLE_INSTRUCTIONS));
+        labeledGrid.addLabelAndComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
         editRolesWindowIsOpen = false;

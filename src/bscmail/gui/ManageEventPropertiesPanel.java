@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,6 +20,7 @@
 package bscmail.gui;
 
 import bscmail.EventProperty;
+import bscmail.gui.util.LabeledGrid;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -50,17 +51,19 @@ class ManageEventPropertiesPanel extends ManageElementPanel<EventProperty> {
    * Constructs a new event properties panel.
    */
   public ManageEventPropertiesPanel() {
-    ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(this);
-    layoutHelper.setLayoutManager();
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+    LabeledGrid labeledGrid = new LabeledGrid();
+    add(labeledGrid);
+
     nameTextField = new JTextField();
     nameTextField.getDocument().addDocumentListener(new DocumentListener(){
       @Override public void insertUpdate(DocumentEvent e) { nameTextFieldChanged(); }
       @Override public void removeUpdate(DocumentEvent e) { nameTextFieldChanged(); }
       @Override public void changedUpdate(DocumentEvent e) { nameTextFieldChanged(); }
     });    // addDocumentListener()
-    layoutHelper.addComponent("Name: ", nameTextField);
+    labeledGrid.addLabelAndComponent("Name: ", nameTextField);
     valueTextField = new JTextField();
-    layoutHelper.addComponent("Default Value: ", valueTextField);
+    labeledGrid.addLabelAndComponent("Default Value: ", valueTextField);
     eventPropertyIsValid = elementIsValid();
   }    // ManageShiftPanel()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -25,6 +25,7 @@ import bscmail.Event;
 import bscmail.EventProperty;
 import bscmail.Shift;
 import bscmail.Volunteer;
+import bscmail.gui.util.LabeledGrid;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +50,7 @@ import javax.swing.*;
  */
 public class DisplayEmailFrame extends JFrame {
 
-    private final JPanel mainPanel;
+    private final LabeledGrid mainPanel;
 
     /**
      * The text area managing the text.
@@ -92,9 +93,7 @@ public class DisplayEmailFrame extends JFrame {
         final int ROWS = 24;
         final int COLUMNS = 80;
 
-        mainPanel = new JPanel();
-        ManageElementPanelLayoutHelper layoutHelper = new ManageElementPanelLayoutHelper(mainPanel);
-        layoutHelper.setLayoutManager();
+        mainPanel = new LabeledGrid();
 
         recipientLine = new JTextField(COLUMNS);
         subjectLine = new JTextField(COLUMNS);
@@ -110,10 +109,10 @@ public class DisplayEmailFrame extends JFrame {
         textArea = new JTextArea(ROWS, COLUMNS);
         textArea.setLineWrap(true);
 
-        layoutHelper.addComponent("To: ", recipientLine);
-        layoutHelper.addComponent("Subject: ", subjectLine);
-        layoutHelper.addComponent("Text: ", new JScrollPane(textArea), true);
-        layoutHelper.addComponent("Actions: ", sendEmail);
+        mainPanel.addLabelAndComponent("To: ", recipientLine);
+        mainPanel.addLabelAndComponent("Subject: ", subjectLine);
+        mainPanel.addLabelAndComponent("Text: ", new JScrollPane(textArea), true);
+        mainPanel.addLabelAndComponent("Actions: ", sendEmail);
 
         add(mainPanel);
 
