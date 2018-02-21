@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,8 +20,10 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.EmailTemplate;
+import bscmail.gui.util.LabeledGrid;
 import java.awt.Dimension;
 import java.io.IOException;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -62,50 +64,53 @@ public class ManageEmailTemplateFrame extends JFrame {
      * @throws NullPointerException if {@code application} is null
      */
     public ManageEmailTemplateFrame(Application application) {
+        final int MIN_TEXT_AREA_COLS = 10;
+        final int MIN_TEXT_AREA_ROWS = 2;
         final int TEXT_AREA_COLS = 40;
         final int TEXT_AREA_ROWS = 12;
 
         this.application = application;
         setTitle(application.getApplicationName() + " - Manage Email");
 
-        JLabel preScheduleLabel = new JLabel("Pre-schedule text:");
-        preScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+        LabeledGrid labeledGrid = new LabeledGrid();
+        add(labeledGrid);
+
+        preScheduleTextArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         preScheduleTextArea.setLineWrap(true);
         preScheduleTextArea.setWrapStyleWord(true);
         JScrollPane preScheduleScrollPane = new JScrollPane(preScheduleTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        JLabel postScheduleLabel = new JLabel("Post-schedule text:");
-        postScheduleTextArea = new JTextArea(TEXT_AREA_ROWS, TEXT_AREA_COLS);
+        labeledGrid.addLabelAndComponent("Pre-schedule text:", preScheduleScrollPane, true);
+
+        postScheduleTextArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         postScheduleTextArea.setLineWrap(true);
         postScheduleTextArea.setWrapStyleWord(true);
         JScrollPane postScheduleScrollPane = new JScrollPane(postScheduleTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        labeledGrid.addLabelAndComponent("Post-schedule text:", postScheduleScrollPane, true);
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        layout.setHorizontalGroup(
-            layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(preScheduleLabel)
-                    .addComponent(postScheduleLabel))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(preScheduleScrollPane)
-                    .addComponent(postScheduleScrollPane))
-        );
-        layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(preScheduleLabel)
-                    .addComponent(preScheduleScrollPane))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(postScheduleLabel)
-                    .addComponent(postScheduleScrollPane))
-        );
+        // Setting frame and text area sizes.
+        //   1. Create the text areas at their desired minimum rows and columns
+        //      and set the minimum size of the frame. (Other techniques for
+        //      setting the minimum size did not work well.)
+        //   2. Alter the rows and columns of the text areas to their preferred
+        //      starting values and set the size of the frame.
+        //   3. Set the text area rows back to their minimum values. This
+        //      prevents scroll bars from apearing when the heigh of the frame
+        //      is lessened but there is no text to scroll to.
         pack();
+        Dimension minimumSize = getSize();
+        setMinimumSize(minimumSize);
+        preScheduleTextArea.setRows(TEXT_AREA_ROWS);
+        preScheduleTextArea.setColumns(TEXT_AREA_COLS);
+        postScheduleTextArea.setRows(TEXT_AREA_ROWS);
+        postScheduleTextArea.setColumns(TEXT_AREA_COLS);
+        pack();
+        preScheduleTextArea.setRows(MIN_TEXT_AREA_ROWS);
+        postScheduleTextArea.setRows(MIN_TEXT_AREA_ROWS);
 
         EmailTemplate emailTemplate = application.getEmailTemplate();
         preScheduleTextArea.setText(emailTemplate.getPreScheduleText());
@@ -133,11 +138,6 @@ public class ManageEmailTemplateFrame extends JFrame {
                 textAreasChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
-
-        Dimension minimumSize = getSize();
-        minimumSize.height = (int)(minimumSize.height * 0.5);
-        minimumSize.width = (int)(minimumSize.width * 0.67);
-        setMinimumSize(minimumSize);
     }    // ManageEmailTemplateFrame()
 
     /**
