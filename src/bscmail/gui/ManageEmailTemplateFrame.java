@@ -97,7 +97,7 @@ public class ManageEmailTemplateFrame extends JFrame {
         //   2. Alter the rows and columns of the text areas to their preferred
         //      starting values and set the size of the frame.
         //   3. Set the text area rows back to their minimum values. This
-        //      prevents scroll bars from apearing when the heigh of the frame
+        //      prevents scroll bars from apearing when the height of the frame
         //      is lessened but there is no text to scroll to.
         pack();
         Dimension minimumSize = getSize();
