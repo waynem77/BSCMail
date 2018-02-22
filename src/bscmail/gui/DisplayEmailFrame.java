@@ -27,6 +27,7 @@ import bscmail.Shift;
 import bscmail.Volunteer;
 import bscmail.gui.util.LabeledGrid;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -90,23 +91,23 @@ public class DisplayEmailFrame extends JFrame {
 
         setTitle(application.getApplicationName() + " - Event Email Text");
 
-        final int ROWS = 24;
-        final int COLUMNS = 80;
+        final int MIN_TEXT_AREA_COLS = 10;
+        final int MIN_TEXT_AREA_ROWS = 2;
+        final int TEXT_AREA_COLS = 80;
+        final int TEXT_AREA_ROWS = 24;
 
         mainPanel = new LabeledGrid();
 
-        recipientLine = new JTextField(COLUMNS);
-        subjectLine = new JTextField(COLUMNS);
+        recipientLine = new JTextField(MIN_TEXT_AREA_COLS);
+        subjectLine = new JTextField(MIN_TEXT_AREA_COLS);
         sendEmail = new JButton("Generate Email");
         sendEmail.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-
                 sendEmailButtonClicked();
-
             }    // actionPerformed()
         });    // addActionListener()
 
-        textArea = new JTextArea(ROWS, COLUMNS);
+        textArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         textArea.setLineWrap(true);
 
         mainPanel.addLabelAndComponent("To: ", recipientLine);
@@ -116,10 +117,27 @@ public class DisplayEmailFrame extends JFrame {
 
         add(mainPanel);
 
+        // Setting frame and text area sizes.
+        //   1. Create the text area at its desired minimum rows and columns
+        //      and set the minimum size of the frame. (Other techniques for
+        //      setting the minimum size did not work well.)
+        //   2. Alter the rows and columns of the text area to its preferred
+        //      starting values and set the size of the frame.
+        //   3. Set the text area rows back to its minimum value. This
+        //      prevents scroll bars from apearing when the height of the frame
+        //      is lessened but there is no text to scroll to.
+        pack();
+        Dimension minimumSize = getSize();
+        setMinimumSize(minimumSize);
+        textArea.setRows(TEXT_AREA_ROWS);
+        textArea.setColumns(TEXT_AREA_COLS);
+        pack();
+        textArea.setRows(MIN_TEXT_AREA_ROWS);
+
         populateRecipientLine(event);
         populateSubjectLine(event);
         populateEmailBody(application.getEmailTemplate(), event);
-        pack();
+//        pack();
 
         assertInvariant();
     }    // DisplayEmailFrame()
