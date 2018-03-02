@@ -22,8 +22,15 @@ package bscmail.gui.util;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -934,5 +941,157 @@ public class LabeledGridTest {
         int expected = 0;
         assertEquals(expected, received);
     }    // removeAllResetsLabelColumnWidthToZero()
+
+    /* getRightSideComponents */
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} does not throw an
+     * exception when there are no components.
+     */
+    @Test
+    public void getRightSideComponentsDoesNotThrowExceptionWhenThereAreNoComponents() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+
+        labeledGrid.getRightSideComponents();
+    }    // getRightSideComponentsDoesNotThrowExceptionWhenThereAreNoComponents()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} does not throw an
+     * exception when there are components.
+     */
+    @Test
+    public void getRightSideComponentsDoesNotThrowExceptionWhenThereAreComponents() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+        try {
+            labeledGrid.addLabelAndComponent("Foo", new JButton());
+        } catch (Exception e) {    // try
+            fail("Test depends on addLabelAndComponent().");
+        }    // catch
+
+        labeledGrid.getRightSideComponents();
+    }    // getRightSideComponentsDoesNotThrowExceptionWhenThereAreComponents()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} does not return
+     * null when there are no components.
+     */
+    @Test
+    public void getRightSideComponentsDoesNotReturnNullWhenThereAreNoComponents() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        assertNotNull(received);
+    }    // getRightSideComponentsDoesNotReturnNullWhenThereAreNoComponents()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} does not throw an
+     * exception when there are components.
+     */
+    @Test
+    public void getRightSideComponentsDoesNotReturnNullWhenThereAreComponents() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+        try {
+            labeledGrid.addLabelAndComponent("Foo", new JButton());
+        } catch (Exception e) {    // try
+            fail("Test depends on addLabelAndComponent().");
+        }    // catch
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        assertNotNull(received);
+    }    // getRightSideComponentsDoesNotReturnNullWhenThereAreComponents()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} returns an empty
+     * list when no components have been added to it.
+     */
+    @Test
+    public void getRightSideComponentsReturnsEmptyListWhenNoComponentsAreAdded() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        List<Component> expected = Collections.emptyList();
+        assertEquals(expected, received);
+    }    // getRightSideComponentsReturnsEmptyListWhenNoComponentsAreAdded()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} returns the
+     * components in the order they were added.
+     */
+    @Test
+    public void getRightSideComponentsReturnsListOfComponentsInOrder() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+        List<Component> components = Arrays.asList(new JButton(), new JTextField(), new JCheckBox());
+        try {
+            for (int i = 0; i < components.size(); ++i) {
+                labeledGrid.addLabelAndComponent(String.valueOf(i), components.get(i));
+            }    // for
+        } catch (Exception e) {    // try
+            fail("Test depends on addLabelAndComponent().");
+        }    // catch
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        List<Component> expected = components;
+        assertEquals(expected, received);    // Confirms number and equality of elements, but not identity
+        for (int i = 0; i < expected.size(); ++i) {
+            assertSame(expected.get(i), received.get(i));
+        }    // for
+    }    // getRightSideComponentsReturnsListOfComponentsInOrder()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} returns an empty
+     * list after a call to {@link LabeledGrid#removeAll()}.
+     */
+    @Test
+    public void getRightSideComponentsReturnsEmptyListAfterCallToRemoveAll() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+        List<Component> components = Arrays.asList(new JButton(), new JTextField(), new JCheckBox());
+        try {
+            for (int i = 0; i < components.size(); ++i) {
+                labeledGrid.addLabelAndComponent(String.valueOf(i), components.get(i));
+            }    // for
+            labeledGrid.removeAll();
+        } catch (Exception e) {    // try
+            fail("Test depends on addLabelAndComponent() and removeAll().");
+        }    // catch
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        List<Component> expected = Collections.emptyList();
+        assertEquals(expected, received);
+    }    // getRightSideComponentsReturnsEmptyListAfterCallToRemoveAll()
+
+    /**
+     * Tests that {@link LabeledGrid#getRightSideComponents()} returns only
+     * those components added after a call to {@link LabeledGrid#removeAll()}.
+     */
+    @Test
+    public void getRightSideComponentsReturnsComponentsAddedAfterCallToRemoveAll() {
+        LabeledGrid labeledGrid = new LabeledGrid();
+        List<Component> oldComponents = Arrays.asList(new JButton(), new JTextField(), new JCheckBox());
+        List<Component> newComponents = Arrays.asList(new JPanel(), new JTree());
+        try {
+            for (int i = 0; i < oldComponents.size(); ++i) {
+                labeledGrid.addLabelAndComponent("Old " + String.valueOf(i), oldComponents.get(i));
+            }    // for
+            labeledGrid.removeAll();
+            for (int i = 0; i < newComponents.size(); ++i) {
+                labeledGrid.addLabelAndComponent("New " + String.valueOf(i), newComponents.get(i));
+            }    // for
+        } catch (Exception e) {    // try
+            fail("Test depends on addLabelAndComponent() and removeAll().");
+        }    // catch
+
+        List<Component> received = labeledGrid.getRightSideComponents();
+
+        List<Component> expected = newComponents;
+        assertEquals(expected, received);    // Confirms number and equality of elements, but not identity
+        for (int i = 0; i < expected.size(); ++i) {
+            assertSame(expected.get(i), received.get(i));
+        }    // for
+    }    // getRightSideComponentsReturnsComponentsAddedAfterCallToRemoveAll()
 
 }    // LabeledGridTest

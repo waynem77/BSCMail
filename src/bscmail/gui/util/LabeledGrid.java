@@ -48,6 +48,11 @@ public class LabeledGrid extends JPanel {
     private List<JLabel> labels;
 
     /**
+     * The set of components in the component column.
+     */
+    private List<Component> rightSideComponents;
+
+    /**
      * True if the add methods are unlocked. This property exists so that the
      * base add functions are locked to users, but may be accessed by
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}.
@@ -76,6 +81,7 @@ public class LabeledGrid extends JPanel {
         labelWidth = 0;
 
         labels = new LinkedList<>();
+        rightSideComponents = new LinkedList<>();
 
         assertInvariant();
     }    // LabeledGrid()
@@ -205,6 +211,7 @@ public class LabeledGrid extends JPanel {
         constraints.fill = GridBagConstraints.NONE;
         add(jLabel, constraints);
         labels.add(jLabel);
+        rightSideComponents.add(component);
 
         gridx = 1;
         constraints = makeConstraints(gridx, gridy);
@@ -258,6 +265,7 @@ public class LabeledGrid extends JPanel {
         labelWidth = 0;
         super.removeAll();
         labels.clear();
+        rightSideComponents.clear();
         assertInvariant();
     }    // removeAll()
 
@@ -331,6 +339,15 @@ public class LabeledGrid extends JPanel {
     }    // setPreferredLabelWidth()
 
     /**
+     * Returns a list of all the components on the grid in order.
+     *
+     * @return a list of all the components on the grid in order.
+     */
+    public List<Component> getRightSideComponents() {
+        return rightSideComponents;
+    }    // getRightSideComponents()
+
+    /**
      * Sets the preferred width of all label components to the given width.
      */
     private void setPreferredWidthOfAllLabelComponents(int width) {
@@ -387,6 +404,8 @@ public class LabeledGrid extends JPanel {
         assert(labels != null);
         assert(Arrays.asList(getComponents()).containsAll(labels));
         assert(allLabelsAreAsWideAsLabelWidth());
+        assert(rightSideComponents != null);
+        assert(Arrays.asList(getComponents()).containsAll(rightSideComponents));
     }    // assertInvariant()
 
     /**
