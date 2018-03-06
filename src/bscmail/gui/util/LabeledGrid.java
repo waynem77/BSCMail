@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,11 @@ import javax.swing.JPanel;
  * @since 3.3
  */
 public class LabeledGrid extends JPanel {
+
+    /**
+     * Horizontal padding between labels and components.
+     */
+    private static final int LABEL_PADDING = 10;
 
     /**
      * The layout manager used by the panel.
@@ -209,9 +215,10 @@ public class LabeledGrid extends JPanel {
         constraints.weightx = 0.0;
         constraints.weighty = sticky ? 1.0 : 0.0;
         constraints.fill = GridBagConstraints.NONE;
+        Insets insets = new Insets(0, 0, 0, LABEL_PADDING);
+        constraints.insets = insets;
         add(jLabel, constraints);
         labels.add(jLabel);
-        rightSideComponents.add(component);
 
         gridx = 1;
         constraints = makeConstraints(gridx, gridy);
@@ -220,6 +227,7 @@ public class LabeledGrid extends JPanel {
         constraints.weighty = sticky ? 1.0 : 0.0;
         constraints.fill = GridBagConstraints.BOTH;
         add(component, constraints);
+        rightSideComponents.add(component);
 
         lockAddMethods();
 
