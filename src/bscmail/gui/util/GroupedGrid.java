@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2017-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,12 +21,10 @@ package bscmail.gui.util;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 /**
@@ -41,16 +39,6 @@ import javax.swing.JPanel;
 public class GroupedGrid extends JPanel {
 
     /**
-     * Vertical padding around components.
-     */
-    private static final int COMPONENT_VERTICAL_PADDING = 1;
-
-    /**
-     * Horizontal padding around components.
-     */
-    private static final int COMPONENT_HORIZONTAL_PADDING = 5;
-
-    /**
      * Additional vertical padding between groups.
      */
     private static final int GROUP_VERTICAL_PADDING = 10;
@@ -61,16 +49,9 @@ public class GroupedGrid extends JPanel {
     private final int groups;
 
     /**
-     * The components in the grouped grid.
+     * The panels containing the components.
      */
-    private final List<List<LabeledComponent>> componentGroups;
-
-    /**
-     * The glue (spacing) at the bottom of the grid. This glue is only visible
-     * when the frame is resized, and allows the other components to "float" to
-     * the top of the frame.
-     */
-    private final Component bottomGlue;
+    private final List<LabeledGrid> panels;
 
     /**
      * Constructs a new grouped grid component with the specified number of
@@ -84,13 +65,17 @@ public class GroupedGrid extends JPanel {
             throw new IllegalArgumentException("groups must be at least 1");
         }    // if
         this.groups = groups;
-        componentGroups = new ArrayList<>();
-        for (int i = 0; i < groups; ++i) {
-            componentGroups.add(new LinkedList<LabeledComponent>());
-        }    // for
-        bottomGlue = Box.createVerticalGlue();
 
-        setLayout(new GridBagLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        panels = new ArrayList<>();
+        for (int i = 0; i < groups; ++i) {
+            if (i != 0) {
+                add(Box.createVerticalStrut(GROUP_VERTICAL_PADDING));
+            }    // if
+            LabeledGrid panel = new LabeledGrid();
+            add(panel);
+            panels.add(panel);
+        }    // for
 
         assertInvariant();
     }    // GroupedGrid()
@@ -118,57 +103,32 @@ public class GroupedGrid extends JPanel {
             throw new IndexOutOfBoundsException("group (" + group + ") is out of bounds ([0.." + (groups - 1) + "])");
         }    // if
 
-        for (int i = group; i < this.groups; ++i) {
-            List<LabeledComponent> componentGroup = componentGroups.get(i);
-            for (LabeledComponent labeledComponent : componentGroup) {
-                remove(labeledComponent.getLabel());
-                remove(labeledComponent.getComponent());
-            }    // for
-        }    // for
-        remove(bottomGlue);
-
-        List<LabeledComponent> componentGroup = componentGroups.get(group);
-        componentGroup.clear();
-        componentGroup.addAll(components);
-        componentGroups.set(group, componentGroup);
-
-        int yindex = 0;
-        for (int i = 0; i < group; ++i) {
-            yindex += componentGroups.get(i).size();
-        }    // for
-        int gridx = 0;
-        int gridy = yindex;
-
-        for (int i = 0; i < components.size(); ++i) {
-            LabeledComponent labeledComponent = components.get(i);
-            Insets insets = new Insets(COMPONENT_VERTICAL_PADDING, COMPONENT_HORIZONTAL_PADDING, COMPONENT_VERTICAL_PADDING, COMPONENT_HORIZONTAL_PADDING);
-            if ((i == 0) && (group != 0)) {
-                insets.top += GROUP_VERTICAL_PADDING;
-            }    // if
-            GridBagConstraints constraints = getDefaultConstraints(gridx, gridy);
-            constraints.insets = insets;
-            add(labeledComponent.getLabel(), constraints);
-            ++gridx;
-
-            constraints = getDefaultConstraints(gridx, gridy);
-            constraints.insets = insets;
-            constraints.weightx = 1.0;
-            add(labeledComponent.getComponent(), constraints);
-            ++gridy;
-            gridx = 0;
+        LabeledGrid panel = panels.get(group);
+        panel.removeAll();
+        for (LabeledComponent labeledComponent : components) {
+            panel.addLabelAndComponent(labeledComponent.getLabel().getText(), labeledComponent.getComponent());
         }    // for
 
-        if (group + 1 < componentGroups.size()) {
-            setComponents(new LinkedList<>(componentGroups.get(group + 1)), group + 1);
-        } else {    // if
-            GridBagConstraints constraints = getDefaultConstraints(0, gridy);
-            constraints.fill = GridBagConstraints.VERTICAL;
-            constraints.weighty = 1.0;
-            add(bottomGlue, constraints);
-        }    // else
+        adjustLabelWidths();
 
         assertInvariant();
     }    // setComponents()
+
+    /**
+     * Adjusts the widths of all the labels to be the maximum value of
+     * {@link LabeledGrid#getMinimumLabelWidth()} for all panels.
+     */
+    private void adjustLabelWidths() {
+        int maximumMinimumLabelWidth = 0;    // The greatest value of LabeledGrid.getMinimumLabelWidth for all panels.
+        for (LabeledGrid panel : panels) {
+            if (panel.getMinimumLabelWidth() > maximumMinimumLabelWidth) {
+                maximumMinimumLabelWidth = panel.getMinimumLabelWidth();
+            }    // if
+        }    // for
+        for (LabeledGrid panel : panels) {
+            panel.setLabelWidth(maximumMinimumLabelWidth);
+        }    // for
+    }    // adjustLabelWidths
 
     /**
      * Returns the list of components in the given group. The return value is
@@ -185,12 +145,8 @@ public class GroupedGrid extends JPanel {
             throw new IndexOutOfBoundsException("group (" + group + ") is out of bounds ([0.." + (groups - 1) + "])");
         }    // if
 
-        List<LabeledComponent> componentGroup = componentGroups.get(group);
-        List<Component> components = new LinkedList<>();
-        for (LabeledComponent labeledComponent : componentGroup) {
-            components.add(labeledComponent.getComponent());
-        }    // for
-
+        LabeledGrid panel = panels.get(group);
+        List<Component> components = panel.getRightSideComponents();
         assert (! components.contains(null));
         return components;
     }    // getValues()
@@ -233,30 +189,29 @@ public class GroupedGrid extends JPanel {
      */
     private void assertInvariant() {
         assert (groups >= 0);
-        assert (componentGroups != null);
-        assert (componentGroups.size() == groups);
-        assert (! componentGroups.contains(null));
-        assert (componentGroupsElementsDoNotContainNull());
-        assert (bottomGlue != null);
+        assert (panels != null);
+        assert (panels.size() == groups);
+        assert (! panels.contains(null));
+        assert (gridContainsAllPanels());
     }    // assertInvariant()
 
     /**
-     * Returns true if none of the elements of {@link #componentGroups} contains
-     * null.
+     * Returns true all the elements of {@link #panels} are contained within the
+     * grouped grid.
      *
      * This function is only used by {@link #assertInvariant()}
      *
-     * @return true if none of the elements of {@code componentGroups} contains
-     * null; false otherwise
+     * @return true all the elements of {@code #panels} are contained within the
+     * grouped grid; false otherwise
      */
-    private boolean componentGroupsElementsDoNotContainNull() {
-        for (List<LabeledComponent> componentGroup : componentGroups) {
-            if (componentGroup.contains(null)) {
+    private boolean gridContainsAllPanels() {
+        for (LabeledGrid panel : panels) {
+            if (! isAncestorOf(panel)) {
                 return false;
             }    // if
         }    // for
 
         return true;
-    }    // componentGroupsElementsDoNotContainNull()
+    }    // gridContainsAllPanels()
 
 }    // GroupedGrid
