@@ -21,10 +21,10 @@ package bscmail.gui.util;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 /**
@@ -66,16 +66,31 @@ public class GroupedGrid extends JPanel {
         }    // if
         this.groups = groups;
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
         panels = new ArrayList<>();
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
         for (int i = 0; i < groups; ++i) {
             if (i != 0) {
-                add(Box.createVerticalStrut(GROUP_VERTICAL_PADDING));
+                add(Box.createVerticalStrut(GROUP_VERTICAL_PADDING), constraints);
+                constraints.gridy++;
             }    // if
             LabeledGrid panel = new LabeledGrid();
-            add(panel);
+            add(panel, constraints);
             panels.add(panel);
+            constraints.gridy++;
         }    // for
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        add(Box.createVerticalGlue(), constraints);
 
         assertInvariant();
     }    // GroupedGrid()

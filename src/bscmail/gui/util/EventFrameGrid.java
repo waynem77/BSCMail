@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2017-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -73,6 +74,7 @@ public class EventFrameGrid extends JPanel {
      * Constructs a new event frame grid,
      */
     public EventFrameGrid() {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         groupedGrid = new GroupedGrid(GROUPS);
         add(groupedGrid);
 

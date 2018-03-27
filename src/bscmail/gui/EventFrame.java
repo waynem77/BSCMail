@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -37,7 +37,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 
 
@@ -81,7 +80,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         eventFrameGrid = new EventFrameGrid();
-        add(new JScrollPane(eventFrameGrid));
+        add(eventFrameGrid);
 
         setEventProperties(eventProperties);
         setShifts(shifts);
@@ -143,6 +142,16 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
     public void eventPropertiesChanged() {
         setEventProperties(application.getEventProperties());
     }    // eventPropertiesChanged()
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void pack() {
+        setMinimumSize(null);
+        super.pack();
+        setMinimumSize(getMinimumSize());
+    }    // pack()
 
     /*
      * Private methods
