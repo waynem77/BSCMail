@@ -237,7 +237,7 @@ public class LabeledGrid extends JPanel {
         if (newLabelWidth > labelWidth) {
             labelWidth = newLabelWidth;
         }  // if
-        setPreferredWidthOfAllLabelComponents(labelWidth)        ;
+        setWidthOfAllLabelComponents(labelWidth)        ;
         assertInvariant();
     }    // addLabelAndComponent()
 
@@ -341,7 +341,7 @@ public class LabeledGrid extends JPanel {
             throw new IllegalArgumentException("width must be at least as great as the minimum label width");
         }    // if
 
-        setPreferredWidthOfAllLabelComponents(width);
+        setWidthOfAllLabelComponents(width);
         labelWidth = width;
         assertInvariant();
     }    // setPreferredLabelWidth()
@@ -358,13 +358,16 @@ public class LabeledGrid extends JPanel {
     /**
      * Sets the preferred width of all label components to the given width.
      */
-    private void setPreferredWidthOfAllLabelComponents(int width) {
+    private void setWidthOfAllLabelComponents(int width) {
         for (JLabel label : labels) {
             Dimension preferredSize = label.getPreferredSize();
             preferredSize.width = width;
+            label.setMinimumSize(preferredSize);
+            label.setMaximumSize(preferredSize);
             label.setPreferredSize(preferredSize);
+            label.setSize(preferredSize);
         }    // for
-    }    // setPreferredWidthOfAllLabelComponents()
+    }    // setWidthOfAllLabelComponents()
 
     /**
      * Creates and returns a {@link GridBagConstraints} object. The constraints
