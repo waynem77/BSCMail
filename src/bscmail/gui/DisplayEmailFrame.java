@@ -37,9 +37,9 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -148,11 +148,14 @@ public class DisplayEmailFrame extends JFrame {
      * @param event the event; may not be null
      */
     private void populateRecipientLine(Event event) {
-        Set<String> emails = new HashSet<>();
+        List<String> emails = new ArrayList<>();
         for (Shift shift : event.getShifts()) {
             Volunteer volunteer = shift.getVolunteer();
             if (volunteer != null) {
-                emails.add(volunteer.getEmail());
+                String email = volunteer.getEmail();
+                if (! emails.contains(email)) {
+                    emails.add(volunteer.getEmail());
+                }    // if
             }    // if
         }    // for
         String toLine = "";
