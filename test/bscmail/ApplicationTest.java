@@ -911,7 +911,7 @@ public class ApplicationTest {
     @Test
     public void setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull() throws IOException {
         Application application = getTestApplication();
-        EmailTemplate emailTemplate = new EmailTemplate("", "");
+        EmailTemplate emailTemplate = new EmailTemplate("", "", "");
 
         application.setEmailTemplate(emailTemplate);
     }    // setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull()
@@ -924,7 +924,7 @@ public class ApplicationTest {
     @Test
     public void getEmailTemplateReturnsArgumentPassedToSetEmailTemplate() throws IOException {
         Application application = getTestApplication();
-        EmailTemplate emailTemplate = new EmailTemplate("foo", "bar");
+        EmailTemplate emailTemplate = new EmailTemplate("foo", "bar", "baz");
         application.setEmailTemplate(emailTemplate);
 
         EmailTemplate received = application.getEmailTemplate();
@@ -1182,7 +1182,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar", "Baz");
 
         application.setEmailTemplate(emailTemplate);
 
@@ -1314,7 +1314,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar", "Baz");
 
         application.setEmailTemplate(emailTemplate);
 
@@ -1446,7 +1446,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar", "Baz");
 
         application.setEmailTemplate(emailTemplate);
 
@@ -1522,7 +1522,7 @@ public class ApplicationTest {
         for (EmailTemplateObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar", "Baz");
 
         application.setEmailTemplate(emailTemplate);
 
@@ -1727,7 +1727,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar");
+        EmailTemplate emailTemplate = new EmailTemplate("Foo", "Bar", "Baz");
 
         application.setEmailTemplate(emailTemplate);
 

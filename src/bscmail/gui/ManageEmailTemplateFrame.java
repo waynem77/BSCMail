@@ -143,7 +143,7 @@ public class ManageEmailTemplateFrame extends JFrame {
      * back to the {@link Application}.
      */
     private void textAreasChanged() {
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleTextArea.getText(), postScheduleTextArea.getText());
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleTextArea.getText(), postScheduleTextArea.getText(), "");
         try {
             application.setEmailTemplate(emailTemplate);
         } catch (IOException e) {

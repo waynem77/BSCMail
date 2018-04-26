@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -75,55 +75,169 @@ public class EmailTemplateFactoryTest {
      * not throw an exception when properties is missing "preScheduleText".
      */
     @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingName() {
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingPreScheduleText() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingName()
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingPreScheduleText()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
      * not return null when properties is missing "preScheduleText".
      */
     @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingName() {
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingPreScheduleText() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
-        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
-        properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
         assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingName()
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingPreScheduleText()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
      * not throw an exception when properties has a null value for "preScheduleText".
      */
     @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullName() {
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullPreScheduleText() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = null;
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullName()
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullPreScheduleText()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
      * not return null when properties has a null value for "preScheduleText".
      */
     @Test
-    public void constructReadWritableDoesNotReturnNullhenPropertiesHasNullName() {
+    public void constructReadWritableDoesNotReturnNullhenPropertiesHasNullPreScheduleText() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = null;
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullPreScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties is missing "postScheduleText".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingPostScheduleText() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
+        String subjectLineTemplate = "baz";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingPostScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties is missing "postScheduleText".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingPostScheduleText() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
+        String subjectLineTemplate = "baz";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingPostScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties has a null value "postScheduleText".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullPostScheduleText() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
+        String postScheduleText = null;
+        String subjectLineTemplate = "baz";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissinPostScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties has a null value "postScheduleText".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasNullPostScheduleText() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
+        String postScheduleText = null;
+        String subjectLineTemplate = "baz";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasNullPostScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties is missing "subjectLineTemplate".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingSubjectLineTemplate() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingSubjectLineTemplate()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties is missing "subjectLineTemplate".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingSubjectLineTemplate() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        String preScheduleText = "foo";
         String postScheduleText = "bar";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
@@ -132,71 +246,46 @@ public class EmailTemplateFactoryTest {
         EmailTemplate received = factory.constructReadWritable(properties);
 
         assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullName()
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingSubjectLineTemplate()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties is missing "postScheduleText".
+     * not throw an exception when properties has a null value
+     * "subjectLineTemplate".
      */
     @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingDefaultValue() {
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullSubjectLineTemplate() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = null;
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingDefaultValue()
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissinSubjectLineTemplate()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
-     * not return null when properties is missing "postScheduleText".
+     * not return null when properties has a null value "subjectLineTemplate".
      */
     @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingDefaultValue() {
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasNullSubjectLineTemplate() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = null;
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
+        properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
         assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingDefaultValue()
-
-    /**
-     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
-     * not throw an exception when properties has a null value "postScheduleText".
-     */
-    @Test
-    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullDefaultValue() {
-        Factory factory = EmailTemplate.getEmailTemplateFactory();
-        String preScheduleText = "foo";
-        String postScheduleText = null;
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("preScheduleText", preScheduleText);
-        properties.put("postScheduleText", postScheduleText);
-
-        factory.constructReadWritable(properties);
-    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissinDefaultValue()
-
-    /**
-     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
-     * not return null when properties has a null value "postScheduleText".
-     */
-    @Test
-    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasNullDefaultValue() {
-        Factory factory = EmailTemplate.getEmailTemplateFactory();
-        String preScheduleText = "foo";
-        String postScheduleText = null;
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("preScheduleText", preScheduleText);
-        properties.put("postScheduleText", postScheduleText);
-
-        EmailTemplate received = factory.constructReadWritable(properties);
-
-        assertNotNull(received);
-    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasNullDefaultValue()
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasNullSubjectLineTemplate()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
@@ -207,9 +296,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         factory.constructReadWritable(properties);
     }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasAllValues()
@@ -223,9 +314,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
@@ -241,13 +334,15 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
-        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText);
+        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasAllValues()
 
@@ -260,9 +355,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
         properties.put("extra", "baz");
 
         factory.constructReadWritable(properties);
@@ -277,9 +374,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
         properties.put("extra", "baz");
 
         EmailTemplate received = factory.constructReadWritable(properties);
@@ -296,14 +395,16 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         String preScheduleText = "foo";
         String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
         properties.put("extra", "baz");
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
-        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText);
+        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasExtraneousValues()
 
@@ -316,9 +417,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         Object preScheduleText = 1;
         Object postScheduleText = 2.0;
+        Object subjectLineTemplate = Boolean.TRUE;
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         factory.constructReadWritable(properties);
     }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasWrongObjects()
@@ -332,9 +435,11 @@ public class EmailTemplateFactoryTest {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
         Object preScheduleText = 1;
         Object postScheduleText = 2.0;
+        Object subjectLineTemplate = Boolean.TRUE;
         Map<String, Object> properties = new HashMap<>();
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
+        properties.put("subjectLineTemplate", subjectLineTemplate);
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
@@ -349,7 +454,8 @@ public class EmailTemplateFactoryTest {
     public void constructReadWritableWorksReflexively() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate originalEmailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate originalEmailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Map<String, Object> properties = originalEmailTemplate.getReadWritableProperties();
         Factory factory = EmailTemplate.getEmailTemplateFactory();

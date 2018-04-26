@@ -47,7 +47,7 @@ public class EmailTemplateTest extends ReadWritableTest {
      */
     @Override
     protected EmailTemplate getReadWritable() {
-        return new EmailTemplate("foo", "bar");
+        return new EmailTemplate("foo", "bar", "baz");
     }    // getReadWritable()
 
 
@@ -63,12 +63,13 @@ public class EmailTemplateTest extends ReadWritableTest {
      * throws a {@link NullPointerException} when preScheduleText is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenNameIsNull() {
+    public void constructorThrowsExceptionWhenPreScheduleTextIsNull() {
         String preScheduleText = null;
         String postScheduleText = "bar";
-
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
-    }    // constructorThrowsExceptionWhenNameIsNull()
+        String subjectLineTemplate = "baz";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorThrowsExceptionWhenPreScheduleTextIsNull()
 
     /**
      * Tests that
@@ -76,12 +77,13 @@ public class EmailTemplateTest extends ReadWritableTest {
      * does not throw an exception when preScheduleText is empty.
      */
     @Test
-    public void constructorDoesNotThrowExceptionWhenNameIsEmpty() {
+    public void constructorDoesNotThrowExceptionWhenPreScheduleTextIsEmpty() {
         String preScheduleText = "";
         String postScheduleText = "bar";
-
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
-    }    // constructorDoesNotThrowExceptionWhenNameIsEmpty()
+        String subjectLineTemplate = "baz";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorDoesNotThrowExceptionWhenPreScheduleTextIsEmpty()
 
     /**
      * Tests that
@@ -89,12 +91,13 @@ public class EmailTemplateTest extends ReadWritableTest {
      * throws a {@link NullPointerException} when postScheduleText is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenDefaultValueIsNull() {
+    public void constructorThrowsExceptionWhenPostScheduleTextIsNull() {
         String preScheduleText = "foo";
         String postScheduleText = null;
-
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
-    }    // constructorThrowsExceptionWhenDefaultValueIsNull()
+        String subjectLineTemplate = "baz";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorThrowsExceptionWhenPostScheduleTextIsNull()
 
     /**
      * Tests that
@@ -102,24 +105,54 @@ public class EmailTemplateTest extends ReadWritableTest {
      * does not throw an exception when postScheduleText is empty.
      */
     @Test
-    public void constructorDoesNotThrowExceptionWhenDefaultValueIsEmpty() {
+    public void constructorDoesNotThrowExceptionWhenPostScheduleTextIsEmpty() {
         String preScheduleText = "foo";
         String postScheduleText = "";
-
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
-    }    // constructorDoesNotThrowExceptionWhenDefaultValueIsEmpty()
+        String subjectLineTemplate = "baz";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorDoesNotThrowExceptionWhenPostScheduleTextIsEmpty()
 
     /**
      * Tests that
      * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
-     * does not throw an exception when neither parameter is null.
+     * throws a {@link NullPointerException} when subjectLineTemplate is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenSubjectLineTemplateIsNull() {
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = null;
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorThrowsExceptionWhenSubjectLineTemplateIsNull()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * does not throw an exception when subjectLineTemplate is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionSubjectLineTemplateIsEmpty() {
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+    }    // constructorDoesNotThrowExceptionWhenSubjectLineTemplateIsEmpty()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * does not throw an exception when any parameter is null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenNoParamIsNull() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
     }    // constructorDoesNotThrowExceptionWhenNoParamIsNull()
 
     /* getPreScheduleText */
@@ -132,7 +165,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getPreScheduleTextDoesNotThrowException() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         emailTemplate.getPreScheduleText();
     }    // getPreScheduleTextDoesNotThrowException()
@@ -145,7 +179,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getPreScheduleTextReturnsCorrectValue() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         String received = emailTemplate.getPreScheduleText();
 
@@ -163,7 +198,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getPostScheduleTextDoesNotThrowException() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         emailTemplate.getPostScheduleText();
     }    // getPostScheduleTextDoesNotThrowException()
@@ -176,13 +212,47 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getPostScheduleTextReturnsCorrectValue() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         String received = emailTemplate.getPostScheduleText();
 
         String expected = postScheduleText;
         assertEquals(expected, received);
     }    // getPostScheduleTextReturnsCorrectValue()
+
+    /* getSubjectLineTemplate */
+
+    /**
+     * Tests that {@link EmailTemplate#getSubjectLineTemplate()} does not throw
+     * an exception.
+     */
+    @Test
+    public void getSubjectLineTemplateDoesNotThrowException() {
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+
+        emailTemplate.getSubjectLineTemplate();
+    }    // getSubjectLineTemplateDoesNotThrowException()
+
+    /**
+     * Tests that {@link EmailTemplate#getSubjectLineTemplate()} returns the
+     * value passed to the constructor.
+     */
+    @Test
+    public void getSubjectLineTemplateReturnsCorrectValue() {
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+
+        String received = emailTemplate.getSubjectLineTemplate();
+
+        String expected = subjectLineTemplate;
+        assertEquals(expected, received);
+    }    // getSubjectLineTemplateReturnsCorrectValue()
 
     /* getReadWritableProperties */
     
@@ -194,13 +264,15 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getReadWritablePropertiesReturnsTheCorrectValue() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Map<String, Object> received = emailTemplate.getReadWritableProperties();
 
         Map<String, Object> expected = new HashMap<>();
         expected.put("preScheduleText", preScheduleText);
         expected.put("postScheduleText", postScheduleText);
+        expected.put("subjectLineTemplate", subjectLineTemplate);
         assertEquals(expected, received);
     }    // Test()
     
@@ -213,7 +285,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void getReadWritablePropertiesHasTheCorrectIterationOrder() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Map<String, Object> properties = emailTemplate.getReadWritableProperties();
         List<String> received = new LinkedList<>();
@@ -221,7 +294,7 @@ public class EmailTemplateTest extends ReadWritableTest {
             received.add(entry.getKey());
         }    // for
 
-        List<String> expected = Arrays.asList("preScheduleText", "postScheduleText");
+        List<String> expected = Arrays.asList("preScheduleText", "postScheduleText", "subjectLineTemplate");
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
@@ -235,7 +308,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsDoesNotThrowExceptionWhenArgumentIsNull() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Object obj = null;
         emailTemplate.equals(obj);
@@ -249,7 +323,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsFalseWhenArgumentIsNull() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Object obj = null;
         boolean received = emailTemplate.equals(obj);
@@ -265,7 +340,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsDoesNotThrowExceptionWhenArgumentIsNotEmailTemplate() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Object obj = 1;
         emailTemplate.equals(obj);
@@ -279,7 +355,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsFalseWhenArgumentIsNotEmailTemplate() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         Object obj = 1;
         boolean received = emailTemplate.equals(obj);
@@ -295,9 +372,10 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsDoesNotThrowExceptionWhenArgumentIsEmailTemplate() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
-        Object obj = new EmailTemplate(preScheduleText, postScheduleText);
+        Object obj = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
         emailTemplate.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsEmailTemplate()
     
@@ -306,34 +384,54 @@ public class EmailTemplateTest extends ReadWritableTest {
      * argument has a different preScheduleText than the caller.
      */
     @Test
-    public void equalsReturnsFalseWhenArgumentHasDifferentName() {
+    public void equalsReturnsFalseWhenArgumentHasDifferentPreScheduleText() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText + "X", postScheduleText);
+        EmailTemplate obj = new EmailTemplate(preScheduleText + "X", postScheduleText, subjectLineTemplate);
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = false;
         assertEquals(expected, received);
-    }    // equalsReturnsFalseWhenArgumentHasDifferentName()
+    }    // equalsReturnsFalseWhenArgumentHasDifferentPreScheduleText()
 
     /**
      * Tests that {@link EmailTemplate#equals(Object)} returns false when the
      * argument has a different postScheduleText than the caller.
      */
     @Test
-    public void equalsReturnsFalseWhenArgumentHasDifferentDefaultValue() {
+    public void equalsReturnsFalseWhenArgumentHasDifferentPostScheduleText() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText + "X");
+        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText + "X", subjectLineTemplate);
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = false;
         assertEquals(expected, received);
-    }    // equalsReturnsFalseWhenArgumentHasDifferentDefaultValue()
+    }    // equalsReturnsFalseWhenArgumentHasDifferentPostScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate#equals(Object)} returns false when the
+     * argument has a different subjectLineTemplate than the caller.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentSubjectLineTemplate() {
+        String preScheduleText = "foo";
+        String postScheduleText = "bar";
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+
+        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate + "X");
+        boolean received = emailTemplate.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentSubjectLineTemplate()
 
     /**
      * Tests that {@link EmailTemplate#equals(Object)} returns true when the
@@ -343,9 +441,10 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsTrueWhenArgumentHasSameNameAndDefaultValue() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText);
+        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = true;
@@ -360,7 +459,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsTrueWhenArgumentIsIdentical() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         EmailTemplate obj = emailTemplate;
         boolean received = emailTemplate.equals((Object)obj);
@@ -378,7 +478,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void hashCodeDoesNotThrowException() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         emailTemplate.hashCode();
     }    // hashCodeDoesNotThrowException()
@@ -391,8 +492,9 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void hashCodeReturnsEqualValuesForEquivalentVolunteers() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate1 = new EmailTemplate(preScheduleText, postScheduleText);
-        EmailTemplate emailTemplate2 = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate1 = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+        EmailTemplate emailTemplate2 = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         int expected = emailTemplate1.hashCode();
         int received = emailTemplate2.hashCode();
@@ -408,7 +510,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void cloneDoesNotThrowException() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         emailTemplate.clone();
     }    // cloneDoesNotThrowException()
@@ -420,7 +523,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void cloneDoesNotReturnNull() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         EmailTemplate received = emailTemplate.clone();
 
@@ -435,7 +539,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void returnValueOfCloneIsEqualToOriginal() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         EmailTemplate received = emailTemplate.clone();
 
@@ -451,7 +556,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void returnValueOfCloneIsNotIdenticalToOriginal() {
         String preScheduleText = "foo";
         String postScheduleText = "bar";
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText);
+        String subjectLineTemplate = "baz";
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
 
         EmailTemplate received = emailTemplate.clone();
 
