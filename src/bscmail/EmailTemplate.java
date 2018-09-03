@@ -28,10 +28,15 @@ import main.ReadWritableFactory;
 /**
  * Represents an email template.  Email templates have the following properties:
  * <ul>
- *   <li>pre-schedule text, and</li>
- *   <li>post-schedule text</li>
+ *   <li>pre-schedule text,</li>
+ *   <li>post-schedule text, and</li>
+ *   <li>subject line template.</li>
  * </ul>
  * 
+ * The pre-schedule and post-schedule text are simple strings, placed before and
+ * after the schedule in the generated email body. The subject line text is a
+ * string of a format appropriate for a
+ * {@link bscmail.util.format.EmailFormatter}.
  * @author wayne.miller
  */
 public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
@@ -179,6 +184,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
      * Returns the email template's subject line template
      *
      * @return the email template's subject line template
+     * @since 3.3
      */
     public String getSubjectLineTemplate() {
         assertInvariant();
