@@ -26,6 +26,7 @@ import bscmail.EventProperty;
 import bscmail.Shift;
 import bscmail.Volunteer;
 import bscmail.gui.util.LabeledGrid;
+import bscmail.util.format.EmailFormatter;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -137,7 +138,6 @@ public class DisplayEmailFrame extends JFrame {
         populateRecipientLine(event);
         populateSubjectLine(event);
         populateEmailBody(application.getEmailTemplate(), event);
-//        pack();
 
         assertInvariant();
     }    // DisplayEmailFrame()
@@ -176,12 +176,10 @@ public class DisplayEmailFrame extends JFrame {
      * @param event the event; may not be null
      */
     private void populateSubjectLine(Event event) {
-        String subject = "Volunteer schedule";
-        String date = this.formattedEventDate(event);
-        if (! date.isEmpty()) {
-            subject += " for " + date;
-        }    // if
-
+        assert(event != null);
+        String format = event.hasDate() ? "Volunteer schedule for {date}" : "Volunteer schedule";
+        EmailFormatter emailFormatter = new EmailFormatter();
+        String subject = emailFormatter.formatString(format, event);
         subjectLine.setText(subject);
     }    // populateSubjectLine()
 
@@ -273,8 +271,6 @@ public class DisplayEmailFrame extends JFrame {
         } catch (URISyntaxException err) {
             //insert error handling
         }
-
-
     }    // sendEmailButtonClicked()
 
     //The following three methods initially found at
@@ -301,9 +297,6 @@ public class DisplayEmailFrame extends JFrame {
         }
     }
     //End of Borrowed Code
-
-
-
 
     /**
      * Appends a line of text to the text area.
