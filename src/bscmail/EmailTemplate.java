@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,6 +20,8 @@
 package bscmail;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import main.ReadWritable;
@@ -29,14 +31,17 @@ import main.ReadWritableFactory;
  * Represents an email template.  Email templates have the following properties:
  * <ul>
  *   <li>pre-schedule text,</li>
- *   <li>post-schedule text, and</li>
- *   <li>subject line template.</li>
+ *   <li>post-schedule text,</li>
+ *   <li>subject line template, and</li>
+ *   <li>date format string.</li>
  * </ul>
- * 
+ *
  * The pre-schedule and post-schedule text are simple strings, placed before and
  * after the schedule in the generated email body. The subject line text is a
  * string of a format appropriate for a
- * {@link bscmail.util.format.EmailFormatter}.
+ * {@link bscmail.util.format.EmailFormatter}. The date format string is a
+ * string of a format appropriate for a {@link java.text.SimpleDateFormat}.
+ *
  * @author wayne.miller
  */
 public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
@@ -44,7 +49,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     /**
      * Class version number.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * A factory that creates an {@link EmailTemplate} from a set of
@@ -83,6 +88,11 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
          * string value of the value corresponding to "subjectLineTemplate".  If
          * such a value does not exist or is null, the subject line template is
          * empty.</li>
+         *   <li>The email template's date format string is given by the string
+         * value of the value corresponding to "dateFormatString". If such a
+         * value does not exist, is null, or is in a format not accepted by
+         * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String, java.lang.String, java.lang.String)},
+         * the date format string is empty.</li>
          * </ul>
          * This method effectively acts as the reverse of
          * {@link EmailTemplate#getReadWritableProperties()}.
@@ -99,10 +109,19 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
             Object preScheduleTextObject = properties.get("preScheduleText");
             Object postScheduleTextObject = properties.get("postScheduleText");
             Object subjectLineTemplateObject = properties.get("subjectLineTemplate");
+            Object dateFormatStringObject = properties.get("dateFormatString");
             String preScheduleText = (preScheduleTextObject != null) ? preScheduleTextObject.toString() : "";
             String postScheduleText = (postScheduleTextObject != null) ? postScheduleTextObject.toString() : "";
             String subjectLineTemplate = (subjectLineTemplateObject != null) ? subjectLineTemplateObject.toString() : "";
-            return new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+            String dateFormatString = (dateFormatStringObject != null) ? dateFormatStringObject.toString() : "";
+            EmailTemplate emailTemplate;
+            try {
+                emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+            } catch (Exception e) {    // try
+                dateFormatString = "";
+                emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+            }    // catch
+            return emailTemplate;
         }    // constructReadWritable()
 
     }    // Factory
@@ -134,6 +153,11 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     private final String subjectLineTemplate;
 
     /**
+     * The date format used in the email.
+     */
+    private final String dateFormatString;
+
+    /**
      * Constructs a new email template.
      *
      * @param preScheduleText the email template's pre-schedule text; may be
@@ -142,9 +166,14 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
      * empty, but not null
      * @param subjectLineTemplate the email template's subject line template;
      * may be empty, but not null
-     * @throws NullPointerException if either parameter is null
+     * @param dateFormatString the date format to use in the email; may not be
+     * null; must be in a format appropriate for a
+     * {@link java.text.SimpleDateFormat}
+     * @throws NullPointerException if any parameter is null
+     * @throws IllegalArgumentException if dateFormatString is not in an
+     * appropriate format
      */
-    public EmailTemplate(String preScheduleText, String postScheduleText, String subjectLineTemplate) {
+    public EmailTemplate(String preScheduleText, String postScheduleText, String subjectLineTemplate, String dateFormatString) {
         if (preScheduleText == null) {
             throw new NullPointerException("preScheduleText may not be null");
         }    // if
@@ -152,11 +181,21 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
             throw new NullPointerException("postScheduleText may not be null");
         }    // if
         if (subjectLineTemplate == null) {
-            throw new NullPointerException("postScheduleText may not be null");
+            throw new NullPointerException("subjectLineTemplate may not be null");
         }    // if
+        if (dateFormatString == null) {
+            throw new NullPointerException("dateFormatString may not be null");
+        }    // if
+        try {
+            DateFormat dummy = new SimpleDateFormat(dateFormatString);
+        } catch (Exception e) {    // try
+            throw new IllegalArgumentException("dateFormatString must be in appropriate format for SimpleDateFormat", e);
+        }    // catch
+
         this.preScheduleText = preScheduleText;
         this.postScheduleText = postScheduleText;
         this.subjectLineTemplate = subjectLineTemplate;
+        this.dateFormatString = dateFormatString;
         assertInvariant();
     }    // Shift()
 
@@ -181,7 +220,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     }    // getDescription()
 
     /**
-     * Returns the email template's subject line template
+     * Returns the email template's subject line template.
      *
      * @return the email template's subject line template
      * @since 3.3
@@ -190,16 +229,42 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
         assertInvariant();
         return subjectLineTemplate;
     }    // getSubjectLineTemplate()
-    
+
+    /**
+     * Returns the email template's date format string.
+     *
+     * @return the email template's date format string
+     * @see #getDateFormatter()
+     * @since 3.3
+     */
+    public String getDateFormatString() {
+        assertInvariant();
+        return dateFormatString;
+    }    // getDateFormatString()
+
+    /**
+     * Returns a {@link DateFormat} that formats a {@link java.util.Date} object
+     * into the format particular to the email template.
+     *
+     * @return an appropriate DateFormat
+     * @see #getDateFormatString()
+     * @since 3.3
+     */
+    public DateFormat getDateFormatter() {
+        assertInvariant();
+        return new SimpleDateFormat(dateFormatString);
+    }    // getDateFormatter()
+
     /**
      * Returns a map containing the read-writable properties of the email
      * template. The map returned by this method is guaranteed to have the
      * following properties.
      * <ul>
-     *   <li>The map has exactly three keys: "preScheduleText",
-     * "postScheduleText", and "subjectLineTemplate".</li>
+     *   <li>The map has exactly four keys: "preScheduleText",
+     * "postScheduleText", and "subjectLineTemplate", and
+     * "dateFormatString".</li>
      *   <li>Each value is a non-null {@link String} corresponding to the return
-     * value of the appropriate method.</li>
+     * value of the appropriate getter method.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
@@ -213,6 +278,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
         properties.put("subjectLineTemplate", subjectLineTemplate);
+        properties.put("dateFormatString", dateFormatString);
         return properties;
     }    // getReadWritableProperties()
 
@@ -234,8 +300,9 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
      * <ol>
      *   <li>the object is another email template,</li>
      *   <li>both email templates have the same pre-schedule text,</li>
-     *   <li>both email templates have the same pre-schedule text, and,</li>
-     *   <li>both email templates have the same subject line template.</li>
+     *   <li>both email templates have the same pre-schedule text,</li>
+     *   <li>both email templates have the same subject line template, and</li>
+     *   <li>both email templates have the same date format string.</li>
      * </ol>
      *
      * @param obj the object with which to compare
@@ -253,7 +320,8 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
         EmailTemplate rhs = (EmailTemplate)obj;
         return preScheduleText.equals(rhs.preScheduleText)
                 && postScheduleText.equals(rhs.postScheduleText)
-                && subjectLineTemplate.equals(rhs.subjectLineTemplate);
+                && subjectLineTemplate.equals(rhs.subjectLineTemplate)
+                && dateFormatString.equals(rhs.dateFormatString);
     }    // equals()
 
     @Override
@@ -264,6 +332,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
         code = code * MULTIPLIER + preScheduleText.hashCode();
         code = code * MULTIPLIER + postScheduleText.hashCode();
         code = code * MULTIPLIER + subjectLineTemplate.hashCode();
+        code = code * MULTIPLIER + dateFormatString.hashCode();
         return code;
     }    // hashCode()
 
@@ -291,5 +360,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
     private void assertInvariant() {
         assert (preScheduleText != null);
         assert (postScheduleText != null);
+        assert (subjectLineTemplate != null);
+        assert (dateFormatString != null);
     }    // assertInvariant()
 }    // EmailTemplate

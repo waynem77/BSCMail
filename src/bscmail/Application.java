@@ -206,7 +206,7 @@ public class Application {
         } catch (IOException e) {    // try
             emailTemplates = new ArrayList<>();
         }    // catch
-        emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "", "");
+        emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "", "", "");
 
         try {
             eventProperties = eventPropertiesIOLayer.getAll();

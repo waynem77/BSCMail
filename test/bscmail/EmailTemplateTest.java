@@ -19,7 +19,10 @@
 
 package bscmail;
 
+import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,25 +59,30 @@ public class EmailTemplateTest extends ReadWritableTest {
     private String subjectLineTemplate;
 
     /**
+     * Date format string variable for testing.
+     */
+    private String dateFormatString;
+
+    /**
      * Returns the event property to be tested.
      *
      * @return the event property to be tested
      */
     @Override
     protected EmailTemplate getReadWritable() {
-        return new EmailTemplate("foo", "bar", "baz");
+        return new EmailTemplate("foo", "bar", "baz", "MMM dd, YYYY");
     }    // getReadWritable()
 
     /**
      * Constructs and returns an EmailTemplate created from the class variables
      * {@link #preScheduleText}, {@link #postScheduleText}, and
      * {@link #subjectLineTemplate}. This method may be used to test the
-     * constructor or in genreal tests.
+     * constructor or in general tests.
      *
      * @return an EmailTemplate created from the class variables
      */
     protected EmailTemplate makeEmailTemplateFromClassVariables(){
-        return new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate);
+        return new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
     }    // makeEmailTemplateFromClassVariables
     /**
      * Populates the class properties used as constructor arguments before each
@@ -85,6 +93,7 @@ public class EmailTemplateTest extends ReadWritableTest {
         preScheduleText = "foo";
         postScheduleText = "bar";
         subjectLineTemplate = "baz";
+        dateFormatString = "MMM dd, YYYY";
     }    // populateConstructorVariables()
 
     /*
@@ -168,7 +177,45 @@ public class EmailTemplateTest extends ReadWritableTest {
     /**
      * Tests that
      * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
-     * does not throw an exception when any parameter is null.
+     * throws a {@link NullPointerException} when dateFormatString is
+     * null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenDateFormatStringIsNull() {
+        dateFormatString = null;
+
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+    }    // constructorThrowsExceptionWhenDateFormatStringIsNull()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * does not throw an exception when dateFormatString is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionDateFormatStringIsEmpty() {
+        dateFormatString = "";
+
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+    }    // constructorDoesNotThrowExceptionDateFormatStringIsEmpty()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * throws a {@link IllegalArgumentException} when dateFormatString is
+     * not in appropriate format.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorThrowsExceptionWhenDateFormatStringIsNotInAppropriateFormat() {
+        dateFormatString = "foo";
+
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+    }    // constructorThrowsExceptionWhenDateFormatStringIsNotInAppropriateFormat()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * does not throw an exception when no parameter is null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenNoParamIsNull() {
@@ -256,6 +303,91 @@ public class EmailTemplateTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // getSubjectLineTemplateReturnsCorrectValue()
 
+    /* getDateFormatString */
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatString()} does not
+     * throw an exception.
+     */
+    @Test
+    public void getDateFormatStringDoesNotThrowException() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        emailTemplate.getDateFormatString();
+    }    // getDateFormatStringDoesNotThrowException()
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatString()} does not
+     * return null.
+     */
+    @Test
+    public void getDateFormatStringDoesNotReturnNull() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        String received = emailTemplate.getDateFormatString();
+
+        assertNotNull(received);
+    }    // getDateFormatStringDoesNotReturnNull()
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatString()} returns
+     * the value passed to the constructor.
+     */
+    @Test
+    public void getDateFormatStringReturnsCorrectValue() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        String received = emailTemplate.getDateFormatString();
+
+        String expected = dateFormatString;
+        assertEquals(expected, received);
+    }    // getDateFormatStringReturnsCorrectValue()
+
+    /* getDateFormatter */
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatter()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getDateFormatterDoesNotThrowException() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        emailTemplate.getDateFormatter();
+    }    // getDateFormatterDoesNotThrowException()
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatter()} does not return null.
+     */
+    @Test
+    public void getDateFormatterDoesNotReturnNull() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        DateFormat received = emailTemplate.getDateFormatter();
+
+        assertNotNull(received);
+    }    // getDateFormatterDoesNotReturnNull()
+
+    /**
+     * Tests that {@link EmailTemplate#getDateFormatter()} returns a formatter
+     * that formats dates according to the dateFormatString passed to the
+     * constructor.
+     */
+    @Test
+    public void getDateFormatterReturnsCorrectFormatter() {
+        dateFormatString = "yyyy:MM:dd GG";
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        DateFormat formatter = emailTemplate.getDateFormatter();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2017, 11, 25);
+        Date date = calendar.getTime();
+        String received = formatter.format(date);
+        String expected = "2017:12:25 AD";
+        assertEquals(expected, received);
+    }    // getDateFormatterReturnsCorrectFormatter()
+
     /* getReadWritableProperties */
 
     /**
@@ -272,6 +404,7 @@ public class EmailTemplateTest extends ReadWritableTest {
         expected.put("preScheduleText", preScheduleText);
         expected.put("postScheduleText", postScheduleText);
         expected.put("subjectLineTemplate", subjectLineTemplate);
+        expected.put("dateFormatString", dateFormatString);
         assertEquals(expected, received);
     }    // Test()
 
@@ -290,7 +423,7 @@ public class EmailTemplateTest extends ReadWritableTest {
             received.add(entry.getKey());
         }    // for
 
-        List<String> expected = Arrays.asList("preScheduleText", "postScheduleText", "subjectLineTemplate");
+        List<String> expected = Arrays.asList("preScheduleText", "postScheduleText", "subjectLineTemplate", "dateFormatString");
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
@@ -368,7 +501,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsFalseWhenArgumentHasDifferentPreScheduleText() {
         EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText + "X", postScheduleText, subjectLineTemplate);
+        preScheduleText += "X";
+        EmailTemplate obj = makeEmailTemplateFromClassVariables();
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = false;
@@ -383,7 +517,8 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsFalseWhenArgumentHasDifferentPostScheduleText() {
         EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText + "X", subjectLineTemplate);
+        postScheduleText += "X";
+        EmailTemplate obj = makeEmailTemplateFromClassVariables();
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = false;
@@ -398,12 +533,29 @@ public class EmailTemplateTest extends ReadWritableTest {
     public void equalsReturnsFalseWhenArgumentHasDifferentSubjectLineTemplate() {
         EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
 
-        EmailTemplate obj = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate + "X");
+        subjectLineTemplate += "X";
+        EmailTemplate obj = makeEmailTemplateFromClassVariables();
         boolean received = emailTemplate.equals((Object)obj);
 
         boolean expected = false;
         assertEquals(expected, received);
     }    // equalsReturnsFalseWhenArgumentHasDifferentSubjectLineTemplate()
+
+    /**
+     * Tests that {@link EmailTemplate#equals(Object)} returns false when the
+     * argument has a different dateFormatString than the caller.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentDateFormatString() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        dateFormatString += "X";
+        EmailTemplate obj = makeEmailTemplateFromClassVariables();
+        boolean received = emailTemplate.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentDateFormatString()
 
     /**
      * Tests that {@link EmailTemplate#equals(Object)} returns true when the
