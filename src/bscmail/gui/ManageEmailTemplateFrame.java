@@ -21,12 +21,15 @@ package bscmail.gui;
 import bscmail.Application;
 import bscmail.EmailTemplate;
 import bscmail.gui.util.LabeledGrid;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -55,6 +58,15 @@ public class ManageEmailTemplateFrame extends JFrame {
      */
     final JTextArea postScheduleTextArea;
 
+    /**
+     * The subject line template text field.
+     */
+    final JTextField subjectLineTemplateTextField;
+
+    /**
+     * The date format string text field.
+     */
+    final JTextField dateFormatStringTextField;
     /**
      * Constructs a new manage email template frame.
      *
@@ -90,6 +102,12 @@ public class ManageEmailTemplateFrame extends JFrame {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         labeledGrid.addLabelAndComponent("Post-schedule text:", postScheduleScrollPane, true);
 
+        subjectLineTemplateTextField = new JTextField();
+        labeledGrid.addLabelAndComponent("Subject line template:", subjectLineTemplateTextField);
+
+        dateFormatStringTextField = new JTextField();
+        labeledGrid.addLabelAndComponent("Date format string:", dateFormatStringTextField);
+
         // Setting frame and text area sizes.
         //   1. Create the text areas at their desired minimum rows and columns
         //      and set the minimum size of the frame. (Other techniques for
@@ -113,6 +131,8 @@ public class ManageEmailTemplateFrame extends JFrame {
         EmailTemplate emailTemplate = application.getEmailTemplate();
         preScheduleTextArea.setText(emailTemplate.getPreScheduleText());
         postScheduleTextArea.setText(emailTemplate.getPostScheduleText());
+        subjectLineTemplateTextField.setText(emailTemplate.getSubjectLineTemplate());
+        dateFormatStringTextField.setText(emailTemplate.getDateFormatString());
 
         preScheduleTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
@@ -136,6 +156,28 @@ public class ManageEmailTemplateFrame extends JFrame {
                 textAreasChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
+        subjectLineTemplateTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // insertUpdate()
+            @Override public void removeUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // removeUpdate()
+            @Override public void changedUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // changedUpdate()
+        });    // addDocumentListener()
+        dateFormatStringTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // insertUpdate()
+            @Override public void removeUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // removeUpdate()
+            @Override public void changedUpdate(DocumentEvent e) {
+                textAreasChanged();
+            }    // changedUpdate()
+        });    // addDocumentListener()
     }    // ManageEmailTemplateFrame()
 
     /**
@@ -143,7 +185,18 @@ public class ManageEmailTemplateFrame extends JFrame {
      * back to the {@link Application}.
      */
     private void textAreasChanged() {
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleTextArea.getText(), postScheduleTextArea.getText(), "", "");
+        String preScheduleText = preScheduleTextArea.getText();
+        String postScheduleText = postScheduleTextArea.getText();
+        String subjectLineTemplate = subjectLineTemplateTextField.getText();
+        String dateFormatString = dateFormatStringTextField.getText();
+        try {
+            new SimpleDateFormat(dateFormatString);
+            dateFormatStringTextField.setBackground(Color.WHITE);
+        } catch (Exception e) {    // try
+            dateFormatString = "";
+            dateFormatStringTextField.setBackground(Color.PINK);
+        }    // catch
+        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
         try {
             application.setEmailTemplate(emailTemplate);
         } catch (IOException e) {
