@@ -59,20 +59,28 @@ class TokenMaker {
 
     /**
      * Creates an atomic token whose string representation is based on the given
-     * date. The string value of the token will be in the format "Saturday May
-     * 25".
+     * date. The string value of the token will be in the format described by
+     * the given argument.
      *
      * @param date the date from which the string representation is obtained;
      * may not be null
+     * @param dateFormatString the date format to use in the email; may not be
+     * null; must be in a format appropriate for a
+     * {@link java.text.SimpleDateFormat}
      * @return an atomic token whose string representation is based on date
-     * @throws NullPointerException if {@code date} is null
+     * @throws NullPointerException if either argument is null
+     * @throws IllegalArgumentException if dateFormatString is not in an
+     * appropriate format
      */
-    public static Token makeDateAtom(Date date) {
+    public static Token makeDateAtom(Date date, String dateFormatString) {
         if (date == null)  {
             throw new NullPointerException("date may not be null");
         }    // if
+        if (dateFormatString == null) {
+            throw new NullPointerException("dateFormatString may not be null");
+        }    // if
 
-        DateFormat format = new SimpleDateFormat("EEEE MMMM d");
+        DateFormat format = new SimpleDateFormat(dateFormatString);
         return new Token(format.format(date), false);
     }    // makeAtom()
 

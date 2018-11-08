@@ -24,7 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Unit tests for {@link EmailFormatter}.
@@ -36,9 +35,14 @@ public class EmailFormatterTest {
     /* object properties */
 
     /**
+     * The date format string used in testing.
+     */
+    private String dateFormatString;
+
+    /**
      * The email formatter being tested.
      */
-    private EmailFormatter emailFormatter;
+//    private EmailFormatter emailFormatter;
 
     /**
      * The format string used in testing.
@@ -68,7 +72,7 @@ public class EmailFormatterTest {
      */
     @Before
     public void preTestSetup() {
-        emailFormatter = new EmailFormatter();
+        dateFormatString = "yyyy-MM-dd";
         format = "foo";
         event = getTestEvent();
     }    // preTestSetup()
@@ -78,7 +82,7 @@ public class EmailFormatterTest {
      */
     @After
     public void postTestTeardown() {
-        emailFormatter = null;
+        dateFormatString = null;
         format = null;
         event = null;
     }    // postTestTeardown()
@@ -86,13 +90,36 @@ public class EmailFormatterTest {
     /* unit tests: constructor */
 
     /**
-     * Tests that {@link EmailFormatter#EmailFormatter()} does not throw an
-     * exception.
+     * Tests that {@link EmailFormatter#EmailFormatter(java.lang.String)} throws
+     * a NullPointerException when dateFormatString is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenDateFormatStringIsNull() {
+        dateFormatString = null;
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
+    }    // constructorThrowsExceptionWhenDateFormatStringIsNull()
+
+    /**
+     * Tests that {@link EmailFormatter#EmailFormatter(java.lang.String)} throws
+     * an IllegalArgumentException when dateFormatString is not in suitable
+     * format.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorThrowsExceptionWhenDateFormatStringIsUnsuitable() {
+        dateFormatString = "foo";
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
+    }    // constructorThrowsExceptionWhenDateFormatStringIsUnsuitable()
+
+    /**
+     * Tests that {@link EmailFormatter#EmailFormatter(java.lang.String)} does
+     * not throw an exception when dateFormatString is not null and in proper
+     * format.
      */
     @Test
-    public void constructorDoesNotThrowException() {
-        emailFormatter = new EmailFormatter();
-    }    // constructorDoesNotThrowException()
+    public void constructorDoesNotThrowExceptionWhenDateFormatStringIsSuitable() {
+        dateFormatString = "yyyy";
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
+    }    // constructorDoesNotThrowExceptionWhenDateFormatStringIsSuitable()
 
     /* unit tests: formatString */
 
@@ -103,6 +130,7 @@ public class EmailFormatterTest {
      */
     @Test(expected = NullPointerException.class)
     public void formatStringThrowsExceptionWhenFormatIsNull() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = null;
 
         emailFormatter.formatString(format, event);
@@ -115,6 +143,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringDoesNotThrowExceptionWhenFormatIsEmpty() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "";
 
         emailFormatter.formatString(format, event);
@@ -127,6 +156,7 @@ public class EmailFormatterTest {
      */
     @Test(expected = NullPointerException.class)
     public void formatStringThrowsExceptionWhenEventIsNull() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         event = null;
 
         emailFormatter.formatString(format, event);
@@ -139,6 +169,8 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringDoesNotThrowExceptionWhenNoArgumentIsNull() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
+
         emailFormatter.formatString(format, event);
     }    // formatStringDoesNotThrowExceptionWhenNoArgumentIsNull()
 
@@ -149,6 +181,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringDoesNotReturnNull() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         String received = emailFormatter.formatString(format, event);
 
         assertNotNull(received);
@@ -161,6 +194,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithNoFormattingMarks() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo";
 
         String received = emailFormatter.formatString(format, event);
@@ -176,6 +210,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithOneBareLeftBrace() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo{bar";
 
         String received = emailFormatter.formatString(format, event);
@@ -191,6 +226,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithOneBareRightBrace() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo}bar";
 
         String received = emailFormatter.formatString(format, event);
@@ -206,6 +242,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithEscapedLeftBrace() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo{{bar";
 
         String received = emailFormatter.formatString(format, event);
@@ -221,6 +258,7 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithEscapedRightBrace() {
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo}}bar";
 
         String received = emailFormatter.formatString(format, event);
@@ -236,6 +274,8 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithDateCommand() {
+        dateFormatString = "yyyy-MM-dd";
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo{date}bar";
         Calendar calendar = Calendar.getInstance();
         calendar.set(2018, 1, 5);    // Monday, February 5, 2018
@@ -243,7 +283,7 @@ public class EmailFormatterTest {
 
         String received = emailFormatter.formatString(format, event);
 
-        String expected = "fooMonday February 5bar";
+        String expected = "foo2018-02-05bar";
         assertEquals(expected, received);
     }    // formatStringReturnsCorrectResultForInputWithDateCommand()
 
@@ -255,6 +295,8 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringReturnsCorrectResultForInputWithDateCommandWhenEventDateIsUnset() {
+        dateFormatString = "yyyy-MM-dd";
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "foo{date}bar";
         event.setDate(null);
 
@@ -270,6 +312,8 @@ public class EmailFormatterTest {
      */
     @Test
     public void formatStringStressTest() {
+        dateFormatString = "yyyy-MM-dd";
+        EmailFormatter emailFormatter = new EmailFormatter(dateFormatString);
         format = "{a{{b{{{c{{{{{{{d}e}}f}}}g}}}}}}}h{date}{date}{{date}}";
         Calendar calendar = Calendar.getInstance();
         calendar.set(2018, 1, 5);    // Monday, February 5, 2018
@@ -277,7 +321,7 @@ public class EmailFormatterTest {
 
         String received = emailFormatter.formatString(format, event);
 
-        String expected = "a{b{c{{{de}f}g}}}hMonday February 5Monday February 5{date}";
+        String expected = "a{b{c{{{de}f}g}}}h2018-02-052018-02-05{date}";
         assertEquals(expected, received);
     }    // formatStringStressTest()
 }    // EmailFormatterTest

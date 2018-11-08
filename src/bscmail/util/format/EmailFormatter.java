@@ -20,6 +20,7 @@
 package bscmail.util.format;
 
 import bscmail.Event;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -35,9 +36,10 @@ import java.util.regex.Pattern;
  * <li>The <strong>brace characters</strong> ("{" and "}") are used as escape
  * characters. Single braces are not reproduced.</li>
  * <li>Brace characters may be escaped: "<strong>{{</strong>" produces "{", and
- * "<strong>}}</strong>" produces "}"
- * <li>"<strong>{date}</strong>" produces the event date in the format "Friday
- * February 2", or "" if the event date is null.
+ * "<strong>}}</strong>" produces "}"</li>
+ * <li>"<strong>{date}</strong>" produces the event date in the format given by
+ * the application's {@link EmailTemplate}, or "" if the event date is
+ * null.</li>
  * </ul>
  *
  * @author Wayne Miller
@@ -45,12 +47,47 @@ import java.util.regex.Pattern;
  */
 public class EmailFormatter {
 
-    List<Token> tokenizeString(String string, Event event) {
+    /**
+     * The format for dates.
+     */
+    private final String dateFormatString;
+
+    /**
+     * Creates a new email formatter with the given date format
+     *
+     * @param dateFormatString the date format to use; may not be null; must be
+     * in a format appropriate for a {@link java.text.SimpleDateFormat}
+     * @throws NullPointerException if any parameter is null
+     * @throws IllegalArgumentException if dateFormatString is not in an
+     * appropriate format
+     */
+    public EmailFormatter(String dateFormatString) {
+        if (dateFormatString == null) {
+            throw new NullPointerException("dateFormatString may not be null");
+        }    // if
+        try {
+            new SimpleDateFormat(dateFormatString);    // Just checking to see if it throws
+        } catch (IllegalArgumentException e) {    // try
+            throw new IllegalArgumentException("dateFormatString must be in acceptible format", e);
+        }    // catch
+
+        this.dateFormatString = dateFormatString;
+        assertInvariant();
+    }    // EmailFormatter()
+
+    /**
+     * Turns a string template into a list of tokens.
+     *
+     * @param string the string template; may not be null
+     * @param event the event; may not be null
+     * @return a list of tokens based on the given string
+     */
+    private List<Token> tokenizeString(String string, Event event) {
         assert (string != null);
         assert (event != null);
 
         Date eventDate = event.getDate();
-        Token dateToken = (eventDate == null) ? TokenMaker.makeStringAtom("") : TokenMaker.makeDateAtom(eventDate);
+        Token dateToken = (eventDate == null) ? TokenMaker.makeStringAtom("") : TokenMaker.makeDateAtom(eventDate, dateFormatString);
 
         List<Token> tokenizedList = Arrays.asList(TokenMaker.makeDecomposableToken(string));
         tokenizedList = tokenizeListForOneToken(tokenizedList, "\\{\\{", TokenMaker.makeStringAtom("{"));
@@ -60,6 +97,16 @@ public class EmailFormatter {
         return tokenizedList;
     }    // tokenizeString()
 
+    /**
+     * Further decomposes a list of tokens and strings by replacing matches of a
+     * regular expression with a particular token.
+     *
+     * @param list the list of tokens and strings; may not be null nor contain
+     * null
+     * @param regex the regular expression; may not be null
+     * @param replacementToken the replacement token; may not be null
+     * @return the further decomposed list
+     */
     private List<Token> tokenizeListForOneToken(List<Token> list, String regex, Token replacementToken) {
         assert (list != null);
         assert (!list.contains(null));
@@ -81,6 +128,15 @@ public class EmailFormatter {
         return furtherTokenizedList;
     }    // tokenizeList
 
+    /**
+     * Decomposes a single token into a list of tokens by replacing matches of a
+     * regular expression with a particular token.
+     *
+     * @param token the token to decompose; may not be null nor atomic
+     * @param regexPattern the regular expression pattern; may not be null
+     * @param replacementToken the replacement token; may not be null
+     * @return the resulting list
+     */
     private List<Token> decomposeToken(Token token, Pattern regexPattern, Token replacementToken) {
         assert (token != null);
         assert (token.isDecomposable());
@@ -102,6 +158,12 @@ public class EmailFormatter {
         return tokenizedList;
     }    // decomposeToken()
 
+    /**
+     * Constructs a string from a list of tokens.
+     *
+     * @param tokens the list of tokens; may not be null nor contain null
+     * @return a string representing the list of tokens
+     */
     private String stringifyTokens(List<Token> tokens) {
         assert (tokens != null);
         assert (! tokens.contains(null));
@@ -123,6 +185,7 @@ public class EmailFormatter {
      * @throws NullPointerException if either argument is null
      */
     public String formatString(String format, Event event) {
+        assertInvariant();
         if (format == null) {
             throw new NullPointerException("format may not be null");
         }    // if
@@ -133,5 +196,12 @@ public class EmailFormatter {
         List<Token> tokens = tokenizeString(format, event);
         return stringifyTokens(tokens);
     }    // formatString()
+
+    /**
+     * Asserts the correctness of the object's internal state.
+     */
+    private void assertInvariant() {
+        assert (dateFormatString != null);
+    }    // assertInvariant()
 
 }    // EmailFormatter

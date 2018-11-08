@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Unit tests for {@link TokenMaker}.
@@ -200,22 +199,54 @@ public class TokenMakerTest {
     @Test(expected = NullPointerException.class)
     public void makeDateAtomThrowsExceptionWhenDateIsNull() {
         Date date = null;
+        String dateFormatString = "EEEE MMMM d";
 
-        TokenMaker.makeDateAtom(date);
+        TokenMaker.makeDateAtom(date, dateFormatString);
     }    // makeDateAtomThrowsExceptionWhenDateIsNull()
 
     /**
-     * Tests that {@link TokenMaker#makeDateAtom(java.util.Date)} does not
-     * throw an exception when date is not null.
+     * Tests that {@link TokenMaker#makeDateAtom(java.util.Date)} throws a
+     * NullPointerException when dateFormatString is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void makeDateAtomThrowsExceptionWhenDateFormatStringIsNull() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
+        Date date = calendar.getTime();
+        String dateFormatString = null;
+
+        TokenMaker.makeDateAtom(date, dateFormatString);
+    }    // makeDateAtomThrowsExceptionWhenDateFormatStringIsNull()
+
+    /**
+     * Tests that {@link TokenMaker#makeDateAtom(java.util.Date)} throws an
+     * IllegalArgumentException when dateFormatString is not in an appropriate
+     * format.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void makeDateAtomThrowsExceptionWhenDateFormatStringIsIncorrect() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
+        Date date = calendar.getTime();
+        String dateFormatString = "foo";
+
+        TokenMaker.makeDateAtom(date, dateFormatString);
+    }    // makeDateAtomThrowsExceptionWhenDateFormatStringIsIncorrect()
+
+    /**
+     * Tests that {@link TokenMaker#makeDateAtom(java.util.Date)} does not throw
+     * an exception when date is not null and dateFormatString is not null and
+     * is in an appropriate format.
      */
     @Test
-    public void makeDateAtomDoesNotThrowExceptionWhenDateIsNotNull() {
+    public void makeDateAtomDoesNotThrowExceptionWhenArgumentsAreOK() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2018, 4, 26);    // Saturday, March 26, 2018
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
         Date date = calendar.getTime();
+        String dateFormatString = "EEEE MMMM d";
 
-        TokenMaker.makeDateAtom(date);
-    }    // makeDateAtomDoesNotThrowExceptionWhenDateIsNotNull()
+        TokenMaker.makeDateAtom(date, dateFormatString);
+    }    // makeDateAtomDoesNotThrowExceptionWhenArgumentsAreOK()
 
     /**
      * Tests that {@link TokenMaker#makeDateAtom(java.util.Date)} does not
@@ -224,10 +255,11 @@ public class TokenMakerTest {
     @Test
     public void makeDateAtomDoesNotReturnNull() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2018, 4, 26);    // Saturday, March 26, 2018
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
         Date date = calendar.getTime();
+        String dateFormatString = "EEEE MMMM d";
 
-        Token received = TokenMaker.makeDateAtom(date);
+        Token received = TokenMaker.makeDateAtom(date, dateFormatString);
 
         assertNotNull(received);
     }    // makeDateAtomDoesNotReturnNull()
@@ -240,13 +272,14 @@ public class TokenMakerTest {
     @Test
     public void makeDateAtomReturnsTokenWithCorrectStringValue() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2018, 4, 26);    // Saturday, March 26, 2018
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
         Date date = calendar.getTime();
-        Token token = TokenMaker.makeDateAtom(date);
+        String dateFormatString = "EEEE-MMMM-d";
+        Token token = TokenMaker.makeDateAtom(date, dateFormatString);
 
         String received = token.getStringValue();
 
-        String expected = "Saturday May 26";
+        String expected = "Saturday-May-26";
         assertEquals(expected, received);
     }    // makeDateAtomReturnsTokenWithCorrectStringValue()
 
@@ -257,9 +290,10 @@ public class TokenMakerTest {
     @Test
     public void makeDateAtomReturnsAtomicToken() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2018, 4, 26);    // Saturday, March 26, 2018
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
         Date date = calendar.getTime();
-        Token token = TokenMaker.makeDateAtom(date);
+        String dateFormatString = "EEEE MMMM d";
+        Token token = TokenMaker.makeDateAtom(date, dateFormatString);
 
         boolean received = token.isDecomposable();
 

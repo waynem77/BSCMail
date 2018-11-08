@@ -136,7 +136,7 @@ public class DisplayEmailFrame extends JFrame {
         textArea.setRows(MIN_TEXT_AREA_ROWS);
 
         populateRecipientLine(event);
-        populateSubjectLine(event);
+        populateSubjectLine(application.getEmailTemplate(), event);
         populateEmailBody(application.getEmailTemplate(), event);
 
         assertInvariant();
@@ -173,13 +173,14 @@ public class DisplayEmailFrame extends JFrame {
     /**
      * Populates the subject line with appropriate text.
      *
+     * @param emailTemplate the email template; may not be null
      * @param event the event; may not be null
      */
-    private void populateSubjectLine(Event event) {
+    private void populateSubjectLine(EmailTemplate emailTemplate, Event event) {
+        assert(emailTemplate != null);
         assert(event != null);
-        String format = event.hasDate() ? "Volunteer schedule for {date}" : "Volunteer schedule";
-        EmailFormatter emailFormatter = new EmailFormatter();
-        String subject = emailFormatter.formatString(format, event);
+        EmailFormatter emailFormatter = new EmailFormatter(emailTemplate.getDateFormatString());
+        String subject = emailFormatter.formatString(emailTemplate.getSubjectLineTemplate(), event);
         subjectLine.setText(subject);
     }    // populateSubjectLine()
 
@@ -202,7 +203,11 @@ public class DisplayEmailFrame extends JFrame {
         appendText("");
 
         // Event properties
-        appendText("Date: " + formattedEventDate(event));
+        if (event.hasDate()) {
+            String datePropertyFormat = "Date: {date}";
+            EmailFormatter emailFormatter = new EmailFormatter(emailTemplate.getDateFormatString());
+            appendText(emailFormatter.formatString(datePropertyFormat, event));
+        }    // if
         for (EventProperty eventProperty : event.getEventProperties()) {
             appendText(eventProperty.getPropertyName() + ": " + eventProperty.getValue());
         }    // for
