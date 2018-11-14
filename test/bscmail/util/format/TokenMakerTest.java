@@ -301,4 +301,23 @@ public class TokenMakerTest {
         assertEquals(expected, received);
     }    // makeDateAtomReturnsAtomicToken()
 
+    /**
+     * Tests that the string value of the token returned by
+     * {@link TokenMaker#makeDateAtom(java.util.Date)} is not empty when
+     * dateFormat is empty; that is, tests that a default date format exists.
+     */
+    @Test
+    public void makeDateAtomReturnsNonemptyTokenWhenDateFormatIsEmpty() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2018, 4, 26);    // Saturday, May 26, 2018
+        Date date = calendar.getTime();
+        String dateFormatString = "";
+        Token token = TokenMaker.makeDateAtom(date, dateFormatString);
+
+        boolean received = token.getStringValue().isEmpty();
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // makeDateAtomReturnsNonemptyTokenWhenDateFormatIsEmpty()
+
 }    // TokenMakerTest

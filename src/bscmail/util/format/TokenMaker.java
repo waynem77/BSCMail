@@ -32,6 +32,12 @@ import java.util.Date;
 class TokenMaker {
 
     /**
+     * The default date format used when the application date format is empty. The
+     * format is like "Saturday December 16".
+     */
+    private static final String DEFAULT_DATE_FORMAT = "EEEE MMMM d";
+
+    /**
      * Creates a decomposable token with the given string representation.
      *
      * @param stringValue the string representation of the token; may not be
@@ -80,6 +86,9 @@ class TokenMaker {
             throw new NullPointerException("dateFormatString may not be null");
         }    // if
 
+        if (dateFormatString.isEmpty()) {
+            dateFormatString = DEFAULT_DATE_FORMAT;
+        }    // if
         DateFormat format = new SimpleDateFormat(dateFormatString);
         return new Token(format.format(date), false);
     }    // makeAtom()
