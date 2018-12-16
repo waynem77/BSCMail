@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -206,7 +206,7 @@ public class Application {
         } catch (IOException e) {    // try
             emailTemplates = new ArrayList<>();
         }    // catch
-        emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate("", "", "", "");
+        emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate(EmailTemplate.SendType.TO, "", "", "", "");
 
         try {
             eventProperties = eventPropertiesIOLayer.getAll();

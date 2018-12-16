@@ -35,6 +35,16 @@ public class EmailTemplateFactoryTest {
     /* class methods and properties */
 
     /**
+     * Send type variable used in testing.
+     */
+    private String sendType;
+
+    /**
+     * Send type object variable used in testing.
+     */
+    private EmailTemplate.SendType sendTypeForEmailTemplateConstructor;
+
+    /**
      * Pre schedule text variable used in testing.
      */
     private String preScheduleText;
@@ -64,16 +74,38 @@ public class EmailTemplateFactoryTest {
      */
     @Before
     public void initializeClassVariables() {
+        sendTypeForEmailTemplateConstructor = EmailTemplate.SendType.CC;
+        sendType = sendTypeForEmailTemplateConstructor.getRwRepresentation();
         preScheduleText = "foo";
         postScheduleText = "bar";
         subjectLineTemplate = "baz";
         dateFormatString = "YYYY-MM-dd";
         properties = new HashMap<>();
+        properties.put("sendType", sendType);
         properties.put("preScheduleText", preScheduleText);
         properties.put("postScheduleText", postScheduleText);
         properties.put("subjectLineTemplate", subjectLineTemplate);
         properties.put("dateFormatString", dateFormatString);
     }    // initializeClassVariables()
+
+    /**
+     * Returns a string that is invalid as a send type.
+     * @return a string that is invalid as a send type
+     */
+    private String getInvalidSendTypeString() {
+        String value = "";
+        boolean stringIsInvalid = true;
+        while (stringIsInvalid) {
+            value += "x";
+            stringIsInvalid = false;
+            for (EmailTemplate.SendType sendType : EmailTemplate.SendType.values()) {
+                if (value.equals(sendType.getRwRepresentation())) {
+                    stringIsInvalid = true;
+                }    // if
+            }    // for
+        }    // while
+        return value;
+    }    // getInvalidSendTypeString()
 
     /* constructReadWritable */
 
@@ -168,6 +200,107 @@ public class EmailTemplateFactoryTest {
 
         assertNotNull(received);
     }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullPreScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties is missing "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        properties.remove("sendType");
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties is missing "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        properties.remove("sendType");
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties has a null value for "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        sendType = null;
+        properties.put("sendType", sendType);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties has a null value for "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullhenPropertiesHasNullSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        sendType = null;
+        properties.put("sendType", sendType);
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not throw an exception when properties has an invalid value for
+     * "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasInvalidSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        sendType = getInvalidSendTypeString();
+        properties.put("sendType", sendType);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasInvalidSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * not return null when properties has an invalid value for "sendType".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesHasInvalidSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        sendType = getInvalidSendTypeString();
+        properties.put("sendType", sendType);
+
+        EmailTemplate received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesHasInvalidSendType()
+
+    /**
+     * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
+     * creates an email template with a send type of "to" when properties has an
+     * invalid value for "sendType".
+     */
+    @Test
+    public void constructReadWritableCreatesEmailTemplateWithSendTypeOfToWhenPropertiesHasInvalidSendType() {
+        Factory factory = EmailTemplate.getEmailTemplateFactory();
+        sendType = getInvalidSendTypeString();
+        properties.put("sendType", sendType);
+        EmailTemplate emailTemplate = factory.constructReadWritable(properties);
+
+        EmailTemplate.SendType received = emailTemplate.getSendType();
+
+        EmailTemplate.SendType expected = EmailTemplate.SendType.TO;
+        assertEquals(expected, received);
+    }    // constructReadWritableCreatesEmailTemplateWithSendTypeOfToWhenPropertiesHasInvalidSendType()
 
     /**
      * Tests that {@link EmailTemplate.Factory#constructReadWritable(Map)} does
@@ -367,7 +500,7 @@ public class EmailTemplateFactoryTest {
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
-        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        EmailTemplate expected = new EmailTemplate(sendTypeForEmailTemplateConstructor, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasAllValues()
 
@@ -404,11 +537,10 @@ public class EmailTemplateFactoryTest {
     @Test
     public void constructReadWritableReturnsCorrectValueWhenPropertiesHasExtraneousValues() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
-        properties.put("extra", "baz");
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
-        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        EmailTemplate expected = new EmailTemplate(sendTypeForEmailTemplateConstructor, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasExtraneousValues()
 
@@ -419,11 +551,13 @@ public class EmailTemplateFactoryTest {
     @Test
     public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasWrongObjects() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
+        Object sendTypeObj = -3;
         Object preScheduleTextObj = 1;
         Object postScheduleTextObj = 2.0;
         Object subjectLineTemplateObj = Boolean.TRUE;
         Object dateFormatStringObj = new HashMap();
         properties = new HashMap<>();
+        properties.put("sendType", sendTypeObj);
         properties.put("preScheduleText", preScheduleTextObj);
         properties.put("postScheduleText", postScheduleTextObj);
         properties.put("subjectLineTemplate", subjectLineTemplateObj);
@@ -439,11 +573,13 @@ public class EmailTemplateFactoryTest {
     @Test
     public void constructReadWritableDoesNotReturnNullWhenPropertiesHasWrongObjects() {
         Factory factory = EmailTemplate.getEmailTemplateFactory();
+        Object sendTypeObj = -3;
         Object preScheduleTextObj = 1;
         Object postScheduleTextObj = 2.0;
         Object subjectLineTemplateObj = Boolean.TRUE;
         Object dateFormatStringObj = new HashMap();
         properties = new HashMap<>();
+        properties.put("sendType", sendTypeObj);
         properties.put("preScheduleText", preScheduleTextObj);
         properties.put("postScheduleText", postScheduleTextObj);
         properties.put("subjectLineTemplate", subjectLineTemplateObj);
@@ -468,7 +604,7 @@ public class EmailTemplateFactoryTest {
 
         EmailTemplate received = factory.constructReadWritable(properties);
 
-        EmailTemplate expected = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, "");
+        EmailTemplate expected = new EmailTemplate(sendTypeForEmailTemplateConstructor, preScheduleText, postScheduleText, subjectLineTemplate, "");
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenDateFormatStringIsIllegal()
 
@@ -478,7 +614,7 @@ public class EmailTemplateFactoryTest {
      */
     @Test
     public void constructReadWritableWorksReflexively() {
-        EmailTemplate originalEmailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        EmailTemplate originalEmailTemplate = new EmailTemplate(sendTypeForEmailTemplateConstructor, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
 
         originalEmailTemplate.getReadWritableProperties();
         Factory factory = EmailTemplate.getEmailTemplateFactory();

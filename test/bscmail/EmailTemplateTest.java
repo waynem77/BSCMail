@@ -44,6 +44,11 @@ public class EmailTemplateTest extends ReadWritableTest {
      */
 
     /**
+     * Send type variable for testing.
+     */
+    private EmailTemplate.SendType sendType;
+
+    /**
      * Pre-schedule text variable for testing.
      */
     private String preScheduleText;
@@ -70,7 +75,7 @@ public class EmailTemplateTest extends ReadWritableTest {
      */
     @Override
     protected EmailTemplate getReadWritable() {
-        return new EmailTemplate("foo", "bar", "baz", "MMM dd, YYYY");
+        return new EmailTemplate(EmailTemplate.SendType.TO, "foo", "bar", "baz", "MMM dd, YYYY");
     }    // getReadWritable()
 
     /**
@@ -82,7 +87,7 @@ public class EmailTemplateTest extends ReadWritableTest {
      * @return an EmailTemplate created from the class variables
      */
     protected EmailTemplate makeEmailTemplateFromClassVariables(){
-        return new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        return new EmailTemplate(sendType, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
     }    // makeEmailTemplateFromClassVariables
     /**
      * Populates the class properties used as constructor arguments before each
@@ -90,6 +95,7 @@ public class EmailTemplateTest extends ReadWritableTest {
      */
     @Before
     public void populateConstructorVariables() {
+        sendType = EmailTemplate.SendType.TO;
         preScheduleText = "foo";
         postScheduleText = "bar";
         subjectLineTemplate = "baz";
@@ -104,7 +110,19 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * throws a {@link NullPointerException} when sendType is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenSendTypeIsNull() {
+        sendType = null;
+
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+    }    // constructorThrowsExceptionWhenSendTypeIsNull()
+
+    /**
+     * Tests that
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * throws a {@link NullPointerException} when preScheduleText is null.
      */
     @Test(expected = NullPointerException.class)
@@ -116,7 +134,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * does not throw an exception when preScheduleText is empty.
      */
     @Test
@@ -128,7 +146,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * throws a {@link NullPointerException} when postScheduleText is null.
      */
     @Test(expected = NullPointerException.class)
@@ -140,7 +158,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * does not throw an exception when postScheduleText is empty.
      */
     @Test
@@ -152,7 +170,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * throws a {@link NullPointerException} when subjectLineTemplate is null.
      */
     @Test(expected = NullPointerException.class)
@@ -164,7 +182,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * does not throw an exception when subjectLineTemplate is empty.
      */
     @Test
@@ -176,7 +194,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * throws a {@link NullPointerException} when dateFormatString is
      * null.
      */
@@ -189,7 +207,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * does not throw an exception when dateFormatString is empty.
      */
     @Test
@@ -201,7 +219,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * throws a {@link IllegalArgumentException} when dateFormatString is
      * not in appropriate format.
      */
@@ -214,7 +232,7 @@ public class EmailTemplateTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailTemplate#EmailTemplate(java.lang.String, java.lang.String)}
+     * {@link EmailTemplate#EmailTemplate(bscmail.EmailTemplate.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * does not throw an exception when no parameter is null.
      */
     @Test
@@ -248,6 +266,33 @@ public class EmailTemplateTest extends ReadWritableTest {
         String expected = preScheduleText;
         assertEquals(expected, received);
     }    // getPreScheduleTextReturnsCorrectValue()
+
+    /* getPreScheduleText */
+
+    /**
+     * Tests that {@link EmailTemplate#getSendType()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getSendTypeDoesNotThrowException() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        emailTemplate.getSendType();
+    }    // getSendTypeDoesNotThrowException()
+
+    /**
+     * Tests that {@link EmailTemplate#getSendType()} returns the value passed
+     * to the constructor.
+     */
+    @Test
+    public void getSendTypeTextReturnsCorrectValue() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        EmailTemplate.SendType received = emailTemplate.getSendType();
+
+        EmailTemplate.SendType expected = sendType;
+        assertEquals(expected, received);
+    }    // getSendTypeTextReturnsCorrectValue()
 
     /* getPostScheduleText */
 
@@ -401,6 +446,7 @@ public class EmailTemplateTest extends ReadWritableTest {
         Map<String, Object> received = emailTemplate.getReadWritableProperties();
 
         Map<String, Object> expected = new HashMap<>();
+        expected.put("sendType", sendType.getRwRepresentation());
         expected.put("preScheduleText", preScheduleText);
         expected.put("postScheduleText", postScheduleText);
         expected.put("subjectLineTemplate", subjectLineTemplate);
@@ -423,7 +469,7 @@ public class EmailTemplateTest extends ReadWritableTest {
             received.add(entry.getKey());
         }    // for
 
-        List<String> expected = Arrays.asList("preScheduleText", "postScheduleText", "subjectLineTemplate", "dateFormatString");
+        List<String> expected = Arrays.asList("sendType", "preScheduleText", "postScheduleText", "subjectLineTemplate", "dateFormatString");
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
@@ -508,6 +554,22 @@ public class EmailTemplateTest extends ReadWritableTest {
         boolean expected = false;
         assertEquals(expected, received);
     }    // equalsReturnsFalseWhenArgumentHasDifferentPreScheduleText()
+
+    /**
+     * Tests that {@link EmailTemplate#equals(Object)} returns false when the
+     * argument has a different sendType than the caller.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentSendType() {
+        EmailTemplate emailTemplate = makeEmailTemplateFromClassVariables();
+
+        sendType = (sendType == EmailTemplate.SendType.TO) ? EmailTemplate.SendType.CC : EmailTemplate.SendType.TO;
+        EmailTemplate obj = makeEmailTemplateFromClassVariables();
+        boolean received = emailTemplate.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentSendType()
 
     /**
      * Tests that {@link EmailTemplate#equals(Object)} returns false when the

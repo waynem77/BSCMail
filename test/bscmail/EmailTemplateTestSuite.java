@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2018 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,11 +23,10 @@ import org.junit.runners.Suite;
 
 /**
  * Unit test suite for {@link EmailTemplate} and {@link EmailTemplate.Factory}.
- * 
+ *
  * @author Wayne Miller
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({bscmail.EmailTemplateTest.class, bscmail.EmailTemplateFactoryTest.class})
+@Suite.SuiteClasses({bscmail.EmailTemplateTest.class, bscmail.EmailTemplateFactoryTest.class, bscmail.EmailTemplateSendTypeTest.class})
 public class EmailTemplateTestSuite {
-    
 }    // EmailTemplateTestSuite

@@ -196,7 +196,7 @@ public class ManageEmailTemplateFrame extends JFrame {
             dateFormatString = "";
             dateFormatStringTextField.setBackground(Color.PINK);
         }    // catch
-        EmailTemplate emailTemplate = new EmailTemplate(preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
         try {
             application.setEmailTemplate(emailTemplate);
         } catch (IOException e) {
