@@ -20,9 +20,12 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.EmailTemplate;
+import bscmail.gui.util.EnumRadioPanel;
 import bscmail.gui.util.LabeledGrid;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import javax.swing.BoxLayout;
@@ -47,6 +50,11 @@ public class ManageEmailTemplateFrame extends JFrame {
      * The capping application.
      */
     final Application application;
+
+    /**
+     * The send type panel.
+     */
+    final EnumRadioPanel<EmailTemplate.SendType> sendTypePanel;
 
     /**
      * The pre-schedule text text area.
@@ -85,6 +93,9 @@ public class ManageEmailTemplateFrame extends JFrame {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         LabeledGrid labeledGrid = new LabeledGrid();
         add(labeledGrid);
+
+        sendTypePanel = new EnumRadioPanel<>(EmailTemplate.SendType.class);
+        labeledGrid.addLabelAndComponent("Place emails in:", sendTypePanel);
 
         preScheduleTextArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         preScheduleTextArea.setLineWrap(true);
@@ -129,53 +140,59 @@ public class ManageEmailTemplateFrame extends JFrame {
         postScheduleTextArea.setRows(MIN_TEXT_AREA_ROWS);
 
         EmailTemplate emailTemplate = application.getEmailTemplate();
+        sendTypePanel.setSelection(emailTemplate.getSendType());
         preScheduleTextArea.setText(emailTemplate.getPreScheduleText());
         postScheduleTextArea.setText(emailTemplate.getPostScheduleText());
         subjectLineTemplateTextField.setText(emailTemplate.getSubjectLineTemplate());
         dateFormatStringTextField.setText(emailTemplate.getDateFormatString());
 
+        sendTypePanel.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                valuesChanged();
+            }    // actionPerformed()
+        });    // addActionLisener()
         preScheduleTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // insertUpdate()
             @Override public void removeUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // removeUpdate()
             @Override public void changedUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
         postScheduleTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // insertUpdate()
             @Override public void removeUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // removeUpdate()
             @Override public void changedUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
         subjectLineTemplateTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // insertUpdate()
             @Override public void removeUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // removeUpdate()
             @Override public void changedUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
         dateFormatStringTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // insertUpdate()
             @Override public void removeUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // removeUpdate()
             @Override public void changedUpdate(DocumentEvent e) {
-                textAreasChanged();
+                valuesChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
     }    // ManageEmailTemplateFrame()
@@ -184,23 +201,23 @@ public class ManageEmailTemplateFrame extends JFrame {
      * Event fired when either of the text areas change.  All changes are passed
      * back to the {@link Application}.
      */
-    private void textAreasChanged() {
+    private void valuesChanged() {
+        EmailTemplate.SendType sendType = sendTypePanel.getSelection();
         String preScheduleText = preScheduleTextArea.getText();
         String postScheduleText = postScheduleTextArea.getText();
         String subjectLineTemplate = subjectLineTemplateTextField.getText();
         String dateFormatString = dateFormatStringTextField.getText();
         try {
-            new SimpleDateFormat(dateFormatString);
             dateFormatStringTextField.setBackground(Color.WHITE);
         } catch (Exception e) {    // try
             dateFormatString = "";
             dateFormatStringTextField.setBackground(Color.PINK);
         }    // catch
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
+        EmailTemplate emailTemplate = new EmailTemplate(sendType, preScheduleText, postScheduleText, subjectLineTemplate, dateFormatString);
         try {
             application.setEmailTemplate(emailTemplate);
         } catch (IOException e) {
         }
-    }    // textAreasChanged()
+    }    // valuesChanged()
 
 }    // ManageEmailTemplateFrame
