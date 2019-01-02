@@ -60,9 +60,19 @@ public class DisplayEmailFrame extends JFrame {
     private final JTextArea textArea;
 
     /**
-     * The text field managing the list of recipients.
+     * The text field managing the list of "to" recipients.
      */
-    private final JTextField recipientLine;
+    private final JTextField toRecipientLine;
+
+    /**
+     * The text field managing the list of "cc" recipients.
+     */
+    private final JTextField ccRecipientLine;
+
+    /**
+     * The text field managing the list of "bcc" recipients.
+     */
+    private final JTextField bccRecipientLine;
 
     /**
      * The text field managing the subject.
@@ -99,7 +109,9 @@ public class DisplayEmailFrame extends JFrame {
 
         mainPanel = new LabeledGrid();
 
-        recipientLine = new JTextField(MIN_TEXT_AREA_COLS);
+        toRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);
+        ccRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);
+        bccRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);
         subjectLine = new JTextField(MIN_TEXT_AREA_COLS);
         sendEmail = new JButton("Generate Email");
         sendEmail.addActionListener(new ActionListener() {
@@ -111,7 +123,9 @@ public class DisplayEmailFrame extends JFrame {
         textArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         textArea.setLineWrap(true);
 
-        mainPanel.addLabelAndComponent("To: ", recipientLine);
+        mainPanel.addLabelAndComponent("To: ", toRecipientLine);
+        mainPanel.addLabelAndComponent("Cc: ", ccRecipientLine);
+        mainPanel.addLabelAndComponent("Bcc: ", bccRecipientLine);
         mainPanel.addLabelAndComponent("Subject: ", subjectLine);
         mainPanel.addLabelAndComponent("Text: ", new JScrollPane(textArea), true);
         mainPanel.addLabelAndComponent("Actions: ", sendEmail);
@@ -135,7 +149,7 @@ public class DisplayEmailFrame extends JFrame {
         pack();
         textArea.setRows(MIN_TEXT_AREA_ROWS);
 
-        populateRecipientLine(event);
+        populateRecipientLines(application.getEmailTemplate(), event);
         populateSubjectLine(application.getEmailTemplate(), event);
         populateEmailBody(application.getEmailTemplate(), event);
 
@@ -143,11 +157,15 @@ public class DisplayEmailFrame extends JFrame {
     }    // DisplayEmailFrame()
 
     /**
-     * Populates the recipient line with the appropriate email addresses.
+     * Populates the recipient lines with the appropriate email addresses.
      *
+     * @param emailTemplate the email template; may not be null
      * @param event the event; may not be null
      */
-    private void populateRecipientLine(Event event) {
+    private void populateRecipientLines(EmailTemplate emailTemplate, Event event) {
+        assert (emailTemplate != null);
+        assert (event != null);
+
         List<String> emails = new ArrayList<>();
         for (Shift shift : event.getShifts()) {
             Volunteer volunteer = shift.getVolunteer();
@@ -158,17 +176,25 @@ public class DisplayEmailFrame extends JFrame {
                 }    // if
             }    // if
         }    // for
-        String toLine = "";
+        String recipients = "";
         for (String email : emails) {
-            if (toLine.isEmpty()) {
-                toLine = email;
+            if (recipients.isEmpty()) {
+                recipients = email;
             } else {    // if
-                toLine += ", " + email;
+                recipients += ", " + email;
             }    // else
         }    // for
 
-        recipientLine.setText(toLine);
-    }    // populateRecipientLine()
+        EmailTemplate.SendType sendType = emailTemplate.getSendType();
+        assert (sendType != null);
+        if (sendType == EmailTemplate.SendType.CC) {
+            ccRecipientLine.setText(recipients);
+        } else if (sendType == EmailTemplate.SendType.BCC) {    // if
+            bccRecipientLine.setText(recipients);
+        } else {    // else if
+            toRecipientLine.setText(recipients);
+        }    // else
+    }    // populateRecipientLines()
 
     /**
      * Populates the subject line with appropriate text.
@@ -269,7 +295,7 @@ public class DisplayEmailFrame extends JFrame {
     private void sendEmailButtonClicked() {
 
         try {
-            mailTo(recipientLine.getText(), subjectLine.getText(), textArea.getText());
+            mailTo(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
         } catch (IOException err) {
             //insert error handling
 
@@ -278,18 +304,43 @@ public class DisplayEmailFrame extends JFrame {
         }
     }    // sendEmailButtonClicked()
 
-    //The following three methods initially found at
-    // http://www.2ality.com/2010/12/simple-way-of-sending-emails-in-java.html
-    //Modified by nathan.cordner
-    private void mailTo(String recipients, String subject,
+    /**
+     * Sends an email through the operating system. Code originally adapted from
+     * http://www.2ality.com/2010/12/simple-way-of-sending-emails-in-java.html
+     * by nathan.cordner.
+     *
+     * @param toRecipients the comma-delimited list of "to" recipient email
+     * addresses; may not be null
+     * @param ccRecipients the comma-delimited list of "cc" recipient email
+     * addresses; may not be null
+     * @param bccRecipients the comma-delimited list of "bcc" recipient email
+     * addresses; may not be null
+     * @param subject the subject line; may not be null
+     * @param body the email body; may not be null
+     * @throws IOException if an I/O error occurs
+     * @throws URISyntaxException if a URI syntax exception occurs
+     */
+    private void mailTo(String toRecipients, String ccRecipients, String bccRecipients, String subject,
                               String body) throws IOException, URISyntaxException {
-        String uriStr = String.format("mailto:%s?subject=%s&body=%s",
-                recipients.replaceAll("\\s",""), // comma separated list, no whitespace
+        String uriStr = String.format("mailto:%s?cc=%s&bcc=%s&subject=%s&body=%s",
+                toRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
+                ccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
+                bccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
                 urlEncode(subject),
                 urlEncode(body));
         Desktop.getDesktop().browse(new URI(uriStr));
     }
 
+    /**
+     * Encodes a string into a format suitable for a URL. Code originally
+     * adapted from
+     * http://www.2ality.com/2010/12/simple-way-of-sending-emails-in-java.html
+     * by nathan.cordner.
+     *
+     * @param str the string to encode; may not be null
+     * @return the encoded string
+     * @throws RuntimeException if an unsupported encoding exception occurs
+     */
     private final String urlEncode(String str) {
         try {
             //WARNING! Something gets messed up here if the last character
@@ -328,8 +379,20 @@ public class DisplayEmailFrame extends JFrame {
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
+        assert (mainPanel != null);
+        assert (isAncestorOf(mainPanel));
         assert (textArea != null);
         assert (isAncestorOf(textArea));
+        assert (toRecipientLine != null);
+        assert (isAncestorOf(toRecipientLine));
+        assert (ccRecipientLine != null);
+        assert (isAncestorOf(ccRecipientLine));
+        assert (bccRecipientLine != null);
+        assert (isAncestorOf(bccRecipientLine));
+        assert (subjectLine != null);
+        assert (isAncestorOf(subjectLine));
+        assert (sendEmail != null);
+        assert (isAncestorOf(sendEmail));
     }    // assertInvariant()
 
 
