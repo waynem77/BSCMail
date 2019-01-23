@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -77,8 +77,8 @@ public class Main {
      */
     private Application getApplication() {
         final String APPLICATION_NAME = "BSCMail";
-        final String APPLICATION_VERSION = "3.2";
-        final String APPLICATION_COPYRIGHT = "Copyright © 2014-2017 its authors.  See the file \"AUTHORS\" for details.";
+        final String APPLICATION_VERSION = "3.3";
+        final String APPLICATION_COPYRIGHT = "Copyright © 2014-2019 its authors.  See the file \"AUTHORS\" for details.";
         ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
 
         final String SHIFTS_FILE = "shifts.xml";
