@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -25,6 +25,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -40,6 +44,118 @@ import javax.swing.JTextArea;
  * @author Wayne Miller
  */
 public class MainFrame extends JFrame {
+
+    /**
+     * A list with a readable name.
+     *
+     * @param <E> the type of element contained by the list
+     */
+    private class NamedList<E> extends LinkedList<E> {
+
+        /**
+         * The name of the list.
+         */
+        private final String name;
+
+        /**
+         * Constructs a named list with the given name.
+         *
+         * @param name the name of the list; may not be null
+         */
+        public NamedList(String name) {
+            assert (name != null);
+            this.name = name;
+        }    // NamedList()
+
+        /**
+         * Returns the name of the list
+         *
+         * @return the name of the list
+         */
+        public String getName() {
+            return name;
+        }    // getName()
+
+    }    // NamedList
+
+    /**
+     * A collection of groups of buttons.
+     *
+     * This class is used to create buttons and help streamline their layout.
+     */
+    class ButtonCollection {
+
+        /**
+         * The buttons.
+         */
+        private final Map<String, List<JButton>> buttons;
+
+        /**
+         * Constructs a new button collection.
+         */
+        public ButtonCollection() {
+            buttons = new LinkedHashMap<>();
+        }    // ButtonCollection()
+
+        /**
+         * Adds a button to the given group with the given name and action listener.
+         * @param groupName the name of the group; may not be null
+         * @param buttonName the name of the button; may not be null
+         * @param actionListener the action listener; may not be null
+         */
+        public void addButton(String groupName, String buttonName, ActionListener actionListener) {
+            assert (groupName != null);
+            assert (buttonName != null);
+            assert (actionListener != null);
+            List<JButton> buttonGroup = buttons.get(groupName);
+            if (buttonGroup == null) {
+                buttonGroup = new LinkedList<>();
+            }    // if
+            JButton button = new JButton(buttonName);
+            button.addActionListener(actionListener);
+            buttonGroup.add(button);
+            buttons.put(groupName, buttonGroup);
+        }    // addButton()
+
+        /**
+         * Returns the number of groups.
+         *
+         * @return the number of groups
+         */
+        public int getNumberOfGroups() {
+            return buttons.keySet().size();
+        }    // getNumberOfGroups()
+
+        /**
+         * Returns the number of buttons in the largest group.
+         * @return the number of buttons in the largest group
+         */
+        public int getMaxSizeOfGroups() {
+            int max = 0;
+            for (List<JButton> buttonGroup : buttons.values()) {
+                if (buttonGroup.size() > max) {
+                    max = buttonGroup.size();
+                }    // if
+            }    // for
+            return max;
+        }    // getMaxSizeOfGroups()
+
+        /**
+         * Returns the grouped buttons.
+         *
+         * @return the grouped buttons
+         */
+        public List<NamedList<JButton>> getButtons() {
+            List<NamedList<JButton>> buttonList = new LinkedList<>();
+            for (String buttonGroupName : buttons.keySet()) {
+                NamedList<JButton> buttonGroup = new NamedList<>(buttonGroupName);
+                buttonGroup.addAll(buttons.get(buttonGroupName));
+                buttonList.add(buttonGroup);
+            }    // for
+            return buttonList;
+        }    // getButtons()
+
+    }    // ButtonCollection
 
     /**
      * The calling application.
@@ -77,17 +193,6 @@ public class MainFrame extends JFrame {
     private final EventFrame eventFrame;
 
     /**
-     * The number of rows in the layout.  This should be equal to the maximum
-     * number of buttons in an individual column.
-     */
-    private final int LAYOUT_ROWS = 5;
-
-    /**
-     * The number of columns in the layout.
-     */
-    private final int LAYOUT_COLUMNS = 3;
-
-    /**
      * Constructs a new main frame.
      *
      * @param application the calling application; may not be null
@@ -100,89 +205,34 @@ public class MainFrame extends JFrame {
         this.application = application;
 
         setTitle(application.getApplicationName());
+
+        // These are the buttons we want on the form. Using the ButtonCollection
+        // class helps streamline the addition and removal of buttons.
+        ButtonCollection buttonCollection = new ButtonCollection();
+        buttonCollection.addButton("Manage", "Shifts", (ActionListener) (ActionEvent e) -> { manageShiftsButtonClicked(); });
+        buttonCollection.addButton("Manage", "Volunteers", (ActionListener) (ActionEvent e) -> { manageVolunteersButtonClicked(); });
+        buttonCollection.addButton("Manage", "Roles", (ActionListener) (ActionEvent e) -> { manageRolesButtonClicked(); });
+        buttonCollection.addButton("Manage", "Email", (ActionListener) (ActionEvent e) -> { manageEmailButtonClicked(); });
+        buttonCollection.addButton("Manage", "Event Properties", (ActionListener) (ActionEvent e) -> { manageEventPropertiesButtonClicked(); });
+        buttonCollection.addButton("Create", "Event", (ActionListener) (ActionEvent e) -> { createEventButtonClicked(); });
+        buttonCollection.addButton("Create", "Email", (ActionListener) (ActionEvent e) -> { createEmailButtonClicked(); });
+        buttonCollection.addButton("Help", "Help", (ActionListener) (ActionEvent e) -> { helpHelpButtonClicked(); });
+        buttonCollection.addButton("Help", "About", (ActionListener) (ActionEvent e) -> { helpAboutButtonClicked(); });
+
+        final int LAYOUT_COLUMNS = buttonCollection.getNumberOfGroups();
+        final int LAYOUT_ROWS = buttonCollection.getMaxSizeOfGroups();
+        List<NamedList<JButton>> buttonGroups = buttonCollection.getButtons();
+
         setLayout(new GridLayout(1, LAYOUT_COLUMNS));
-
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder("Manage"));
-        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
-        JButton button = new JButton("Shifts");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageShiftsButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-
-        button = new JButton("Volunteers");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageVolunteersButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-        button = new JButton("Roles");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageRolesButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-
-        button = new JButton("Email");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageEmailButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-
-        button = new JButton("Event Properties");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                manageEventPropertiesButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListever()
-        panel.add(button);
-        add(panel);
-
-        panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder("Create"));
-        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
-        button = new JButton("Event");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                createEventButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-        button = new JButton("Email");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                createEmailButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-        add(panel);
-
-        panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder("Help"));
-        panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
-        button = new JButton("Help");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                helpHelpButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-        button = new JButton("About");
-        button.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                helpAboutButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
-        panel.add(button);
-        panel.add(button);
-        add(panel);
+        for (NamedList<JButton> buttonGroup : buttonGroups) {
+            JPanel panel = new JPanel();
+            panel.setBorder(BorderFactory.createTitledBorder(buttonGroup.getName()));
+            panel.setLayout(new GridLayout(LAYOUT_ROWS, 1));
+            for (JButton button : buttonGroup) {
+                panel.add(button);
+            }    // for
+            add(panel);
+        }    // for
 
         pack();
         Dimension packedSize = this.getSize();
