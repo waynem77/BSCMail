@@ -21,6 +21,7 @@ package main;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.EmailServerProperties;
 import bscmail.EmailTemplate;
 import bscmail.EventProperty;
 import bscmail.Role;
@@ -93,12 +94,15 @@ public class Main {
         final String EMAIL_TEMPLATE_FILE = "emailTemplate.xml";
         IOLayer<EmailTemplate> emailTemplateIOLayer = new XMLIOLayer(EMAIL_TEMPLATE_FILE, EmailTemplate.getEmailTemplateFactory());
 
+        final String EMAIL_SERVER_PROPERTIES_FILE = "emailServerProperties.xml";
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new XMLIOLayer(EMAIL_SERVER_PROPERTIES_FILE, EmailServerProperties.getEmailServerPropertiesFactory());
+
         final String EVENT_PROPERTIES_FILE = "eventProperties.xml";
         IOLayer<EventProperty> eventPropertiesIOLayer = new XMLIOLayer(EVENT_PROPERTIES_FILE, EventProperty.getEventPropertyFactory());
 
         final String USER_GUIDE_FILE = "userguide.pdf";
         HelpDisplay helpDisplay = new HelpFileDisplay(USER_GUIDE_FILE);
 
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getApplication()
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.ApplicationInfo;
+import bscmail.EmailServerProperties;
 import bscmail.EmailTemplate;
 import bscmail.EventProperty;
 import bscmail.Role;
@@ -49,9 +50,10 @@ public class ManageShiftPanelTest extends ManageElementPanelTest<Shift> {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /**

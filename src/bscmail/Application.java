@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -67,6 +67,11 @@ public class Application {
     private EmailTemplate emailTemplate;
 
     /**
+     * The email server properties.
+     */
+    private EmailServerProperties emailServerProperties;
+
+    /**
      * The list of defined event properties.
      */
     private List<EventProperty> eventProperties;
@@ -82,17 +87,22 @@ public class Application {
     private final IOLayer<Volunteer> volunteersIOLayer;
 
     /**
-     * The shifts I/O layer.
+     * The roles I/O layer.
      */
     private final IOLayer<Role> rolesIOLayer;
 
     /**
-     * The shifts I/O layer.
+     * The email template I/O layer.
      */
     private final IOLayer<EmailTemplate> emailTemplateIOLayer;
 
     /**
-     * The shifts I/O layer.
+     * The email server properties I/O layer.
+     */
+    private final IOLayer<EmailServerProperties> emailServerPropertiesIOLayer;
+
+    /**
+     * The event properties I/O layer.
      */
     private final IOLayer<EventProperty> eventPropertiesIOLayer;
 
@@ -117,6 +127,11 @@ public class Application {
     private final List<EmailTemplateObserver> emailTemplateObservers;
 
     /**
+     * The list of email server properties observers.
+     */
+    private final List<EmailServerPropertiesObserver> emailServerPropertiesObservers;
+
+    /**
      * The list of event property observers.
      */
     private final List<EventPropertiesObserver> eventPropertiesObservers;
@@ -138,6 +153,8 @@ public class Application {
      * @param rolesIOLayer the I/O layer used for storing roles; may not be null
      * @param emailTemplateIOLayer the I/O layer used for storing the email
      * template; may not be null
+     * @param emailServerPropertiesIOLayer the I/O layer used for storing the
+     * email server properties; may not be null
      * @param eventPropertiesIOLayer the I/O layer used for storing the event
      * properties; may not be null
      * @param helpDisplay the help displayer; may not be null
@@ -148,6 +165,7 @@ public class Application {
             IOLayer<Volunteer> volunteersIOLayer,
             IOLayer<Role> rolesIOLayer,
             IOLayer<EmailTemplate> emailTemplateIOLayer,
+            IOLayer<EmailServerProperties> emailServerPropertiesIOLayer,
             IOLayer<EventProperty> eventPropertiesIOLayer,
             HelpDisplay helpDisplay) throws ExceptionInInitializerError {
         if (applicationInfo == null) {
@@ -170,6 +188,10 @@ public class Application {
             throw new NullPointerException("emailTemplateIOLayer may not be null");
         }    // if
         this.emailTemplateIOLayer = emailTemplateIOLayer;
+        if (emailServerPropertiesIOLayer == null) {
+            throw new NullPointerException("emailServerPropertiesIOLayer may not be null");
+        }    // if
+        this.emailServerPropertiesIOLayer = emailServerPropertiesIOLayer;
         if (eventPropertiesIOLayer == null) {
             throw new NullPointerException("eventPropertiesIOLayer may not be null");
         }    // if
@@ -208,6 +230,14 @@ public class Application {
         }    // catch
         emailTemplate = ((emailTemplates != null) && !emailTemplates.isEmpty()) ? emailTemplates.get(0) : new EmailTemplate(EmailTemplate.SendType.TO, "", "", "", "");
 
+        List<EmailServerProperties> emailServerPropertiesList;
+        try {
+            emailServerPropertiesList = emailServerPropertiesIOLayer.getAll();
+        } catch (IOException e) {    // try
+            emailServerPropertiesList = new ArrayList<>();
+        }    // catch
+        emailServerProperties = ((emailServerPropertiesList != null) && !emailServerPropertiesList.isEmpty()) ? emailServerPropertiesList.get(0) : new EmailServerProperties("", "", "");
+
         try {
             eventProperties = eventPropertiesIOLayer.getAll();
         } catch (IOException e) {    // try
@@ -218,6 +248,7 @@ public class Application {
         volunteersObservers = new LinkedList<>();
         rolesObservers = new LinkedList<>();
         emailTemplateObservers = new LinkedList<>();
+        emailServerPropertiesObservers = new LinkedList<>();
         eventPropertiesObservers = new LinkedList<>();
 
         assertInvariant();
@@ -438,6 +469,40 @@ public class Application {
     }    // setEmailTemplate()
 
     /**
+     * Returns the defined email server properties.
+     *
+     * @return the defined email server properties
+     */
+    public EmailServerProperties getEmailServerProperties() {
+        assertInvariant();
+        return emailServerProperties.clone();
+    }    // getEmailServerProperties()
+
+    /**
+     * Sets the defined email server properties.
+     *
+     * @param emailServerProperties the email server properties to set; may not
+     * be null
+     * @throws NullPointerException if {@code emailTemplate} is null
+     * @throws IOException if an I/O error occurs
+     */
+    public void setEmailServerProperties(EmailServerProperties emailServerProperties) throws IOException {
+        assertInvariant();
+        if (emailServerProperties == null) {
+            throw new NullPointerException("emailServerProperties may not be null");
+        }    // if
+        this.emailServerProperties = emailServerProperties.clone();
+        List<EmailServerProperties> wrapper = new LinkedList<>();
+        wrapper.add(this.emailServerProperties);
+        for (EmailServerPropertiesObserver observer : emailServerPropertiesObservers) {
+            observer.emailServerPropertiesChanged();
+        }    // for
+
+        emailServerPropertiesIOLayer.setAll(wrapper);
+        assertInvariant();
+    }    // setEmailServerProperties()
+
+    /**
      * Returns the list of defined event properties. The list returned is a copy
      * of the master, so changes to it do not affect the master and vice-versa.
      *
@@ -531,7 +596,6 @@ public class Application {
         assertInvariant();
     }    // registerObserver()
 
-
     /**
      * Registers an email template observer with this application.
      *
@@ -544,6 +608,22 @@ public class Application {
             throw new NullPointerException("observer may not be null");
         }    // if
         emailTemplateObservers.add(observer);
+        assertInvariant();
+    }    // registerObserver()
+
+    /**
+     * Registers an email server properties observer with this application.
+     *
+     * @param observer the observer to register; may not be null
+     * @throws NullPointerException if observer is null
+     * @since 3.4
+     */
+    public void registerObserver(EmailServerPropertiesObserver observer) {
+        assertInvariant();
+        if (observer == null) {
+            throw new NullPointerException("observer may not be null");
+        }    // if
+        emailServerPropertiesObservers.add(observer);
         assertInvariant();
     }    // registerObserver()
 
@@ -602,6 +682,7 @@ public class Application {
         assert (volunteersIOLayer != null);
         assert (rolesIOLayer != null);
         assert (emailTemplateIOLayer != null);
+        assert (emailServerPropertiesIOLayer != null);
         assert (eventPropertiesIOLayer != null);
         assert (shifts != null);
         assert (! shifts.contains(null));
@@ -619,6 +700,9 @@ public class Application {
         assert (emailTemplate != null);
         assert (emailTemplateObservers != null);
         assert (! emailTemplateObservers.contains(null));
+        assert (emailServerProperties != null);
+        assert (emailServerPropertiesObservers != null);
+        assert (! emailServerPropertiesObservers.contains(null));
         assert (eventPropertiesObservers != null);
         assert (! eventPropertiesObservers.contains(null));
     }    // assertInvariant()
