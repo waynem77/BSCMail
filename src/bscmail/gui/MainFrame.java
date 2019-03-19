@@ -178,7 +178,12 @@ public class MainFrame extends JFrame {
     private final ManageEmailTemplateFrame manageEmailTemplateFrame;
 
     /**
-     * A frame to manage volunteers.
+     * A frame to manage the email server properties.
+     */
+    private final ManageEmailServerPropertiesFrame manageEmailServerPropertiesFrame;
+
+    /**
+     * A frame to manage roles.
      */
     private final ManageRolesFrame manageRolesFrame;
 
@@ -212,7 +217,8 @@ public class MainFrame extends JFrame {
         buttonCollection.addButton("Manage", "Shifts", (ActionListener) (ActionEvent e) -> { manageShiftsButtonClicked(); });
         buttonCollection.addButton("Manage", "Volunteers", (ActionListener) (ActionEvent e) -> { manageVolunteersButtonClicked(); });
         buttonCollection.addButton("Manage", "Roles", (ActionListener) (ActionEvent e) -> { manageRolesButtonClicked(); });
-        buttonCollection.addButton("Manage", "Email", (ActionListener) (ActionEvent e) -> { manageEmailButtonClicked(); });
+        buttonCollection.addButton("Manage", "Email Template", (ActionListener) (ActionEvent e) -> { manageEmailTemplateButtonClicked(); });
+        buttonCollection.addButton("Manage", "Email Server", (ActionListener) (ActionEvent e) -> { manageEmailServerButtonClicked(); });
         buttonCollection.addButton("Manage", "Event Properties", (ActionListener) (ActionEvent e) -> { manageEventPropertiesButtonClicked(); });
         buttonCollection.addButton("Create", "Event", (ActionListener) (ActionEvent e) -> { createEventButtonClicked(); });
         buttonCollection.addButton("Create", "Email", (ActionListener) (ActionEvent e) -> { createEmailButtonClicked(); });
@@ -246,6 +252,10 @@ public class MainFrame extends JFrame {
 
         manageEmailTemplateFrame = new ManageEmailTemplateFrame(application);
         manageEmailTemplateFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        manageEmailServerPropertiesFrame = new ManageEmailServerPropertiesFrame(application);
+        manageEmailServerPropertiesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         manageRolesFrame = new ManageRolesFrame(application);
         manageRolesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -286,13 +296,22 @@ public class MainFrame extends JFrame {
     }    // manageRolesButtonClicked()
 
     /**
-     * Event fired when the manage email button is clicked.
+     * Event fired when the manage email template button is clicked.
      */
-    private void manageEmailButtonClicked() {
+    private void manageEmailTemplateButtonClicked() {
         assertInvariant();
         manageEmailTemplateFrame.setVisible(true);
         assertInvariant();
-    }    // manageVolunteersButtonClicked()
+    }    // manageEmailTemplateButtonClicked()
+
+    /**
+     * Event fired when the manage email server button is clicked.
+     */
+    private void manageEmailServerButtonClicked() {
+        assertInvariant();
+        manageEmailServerPropertiesFrame.setVisible(true);
+        assertInvariant();
+    }    // manageEmailTemplateButtonClicked()
 
     /**
      * Event fired when the manage volunteers button is clicked.
@@ -381,6 +400,7 @@ public class MainFrame extends JFrame {
         assert(manageShiftsFrame != null);
         assert(manageVolunteersFrame != null);
         assert(manageEmailTemplateFrame != null);
+        assert(manageEmailServerPropertiesFrame != null);
         assert(manageRolesFrame != null);
         assert(manageEventPropertiesFrame != null);
         assert(eventFrame != null);

@@ -29,6 +29,7 @@ build/*
 dist/*
 
 # Local data files removed from source control
+emailServerProperties.xml
 emailTemplate.xml
 eventProperties.xml
 roles.xml
