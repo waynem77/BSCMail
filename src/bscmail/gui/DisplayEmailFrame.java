@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -25,6 +25,7 @@ import bscmail.Event;
 import bscmail.EventProperty;
 import bscmail.Shift;
 import bscmail.Volunteer;
+import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.LabeledGrid;
 import bscmail.util.format.EmailFormatter;
 import java.awt.Desktop;
@@ -108,6 +109,7 @@ public class DisplayEmailFrame extends JFrame {
         final int TEXT_AREA_ROWS = 24;
 
         mainPanel = new LabeledGrid();
+        mainPanel.setBorder(ComponentFactory.getStandardBorder());
 
         toRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);
         ccRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);

@@ -21,9 +21,8 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.EmailServerProperties;
-import bscmail.EmailTemplate;
+import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.LabeledGrid;
-import java.awt.Color;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -75,6 +74,7 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         LabeledGrid labeledGrid = new LabeledGrid();
+        labeledGrid.setBorder(ComponentFactory.getStandardBorder());
         add(labeledGrid);
 
         hostnameTextField = new JTextField();

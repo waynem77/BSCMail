@@ -21,6 +21,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.Event;
+import bscmail.gui.util.ComponentFactory;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -369,17 +370,15 @@ public class MainFrame extends JFrame {
         aboutText += "You should have received a copy of the GNU General Public License\n";
         aboutText += "along with " + application.getApplicationName() + ".  If not, see <http://www.gnu.org/licenses/>.";
 
-        final int MARGIN = 10;
-        final int INTERNAL_MARGIN = MARGIN / 2;
         JFrame frame = new JFrame();
         frame.setTitle(application.getApplicationName() + " - About");
         Box contentPane = Box.createVerticalBox();
-        contentPane.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
+        contentPane.setBorder(ComponentFactory.getStandardBorder());
         frame.setContentPane(contentPane);
         JPanel panel = new JPanel();
         panel.add(new JLabel(versionString));
         frame.add(panel);
-        frame.add(Box.createVerticalStrut(INTERNAL_MARGIN));
+        frame.add(ComponentFactory.getStandardVerticalStrut());
         panel = new JPanel();
         JTextArea aboutTextArea = new JTextArea(aboutText);
         aboutTextArea.setEditable(false);
