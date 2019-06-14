@@ -518,6 +518,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
 
     /**
      * Displays a message box indicating that the frame is unable to save data.
+     *
+     * @param e the causing exception
      */
     private void unableToSave(Exception e) {
         application.showErrorDialog(this, "Unable to save data", e);

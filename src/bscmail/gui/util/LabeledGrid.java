@@ -97,11 +97,12 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @return
+     * @param comp not used
+     * @return not defined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
+    @Deprecated
     public Component add(Component comp) {
         assert(this.addMethodsAreUnlocked());
         Component retval = super.add(comp);
@@ -113,11 +114,12 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param constraints
+     * @param comp not used
+     * @param constraints not used
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
+    @Deprecated
     public void add(Component comp, Object constraints) {
         assert(this.addMethodsAreUnlocked());
         super.add(comp, constraints);
@@ -128,12 +130,13 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param index
-     * @return
+     * @param comp not used
+     * @param index not used
+     * @return not defined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
+    @Deprecated
     public Component add(Component comp, int index) {
         assert(this.addMethodsAreUnlocked());
         Component retval = super.add(comp, index);
@@ -145,12 +148,13 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param name
-     * @param comp
-     * @return
+     * @param name not used
+     * @param comp not used
+     * @return not defined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
+    @Deprecated
     public Component add(String name, Component comp) {
         assert(this.addMethodsAreUnlocked());
         Component retval = super.add(name, comp);
@@ -162,12 +166,13 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param constraints
-     * @param index
+     * @param comp not used
+     * @param constraints not used
+     * @param index not used
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
+    @Deprecated
     public void add(Component comp, Object constraints, int index) {
         assert(this.addMethodsAreUnlocked());
         super.add(comp, constraints, index);
@@ -244,10 +249,11 @@ public class LabeledGrid extends JPanel {
     /**
      * Do not use this method. Use {@link #removeAll()} instead.
      *
-     * @param comp
+     * @param comp not used
      * @see #removeAll()
      */
     @Override
+    @Deprecated
     public void remove(Component comp) {
         assert(false);
     }    // remove()
@@ -255,10 +261,11 @@ public class LabeledGrid extends JPanel {
     /**
      * Do not use this method. Use {@link #removeAll()} instead.
      *
-     * @param index
+     * @param index not used
      * @see #removeAll()
      */
     @Override
+    @Deprecated
     public void remove(int index) {
         assert(false);
     }    // remove()
@@ -357,6 +364,8 @@ public class LabeledGrid extends JPanel {
 
     /**
      * Sets the preferred width of all label components to the given width.
+     * 
+     * @param width the component width
      */
     private void setWidthOfAllLabelComponents(int width) {
         for (JLabel label : labels) {
@@ -373,14 +382,14 @@ public class LabeledGrid extends JPanel {
      * Creates and returns a {@link GridBagConstraints} object. The constraints
      * object has the following properties.
      * <ul>
-     * <li>{@code anchor} is set to {@link GridBagConstraints.NORTHWEST}.</li>
-     * <li>{@code fill} is set to {@link GridBagConstraints.HORIZONTAL}.</li>
+     * <li>{@code anchor} is set to {@link GridBagConstraints#NORTHWEST}.</li>
+     * <li>{@code fill} is set to {@link GridBagConstraints#HORIZONTAL}.</li>
      * <li>{@code gridx} and {@code gridy} are set to the given arguments.</li>
      * </ul>
      *
      * @param gridx the {@code gridx} property for the constraints
      * @param gridy the {@code gridy} property for the constraints
-     * @return
+     * @return a "default" {@code GirdBackConstraints} object
      */
     private GridBagConstraints makeConstraints(int gridx, int gridy) {
         GridBagConstraints constraints = new GridBagConstraints();

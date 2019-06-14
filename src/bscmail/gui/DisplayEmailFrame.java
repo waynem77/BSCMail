@@ -272,9 +272,10 @@ public class DisplayEmailFrame extends JFrame {
     }    // populateEmailBody()
 
     /**
-     * Populates the subject line with appropriate text.
+     * Formats the event date and returns its string value.
      *
      * @param event the event; may not be null
+     * @return the formatted date
      */
     private String formattedEventDate(Event event) {
         if (event == null) {
