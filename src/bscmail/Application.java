@@ -236,7 +236,7 @@ public class Application {
         } catch (IOException e) {    // try
             emailServerPropertiesList = new ArrayList<>();
         }    // catch
-        emailServerProperties = ((emailServerPropertiesList != null) && !emailServerPropertiesList.isEmpty()) ? emailServerPropertiesList.get(0) : new EmailServerProperties("", "", "");
+        emailServerProperties = ((emailServerPropertiesList != null) && !emailServerPropertiesList.isEmpty()) ? emailServerPropertiesList.get(0) : new EmailServerProperties("", "", "", false);
 
         try {
             eventProperties = eventPropertiesIOLayer.getAll();

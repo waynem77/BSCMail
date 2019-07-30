@@ -51,19 +51,25 @@ public class EmailServerPropertiesFactoryTest {
     private String username;
 
     /**
+     * UseTLS variable for testing.
+     */
+    private boolean useTLS;
+
+    /**
      * Properties map used in testing.
      */
     private Map<String, Object> properties;
 
     /**
      * Constructs and returns an EmailServerProperties object created from the
-     * class variables {@link #hostname}, {@link #port}, and {@link #username}.
-     * This method may be used to test the constructor or in general tests.
+     * class variables {@link #hostname}, {@link #port}, {@link #username}, and
+     * {@link #useTLS}. This method may be used to test the constructor or in
+     * general tests.
      *
      * @return an EmailServerProperties object created from the class variables
      */
     protected EmailServerProperties makeEmailServerPropertiesFromClassVariables(){
-        return new EmailServerProperties(hostname, port, username);
+        return new EmailServerProperties(hostname, port, username, useTLS);
     }    // makeEmailServerPropertiesFromClassVariables
 
     /**
@@ -74,10 +80,12 @@ public class EmailServerPropertiesFactoryTest {
         hostname = "foo";
         port = "1234";
         username = "baz";
+        useTLS = true;
         properties = new HashMap<>();
         properties.put("hostname", hostname);
         properties.put("port", port);
         properties.put("username", username);
+        properties.put("useTLS", useTLS);
     }    // initializeClassVariables()
 
     /*
@@ -142,6 +150,7 @@ public class EmailServerPropertiesFactoryTest {
         hostname = "";
         port = "";
         username = "";
+        useTLS = false;
         EmailServerProperties expected = makeEmailServerPropertiesFromClassVariables();
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesIsEmpty()
@@ -428,6 +437,114 @@ public class EmailServerPropertiesFactoryTest {
     /**
      * Tests that
      * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
+     * throw an exception when properties is missing "useTLS".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.remove("useTLS");
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesIsMissingUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
+     * return null when properties is missing "useTLS".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.remove("useTLS");
+
+        EmailServerProperties received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullWhenPropertiesIsMissingUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} returns
+     * the correct value when properties is missing "useTLS".
+     */
+    @Test
+    public void constructReadWritableReturnsCorrectValueWhenPropertiesIsMissingUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.remove("useTLS");
+
+        EmailServerProperties received = factory.constructReadWritable(properties);
+
+        useTLS = false;
+        EmailServerProperties expected = makeEmailServerPropertiesFromClassVariables();
+        assertEquals(expected, received);
+    }    // constructReadWritableReturnsCorrectValueWhenPropertiesIsMissingUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
+     * throw an exception when properties has a null value for "useTLS".
+     */
+    @Test
+    public void constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.put("useTLS", null);
+
+        factory.constructReadWritable(properties);
+    }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasNullUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
+     * return null when properties has a null value for "useTLS".
+     */
+    @Test
+    public void constructReadWritableDoesNotReturnNullhenPropertiesHasNullUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.put("useTLS", null);
+
+        EmailServerProperties received = factory.constructReadWritable(properties);
+
+        assertNotNull(received);
+    }    // constructReadWritableDoesNotReturnNullhenPropertiesHasNullUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} returns
+     * the correct value when properties has a null value for "useTLS".
+     */
+    @Test
+    public void constructReadWritableReturnsCorrectValueWhenPropertiesHasNullUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.put("useTLS", null);
+
+        EmailServerProperties received = factory.constructReadWritable(properties);
+
+        useTLS = false;
+        EmailServerProperties expected = makeEmailServerPropertiesFromClassVariables();
+        assertEquals(expected, received);
+    }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasNullUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} returns
+     * the correct value when properties has a the string value "true" for
+     * "useTLS".
+     */
+    @Test
+    public void constructReadWritableReturnsCorrectValueWhenPropertiesHasStringTrueForUseTLS() {
+        EmailServerProperties.Factory factory = EmailServerProperties.getEmailServerPropertiesFactory();
+        properties.put("useTLS", "true");
+
+        EmailServerProperties received = factory.constructReadWritable(properties);
+
+        useTLS = true;
+        EmailServerProperties expected = makeEmailServerPropertiesFromClassVariables();
+        assertEquals(expected, received);
+    }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasStringTrueForUseTLS()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
      * throw an exception when properties has all required values.
      */
     @Test
@@ -521,10 +638,12 @@ public class EmailServerPropertiesFactoryTest {
         Object hostnameObj = 2.0;
         Object portObj = Boolean.TRUE;
         Object usernameObj = new HashMap();
+        Object useTLSObj = 5;
         properties = new HashMap<>();
         properties.put("hostname", hostnameObj);
         properties.put("port", portObj);
         properties.put("username", usernameObj);
+        properties.put("useTLS", useTLSObj);
 
         factory.constructReadWritable(properties);
     }    // constructReadWritableDoesNotThrowExceptionWhenPropertiesHasWrongObjects()
@@ -532,7 +651,7 @@ public class EmailServerPropertiesFactoryTest {
     /**
      * Tests that
      * {@link EmailServerProperties.Factory#constructReadWritable(Map)} does not
-     * returns null when the values are the wrong objects.
+     * return null when the values are the wrong objects.
      */
     @Test
     public void constructReadWritableDoesNotReturnNullWhenPropertiesHasWrongObjects() {
@@ -540,10 +659,12 @@ public class EmailServerPropertiesFactoryTest {
         Object hostnameObj = 2.0;
         Object portObj = Boolean.TRUE;
         Object usernameObj = new HashMap();
+        Object useTLSObj = 5;
         properties = new HashMap<>();
         properties.put("hostname", hostnameObj);
         properties.put("port", portObj);
         properties.put("username", usernameObj);
+        properties.put("useTLS", useTLSObj);
 
         EmailServerProperties received = factory.constructReadWritable(properties);
 
@@ -561,16 +682,19 @@ public class EmailServerPropertiesFactoryTest {
         Object hostnameObj = 2.0;
         Object portObj = Boolean.TRUE;
         Object usernameObj = new HashMap();
+        Object useTLSObj = 5;
         properties = new HashMap<>();
         properties.put("hostname", hostnameObj);
         properties.put("port", portObj);
         properties.put("username", usernameObj);
+        properties.put("useTLS", useTLSObj);
 
         EmailServerProperties received = factory.constructReadWritable(properties);
 
         hostname = hostnameObj.toString();
         port = portObj.toString();
         username = usernameObj.toString();
+        useTLS = false;
         EmailServerProperties expected = makeEmailServerPropertiesFromClassVariables();
         assertEquals(expected, received);
     }    // constructReadWritableReturnsCorrectValueWhenPropertiesHasWrongObjects()

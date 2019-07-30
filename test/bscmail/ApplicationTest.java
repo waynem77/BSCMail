@@ -1015,7 +1015,7 @@ public class ApplicationTest {
     @Test
     public void setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull() throws IOException {
         Application application = getTestApplication();
-        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz");
+        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
 
         application.setEmailServerProperties(emailServerProperties);
     }    // setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull()
@@ -1029,7 +1029,7 @@ public class ApplicationTest {
     @Test
     public void getEmailServerPropertiesReturnsArgumentPassedToSetEmailServerProperties() throws IOException {
         Application application = getTestApplication();
-        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz");
+        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
         application.setEmailServerProperties(emailServerProperties);
 
         EmailServerProperties received = application.getEmailServerProperties();
@@ -1305,7 +1305,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((ShiftsObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailTemplate);
 
@@ -1455,7 +1455,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((VolunteersObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailTemplate);
 
@@ -1605,7 +1605,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((RolesObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailTemplate);
 
@@ -1755,7 +1755,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EmailTemplateObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailTemplate);
 
@@ -1834,7 +1834,7 @@ public class ApplicationTest {
         for (EmailServerPropertiesObserver observer : observers) {
             application.registerObserver(observer);
         }    // for
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailTemplate);
 
@@ -2074,7 +2074,7 @@ public class ApplicationTest {
         Application application = getTestApplication();
         ApplicationObserver observer = new ApplicationObserver();
         application.registerObserver((EventPropertiesObserver)observer);
-        EmailServerProperties emailServerProperties = new EmailServerProperties("Foo", "Bar", "Baz");
+        EmailServerProperties emailServerProperties = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
         application.setEmailServerProperties(emailServerProperties);
 

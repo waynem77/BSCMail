@@ -56,24 +56,30 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
     private String username;
 
     /**
+     * UseTLS variable for testing.
+     */
+    private boolean useTLS;
+
+    /**
      * Returns the EmailServerProperties object to be tested.
      *
      * @return the EmailServerProperties object to be tested
      */
     @Override
     protected EmailServerProperties getReadWritable() {
-        return new EmailServerProperties("foo", "1234", "baz");
+        return new EmailServerProperties("foo", "1234", "baz", true);
     }    // getReadWritable()
 
     /**
      * Constructs and returns an EmailServerProperties object created from the
-     * class variables {@link #hostname}, {@link #port}, and {@link #username}.
-     * This method may be used to test the constructor or in general tests.
+     * class variables {@link #hostname}, {@link #port}, {@link #username}, and
+     * {@link #useTLS}. This method may be used to test the constructor or in
+     * general tests.
      *
      * @return an EmailServerProperties object created from the class variables
      */
     protected EmailServerProperties makeEmailServerPropertiesFromClassVariables(){
-        return new EmailServerProperties(hostname, port, username);
+        return new EmailServerProperties(hostname, port, username, useTLS);
     }    // makeEmailServerPropertiesFromClassVariables
 
     /**
@@ -85,6 +91,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
         hostname = "foo";
         port = "1234";
         username = "baz";
+        useTLS = true;
     }    // populateConstructorVariables()
 
     /*
@@ -95,7 +102,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * throws a {@link NullPointerException} when hostname is null.
      */
     @Test(expected = NullPointerException.class)
@@ -107,7 +114,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * does not throw an exception when hostname is empty.
      */
     @Test
@@ -119,7 +126,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * throws a {@link NullPointerException} when port is null.
      */
     @Test(expected = NullPointerException.class)
@@ -131,7 +138,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * does not throw an exception when port is empty.
      */
     @Test
@@ -143,7 +150,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * throws a {@link NullPointerException} when username is null.
      */
     @Test(expected = NullPointerException.class)
@@ -155,7 +162,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * does not throw an exception when username is empty.
      */
     @Test
@@ -167,7 +174,31 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
 
     /**
      * Tests that
-     * {@link EmailServerProperties#EmailServerProperties(bscmail.EmailServerProperties.SendType, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
+     * does not throw an exception when useTLS is true.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenUseTlsIsTrue() {
+        useTLS = true;
+
+        EmailServerProperties emailServerProperties = makeEmailServerPropertiesFromClassVariables();
+    }    // constructorDoesNotThrowExceptionWhenUseTlsIsTrue()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
+     * does not throw an exception when useTLS is false.
+     */
+    @Test
+    public void constructorDoesNotThrowExceptionWhenUseTlsIsFalse() {
+        useTLS = false;
+
+        EmailServerProperties emailServerProperties = makeEmailServerPropertiesFromClassVariables();
+    }    // constructorDoesNotThrowExceptionWhenUseTlsIsFalse()
+
+    /**
+     * Tests that
+     * {@link EmailServerProperties#EmailServerProperties(java.lang.String, java.lang.String, java.lang.String, boolean}
      * does not throw an exception when no parameter is null.
      */
     @Test
@@ -256,6 +287,33 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // getUsernameReturnsCorrectValue()
 
+    /* useTLS */
+
+    /**
+     * Tests that {@link EmailServerProperties#useTLS()} does not throw an
+     * exception.
+     */
+    @Test
+    public void useTLSDoesNotThrowException() {
+        EmailServerProperties emailServerProperties = makeEmailServerPropertiesFromClassVariables();
+
+        emailServerProperties.useTLS();
+    }    // useTLSDoesNotThrowException()
+
+    /**
+     * Tests that {@link EmailServerProperties#useTLS()} returns the value
+     * passed to the constructor.
+     */
+    @Test
+    public void useTLSReturnsCorrectValue() {
+        EmailServerProperties emailServerProperties = makeEmailServerPropertiesFromClassVariables();
+
+        boolean received = emailServerProperties.useTLS();
+
+        boolean expected = useTLS;
+        assertEquals(expected, received);
+    }    // useTLSReturnsCorrectValue()
+
     /* getReadWritableProperties */
 
     /**
@@ -272,6 +330,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
         expected.put("hostname", hostname);
         expected.put("port", port);
         expected.put("username", username);
+        expected.put("useTLS", useTLS);
         assertEquals(expected, received);
     }    // getReadWritablePropertiesReturnsTheCorrectValue()
 
@@ -290,7 +349,7 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
             received.add(entry.getKey());
         }    // for
 
-        List<String> expected = Arrays.asList("hostname", "port", "username");
+        List<String> expected = Arrays.asList("hostname", "port", "username", "useTLS");
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
@@ -407,6 +466,22 @@ public class EmailServerPropertiesTest extends ReadWritableTest {
         boolean expected = false;
         assertEquals(expected, received);
     }    // equalsReturnsFalseWhenArgumentHasDifferentUsername()
+
+    /**
+     * Tests that {@link EmailServerProperties#equals(Object)} returns false
+     * when the argument has a different useTLS value than the caller.
+     */
+    @Test
+    public void equalsReturnsFalseWhenArgumentHasDifferentUseTLS() {
+        EmailServerProperties emailServerProperties = makeEmailServerPropertiesFromClassVariables();
+
+        useTLS = !useTLS;
+        EmailServerProperties obj = makeEmailServerPropertiesFromClassVariables();
+        boolean received = emailServerProperties.equals((Object)obj);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // equalsReturnsFalseWhenArgumentHasDifferentUseTLS()
 
     /**
      * Tests that {@link EmailServerProperties#equals(Object)} returns true when

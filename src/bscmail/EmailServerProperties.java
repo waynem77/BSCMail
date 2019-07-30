@@ -25,17 +25,18 @@ import main.ReadWritable;
 import main.ReadWritableFactory;
 
 /**
- * Represents the connection properties for an email server. The object has the followin properties.
+ * Represents the connection properties for an email server. The object has the following properties.
  * <ul>
  *   <li>hostname,</li>
- *   <li>port, and</li>
- *   <li>username.</li>
+ *   <li>port,</li>
+ *   <li>username, and</li>
+ *   <li>useTLS.</li>
  * </ul>
  *
- * Each property is a simple string.
+ * useTLS is a boolean; the other properties are simple strings.
  *
  * @author wayne.miller
- * @since 3.3
+ * @since 3.4
  */
 public class EmailServerProperties implements Cloneable, Serializable, ReadWritable {
 
@@ -78,6 +79,9 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
          *   <li>The EmailServerProperties object's username is given by the
          * string value of the value corresponding to "username". If such a
          * value does not exist or is null, the username is empty.</li>
+         *   <li>The EmailServerProperties object's useTLS is given by the
+         * boolean value of the value corresponding to "useTLS". If such a
+         * value does not exist or is null, useTLS is set to false.</li>
          * </ul>
          * This method effectively acts as the reverse of
          * {@link EmailServerProperties#getReadWritableProperties()}.
@@ -102,7 +106,10 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
             Object usernameObj = properties.get("username");
             String username = (usernameObj != null) ? usernameObj.toString() : "";
 
-            return new EmailServerProperties(hostname, port, username);
+            Object useTLSObj = properties.get("useTLS");
+            boolean useTLS = (useTLSObj != null) ? Boolean.parseBoolean(useTLSObj.toString()) : false;
+
+            return new EmailServerProperties(hostname, port, username, useTLS);
         }    // constructReadWritable()
 
     }    // Factory
@@ -136,14 +143,20 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
     private final String username;
 
     /**
+     * True if the server requires TLS; false otherwise.
+     */
+    private final Boolean useTLS;
+
+    /**
      * Constructs a new EmailServerProperties object.
      *
      * @param hostname the SMTP server hostname
      * @param port the SMTP server port
      * @param username the username used with the SMTP server
+     * @param useTLS true if the server requires TLS; false otherwise
      * @throws NullPointerException if any parameter is null
      */
-    public EmailServerProperties(String hostname, String port, String username) {
+    public EmailServerProperties(String hostname, String port, String username, boolean useTLS) {
         if (hostname == null) {
             throw new NullPointerException("hostname may not be null");
         }    // if
@@ -157,6 +170,7 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
         this.hostname = hostname;
         this.port = port;
         this.username = username;
+        this.useTLS = useTLS;
         assertInvariant();
     }    // Shift()
 
@@ -190,16 +204,27 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
         return username;
     }    // getUsername()
 
+    /**
+     * Returns true if the server requires TLS; false otherwise.
+     *
+     * @return true if the server requires TLS; false otherwise.
+     */
+    public boolean useTLS() {
+        assertInvariant();
+        return useTLS;
+    }    // useTLS()
 
     /**
      * Returns a map containing the read-writable properties of the object. The
      * map returned by this method is guaranteed to have the following
      * properties.
      * <ul>
-     *   <li>The map has exactly three keys: "hostname", "port", and
-     * "username".</li>
-     *   <li>The values are non-null {@link String}s corresponding to the return
-     * values of the appropriate getter methods.</li>
+     *   <li>The map has exactly four keys: "hostname", "port", "username", and
+     * "useTLS".</li>
+     *   <li>The values of "hostname", "post", are "username" are non-null
+     * {@link String}s corresponding to the return values of the appropriate
+     * getter methods. The value of "useTLS" is a {@link Boolean} corresponding
+     * to the return value of {@link EmailServerProperties#useTLS()}.</li>
      *   <li>The iteration order of the elements is fixed in the order the keys
      * are presented above.</li>
      * </ul>
@@ -213,6 +238,7 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
         properties.put("hostname", hostname);
         properties.put("port", port);
         properties.put("username", username);
+        properties.put("useTLS", useTLS);
         return properties;
     }    // getReadWritableProperties()
 
@@ -235,8 +261,9 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
      * <ol>
      *   <li>the object is another EmailServerProperties object,</li>
      *   <li>both objects have the same hostname,</li>
-     *   <li>both objects have the same port, and</li>
-     *   <li>both objects have the same username.</li>
+     *   <li>both objects have the same port,</li>
+     *   <li>both objects have the same username, and</li>
+     *   <li>both objects have the same useTLS.</li>
      * </ol>
      *
      * @param obj the object with which to compare
@@ -250,7 +277,8 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
             assert (properties != null);
             return properties.getHostname().equals(hostname) &&
                     properties.getPort().equals(port) &&
-                    properties.getUsername().equals(username);
+                    properties.getUsername().equals(username) &&
+                    useTLS.equals(properties.useTLS());
         }    // if
         return false;
     }    // equals()
@@ -264,6 +292,7 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
         code = code * MULTIPLIER + hostname.hashCode();
         code = code * MULTIPLIER + port.hashCode();
         code = code * MULTIPLIER + username.hashCode();
+        code = code * MULTIPLIER + useTLS.hashCode();
         return code;
     }    // hashCode()
 
@@ -275,7 +304,7 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
     @Override
     public EmailServerProperties clone() {
         assertInvariant();
-        return new EmailServerProperties(hostname, port, username);
+        return new EmailServerProperties(hostname, port, username, useTLS);
     }    // clone()
 
     /**
@@ -285,5 +314,6 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
         assert (hostname != null);
         assert (port != null);
         assert (username != null);
+        assert (useTLS != null);
     }    // assertInvariant()
 }

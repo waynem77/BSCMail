@@ -23,8 +23,11 @@ import bscmail.Application;
 import bscmail.EmailServerProperties;
 import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.LabeledGrid;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -60,6 +63,11 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
     private final JTextField usernameTextField;
 
     /**
+     * The use TLS check box.
+     */
+    private final JCheckBox useTLSCheckBox;
+
+    /**
      * Constructs a new manage email server properties frame.
      *
      * @param application the calling application; may not be null
@@ -86,10 +94,14 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
         usernameTextField = new JTextField();
         labeledGrid.addLabelAndComponent("Username:", usernameTextField);
 
+        useTLSCheckBox = new JCheckBox();
+        labeledGrid.addLabelAndComponent("Use TLS:", useTLSCheckBox);
+
         EmailServerProperties emailServerProperties = application.getEmailServerProperties();
         hostnameTextField.setText(emailServerProperties.getHostname());
         portTextField.setText(emailServerProperties.getPort());
         usernameTextField.setText(emailServerProperties.getUsername());
+        useTLSCheckBox.setSelected(emailServerProperties.useTLS());
 
         hostnameTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
@@ -124,6 +136,11 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
                 valuesChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
+        useTLSCheckBox.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                valuesChanged();
+            }    // actionPerformed()
+        });
 
         pack();
         assertInvariant();
@@ -137,7 +154,8 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
         String hostname = hostnameTextField.getText();
         String port = portTextField.getText();
         String username = usernameTextField.getText();
-        EmailServerProperties emailServerProperties = new EmailServerProperties(hostname, port, username);
+        boolean useTLS = useTLSCheckBox.isSelected();
+        EmailServerProperties emailServerProperties = new EmailServerProperties(hostname, port, username, useTLS);
 
         try {
             application.setEmailServerProperties(emailServerProperties);
@@ -156,6 +174,8 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
         assert (isAncestorOf(portTextField));
         assert (usernameTextField != null);
         assert (isAncestorOf(usernameTextField));
+        assert (useTLSCheckBox != null);
+        assert (isAncestorOf(useTLSCheckBox));
     }    // assertInvariant()
 
 }    // ManageEmailServerPropertiesFrame
