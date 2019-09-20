@@ -20,6 +20,7 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.EmailServerProperties;
 import bscmail.EmailTemplate;
 import bscmail.Event;
 import bscmail.EventProperty;
@@ -27,7 +28,10 @@ import bscmail.Shift;
 import bscmail.Volunteer;
 import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.LabeledGrid;
+import bscmail.mail.MailMessage;
+import bscmail.mail.Mailer;
 import bscmail.util.format.EmailFormatter;
+import com.sun.mail.smtp.SMTPTransport;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -42,6 +46,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import javax.swing.*;
 
@@ -53,6 +64,19 @@ import javax.swing.*;
  */
 public class DisplayEmailFrame extends JFrame {
 
+    /**
+     * The underlying application.
+     */
+    private final Application application;
+
+    /**
+     * The email server properties.
+     */
+    private final EmailServerProperties serverProperties;
+
+    /**
+     * The layout grid for the frame.
+     */
     private final LabeledGrid mainPanel;
 
     /**
@@ -100,6 +124,8 @@ public class DisplayEmailFrame extends JFrame {
         if (event == null) {
             throw new NullPointerException("event may not be null");
         }    // if
+
+        this.application = application;
 
         setTitle(application.getApplicationName() + " - Event Email Text");
 
@@ -154,6 +180,8 @@ public class DisplayEmailFrame extends JFrame {
         populateRecipientLines(application.getEmailTemplate(), event);
         populateSubjectLine(application.getEmailTemplate(), event);
         populateEmailBody(application.getEmailTemplate(), event);
+
+        serverProperties = application.getEmailServerProperties();
 
         assertInvariant();
     }    // DisplayEmailFrame()
@@ -296,15 +324,122 @@ public class DisplayEmailFrame extends JFrame {
      */
     private void sendEmailButtonClicked() {
 
-        try {
-            mailTo(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
-        } catch (IOException err) {
-            //insert error handling
+//        try {
+//            mailTo(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
+//        } catch (IOException err) {
+//            //insert error handling
+//
+//        } catch (URISyntaxException err) {
+//            //insert error handling
+//        }
 
-        } catch (URISyntaxException err) {
-            //insert error handling
-        }
+        JPasswordField passwordField = new JPasswordField();
+        int selection = JOptionPane.showConfirmDialog(this, passwordField, application.getApplicationName() + " - Enter Password", JOptionPane.OK_CANCEL_OPTION);
+
+        if (selection == JOptionPane.OK_OPTION) {
+            Mailer mailer = new Mailer(application);
+            MailerFrame mailerFrame = new MailerFrame(application, mailer);
+            mailerFrame.setVisible(true);
+            mailerFrame.mailerStatusChanged();
+
+            EmailServerProperties serverProperties = application.getEmailServerProperties();
+            MailMessage message = new MailMessage(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
+//            mailer.send(message, new String(passwordField.getPassword()));
+
+            Thread mailerThread = new Thread(){
+                public void run() {
+                    mailer.send(message, new String(passwordField.getPassword()));
+                }
+            };
+            mailerThread.start();
+        }    // if
     }    // sendEmailButtonClicked()
+
+    /**
+     * Sends an email through the operating system. Code originally adapted from
+     * http://www.2ality.com/2010/12/simple-way-of-sending-emails-in-java.html
+     * by nathan.cordner.
+     *
+     * @param toRecipients the comma-delimited list of "to" recipient email
+     * addresses; may not be null
+     * @param ccRecipients the comma-delimited list of "cc" recipient email
+     * addresses; may not be null
+     * @param bccRecipients the comma-delimited list of "bcc" recipient email
+     * addresses; may not be null
+     * @param subject the subject line; may not be null
+     * @param body the email body; may not be null
+     * @throws IOException if an I/O error occurs
+     * @throws URISyntaxException if a URI syntax exception occurs
+     */
+    private void mailToOld1(String toRecipients, String ccRecipients, String bccRecipients, String subject,
+                              String body) throws IOException, URISyntaxException {
+//        String uriStr = String.format("mailto:%s?cc=%s&bcc=%s&subject=%s&body=%s",
+//                toRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
+//                ccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
+//                bccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
+//                urlEncode(subject),
+//                urlEncode(body));
+//        Desktop.getDesktop().browse(new URI(uriStr));
+
+        // https://support.google.com/mail/answer/7126229?hl=en&visit_id=636825822910416256-3468808783&rd=2
+        // https://www.tutorialspoint.com/java/java_sending_email.htm
+
+        // https://www.mkyong.com/java/javamail-api-sending-email-via-gmail-smtp-example/
+
+        String to = "waynem77@yahoo.com";
+        String from = "volunteer@bostonswingcentral.org";
+        String host = "smtp.gmail.com";
+//        String port = "465";
+        String port = "587";
+        Properties properties = System.getProperties();
+//        properties.setProperty("mail.smtp.host", host);
+//        properties.setProperty("mail.user", from);
+//        properties.setProperty("mail.smtp.user", from);
+//        properties.setProperty("mail.from", from);
+//        properties.setProperty("mail.password", "lobstahroll3");
+//        properties.setProperty("mail.smtp.password", "lobstahroll3");
+//        properties.setProperty("mail.smtp.ssl.enable", "true");
+//        properties.setProperty("mail.smtp.port", "465");
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.socketFactory.port", port);
+		properties.put("mail.smtp.socketFactory.class",
+				"javax.net.ssl.SSLSocketFactory");
+//                properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.port", port);
+                properties.put("mail.smtp.starttls.enable","true");
+                properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+        Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(from,"lobstahroll3");
+				}
+			});
+        try {
+             // Create a default MimeMessage object.
+             MimeMessage message = new MimeMessage(session);
+
+             // Set From: header field of the header.
+             message.setFrom(new InternetAddress(from));
+
+             // Set To: header field of the header.
+             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+            // Set Subject: header field
+            message.setSubject(subject);
+
+            // Now set the actual message
+            message.setText(body);
+
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+         } catch (Exception mex) {
+            mex.printStackTrace();
+         }
+
+    }
 
     /**
      * Sends an email through the operating system. Code originally adapted from
@@ -324,13 +459,44 @@ public class DisplayEmailFrame extends JFrame {
      */
     private void mailTo(String toRecipients, String ccRecipients, String bccRecipients, String subject,
                               String body) throws IOException, URISyntaxException {
-        String uriStr = String.format("mailto:%s?cc=%s&bcc=%s&subject=%s&body=%s",
-                toRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
-                ccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
-                bccRecipients.replaceAll("\\s",""), // comma separated list, no whitespace
-                urlEncode(subject),
-                urlEncode(body));
-        Desktop.getDesktop().browse(new URI(uriStr));
+
+        // https://support.google.com/mail/answer/7126229?hl=en&visit_id=636825822910416256-3468808783&rd=2
+        // https://www.tutorialspoint.com/java/java_sending_email.htm
+
+        // https://www.mkyong.com/java/javamail-api-sending-email-via-gmail-smtp-example/
+
+        String to = "waynem77@yahoo.com";
+        String from = "volunteer@bostonswingcentral.org";
+        String host = "smtp.gmail.com";
+//        String port = "465";
+        String port = "587";
+
+        Properties properties = System.getProperties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.port", port);
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.ssl.trust", host);
+
+        Session session = Session.getInstance(properties, null);
+
+        try {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+        message.setSubject(subject);
+        message.setText(body);
+        message.setHeader("X-Mailer", "BSCMail");
+        message.setSentDate(new Date());
+
+        SMTPTransport transport = (SMTPTransport)session.getTransport("smtp");
+        transport.connect(host, from, "lobstahroll3");
+        transport.sendMessage(message, message.getAllRecipients());
+        System.out.println("Response: " + transport.getLastServerResponse());
+        System.out.println("Sent message successfully....");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -381,6 +547,8 @@ public class DisplayEmailFrame extends JFrame {
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
+        assert (application != null);
+        assert (serverProperties != null);
         assert (mainPanel != null);
         assert (isAncestorOf(mainPanel));
         assert (textArea != null);
