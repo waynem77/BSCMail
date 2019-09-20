@@ -23,6 +23,7 @@ import bscmail.Application;
 import bscmail.mail.Mailer;
 import bscmail.mail.MailerObserver;
 import bscmail.mail.MailerStatus;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -100,6 +101,7 @@ public class MailerFrame extends JFrame implements MailerObserver {
         this.mailer = mailer;
         mailer.registerObserver(this);
 
+        setCursor(new Cursor(Cursor.WAIT_CURSOR));
         assertInvariant();
     }    // MailerFrame()
 
@@ -112,9 +114,11 @@ public class MailerFrame extends JFrame implements MailerObserver {
         MailerStatus status = mailer.getStatus();
         if (status.equals(MailerStatus.MAIL_SENT)) {
             messagesTextArea.append(status + ": " + mailer.getLastServerResponse() + "\n");
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             closeButton.setEnabled(true);
         } else if (status.equals(MailerStatus.ERROR)) {
             messagesTextArea.append(status + ": " + mailer.getLastError().toString() + "\n");
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             closeButton.setEnabled(true);
         } else {
             messagesTextArea.append(status + "...\n");
