@@ -32,13 +32,11 @@ import bscmail.mail.MailMessage;
 import bscmail.mail.Mailer;
 import bscmail.util.format.EmailFormatter;
 import com.sun.mail.smtp.SMTPTransport;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -68,11 +66,6 @@ public class DisplayEmailFrame extends JFrame {
      * The underlying application.
      */
     private final Application application;
-
-    /**
-     * The email server properties.
-     */
-    private final EmailServerProperties serverProperties;
 
     /**
      * The layout grid for the frame.
@@ -180,8 +173,6 @@ public class DisplayEmailFrame extends JFrame {
         populateRecipientLines(application.getEmailTemplate(), event);
         populateSubjectLine(application.getEmailTemplate(), event);
         populateEmailBody(application.getEmailTemplate(), event);
-
-        serverProperties = application.getEmailServerProperties();
 
         assertInvariant();
     }    // DisplayEmailFrame()
@@ -548,7 +539,6 @@ public class DisplayEmailFrame extends JFrame {
      */
     private void assertInvariant() {
         assert (application != null);
-        assert (serverProperties != null);
         assert (mainPanel != null);
         assert (isAncestorOf(mainPanel));
         assert (textArea != null);
