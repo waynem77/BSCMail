@@ -38,7 +38,7 @@ import javax.swing.event.DocumentListener;
  * {@link Application}.
  *
  * @since 3.4
- * @author Wayne Miller <waynem77@yahoo.com>
+ * @author Wayne Miller (waynem77@yahoo.com)
  */
 public class ManageEmailServerPropertiesFrame extends JFrame {
 

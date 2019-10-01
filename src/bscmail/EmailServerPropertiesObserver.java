@@ -25,7 +25,7 @@ package bscmail;
  *
  * @see Application
  * @since 3.4
- * @author Wayne Miller <waynem77@yahoo.com>
+ * @author Wayne Miller (waynem77@yahoo.com)
  */
 public interface EmailServerPropertiesObserver {
 

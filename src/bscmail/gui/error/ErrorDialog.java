@@ -123,6 +123,7 @@ public class ErrorDialog extends JDialog {
     
     /**
      * Event that fires when the more button is pressed.
+     * @param e the event
      */
     private void moreButtonClicked(ActionEvent e) {
         JButton moreButton = (JButton)e.getSource();

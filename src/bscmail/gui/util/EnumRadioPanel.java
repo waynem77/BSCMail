@@ -62,7 +62,7 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
      * first enum) will be selected.
      *
      * @param enumClass the class of the enum; may not be null
-     * @throws NullPointerException if {@class enumClass} is null
+     * @throws NullPointerException if {@code enumClass} is null
      */
     public EnumRadioPanel(Class<E> enumClass) {
         if (enumClass == null) {
@@ -167,6 +167,8 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
 
     /**
      * Event that fires when any radio button is clicked.
+     *
+     * @param e the event
      */
     private void radioButtonClicked(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {

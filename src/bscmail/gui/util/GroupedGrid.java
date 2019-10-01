@@ -180,14 +180,14 @@ public class GroupedGrid extends JPanel {
      * Creates and returns a "default" {@link GridBagConstraints} object. The
      * constraints object has the following properties.
      * <ul>
-     * <li>{@code anchor} is set to {@link GridBagConstraints.NORTHWEST}.</li>
-     * <li>{@code fill} is set to {@link GridBagConstraints.HORIZONTAL}.</li>
+     * <li>{@code anchor} is set to {@link GridBagConstraints#NORTHWEST}.</li>
+     * <li>{@code fill} is set to {@link GridBagConstraints#HORIZONTAL}.</li>
      * <li>{@code gridx} and {@code gridy} are set to the given arguments.</li>
      * </ul>
      *
      * @param gridx the {@code gridx} property for the constraints
      * @param gridy the {@code gridy} property for the constraints
-     * @return
+     * @return a default 
      */
     private GridBagConstraints getDefaultConstraints(int gridx, int gridy) {
         GridBagConstraints constraints = new GridBagConstraints();

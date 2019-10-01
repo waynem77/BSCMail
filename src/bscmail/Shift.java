@@ -454,7 +454,8 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
 
     /**
      * Hash code for primitive boolean
-     * @param bool
+     *
+     * @param bool the boolean value
      * @return The boolean's hash code
      */
     private int booleanHashCode(boolean bool) {

@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 /**
  * Factory for statically creating standard components.
  *
- * @author Wayne Miller <waynem77@yahoo.com>
+ * @author Wayne Miller (waynem77@yahoo.com)
  * @since 3.4
  */
 public class ComponentFactory {

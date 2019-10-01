@@ -97,8 +97,8 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @return
+     * @param comp the component
+     * @return undefined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
@@ -113,8 +113,8 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param constraints
+     * @param comp the component
+     * @param constraints the constraints
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
@@ -128,9 +128,9 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param index
-     * @return
+     * @param comp the component
+     * @param index the index
+     * @return undefined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
@@ -145,9 +145,9 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param name
-     * @param comp
-     * @return
+     * @param name the name
+     * @param comp the component
+     * @return undefined
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
@@ -162,9 +162,9 @@ public class LabeledGrid extends JPanel {
      * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
      * instead.
      *
-     * @param comp
-     * @param constraints
-     * @param index
+     * @param comp the component
+     * @param constraints the constraint
+     * @param index the index
      * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
      */
     @Override
@@ -244,7 +244,7 @@ public class LabeledGrid extends JPanel {
     /**
      * Do not use this method. Use {@link #removeAll()} instead.
      *
-     * @param comp
+     * @param comp the component
      * @see #removeAll()
      */
     @Override
@@ -255,7 +255,7 @@ public class LabeledGrid extends JPanel {
     /**
      * Do not use this method. Use {@link #removeAll()} instead.
      *
-     * @param index
+     * @param index the index
      * @see #removeAll()
      */
     @Override
@@ -357,6 +357,8 @@ public class LabeledGrid extends JPanel {
 
     /**
      * Sets the preferred width of all label components to the given width.
+     *
+     * @param width the preferred width
      */
     private void setWidthOfAllLabelComponents(int width) {
         for (JLabel label : labels) {
@@ -373,14 +375,14 @@ public class LabeledGrid extends JPanel {
      * Creates and returns a {@link GridBagConstraints} object. The constraints
      * object has the following properties.
      * <ul>
-     * <li>{@code anchor} is set to {@link GridBagConstraints.NORTHWEST}.</li>
-     * <li>{@code fill} is set to {@link GridBagConstraints.HORIZONTAL}.</li>
+     * <li>{@code anchor} is set to {@link GridBagConstraints#NORTHWEST}.</li>
+     * <li>{@code fill} is set to {@link GridBagConstraints#HORIZONTAL}.</li>
      * <li>{@code gridx} and {@code gridy} are set to the given arguments.</li>
      * </ul>
      *
      * @param gridx the {@code gridx} property for the constraints
      * @param gridy the {@code gridy} property for the constraints
-     * @return
+     * @return a constraints object satisfying the description
      */
     private GridBagConstraints makeConstraints(int gridx, int gridy) {
         GridBagConstraints constraints = new GridBagConstraints();
