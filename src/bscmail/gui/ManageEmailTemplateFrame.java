@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2018 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,6 +20,7 @@ package bscmail.gui;
 
 import bscmail.Application;
 import bscmail.EmailTemplate;
+import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.EnumRadioPanel;
 import bscmail.gui.util.LabeledGrid;
 import java.awt.Color;
@@ -27,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -88,10 +88,11 @@ public class ManageEmailTemplateFrame extends JFrame {
         final int TEXT_AREA_ROWS = 12;
 
         this.application = application;
-        setTitle(application.getApplicationName() + " - Manage Email");
+        setTitle(application.getApplicationName() + " - Manage Email Template");
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         LabeledGrid labeledGrid = new LabeledGrid();
+        labeledGrid.setBorder(ComponentFactory.getStandardBorder());
         add(labeledGrid);
 
         sendTypePanel = new EnumRadioPanel<>(EmailTemplate.SendType.class);

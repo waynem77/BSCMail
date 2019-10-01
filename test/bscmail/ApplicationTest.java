@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -38,23 +38,26 @@ public class ApplicationTest {
     /**
      * Observer used in tests.
      */
-    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, RolesObserver, EmailTemplateObserver, EventPropertiesObserver {
+    private class ApplicationObserver implements ShiftsObserver, VolunteersObserver, RolesObserver, EmailTemplateObserver, EmailServerPropertiesObserver, EventPropertiesObserver {
         private boolean shiftsChanged = false;
         private boolean volunteersChanged = false;
         private boolean rolesChanged = false;
         private boolean emailTemplateChanged = false;
+        private boolean emailServerPropertiesChanged = false;
         private boolean eventPropertiesChanged = false;
 
         @Override public void shiftsChanged() { shiftsChanged = true; }
         @Override public void volunteersChanged() { volunteersChanged = true; }
         @Override public void rolesChanged() { rolesChanged = true; }
         @Override public void emailTemplateChanged() { emailTemplateChanged = true; }
+        @Override public void emailServerPropertiesChanged() { emailServerPropertiesChanged = true; }
         @Override public void eventPropertiesChanged() { eventPropertiesChanged = true; }
 
         public boolean getShiftsChanged() { return shiftsChanged; }
         public boolean getVolunteersChanged() { return volunteersChanged; }
         public boolean getRolesChanged() { return rolesChanged; }
         public boolean getEmailTemplateChanged() { return emailTemplateChanged; }
+        public boolean getEmailServerPropertiesChanged() { return emailServerPropertiesChanged; }
         public boolean getEventPropertiesChanged() { return eventPropertiesChanged; }
     }    // ApplicationObserver
 
@@ -74,9 +77,10 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /*
@@ -87,7 +91,7 @@ public class ApplicationTest {
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when applicationInfo is null.
      */
     @Test(expected = NullPointerException.class)
@@ -97,15 +101,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when shiftsIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -115,15 +120,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when volunteersIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -133,15 +139,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = null;
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenVolunteersIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when rolesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -151,15 +158,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = null;
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenRolesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when emailTemplateIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -169,15 +177,36 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = null;
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEmailTemplateIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * throws a {@link NullPointerException} when emailServerPropertiesIOLayer
+     * is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull() {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = null;
+        IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+    }    // constructorThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull()
+
+    /**
+     * Tests that
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when eventPropertiesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
@@ -187,15 +216,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = null;
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEventPropertiesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when helpDisplay is null.
      */
     @Test(expected = NullPointerException.class)
@@ -205,15 +235,16 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = null;
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenHelpDisplayIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * does not throw an exception when no parameter is null.
      */
     @Test
@@ -223,10 +254,11 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
 
     /* getApplicationName */
@@ -264,9 +296,10 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getApplicationName();
 
@@ -309,9 +342,10 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getVersion();
 
@@ -355,9 +389,10 @@ public class ApplicationTest {
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
         IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getCopyright();
 
@@ -933,6 +968,76 @@ public class ApplicationTest {
         assertEquals(expected, received);
     }    // getEmailTemplateReturnsArgumentPassedToSetEmailTemplate()
 
+    /* getEmailServerProperties / setEmailServerProperties */
+
+    /**
+     * Tests that {@link Application#getEmailServerProperties()} does not throw
+     * an exception.
+     */
+    @Test
+    public void getEmailServerPropertiesDoesNotThrowException() throws IOException {
+        Application application = getTestApplication();
+
+        application.getEmailServerProperties();
+    }    // getEmailServerPropertiesDoesNotThrowException()
+
+    /**
+     * Tests that {@link Application#getEmailServerProperties()} does not return
+     * null.
+     */
+    @Test
+    public void getEmailServerPropertiesDoesNotReturnNull() throws IOException {
+        Application application = getTestApplication();
+
+        EmailServerProperties received = application.getEmailServerProperties();
+
+        assertNotNull(received);
+    }    // getEmailServerPropertiesDoesNotReturnNull()
+
+    /**
+     * Tests that
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * throws a {@link NullPointerException} when emailServerProperties is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setEmailServerPropertiesThrowsExceptionWhenEmailServerPropertiesIsNull() throws IOException {
+        Application application = getTestApplication();
+        EmailServerProperties emailServerProperties = null;
+
+        application.setEmailServerProperties(emailServerProperties);
+    }    // setEmailServerPropertiesThrowsExceptionWhenEmailServerPropertiesIsNull()
+
+    /**
+     * Tests that
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not throw an exception when emailServerProperties is not null.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull() throws IOException {
+        Application application = getTestApplication();
+        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
+
+        application.setEmailServerProperties(emailServerProperties);
+    }    // setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull()
+
+    /**
+     * Tests that the email template returned by
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * is equal to the email template passed to
+     * {@link Application#setEmailServerProperties(List)}.
+     */
+    @Test
+    public void getEmailServerPropertiesReturnsArgumentPassedToSetEmailServerProperties() throws IOException {
+        Application application = getTestApplication();
+        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
+        application.setEmailServerProperties(emailServerProperties);
+
+        EmailServerProperties received = application.getEmailServerProperties();
+
+        EmailServerProperties expected = emailServerProperties;
+        assertEquals(expected, received);
+    }    // getEmailServerPropertiesReturnsArgumentPassedToSetEmailServerProperties()
+
     /* getEventProperties / setEventProperties */
 
     /**
@@ -1190,6 +1295,24 @@ public class ApplicationTest {
     }    // setEmailTemplateDoesNotNotifyShiftObservers()
 
     /**
+     * Tests that a call to
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not notify any observers registered with
+     * {@link Application#registerObserver(ShiftsObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotNotifyShiftObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((ShiftsObserver)observer);
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailTemplate);
+
+        assertFalse(observer.getShiftsChanged());
+    }    // setEmailServerPropertiesDoesNotNotifyShiftObservers()
+
+    /**
      * Tests that a call to {@link Application#setEventProperties(List)} does
      * not notify any observers registered with
      * {@link Application#registerObserver(ShiftsObserver)}.
@@ -1320,6 +1443,24 @@ public class ApplicationTest {
 
         assertFalse(observer.getVolunteersChanged());
     }    // setEmailTemplateDoesNotNotifyVolunteerObservers()
+
+    /**
+     * Tests that a call to
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not notify any observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotNotifyVolunteerObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((VolunteersObserver)observer);
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailTemplate);
+
+        assertFalse(observer.getVolunteersChanged());
+    }    // setEmailServerPropertiesDoesNotNotifyVolunteerObservers()
 
     /**
      * Tests that a call to {@link Application#setEventProperties(List)} does
@@ -1454,6 +1595,24 @@ public class ApplicationTest {
     }    // setEmailTemplateDoesNotNotifyRoleObservers()
 
     /**
+     * Tests that a call to
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not notify any observers registered with
+     * {@link Application#registerObserver(RolesObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotNotifyRoleObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((RolesObserver)observer);
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailTemplate);
+
+        assertFalse(observer.getRolesChanged());
+    }    // setEmailServerPropertiesDoesNotNotifyRoleObservers()
+
+    /**
      * Tests that a call to {@link Application#setEventProperties(List)} does
      * not notify any observers registered with
      * {@link Application#registerObserver(RolesObserver)}.
@@ -1586,6 +1745,24 @@ public class ApplicationTest {
     }    // setRolesDoesNotNotifyEmailTemplateObservers()
 
     /**
+     * Tests that a call to
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not notify any observers registered with
+     * {@link Application#registerObserver(EmailTemplateObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotNotifyEmailTemplateObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailTemplateObserver)observer);
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailTemplate);
+
+        assertFalse(observer.getEmailTemplateChanged());
+    }    // setEmailServerPropertiesDoesNotNotifyEmailTemplateObservers()
+
+    /**
      * Tests that a call to {@link Application#setEventProperties(List)} does
      * not notify any observers registered with
      * {@link Application#registerObserver(EmailTemplateObserver)}.
@@ -1601,6 +1778,158 @@ public class ApplicationTest {
 
         assertFalse(observer.getEmailTemplateChanged());
     }    // setEventPropertiesDoesNotNotifyEmailTemplateObservers()
+
+    /* registerObserver(EmailServerPropertiesObserver) */
+
+    /**
+     * Tests that
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}
+     * throws a {@link NullPointerException} when observer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void registerObserverEmailServerPropertiesObserverThrowsExceptionWhenObserverIsNull() {
+        Application application = getTestApplication();
+        EmailServerPropertiesObserver observer = null;
+
+        application.registerObserver(observer);
+    }    // registerObserverEmailServerPropertiesObserverThrowsExceptionWhenObserverIsNull()
+
+    /**
+     * Tests that
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)} does
+     * not throw an exception when observer is not null.
+     */
+    @Test
+    public void registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
+        Application application = getTestApplication();
+        EmailServerPropertiesObserver observer = new ApplicationObserver();
+
+        application.registerObserver(observer);
+    }    // registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
+
+    /**
+     * Tests that
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)} does
+     * not throw an exception when called twice with different observers.
+     */
+    @Test
+    public void registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenCalledTwice() {
+        Application application = getTestApplication();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+
+        for (EmailServerPropertiesObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+    }    // registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenCalledTwice()
+
+    /**
+     * Tests that a call to {@link Application#setEmailServerProperties(List)}
+     * notifies all observers registered with
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesNotifiesAllEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (EmailServerPropertiesObserver observer : observers) {
+            application.registerObserver(observer);
+        }    // for
+        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailTemplate);
+
+        for (ApplicationObserver observer : observers) {
+            assertTrue(observer.getEmailServerPropertiesChanged());
+        }    // for
+    }    // setEmailServerPropertiesNotifiesAllEmailServerPropertiesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setShifts(List)} does not notify
+     * any observers registered with
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}.
+     */
+    @Test
+    public void setShiftsDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailServerPropertiesObserver)observer);
+        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+
+        application.setShifts(shifts);
+
+        assertFalse(observer.getEmailServerPropertiesChanged());
+    }    // setShiftsDoesNotNotifyEmailServerPropertiesObservers()
+
+    /**
+     * Tests that a call to {@link Application#Volunteers(List)} does not notify
+     * any observers registered with
+     * {@link Application#registerObserver(VolunteersObserver)}.
+     */
+    @Test
+    public void setVolunteersDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailServerPropertiesObserver)observer);
+        List<Volunteer> volunteers = Arrays.asList(
+                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+
+        application.setVolunteers(volunteers);
+
+        assertFalse(observer.getEmailServerPropertiesChanged());
+    }    // setVolunteersDoesNotNotifyEmailServerPropertiesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setRoles(List)} does not notify
+     * any observers registered with
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}.
+     */
+    @Test
+    public void setRolesDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailServerPropertiesObserver)observer);
+        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+
+        application.setRoles(roles);
+
+        assertFalse(observer.getEmailServerPropertiesChanged());
+    }    // setRolesDoesNotNotifyEmailServerPropertiesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEmailTemplate(Reader)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}.
+     */
+    @Test
+    public void setEmailTemplateDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailServerPropertiesObserver)observer);
+        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+
+        application.setEmailTemplate(emailTemplate);
+
+        assertFalse(observer.getEmailServerPropertiesChanged());
+    }    // setEmailTemplateDoesNotNotifyEmailServerPropertiesObservers()
+
+    /**
+     * Tests that a call to {@link Application#setEventProperties(List)} does
+     * not notify any observers registered with
+     * {@link Application#registerObserver(EmailServerPropertiesObserver)}.
+     */
+    @Test
+    public void setEventPropertiesDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EmailServerPropertiesObserver)observer);
+        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+
+        application.setEventProperties(eventProperties);
+
+        assertFalse(observer.getEmailServerPropertiesChanged());
+    }    // setEventPropertiesDoesNotNotifyEmailServerPropertiesObservers()
 
     /* registerObserver(EventPropertiesObserver) */
 
@@ -1733,5 +2062,23 @@ public class ApplicationTest {
 
         assertFalse(observer.getEventPropertiesChanged());
     }    // setEmailTemplateDoesNotNotifyEventPropertyObservers()
+
+    /**
+     * Tests that a call to
+     * {@link Application#setEmailServerProperties(bscmail.EmailServerProperties)}
+     * does not notify any observers registered with
+     * {@link Application#registerObserver(EventPropertiesObserver)}.
+     */
+    @Test
+    public void setEmailServerPropertiesDoesNotNotifyEventPropertiesObservers() throws IOException {
+        Application application = getTestApplication();
+        ApplicationObserver observer = new ApplicationObserver();
+        application.registerObserver((EventPropertiesObserver)observer);
+        EmailServerProperties emailServerProperties = new EmailServerProperties("Foo", "Bar", "Baz", false);
+
+        application.setEmailServerProperties(emailServerProperties);
+
+        assertFalse(observer.getEventPropertiesChanged());
+    }    // setEmailServerPropertiesDoesNotNotifyEventPropertiesObservers()
 
 }    // ApplicationTest

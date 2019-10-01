@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 package bscmail.gui;
 
 import bscmail.Application;
@@ -30,14 +28,17 @@ import bscmail.Shift;
 import bscmail.TestIOLayer;
 import bscmail.Volunteer;
 import bscmail.help.HelpDisplay;
+import bscmail.mail.Mailer;
 import iolayer.IOLayer;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
+ * Unit tests for {@link MailerFrame}.
  *
- * @author Wayne Miller
+ * @author Wayne Miller (waynem77@yahoo.com)
  */
-public class ManageRolePanelTest {
+public class MailerFrameTest {
 
     /**
      * Returns an application that can be used in tests.
@@ -54,27 +55,58 @@ public class ManageRolePanelTest {
         return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
+    /* constructor */
+
     /**
-     * Tests that
-     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} throws a
-     * {@link NullPointerException} when application is null.
+     * Tests that {@link MailerFrame#MailerFrame(bscmail.Application, Mailer)}
+     * throws a NullPointerException when application is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenApplicationIsNull() {
+    public void constructorThrowsExceptionWhenServerPropertiesIsNull() {
         Application application = null;
+        Mailer mailer = new Mailer(getTestApplication());
 
-        ManageRolesFrame frame = new ManageRolesFrame(application);
-    }    // constructorThrowsExceptionWhenApplicationIsNull()
+        MailerFrame mailerFrame = new MailerFrame(application, mailer);
+    }    // constructorThrowsExceptionWhenServerPropertiesIsNull()
 
     /**
      * Tests that
-     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} does not
-     * throw an exception when application is not null.
+     * {@link MailerFrame#MailerFrame(bscmail.Application, Mailer)}
+     * throws a NullPointerException when mailer is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenMailerIsNull() {
+        Application application = getTestApplication();
+        Mailer mailer = null;
+
+        MailerFrame mailerFrame = new MailerFrame(application, mailer);
+    }    // constructorThrowsExceptionWhenMailerIsNull()
+
+    /**
+     * Tests that
+     * {@link MailerFrame#MailerFrame(bscmail.Application, Mailer)}
+     * does not throw an exception when no argument is null.
      */
     @Test
-    public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
+    public void constructorDoesNotThrowExceptionWhenNoArgumentIsNull() {
         Application application = getTestApplication();
-        ManageRolesFrame frame = new ManageRolesFrame(application);
-    }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
+        Mailer mailer = new Mailer(application);
 
-}    // ManageRolePanelTest
+        MailerFrame mailerFrame = new MailerFrame(application, mailer);
+    }    // constructorDoesNotThrowExceptionWhenNoArgumentIsNull()
+
+    /* mailerStatusChanged */
+
+    /**
+     * Tests that {@link MailerFrame#mailerStatusChanged()} does not throw an
+     * exception.
+     */
+    @Test
+    public void mailerStatusChangedDoesNotThrowException() {
+        Application application = getTestApplication();
+        Mailer mailer = new Mailer(application);
+        MailerFrame mailerFrame = new MailerFrame(application, mailer);
+
+        mailerFrame.mailerStatusChanged();
+    }    // mailerStatusChangedDoesNotThrowException()
+}

@@ -168,7 +168,7 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
     /**
      * Event that fires when any radio button is clicked.
      *
-     * @param e the {@link ItemEvent} provided to the event handler
+     * @param e the event
      */
     private void radioButtonClicked(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {

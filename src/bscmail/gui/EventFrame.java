@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2018 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -27,6 +27,7 @@ import bscmail.Shift;
 import bscmail.VolunteersObserver;
 import bscmail.ShiftsObserver;
 import bscmail.Volunteer;
+import bscmail.gui.util.ComponentFactory;
 import bscmail.gui.util.EventFrameGrid;
 import bscmail.gui.util.EventPropertyControl;
 import bscmail.gui.util.ShiftControl;
@@ -80,6 +81,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         eventFrameGrid = new EventFrameGrid();
+        eventFrameGrid.setBorder(ComponentFactory.getStandardBorder());
         add(eventFrameGrid);
 
         setEventProperties(eventProperties);

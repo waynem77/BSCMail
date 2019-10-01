@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 package bscmail.gui;
 
 import bscmail.Application;
@@ -32,12 +30,14 @@ import bscmail.Volunteer;
 import bscmail.help.HelpDisplay;
 import iolayer.IOLayer;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
+ * Unit tests for {@link ManageEmailServerPropertiesFrame}.
  *
- * @author Wayne Miller
+ * @author Wayne Miller <waynem77@yahoo.com>
  */
-public class ManageRolePanelTest {
+public class ManageEmailServerPropertiesFrameTest {
 
     /**
      * Returns an application that can be used in tests.
@@ -56,25 +56,26 @@ public class ManageRolePanelTest {
 
     /**
      * Tests that
-     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} throws a
-     * {@link NullPointerException} when application is null.
+     * {@link ManageEmailServerPropertiesFrame#ManageEmailServerPropertiesFrame(bscmail.Application)}
+     * throws a {@link NullPointerException} when application is null.
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenApplicationIsNull() {
         Application application = null;
 
-        ManageRolesFrame frame = new ManageRolesFrame(application);
+        ManageEmailServerPropertiesFrame frame = new ManageEmailServerPropertiesFrame(application);
     }    // constructorThrowsExceptionWhenApplicationIsNull()
 
     /**
      * Tests that
-     * {@link ManageRolesFrame#ManageRolesFrame(bscmail.Application)} does not
-     * throw an exception when application is not null.
+     * {@link ManageEmailServerPropertiesFrame#ManageEmailServerPropertiesFrame(bscmail.Application)}
+     * does not throw an exception when application is not null.
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenApplicationIsNotNull() {
         Application application = getTestApplication();
-        ManageRolesFrame frame = new ManageRolesFrame(application);
+
+        ManageEmailServerPropertiesFrame frame = new ManageEmailServerPropertiesFrame(application);
     }    // constructorDoesNotThrowExceptionWhenApplicationIsNotNull()
 
-}    // ManageRolePanelTest
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,6 +20,7 @@
 package bscmail.gui;
 
 import bscmail.Application;
+import bscmail.gui.util.ComponentFactory;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -211,12 +212,14 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         final int HALF_STRUT_WIDTH = STRUT_WIDTH / 2;
 
         JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setBorder(ComponentFactory.getStandardBorder());
         add(scrollPane, constraints);
 
         constraints.gridx++;
         add(Box.createHorizontalStrut(HALF_STRUT_WIDTH), constraints);
 
         JPanel movementPanel = createMovementPanel();
+        movementPanel.setBorder(ComponentFactory.getStandardBorder());
         constraints.gridx++;
         add(movementPanel, constraints);
 
@@ -230,6 +233,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         add(Box.createHorizontalStrut(STRUT_WIDTH), constraints);
 
         JPanel actionPanel = createActionPanel();
+        actionPanel.setBorder(ComponentFactory.getStandardBorder());
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1.0;
         constraints.gridx++;
@@ -519,7 +523,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     /**
      * Displays a message box indicating that the frame is unable to save data.
      *
-     * @param e the causing exception
+     * @param e the exception
      */
     private void unableToSave(Exception e) {
         application.showErrorDialog(this, "Unable to save data", e);
