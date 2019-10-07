@@ -24,10 +24,11 @@ hs_err_pid*
 # Emacs backup files
 *~
 
-# Build, distribution, and lib directories
+# Library and geerated file directories
 build/*
 dist/*
 lib/*
+target/*
 
 # Local data files removed from source control
 emailServerProperties.xml
