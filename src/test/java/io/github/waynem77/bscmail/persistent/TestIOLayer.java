@@ -19,7 +19,6 @@
 
 package io.github.waynem77.bscmail.persistent;
 
-import io.github.waynem77.bscmail.ReadWritable;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
 import java.io.IOException;
 import java.util.ArrayList;

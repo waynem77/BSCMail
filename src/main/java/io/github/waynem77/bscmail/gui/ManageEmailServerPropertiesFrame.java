@@ -21,7 +21,7 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
 import io.github.waynem77.bscmail.gui.util.LabeledGrid;
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

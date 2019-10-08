@@ -19,8 +19,6 @@
 
 package io.github.waynem77.bscmail.persistent;
 
-import io.github.waynem77.bscmail.ReadWritable;
-import io.github.waynem77.bscmail.ReadWritableFactory;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

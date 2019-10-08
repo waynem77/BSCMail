@@ -19,7 +19,7 @@
 
 package io.github.waynem77.bscmail.iolayer;
 
-import io.github.waynem77.bscmail.ReadWritable;
+import io.github.waynem77.bscmail.persistent.ReadWritable;
 import java.io.IOException;
 import java.util.List;
 

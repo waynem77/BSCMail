@@ -19,7 +19,7 @@
 
 package io.github.waynem77.bscmail.gui;
 
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.EventProperty;
 import java.io.IOException;
 import java.util.Comparator;

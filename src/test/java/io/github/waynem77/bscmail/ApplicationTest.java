@@ -17,10 +17,23 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.waynem77.bscmail.persistent;
+package io.github.waynem77.bscmail;
 
 import io.github.waynem77.bscmail.help.HelpDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
+import io.github.waynem77.bscmail.persistent.EmailServerProperties;
+import io.github.waynem77.bscmail.persistent.EmailServerPropertiesObserver;
+import io.github.waynem77.bscmail.persistent.EmailTemplate;
+import io.github.waynem77.bscmail.persistent.EmailTemplateObserver;
+import io.github.waynem77.bscmail.persistent.EventPropertiesObserver;
+import io.github.waynem77.bscmail.persistent.EventProperty;
+import io.github.waynem77.bscmail.persistent.Role;
+import io.github.waynem77.bscmail.persistent.RolesObserver;
+import io.github.waynem77.bscmail.persistent.Shift;
+import io.github.waynem77.bscmail.persistent.ShiftsObserver;
+import io.github.waynem77.bscmail.persistent.TestIOLayer;
+import io.github.waynem77.bscmail.persistent.Volunteer;
+import io.github.waynem77.bscmail.persistent.VolunteersObserver;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -17,7 +17,7 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.waynem77.bscmail;
+package io.github.waynem77.bscmail.persistent;
 
 import java.util.HashMap;
 import java.util.Map;

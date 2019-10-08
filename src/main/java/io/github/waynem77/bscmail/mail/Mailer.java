@@ -19,7 +19,7 @@
 
 package io.github.waynem77.bscmail.mail;
 
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import com.sun.mail.smtp.SMTPTransport;
 import java.util.Date;

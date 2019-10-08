@@ -19,8 +19,8 @@
 
 package io.github.waynem77.bscmail.iolayer;
 
-import io.github.waynem77.bscmail.ReadWritable;
-import io.github.waynem77.bscmail.ReadWritableFactory;
+import io.github.waynem77.bscmail.persistent.ReadWritable;
+import io.github.waynem77.bscmail.persistent.ReadWritableFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;

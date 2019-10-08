@@ -19,7 +19,6 @@
 
 package io.github.waynem77.bscmail.persistent;
 
-import io.github.waynem77.bscmail.ReadWritableFactoryTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.*;

@@ -22,7 +22,7 @@ package io.github.waynem77.bscmail.gui;
 import io.github.waynem77.bscmail.mail.Mailer;
 import io.github.waynem77.bscmail.mail.MailerObserver;
 import io.github.waynem77.bscmail.mail.MailerStatus;
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

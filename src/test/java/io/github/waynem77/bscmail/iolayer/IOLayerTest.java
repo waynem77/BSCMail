@@ -19,8 +19,8 @@
 
 package io.github.waynem77.bscmail.iolayer;
 
-import io.github.waynem77.bscmail.ReadWritable;
-import io.github.waynem77.bscmail.ReadWritableFactory;
+import io.github.waynem77.bscmail.persistent.ReadWritable;
+import io.github.waynem77.bscmail.persistent.ReadWritableFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;

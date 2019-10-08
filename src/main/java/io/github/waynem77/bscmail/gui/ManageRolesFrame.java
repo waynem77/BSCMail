@@ -19,7 +19,7 @@
 
 package io.github.waynem77.bscmail.gui;
 
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.RolesObserver;
 import java.io.IOException;

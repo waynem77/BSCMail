@@ -20,7 +20,7 @@
 package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.Event;
 import java.awt.Dimension;
 import java.awt.GridLayout;

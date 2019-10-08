@@ -24,7 +24,7 @@ import io.github.waynem77.bscmail.gui.util.EventFrameGrid;
 import io.github.waynem77.bscmail.gui.util.EventPropertyControl;
 import io.github.waynem77.bscmail.gui.util.ShiftControl;
 import io.github.waynem77.bscmail.gui.util.VolunteerDisplayWrapper;
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.Event;
 import io.github.waynem77.bscmail.persistent.EventPropertiesObserver;
 import io.github.waynem77.bscmail.persistent.EventProperty;

@@ -17,7 +17,7 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.waynem77.bscmail.persistent;
+package io.github.waynem77.bscmail;
 
 import org.junit.*;
 import static org.junit.Assert.*;

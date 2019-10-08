@@ -22,8 +22,8 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.help.HelpDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
-import io.github.waynem77.bscmail.persistent.Application;
-import io.github.waynem77.bscmail.persistent.ApplicationInfo;
+import io.github.waynem77.bscmail.Application;
+import io.github.waynem77.bscmail.ApplicationInfo;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailTemplate;
 import io.github.waynem77.bscmail.persistent.EventProperty;

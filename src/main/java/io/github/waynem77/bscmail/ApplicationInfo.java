@@ -17,7 +17,7 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.waynem77.bscmail.persistent;
+package io.github.waynem77.bscmail;
 
 /**
  * A collection of information about the application, used by an

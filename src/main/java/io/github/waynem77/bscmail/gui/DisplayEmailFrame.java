@@ -23,7 +23,7 @@ import io.github.waynem77.bscmail.gui.util.ComponentFactory;
 import io.github.waynem77.bscmail.gui.util.LabeledGrid;
 import io.github.waynem77.bscmail.mail.MailMessage;
 import io.github.waynem77.bscmail.mail.Mailer;
-import io.github.waynem77.bscmail.persistent.Application;
+import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailTemplate;
 import io.github.waynem77.bscmail.persistent.Event;
