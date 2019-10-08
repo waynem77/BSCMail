@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Displays application help by opening and displaying a file.
+ * Displays application help by opening and displaying an external file.
  *
  * @author Wayne Miller
  * @since 3.1

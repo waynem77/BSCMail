@@ -21,7 +21,7 @@ package io.github.waynem77.bscmail;
 
 import io.github.waynem77.bscmail.gui.MainFrame;
 import io.github.waynem77.bscmail.help.HelpDisplay;
-import io.github.waynem77.bscmail.help.HelpFileDisplay;
+import io.github.waynem77.bscmail.help.HelpFileFromResourceDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
 import io.github.waynem77.bscmail.iolayer.XMLIOLayer;
 import io.github.waynem77.bscmail.persistent.Application;
@@ -101,7 +101,7 @@ public class Main {
         IOLayer<EventProperty> eventPropertiesIOLayer = new XMLIOLayer(EVENT_PROPERTIES_FILE, EventProperty.getEventPropertyFactory());
 
         final String USER_GUIDE_FILE = "userguide.pdf";
-        HelpDisplay helpDisplay = new HelpFileDisplay(USER_GUIDE_FILE);
+        HelpDisplay helpDisplay = new HelpFileFromResourceDisplay(USER_GUIDE_FILE);
 
         return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getApplication()
