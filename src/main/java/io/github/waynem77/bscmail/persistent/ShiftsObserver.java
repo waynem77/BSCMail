@@ -23,8 +23,8 @@ package io.github.waynem77.bscmail.persistent;
  * A class may implement the {@code ShiftsObserver} interface when it wants to
  * be informed of changes to the list of defined volunteer shifts.
  * 
- * @see Application
- * @see bscmail.Shift
+ * @see io.github.waynem77.bscmail.Application
+ * @see io.github.waynem77.bscmail.persistent.Shift
  * @since 2.0
  * @author Wayne Miller
  */

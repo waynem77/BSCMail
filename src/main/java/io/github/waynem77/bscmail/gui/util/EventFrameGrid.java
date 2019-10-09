@@ -33,10 +33,10 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
 /**
- * A control grid used in {@link bscmail.gui.EventFrame}. The grid contains a date
- * control for the event, a variable set of text controls for event properties,
- * a variable set of dropdown controls for shifts, and their corresponding
- * labels.
+ * A control grid used in {@link io.github.waynem77.bscmail.gui.EventFrame}. The
+ * grid contains a date control for the event, a variable set of text controls
+ * for event properties, a variable set of dropdown controls for shifts, and
+ * their corresponding labels.
  *
  * This class is something of a facade for {@link GroupedGrid}.
  *

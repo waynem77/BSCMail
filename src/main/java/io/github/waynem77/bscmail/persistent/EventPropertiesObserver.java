@@ -23,7 +23,7 @@ package io.github.waynem77.bscmail.persistent;
  * A class may implement the {@code ShiftsObserver} interface when it wants to
  * be informed of changes to the list of defined event properties.
  *
- * @see Application
+ * @see io.github.waynem77.bscmail.Application
  * @since 3.0
  * @author Chaitra Mayya
  */

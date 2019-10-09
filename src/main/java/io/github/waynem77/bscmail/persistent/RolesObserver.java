@@ -27,8 +27,8 @@ package io.github.waynem77.bscmail.persistent;
  * A class may implement the {@code RolesObserver} interface when it wants to
  * be informed of changes to the list of defined roles.
  *
- * @see Application
- * @see bscmail.Volunteer
+ * @see io.github.waynem77.bscmail.Application
+ * @see io.github.waynem77.bscmail.persistent.Volunteer
  * @since 3.0
  * @author Nathan Cordner, on behalf of Vecna
  */

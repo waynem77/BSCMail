@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * A class may implement this interface to be read from and written to disk by
- * an {@link iolayer.IOLayer}
+ * an {@link io.github.waynem77.bscmail.iolayer.IOLayer}
  * 
  * @author Wayne Miller
  * @since 2.1

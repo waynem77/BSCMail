@@ -23,7 +23,7 @@ package io.github.waynem77.bscmail.persistent;
  * A class may implement the {@code EmailTemplateObserver} interface when it
  * wants to be informed of changes to the defined email template.
  *
- * @see Application
+ * @see io.github.waynem77.bscmail.Application
  * @since 3.4
  * @author Wayne Miller (waynem77@yahoo.com)
  */

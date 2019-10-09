@@ -39,8 +39,9 @@ import java.util.Map;
  * pre-schedule and post-schedule text are simple strings, placed before and
  * after the schedule in the generated email body. The subject line text is a
  * string of a format appropriate for a
- * {@link bscmail.util.format.EmailFormatter}. The date format string is a
- * string of a format appropriate for a {@link java.text.SimpleDateFormat}.
+ * {@link io.github.waynem77.bscmail.util.format.EmailFormatter}. The date
+ * format string is a string of a format appropriate for a
+ * {@link java.text.SimpleDateFormat}.
  *
  * @author wayne.miller
  */

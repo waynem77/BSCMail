@@ -38,8 +38,9 @@ import java.util.regex.Pattern;
  * <li>Brace characters may be escaped: "<strong>{{</strong>" produces "{", and
  * "<strong>}}</strong>" produces "}"</li>
  * <li>"<strong>{date}</strong>" produces the event date in the format given by
- * the application's {@link bscmail.EmailTemplate}, or "" if the event date is
- * null.</li>
+ * the application's
+ * {@link io.github.waynem77.bscmail.persistent.EmailTemplate}, or "" if the
+ * event date is null.</li>
  * </ul>
  *
  * @author Wayne Miller
