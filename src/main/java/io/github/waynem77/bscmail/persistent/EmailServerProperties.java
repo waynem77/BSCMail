@@ -60,6 +60,12 @@ public class EmailServerProperties implements Cloneable, Serializable, ReadWrita
     public static class Factory implements ReadWritableFactory<EmailServerProperties> {
 
         /**
+         * Constructs a new email server properties factory.
+         */
+        Factory() {
+        }    // Factory()
+
+        /**
          * Constructs an EmailServerProperties object from the given
          * read-writable properties. If the factory is unable to create an
          * EmailServerProperties object from the given properties, this method

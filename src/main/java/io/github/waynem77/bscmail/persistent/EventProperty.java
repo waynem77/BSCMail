@@ -57,7 +57,7 @@ public class EventProperty implements Cloneable, Serializable, ReadWritable {
         /**
          * Constructs a new EventProperty factory.
          */
-        private Factory() {
+        Factory() {
         }    // Factory()
 
         /**

@@ -58,7 +58,7 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
         /**
          * Constructs a new shift factory.
          */
-        private Factory() {
+        Factory() {
         }
 
         /**

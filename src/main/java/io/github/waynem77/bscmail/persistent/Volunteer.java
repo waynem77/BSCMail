@@ -99,7 +99,7 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
         /**
          * Constructs a new volunteer factory.
          */
-        private Factory() {
+        Factory() {
             // do nothing
         }
 

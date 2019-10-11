@@ -140,7 +140,7 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
         /**
          * Constructs a new email template factory.
          */
-        private Factory() {
+        Factory() {
         }    // Factory()
 
         /**

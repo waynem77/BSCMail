@@ -57,7 +57,7 @@ public class Role implements Cloneable, Serializable, ReadWritable {
         /**
          * Constructs a new role factory.
          */
-        private Factory() {
+        Factory() {
         }
 
         /**

@@ -23,6 +23,7 @@ import io.github.waynem77.bscmail.gui.MainFrame;
 import io.github.waynem77.bscmail.help.HelpDisplay;
 import io.github.waynem77.bscmail.help.HelpFileFromResourceDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
+import io.github.waynem77.bscmail.iolayer.IOLayerFactory;
 import io.github.waynem77.bscmail.iolayer.XMLIOLayer;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailTemplate;
@@ -80,23 +81,37 @@ public class Main {
         final String APPLICATION_COPYRIGHT = "Copyright © 2014-2019 its authors.  See the file \"AUTHORS\" for details.";
         ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
 
+        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+
+        final Class SHIFTS_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class SHIFTS_READ_WRITABLE_CLASS = Shift.class;
         final String SHIFTS_FILE = "shifts.xml";
-        IOLayer<Shift> shiftsIOLayer = new XMLIOLayer(SHIFTS_FILE, Shift.getShiftFactory());
+        IOLayer<Shift> shiftsIOLayer = ioLayerFactory.createIOLayer(SHIFTS_IOLAYER_CLASS, SHIFTS_READ_WRITABLE_CLASS, new Object[]{ SHIFTS_FILE });
 
+        final Class VOLUNTEERS_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class VOLUNTEERS_READ_WRITABLE_CLASS = Volunteer.class;
         final String VOLUNTEERS_FILE = "volunteers.xml";
-        IOLayer<Volunteer> volunteersIOLayer = new XMLIOLayer(VOLUNTEERS_FILE, Volunteer.getVolunteerFactory());
+        IOLayer<Volunteer> volunteersIOLayer = ioLayerFactory.createIOLayer(VOLUNTEERS_IOLAYER_CLASS, VOLUNTEERS_READ_WRITABLE_CLASS, new Object[]{ VOLUNTEERS_FILE });
 
+        final Class ROLES_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class ROLES_READ_WRITABLE_CLASS = Role.class;
         final String ROLES_FILE = "roles.xml";
-        IOLayer<Role> rolesIOLayer = new XMLIOLayer(ROLES_FILE, Role.getRoleFactory());
+        IOLayer<Role> rolesIOLayer = ioLayerFactory.createIOLayer(ROLES_IOLAYER_CLASS, ROLES_READ_WRITABLE_CLASS, new Object[]{ ROLES_FILE });
 
+        final Class EMAIL_TEMPLATE_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class EMAIL_TEMPLATE_READ_WRITABLE_CLASS = EmailTemplate.class;
         final String EMAIL_TEMPLATE_FILE = "emailTemplate.xml";
-        IOLayer<EmailTemplate> emailTemplateIOLayer = new XMLIOLayer(EMAIL_TEMPLATE_FILE, EmailTemplate.getEmailTemplateFactory());
+        IOLayer<EmailTemplate> emailTemplateIOLayer = ioLayerFactory.createIOLayer(EMAIL_TEMPLATE_IOLAYER_CLASS, EMAIL_TEMPLATE_READ_WRITABLE_CLASS, new Object[]{ EMAIL_TEMPLATE_FILE });
 
+        final Class EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class EMAIL_SERVER_PROPERTIES_READ_WRITABLE_CLASS = EmailServerProperties.class;
         final String EMAIL_SERVER_PROPERTIES_FILE = "emailServerProperties.xml";
-        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new XMLIOLayer(EMAIL_SERVER_PROPERTIES_FILE, EmailServerProperties.getEmailServerPropertiesFactory());
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = ioLayerFactory.createIOLayer(EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS, EMAIL_SERVER_PROPERTIES_READ_WRITABLE_CLASS, new Object[]{ EMAIL_SERVER_PROPERTIES_FILE });
 
+        final Class EVENT_PROPERTIES_IOLAYER_CLASS = XMLIOLayer.class;
+        final Class EVENT_PROPERTIES_READ_WRITABLE_CLASS = EventProperty.class;
         final String EVENT_PROPERTIES_FILE = "eventProperties.xml";
-        IOLayer<EventProperty> eventPropertiesIOLayer = new XMLIOLayer(EVENT_PROPERTIES_FILE, EventProperty.getEventPropertyFactory());
+        IOLayer<EventProperty> eventPropertiesIOLayer = ioLayerFactory.createIOLayer(EVENT_PROPERTIES_IOLAYER_CLASS, EVENT_PROPERTIES_READ_WRITABLE_CLASS, new Object[]{ EVENT_PROPERTIES_FILE });
 
         final String USER_GUIDE_FILE = "userguide.pdf";
         HelpDisplay helpDisplay = new HelpFileFromResourceDisplay(USER_GUIDE_FILE);
