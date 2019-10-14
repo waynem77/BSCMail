@@ -23,7 +23,7 @@ import io.github.waynem77.bscmail.gui.MainFrame;
 import io.github.waynem77.bscmail.help.HelpDisplay;
 import io.github.waynem77.bscmail.help.HelpFileFromResourceDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
-import io.github.waynem77.bscmail.iolayer.IOLayerFactory;
+import io.github.waynem77.bscmail.iolayer.IOLayerFactoryImpl;
 import io.github.waynem77.bscmail.iolayer.XMLIOLayer;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailTemplate;
@@ -81,7 +81,7 @@ public class Main {
         final String APPLICATION_COPYRIGHT = "Copyright © 2014-2019 its authors.  See the file \"AUTHORS\" for details.";
         ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
 
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
 
         final Class SHIFTS_IOLAYER_CLASS = XMLIOLayer.class;
         final Class SHIFTS_READ_WRITABLE_CLASS = Shift.class;

@@ -20,15 +20,15 @@
 package io.github.waynem77.bscmail.persistent;
 
 /**
- * A factory that creates {@link ReadWritableFactory} objects.
+ * Factory interface for {@link ReadWritableFactory} objects.
  *
  * @author Wayne Miller (waynem77@yahoo.com)
  * @since 4.0
  */
-public class ReadWritableFactoryFactory {
+public interface ReadWritableFactoryFactory {
 
     /**
-     * Returns a {@link ReadWritableFactory} corresponding to the given }@link
+     * Returns a {@link ReadWritableFactory} corresponding to the given {@link
      * ReadWritable} implementation.
      *
      * @param <T> the type of the ReadWritable implementation
@@ -39,25 +39,6 @@ public class ReadWritableFactoryFactory {
      * for readWritableClass
      * @throws NullPointerException if readWritableClass is null
      */
-    public <T extends ReadWritable> ReadWritableFactory getReadWritableFactory(Class<T> readWritableClass) {
-        if (readWritableClass == null) {
-            throw new NullPointerException("readWritableClass may not be null");
-        }    // if
-
-        if (readWritableClass.equals(EmailServerProperties.class)) {
-            return new EmailServerProperties.Factory();
-        } else if (readWritableClass.equals(EmailTemplate.class)) {    // if
-            return new EmailTemplate.Factory();
-        } else if (readWritableClass.equals(EventProperty.class)) {    // else if
-            return new EventProperty.Factory();
-        } else if (readWritableClass.equals(Role.class)) {    // else if
-            return new Role.Factory();
-        } else if (readWritableClass.equals(Shift.class)) {    // else if
-            return new Shift.Factory();
-        } else if (readWritableClass.equals(Volunteer.class)) {    // else if
-            return new Volunteer.Factory();
-        }    // else if
-        throw new IllegalArgumentException("Method not implemented for " + readWritableClass);
-    }
+    public <T extends ReadWritable> ReadWritableFactory getReadWritableFactory(Class<T> readWritableClass);
 
 }    // ReadWritableFactoryFactory

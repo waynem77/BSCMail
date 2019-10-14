@@ -20,37 +20,20 @@
 package io.github.waynem77.bscmail.iolayer;
 
 import io.github.waynem77.bscmail.persistent.ReadWritable;
-import io.github.waynem77.bscmail.persistent.ReadWritableFactory;
-import io.github.waynem77.bscmail.persistent.ReadWritableFactoryFactory;
-import java.io.Serializable;
 
 /**
- * Factory for {@link IOLayer} objects.
+ * Factory interface for {@link IOLayer} objects.
  *
  * @author Wayne Miller (waynem77@yahoo.com)
  * @since 4.0
  */
-public class IOLayerFactory {
+public interface IOLayerFactory {
 
     /**
      * Creates an {@link IOLayer} implementation of the specified class
      * parameterized for the specified {@link ReadWritable} implementation using
      * the given arguments. The arguments depend on the type of IOLayer being
-     * created.
-     *
-     * <br>
-     *
-     * <table style="border: 1px solid black">
-     * <caption>{@code arguments} Specifications for IOLayer Implementations</caption>
-     * <tr>
-     * <th>SerializingIOLayer</th>
-     * <td>one element, a string containing the pathname of the output file</td>
-     * </tr>
-     * <tr>
-     * <th>XMLIOLayer</th>
-     * <td>one element, a string containing the pathname of the output file</td>
-     * </tr>
-     * </table>
+     * created and the IOLayerFactory implementation.
      *
      * @param <T> the type of the ReadWritable implementation
      * @param ioLayerClass the IOLayer implementation class; may not be null
@@ -63,76 +46,6 @@ public class IOLayerFactory {
      * IOLayer being created, or if a factory has not been implemented for
      * ioLayerClass
      */
-    public <T extends ReadWritable> IOLayer<T> createIOLayer(Class<? extends IOLayer> ioLayerClass, Class<T> readWritableClass, Object[] arguments) {
-        if (ioLayerClass == null) {
-            throw new NullPointerException("ioLayerClass may not be null");
-        }  // if
-        if (readWritableClass == null) {
-            throw new NullPointerException("readWritableClass may not be null");
-        }  // if
-
-        if (arguments == null) {
-            arguments = new Object[0];
-        }    // if
-
-        ReadWritableFactoryFactory rwFactoryFactory = new ReadWritableFactoryFactory();
-        ReadWritableFactory rwFactory = rwFactoryFactory.getReadWritableFactory(readWritableClass);
-
-        if (ioLayerClass.equals(SerializingIOLayer.class)) {
-            return createSerializingIOLayer(rwFactory, arguments);
-        }    // if
-        if (ioLayerClass.equals(XMLIOLayer.class)) {
-            return createXMLIOLayer(rwFactory, arguments);
-        }    // if
-        throw new IllegalArgumentException("Method not implemented for " + ioLayerClass);
-    }    // createIOLayer
-
-    /**
-     * Creates a {@link SerializingIOLayer} using the given
-     * {@link ReadWritableFactory} and arguments.
-     *
-     * @param <T> the type of the ReadWritableFactory
-     * @param readWritableFactory the ReadWritableFactory; may not be null
-     * @param arguments the arguments; may not be null; must contain exactly one
-     * argument, a string containing the pathname of the data file
-     *
-     * @return a SerializingIOLayer
-     * @throws IllegalArgumentException if arguments does not meet the criteria
-     * above
-     */
-    private <T extends ReadWritable & Serializable> SerializingIOLayer<T> createSerializingIOLayer(ReadWritableFactory<T> readWritableFactory, Object[] arguments) {
-        assert (readWritableFactory != null);
-        assert (arguments != null);
-        if (arguments.length != 1) {
-            throw new IllegalArgumentException("arguments must have length 1");
-        }    // if
-
-        String pathname = arguments[0].toString();
-        return new SerializingIOLayer(pathname, readWritableFactory);
-    }    // createSerializingIOLayer()
-
-    /**
-     * Creates an {@link XMLIOLayer} using the given {@link ReadWritableFactory}
-     * and arguments.
-     *
-     * @param <T> the type of the ReadWritableFactory
-     * @param readWritableFactory the ReadWritableFactory; may not be null
-     * @param arguments the arguments; may not be null; must contain exactly one
-     * argument, a string containing the pathname of the data file
-     *
-     * @return an XMLIOLayer
-     * @throws IllegalArgumentException if arguments does not meet the criteria
-     * above
-     */
-    private <T extends ReadWritable> XMLIOLayer<T> createXMLIOLayer(ReadWritableFactory<T> readWritableFactory, Object[] arguments) {
-        assert (readWritableFactory != null);
-        assert (arguments != null);
-        if (arguments.length != 1) {
-            throw new IllegalArgumentException("arguments must have length 1");
-        }    // if
-
-        String pathname = arguments[0].toString();
-        return new XMLIOLayer(pathname, readWritableFactory);
-    }    // createXMLIOLayer()
+    public <T extends ReadWritable> IOLayer<T> createIOLayer(Class<? extends IOLayer> ioLayerClass, Class<T> readWritableClass, Object[] arguments);
 
 }    // IOLayerFactory

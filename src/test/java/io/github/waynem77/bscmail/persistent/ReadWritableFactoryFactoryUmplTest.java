@@ -25,20 +25,20 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for {@link ReadWritableFactoryFactory}
+ * Unit tests for {@link ReadWritableFactoryFactoryImpl}
  *
  * @author Wayne Miller (waynem77@yahoo.com)
  */
-public class ReadWritableFactoryFactoryTest {
+public class ReadWritableFactoryFactoryUmplTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} throws a
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} throws a
      * NullPointerException when readWritableClass is null.
      */
     @Test(expected = NullPointerException.class)
     public void getReadWritableFactoryThrowsExceptionWhenReadWritableClassIsNull() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<? extends ReadWritable> readWritableClass = null;
 
         factoryFactory.getReadWritableFactory(readWritableClass);
@@ -46,7 +46,7 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} throws
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} throws
      * an IllegalArgumentException when no factory has been implemented for
      * readWritableClass.
      */
@@ -56,7 +56,7 @@ public class ReadWritableFactoryFactoryTest {
             @Override public Map<String, Object> getReadWritableProperties() { return null; }
             @Override public ReadWritableFactory<FactoryNotImplemented> getReadWritableFactory() { return null; }
         }    // FactoryNotImplemented
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<? extends ReadWritable> readWritableClass = FactoryNotImplemented.class;
 
         factoryFactory.getReadWritableFactory(readWritableClass);
@@ -64,12 +64,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link EmailServerProperties}.
      */
     @Test
     public void getReadWritableFactoryWorksWithEmailServerProperties() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<EmailServerProperties> readWritableClass = EmailServerProperties.class;
 
         ReadWritableFactory<EmailServerProperties> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -82,12 +82,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link EmailTemplate}.
      */
     @Test
     public void getReadWritableFactoryWorksWithEmailTemplate() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<EmailTemplate> readWritableClass = EmailTemplate.class;
 
         ReadWritableFactory<EmailTemplate> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -100,12 +100,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link EventProperty}.
      */
     @Test
     public void getReadWritableFactoryWorksWithEventProperty() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<EventProperty> readWritableClass = EventProperty.class;
 
         ReadWritableFactory<EventProperty> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -118,12 +118,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link Role}.
      */
     @Test
     public void getReadWritableFactoryWorksWithRole() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<Role> readWritableClass = Role.class;
 
         ReadWritableFactory<Role> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -136,12 +136,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link Shift}.
      */
     @Test
     public void getReadWritableFactoryWorksWithShift() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<Shift> readWritableClass = Shift.class;
 
         ReadWritableFactory<Shift> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -154,12 +154,12 @@ public class ReadWritableFactoryFactoryTest {
 
     /**
      * Tests that
-     * {@link ReadWritableFactoryFactory#getReadWritableFactory(Class)} works
+     * {@link ReadWritableFactoryFactoryImpl#getReadWritableFactory(Class)} works
      * with {@link Volunteer}.
      */
     @Test
     public void getReadWritableFactoryWorksWithVolunteer() {
-        ReadWritableFactoryFactory factoryFactory = new ReadWritableFactoryFactory();
+        ReadWritableFactoryFactoryImpl factoryFactory = new ReadWritableFactoryFactoryImpl();
         Class<Volunteer> readWritableClass = Volunteer.class;
 
         ReadWritableFactory<Volunteer> rwFactory = factoryFactory.getReadWritableFactory(readWritableClass);
@@ -170,4 +170,4 @@ public class ReadWritableFactoryFactoryTest {
         assertNotNull(received);
     }    // getReadWritableFactoryWorksWithVolunteer
 
-}
+}    // ReadWritableFactoryFactoryImplTest

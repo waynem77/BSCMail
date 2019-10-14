@@ -26,19 +26,19 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for {@link IOLayerFactory}.
+ * Unit tests for {@link IOLayerFactoryImpl}.
  *
  * @author Wayne Miller (waynem77@yahoo.com)
  */
-public class IOLayerFactoryTest {
+public class IOLayerFactoryImplTest {
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws a NullPointerException when ioLayerClass is null.
      */
     @Test(expected = NullPointerException.class)
     public void createIOLayerThrowsExceptionWhenIoLayerClassIsNull() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = null;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[0];
@@ -47,12 +47,12 @@ public class IOLayerFactoryTest {
     }    // createIOLayerThrowsExceptionWhenIoLayerClassIsNull
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws a NullPointerException when readWritableClass is null.
      */
     @Test(expected = NullPointerException.class)
     public void createIOLayerThrowsExceptionWhenReadWritableClassIsNull() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = XMLIOLayer.class;
         Class<? extends ReadWritable> readWritableClass = null;
         Object[] arguments = new Object[0];
@@ -61,7 +61,7 @@ public class IOLayerFactoryTest {
     }    // createIOLayerThrowsExceptionWhenReadWritableClassIsNull
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws a NullPointerException when ioLayerClass is null.
      */
     @Test(expected = IllegalArgumentException.class)
@@ -70,7 +70,7 @@ public class IOLayerFactoryTest {
             @Override public List getAll() { return null; }
             @Override public void setAll(List list) { }
         }    // FactoryNotImplemented
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = FactoryNotImplemented.class;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[0];
@@ -81,12 +81,12 @@ public class IOLayerFactoryTest {
     /* tests with SerializingIOLayer */
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * works with {@link SerializingIOLayer}.
      */
     @Test
     public void createIOLayerWorksWithSerializingIoLayer() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = SerializingIOLayer.class;
         Class<Shift> readWritableClass = Shift.class;
         Object[] arguments = new Object[]{ "foo" };
@@ -97,13 +97,13 @@ public class IOLayerFactoryTest {
     }    // createIOLayerWorksWithSerializingIoLayer()
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws an IllegalArgumentException with {@link SerializingIOLayer} when
      * there are too few arguments.
      */
     @Test(expected = IllegalArgumentException.class)
     public void createIOLayerThrowsExceptionWithSerializingIoLayerWhenThereAreTooFewArguments() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = SerializingIOLayer.class;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[0];
@@ -112,13 +112,13 @@ public class IOLayerFactoryTest {
     }    // createIOLayerThrowsExceptionWithSerializingIoLayerWhenThereAreTooFewArguments()
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws an IllegalArgumentException with {@link SerializingIOLayer} when
      * there are too many arguments.
      */
     @Test(expected = IllegalArgumentException.class)
     public void createIOLayerThrowsExceptionWithSerializingIoLayerWhenThereAreTooManyArguments() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = SerializingIOLayer.class;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[]{ "foo", "bar" };
@@ -129,12 +129,12 @@ public class IOLayerFactoryTest {
     /* tests with XMLIOLayer */
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * works with {@link XMLIOLayer}.
      */
     @Test
     public void createIOLayerWorksWithXMLIoLayer() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = XMLIOLayer.class;
         Class<Shift> readWritableClass = Shift.class;
         Object[] arguments = new Object[]{ "foo" };
@@ -145,13 +145,13 @@ public class IOLayerFactoryTest {
     }    // createIOLayerWorksWithXMLIoLayer()
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws an IllegalArgumentException with {@link XMLIOLayer} when
      * there are too few arguments.
      */
     @Test(expected = IllegalArgumentException.class)
     public void createIOLayerThrowsExceptionWithXMLIoLayerWhenThereAreTooFewArguments() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = XMLIOLayer.class;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[0];
@@ -160,13 +160,13 @@ public class IOLayerFactoryTest {
     }    // createIOLayerThrowsExceptionWithXMLIoLayerWhenThereAreTooFewArguments()
 
     /**
-     * Tests that {@link IOLayerFactory#createIOLayer(Class, Class, Object[])}
+     * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
      * throws an IllegalArgumentException with {@link XMLIOLayer} when
      * there are too many arguments.
      */
     @Test(expected = IllegalArgumentException.class)
     public void createIOLayerThrowsExceptionWithXMLIoLayerWhenThereAreTooManyArguments() {
-        IOLayerFactory ioLayerFactory = new IOLayerFactory();
+        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
         Class<? extends IOLayer> ioLayerClass = XMLIOLayer.class;
         Class<? extends ReadWritable> readWritableClass = io.github.waynem77.bscmail.persistent.Shift.class;
         Object[] arguments = new Object[]{ "foo", "bar" };
@@ -174,4 +174,4 @@ public class IOLayerFactoryTest {
         ioLayerFactory.createIOLayer(ioLayerClass, readWritableClass, arguments);
     }    // createIOLayerThrowsExceptionWithXMLIoLayerWhenThereAreTooManyArguments()
 
-}
+}    // IOLayerFactoryImplTest
