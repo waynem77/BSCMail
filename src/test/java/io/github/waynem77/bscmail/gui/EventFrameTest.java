@@ -29,7 +29,7 @@ import io.github.waynem77.bscmail.persistent.Event;
 import io.github.waynem77.bscmail.persistent.EventProperty;
 import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.Shift;
-import io.github.waynem77.bscmail.persistent.TestIOLayer;
+import io.github.waynem77.bscmail.iolayer.TestIOLayer;
 import io.github.waynem77.bscmail.persistent.Volunteer;
 import java.io.IOException;
 import java.util.ArrayList;

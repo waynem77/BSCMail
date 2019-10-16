@@ -17,9 +17,9 @@
  * along with BSCMail.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.waynem77.bscmail.persistent;
+package io.github.waynem77.bscmail.iolayer;
 
-import io.github.waynem77.bscmail.iolayer.IOLayer;
+import io.github.waynem77.bscmail.persistent.ReadWritable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
