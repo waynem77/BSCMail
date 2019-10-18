@@ -50,7 +50,49 @@ import javax.swing.JFrame;
 public class Application {
 
     /*
-     * Private class properties.
+     * Static methods
+     */
+
+    /**
+     * Creates and returns a new application.
+     *
+     * @param applicationInfo the application info object for the application;
+     * may not be null
+     * @param shiftsIOLayer the I/O layer to be used for storing shifts; may not
+     * be null
+     * @param volunteersIOLayer the I/O layer to be used for storing volunteers;
+     * may not be null
+     * @param rolesIOLayer the I/O layer to be used for storing roles; may not
+     * be null
+     * @param emailTemplateIOLayer the I/O layer to be used for storing the
+     * email template; may not be null
+     * @param emailServerPropertiesIOLayer the I/O layer to be used for storing
+     * the email server properties; may not be null
+     * @param eventPropertiesIOLayer the I/O layer to be used for storing the
+     * event properties; may not be null
+     * @param helpDisplay the help displayer to use; may not be null
+     * @throws NullPointerException if any parameter is null
+     */
+    public static Application createApplication(ApplicationInfo applicationInfo,
+            IOLayer<Shift> shiftsIOLayer,
+            IOLayer<Volunteer> volunteersIOLayer,
+            IOLayer<Role> rolesIOLayer,
+            IOLayer<EmailTemplate> emailTemplateIOLayer,
+            IOLayer<EmailServerProperties> emailServerPropertiesIOLayer,
+            IOLayer<EventProperty> eventPropertiesIOLayer,
+            HelpDisplay helpDisplay) {
+        return new Application(applicationInfo,
+                shiftsIOLayer,
+                volunteersIOLayer,
+                rolesIOLayer,
+                emailTemplateIOLayer,
+                emailServerPropertiesIOLayer,
+                eventPropertiesIOLayer,
+                helpDisplay);
+    }    // createApplication()
+
+    /*
+     * Class properties
      */
 
     /**
@@ -153,6 +195,10 @@ public class Application {
      */
     private final HelpDisplay helpDisplay;
 
+    /*
+     * Class methods
+     */
+
     /**
      * Constructs a new application.
      *
@@ -172,14 +218,14 @@ public class Application {
      * @param helpDisplay the help displayer; may not be null
      * @throws NullPointerException if any parameter is null
      */
-    public Application(ApplicationInfo applicationInfo,
+    private Application(ApplicationInfo applicationInfo,
             IOLayer<Shift> shiftsIOLayer,
             IOLayer<Volunteer> volunteersIOLayer,
             IOLayer<Role> rolesIOLayer,
             IOLayer<EmailTemplate> emailTemplateIOLayer,
             IOLayer<EmailServerProperties> emailServerPropertiesIOLayer,
             IOLayer<EventProperty> eventPropertiesIOLayer,
-            HelpDisplay helpDisplay) throws ExceptionInInitializerError {
+            HelpDisplay helpDisplay) {
         if (applicationInfo == null) {
             throw new NullPointerException("applicationInfo may not be null");
         }    // if

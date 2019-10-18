@@ -116,6 +116,6 @@ public class Main {
         final String USER_GUIDE_FILE = "userguide.pdf";
         HelpDisplay helpDisplay = new HelpFileFromResourceDisplay(USER_GUIDE_FILE);
 
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getApplication()
 }

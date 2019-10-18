@@ -93,7 +93,7 @@ public class ApplicationTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /*
@@ -118,7 +118,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
@@ -137,7 +137,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
 
     /**
@@ -156,7 +156,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenVolunteersIoLayerIsNull()
 
     /**
@@ -175,7 +175,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenRolesIoLayerIsNull()
 
     /**
@@ -194,7 +194,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEmailTemplateIoLayerIsNull()
 
     /**
@@ -214,7 +214,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull()
 
     /**
@@ -233,7 +233,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = null;
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenEventPropertiesIoLayerIsNull()
 
     /**
@@ -252,7 +252,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = null;
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorThrowsExceptionWhenHelpDisplayIsNull()
 
     /**
@@ -271,7 +271,7 @@ public class ApplicationTest {
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
 
     /* getApplicationName */
@@ -312,7 +312,7 @@ public class ApplicationTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getApplicationName();
 
@@ -358,7 +358,7 @@ public class ApplicationTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getVersion();
 
@@ -405,7 +405,7 @@ public class ApplicationTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        Application application = new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
 
         String received = application.getCopyright();
 

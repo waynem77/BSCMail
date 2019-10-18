@@ -65,7 +65,7 @@ public class EventFrameTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
-        return new Application(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
     }    // getTestApplication()
 
     /**
