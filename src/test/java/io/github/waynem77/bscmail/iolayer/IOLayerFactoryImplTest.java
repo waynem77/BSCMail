@@ -62,7 +62,7 @@ public class IOLayerFactoryImplTest {
 
     /**
      * Tests that {@link IOLayerFactoryImpl#createIOLayer(Class, Class, Object[])}
-     * throws a NullPointerException when ioLayerClass is null.
+     * throws a NullPointerException when ioLayerClass is unknown.
      */
     @Test(expected = IllegalArgumentException.class)
     public void createIOLayerThrowsExceptionWhenIoLayerClassIsUnknown() {
