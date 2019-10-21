@@ -20,17 +20,9 @@
 package io.github.waynem77.bscmail;
 
 import io.github.waynem77.bscmail.gui.MainFrame;
-import io.github.waynem77.bscmail.help.HelpDisplay;
-import io.github.waynem77.bscmail.help.HelpFileFromResourceDisplay;
-import io.github.waynem77.bscmail.iolayer.IOLayer;
-import io.github.waynem77.bscmail.iolayer.IOLayerFactoryImpl;
-import io.github.waynem77.bscmail.iolayer.XMLIOLayer;
-import io.github.waynem77.bscmail.persistent.EmailServerProperties;
-import io.github.waynem77.bscmail.persistent.EmailTemplate;
-import io.github.waynem77.bscmail.persistent.EventProperty;
-import io.github.waynem77.bscmail.persistent.Role;
-import io.github.waynem77.bscmail.persistent.Shift;
-import io.github.waynem77.bscmail.persistent.Volunteer;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import javax.swing.JFrame;
 
 /**
@@ -44,6 +36,10 @@ import javax.swing.JFrame;
  */
 public class Main {
 
+    /*
+     * Static methods
+     */
+
     /**
      * Main program.  This method just executes {@link Main#run()}.
      *
@@ -55,67 +51,42 @@ public class Main {
         main.run();
     }    // main(String[] args)
 
+    /*
+     * Class properties and methods
+     */
+
     /**
-     * Runs and tests the system.
+     * The name of the application properties resource.
+     */
+    private final String APPLICATION_PROPERTIES_FILE = "application.properties";
+
+    /**
+     * Runs the system.
      */
     private void run() {
-        Application application = getApplication();
-        JFrame frame = new MainFrame(application);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        try {
+            Application application = getApplication();
+            JFrame frame = new MainFrame(application);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }    // run()
 
     /**
      * Returns the application used in this program.
      *
-     * Note to developers: This method defines the application information used
-     * by the application. Any changes to the name, version, copyright, or
-     * datafiles should occur here.
-     *
      * @return the application used in this program
+     * @throws IOException if the method is unable to read the application
+     * properties resource
      * @since 3.1
      */
-    private Application getApplication() {
-        final String APPLICATION_NAME = "BSCMail";
-        final String APPLICATION_VERSION = "3.4";
-        final String APPLICATION_COPYRIGHT = "Copyright © 2014-2019 its authors.  See the file \"AUTHORS\" for details.";
-        ApplicationInfo applicationInfo = new ApplicationInfo(APPLICATION_NAME, APPLICATION_VERSION, APPLICATION_COPYRIGHT);
-
-        IOLayerFactoryImpl ioLayerFactory = new IOLayerFactoryImpl();
-
-        final Class SHIFTS_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class SHIFTS_READ_WRITABLE_CLASS = Shift.class;
-        final String SHIFTS_FILE = "shifts.xml";
-        IOLayer<Shift> shiftsIOLayer = ioLayerFactory.createIOLayer(SHIFTS_IOLAYER_CLASS, SHIFTS_READ_WRITABLE_CLASS, new Object[]{ SHIFTS_FILE });
-
-        final Class VOLUNTEERS_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class VOLUNTEERS_READ_WRITABLE_CLASS = Volunteer.class;
-        final String VOLUNTEERS_FILE = "volunteers.xml";
-        IOLayer<Volunteer> volunteersIOLayer = ioLayerFactory.createIOLayer(VOLUNTEERS_IOLAYER_CLASS, VOLUNTEERS_READ_WRITABLE_CLASS, new Object[]{ VOLUNTEERS_FILE });
-
-        final Class ROLES_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class ROLES_READ_WRITABLE_CLASS = Role.class;
-        final String ROLES_FILE = "roles.xml";
-        IOLayer<Role> rolesIOLayer = ioLayerFactory.createIOLayer(ROLES_IOLAYER_CLASS, ROLES_READ_WRITABLE_CLASS, new Object[]{ ROLES_FILE });
-
-        final Class EMAIL_TEMPLATE_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class EMAIL_TEMPLATE_READ_WRITABLE_CLASS = EmailTemplate.class;
-        final String EMAIL_TEMPLATE_FILE = "emailTemplate.xml";
-        IOLayer<EmailTemplate> emailTemplateIOLayer = ioLayerFactory.createIOLayer(EMAIL_TEMPLATE_IOLAYER_CLASS, EMAIL_TEMPLATE_READ_WRITABLE_CLASS, new Object[]{ EMAIL_TEMPLATE_FILE });
-
-        final Class EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class EMAIL_SERVER_PROPERTIES_READ_WRITABLE_CLASS = EmailServerProperties.class;
-        final String EMAIL_SERVER_PROPERTIES_FILE = "emailServerProperties.xml";
-        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = ioLayerFactory.createIOLayer(EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS, EMAIL_SERVER_PROPERTIES_READ_WRITABLE_CLASS, new Object[]{ EMAIL_SERVER_PROPERTIES_FILE });
-
-        final Class EVENT_PROPERTIES_IOLAYER_CLASS = XMLIOLayer.class;
-        final Class EVENT_PROPERTIES_READ_WRITABLE_CLASS = EventProperty.class;
-        final String EVENT_PROPERTIES_FILE = "eventProperties.xml";
-        IOLayer<EventProperty> eventPropertiesIOLayer = ioLayerFactory.createIOLayer(EVENT_PROPERTIES_IOLAYER_CLASS, EVENT_PROPERTIES_READ_WRITABLE_CLASS, new Object[]{ EVENT_PROPERTIES_FILE });
-
-        final String USER_GUIDE_FILE = "userguide.pdf";
-        HelpDisplay helpDisplay = new HelpFileFromResourceDisplay(USER_GUIDE_FILE);
-
-        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+    private Application getApplication() throws IOException {
+        try (InputStream applicationPropertiesInputStream = ClassLoader.getSystemResourceAsStream(APPLICATION_PROPERTIES_FILE)) {
+            Properties applicationProperties = new Properties();
+            applicationProperties.load(applicationPropertiesInputStream);
+            return Application.createApplication(applicationProperties);
+        }    // try
     }    // getApplication()
 }
