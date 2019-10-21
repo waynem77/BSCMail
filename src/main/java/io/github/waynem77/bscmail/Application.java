@@ -512,7 +512,7 @@ public class Application {
      * @param helpDisplay the help displayer; may not be null
      * @throws NullPointerException if any parameter is null
      */
-    private Application(ApplicationInfo applicationInfo,
+    protected Application(ApplicationInfo applicationInfo,
             IOLayer<Shift> shiftsIOLayer,
             IOLayer<Volunteer> volunteersIOLayer,
             IOLayer<Role> rolesIOLayer,

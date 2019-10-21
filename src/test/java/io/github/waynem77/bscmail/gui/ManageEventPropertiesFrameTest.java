@@ -19,17 +19,8 @@
 
 package io.github.waynem77.bscmail.gui;
 
-import io.github.waynem77.bscmail.help.HelpDisplay;
-import io.github.waynem77.bscmail.iolayer.IOLayer;
 import io.github.waynem77.bscmail.Application;
-import io.github.waynem77.bscmail.ApplicationInfo;
-import io.github.waynem77.bscmail.persistent.EmailServerProperties;
-import io.github.waynem77.bscmail.persistent.EmailTemplate;
-import io.github.waynem77.bscmail.persistent.EventProperty;
-import io.github.waynem77.bscmail.persistent.Role;
-import io.github.waynem77.bscmail.persistent.Shift;
-import io.github.waynem77.bscmail.iolayer.TestIOLayer;
-import io.github.waynem77.bscmail.persistent.Volunteer;
+import io.github.waynem77.bscmail.TestApplication;
 import org.junit.*;
 
 /**
@@ -43,15 +34,7 @@ public class ManageEventPropertiesFrameTest {
      * Returns an application that can be used in tests.
      */
     private Application getTestApplication()  {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
-        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
-        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
-        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
-        IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
-        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+        return new TestApplication();
     }    // getTestApplication()
 
     /**

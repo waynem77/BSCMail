@@ -19,17 +19,11 @@
 
 package io.github.waynem77.bscmail.gui;
 
-import io.github.waynem77.bscmail.help.HelpDisplay;
-import io.github.waynem77.bscmail.iolayer.IOLayer;
 import io.github.waynem77.bscmail.Application;
-import io.github.waynem77.bscmail.ApplicationInfo;
-import io.github.waynem77.bscmail.persistent.EmailServerProperties;
-import io.github.waynem77.bscmail.persistent.EmailTemplate;
+import io.github.waynem77.bscmail.TestApplication;
 import io.github.waynem77.bscmail.persistent.Event;
-import io.github.waynem77.bscmail.persistent.EventProperty;
 import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.Shift;
-import io.github.waynem77.bscmail.iolayer.TestIOLayer;
 import io.github.waynem77.bscmail.persistent.Volunteer;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,17 +49,15 @@ public class EventFrameTest {
     /**
      * Returns an application that can be used in tests.
      */
-    private Application getTestApplication()  {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
-        TestIOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
-        shiftsIOLayer.setAll(getTestShifts());
-        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
-        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
-        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
-        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
-        IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
-        HelpDisplay helpDisplay = new HelpDisplay(){ @Override public void displayHelp() {} };
-        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+    private Application getTestApplication() {
+        try {
+            Application application = new TestApplication();
+            application.setShifts(getTestShifts());
+            return application;
+        } catch (IOException e) {    // try
+            fail("Test error: unable to set shifts");
+            return null;
+        }    // catch
     }    // getTestApplication()
 
     /**
