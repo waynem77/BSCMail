@@ -21,7 +21,9 @@ package io.github.waynem77.bscmail;
 
 import io.github.waynem77.bscmail.gui.error.ErrorDialog;
 import io.github.waynem77.bscmail.help.HelpDisplay;
+import io.github.waynem77.bscmail.help.HelpDisplayFactory;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
+import io.github.waynem77.bscmail.iolayer.IOLayerFactory;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailServerPropertiesObserver;
 import io.github.waynem77.bscmail.persistent.EmailTemplate;
@@ -34,11 +36,13 @@ import io.github.waynem77.bscmail.persistent.Shift;
 import io.github.waynem77.bscmail.persistent.ShiftsObserver;
 import io.github.waynem77.bscmail.persistent.Volunteer;
 import io.github.waynem77.bscmail.persistent.VolunteersObserver;
+import io.github.waynem77.bscmail.util.parser.CsvStringParser;
 import java.awt.Frame;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import javax.swing.JFrame;
 
 /**
@@ -50,11 +54,168 @@ import javax.swing.JFrame;
 public class Application {
 
     /*
-     * Static methods
+     * Static classes and methods
      */
 
     /**
-     * Creates and returns a new application.
+     * A set of enums corresponding to the required keys of the properties
+     * argument of {@link Application#createApplication(Properties)}. The return
+     * value of {@link #toString()} for the enum is the value of the
+     * corresponding key.
+     *
+     * @since 4.0
+     */
+    public static enum PropertyKey {
+
+        /**
+         * "application.name", the application name.
+         */
+        APPLICATION_NAME ("application.name"),
+
+        /**
+         * "application.version", the application version.
+         */
+        APPLICATION_VERSION ("application.version"),
+
+
+        /**
+         * "application.copyright", the application copyright string.
+         */
+        APPLICATION_COPYRIGHT ("application.copyright"),
+
+        /**
+         * "application.iolayerFactory", the class of the {@link IOLayerFactory}
+         * implementation for the application.
+         */
+        APPLICATION_IOLAYER_FACTORY ("application.iolayerFactory"),
+
+        /**
+         * "application.helpDisplayFactory", the class of the
+         * {@link HelpDisplayFactory} implementation for the application.
+         */
+        APPLICATION_HELP_DISPLAY_FACTORY ("application.helpDisplayFactory"),
+
+        /**
+         * "shifts.iolayer.class", the class of the {@link IOLayerFactory}
+         * implementation for the application.
+         */
+        SHIFTS_IOLAYER_CLASS ("shifts.iolayer.class"),
+
+        /**
+         * "shifts.iolayer.arguments", the arguments for the shifts IOLayer.
+         */
+        SHIFTS_IOLAYER_ARGUMENTS ("shifts.iolayer.arguments"),
+
+        /**
+         * "volunteers.iolayer.class", the class of the {@link IOLayer}
+         * implementation for volunteers.
+         */
+        VOLUNTEERS_IOLAYER_CLASS ("volunteers.iolayer.class"),
+
+        /**
+         * "volunteers.iolayer.arguments", the arguments for the volunteers
+         * IOLayer constructor.
+         */
+        VOLUNTEERS_IOLAYER_ARGUMENTS ("volunteers.iolayer.arguments"),
+
+        /**
+         * "roles.iolayer.class", the class of the {@link IOLayer}
+         * implementation for roles.
+         */
+        ROLES_IOLAYER_CLASS ("roles.iolayer.class"),
+
+        /**
+         * "roles.iolayer.arguments", the arguments for the roles IOLayer
+         * constructor.
+         */
+        ROLES_IOLAYER_ARGUMENTS ("roles.iolayer.arguments"),
+
+        /**
+         * "emailTemplate.iolayer.class", the class of the {@link IOLayer}
+         * implementation for the email template.
+         */
+        EMAIL_TEMPLATE_IOLAYER_CLASS ("emailTemplate.iolayer.class"),
+
+        /**
+         * "emailTemplate.iolayer.arguments", the arguments for the email
+         * template IOLayer constructor.
+         */
+        EMAIL_TEMPLATE_IOLAYER_ARGUMENTS ("emailTemplate.iolayer.arguments"),
+
+        /**
+         * "emailServerProperties.iolayer.class", the class of the
+         * {@link IOLayer} implementation for the email server properties.
+         */
+        EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS ("emailServerProperties.iolayer.class"),
+
+        /**
+         * "emailServerProperties.iolayer.arguments", the arguments for the
+         * email server properties IOLayer constructor.
+         */
+        EMAIL_SERVER_PROPERTIES_IOLAYER_ARGUMENTS ("emailServerProperties.iolayer.arguments"),
+
+        /**
+         * "eventProperties.iolayer.class", the class of the {@link IOLayer}
+         * implementation for event properties.
+         */
+        EVENT_PROPERTIES_IOLAYER_CLASS ("eventProperties.iolayer.class"),
+
+        /**
+         * "eventProperties.iolayer.arguments", the arguments for the event
+         * properties IOLayer constructor.
+         */
+        EVENT_PROPERTIES_IOLAYER_ARGUMENTS ("eventProperties.iolayer.arguments"),
+
+        /**
+         * "helpDisplay.class", the class of the {@link HelpDisplay}
+         * implementation for the application.
+         */
+        HELP_DISPLAY_CLASS ("helpDisplay.class"),
+
+        /**
+         * "helpDisplay.arguments", the arguments for the HelpDisplay
+         * constructor.
+         */
+        HELP_DISPLAY_ARGUMENTS ("helpDisplay.arguments");
+
+        /**
+         * The string value.
+         */
+        private final String stringValue;
+
+        /**
+         * Constructs an enum with the given string value.
+         *
+         * @param stringValue the string value; may not be null
+         */
+        private PropertyKey(String stringValue) {
+            assert (stringValue != null);
+            this.stringValue = stringValue;
+        }    // PropertyKey()
+
+        /**
+         * Returns the key string of the corresponding property value.
+         *
+         * @return the key string of the corresponding property value
+         */
+        public String getKeyString() {
+            return stringValue;
+        }    // getKeyString()
+
+        /**
+         * Returns the string value of the enum. This value is the same as that
+         * returned by {@link #getKeyString()}.
+         *
+         * @return the string value of the enum
+         */
+        @Override
+        public String toString() {
+            return stringValue;
+        }    // toString()
+    }    // PropertyKey
+
+    /**
+     * Creates and returns a new application from the given arguments.
      *
      * @param applicationInfo the application info object for the application;
      * may not be null
@@ -71,6 +232,7 @@ public class Application {
      * @param eventPropertiesIOLayer the I/O layer to be used for storing the
      * event properties; may not be null
      * @param helpDisplay the help displayer to use; may not be null
+     * @return a new Application
      * @throws NullPointerException if any parameter is null
      */
     public static Application createApplication(ApplicationInfo applicationInfo,
@@ -89,6 +251,138 @@ public class Application {
                 emailServerPropertiesIOLayer,
                 eventPropertiesIOLayer,
                 helpDisplay);
+    }    // createApplication()
+
+    /**
+     * Creates a new Application from the given properties. The properties
+     * object must contain the following key-value pairs.
+     * <table style="border: 1px solid black">
+     * <caption>Application Properties Specification</caption>
+     * <tr><th>application.name</th><td>the application name</td></tr>
+     * <tr><th>application.version</th><td>the application version</td></tr>
+     * <tr><th>application.copyright</th><td>the application copyright string</td></tr>
+     * <tr><th>application.iolayerFactory</th><td>the class of the {@link IOLayerFactory} implementation for the application</td></tr>
+     * <tr><th>application.helpDisplayFactory</th><td>the class of the {@link HelpDisplayFactory} implementation for the application</td></tr>
+     * <tr><th>shifts.iolayer.class</th><td>the class of the {@link IOLayer} implementation for shifts</td></tr>
+     * <tr><th>shifts.iolayer.arguments</th><td>the arguments for the shifts IOLayer constructor</td></tr>
+     * <tr><th>volunteers.iolayer.class</th><td>the class of the {@link IOLayer} implementation for volunteers</td></tr>
+     * <tr><th>volunteers.iolayer.arguments</th><td>the arguments for the volunteers IOLayer constructor</td></tr>
+     * <tr><th>roles.iolayer.class</th><td>the class of the {@link IOLayer} implementation for roles</td></tr>
+     * <tr><th>roles.iolayer.arguments</th><td>the arguments for the roles IOLayer constructor</td></tr>
+     * <tr><th>emailTemplate.iolayer.class</th><td>the class of the {@link IOLayer} implementation for the email template</td></tr>
+     * <tr><th>emailTemplate.iolayer.arguments</th><td>the arguments for the email template IOLayer constructor</td></tr>
+     * <tr><th>emailServerProperties.iolayer.class</th><td>the class of the {@link IOLayer} implementation for the email server properties</td></tr>
+     * <tr><th>emailServerProperties.iolayer.arguments</th><td>the arguments for the email server properties IOLayer constructor</td></tr>
+     * <tr><th>eventProperties.iolayer.class</th><td>the class of the {@link IOLayer} implementation for event properties</td></tr>
+     * <tr><th>eventProperties.iolayer.arguments</th><td>the arguments for the even properties IOLayer constructor</td></tr>
+     * <tr><th>helpDisplay.class</th><td>the class of the {@link HelpDisplay} implementation for the application</td></tr>
+     * <tr><th>helpDisplay.arguments</th><td>the arguments for the HelpDisplay constructor</td></tr>
+     * </table>
+     * The {@code arguments} properties should all be comma-separated values in
+     * the format specified by <a href="https://tools.ietf.org/html/rfc4180">RFC
+     * 4180</a>
+     *
+     * @param applicationProperties the application properties; may not be null;
+     * must meet the specification above
+     * @return a new Application
+     * @throws NullPointerException if applicationProperties is null
+     * @throws IllegalArgumentException if applicationProperties does not match
+     * the above specification
+     * @see PropertyKey
+     */
+    public static Application createApplication(Properties applicationProperties) {
+        if (applicationProperties == null) {
+            throw new NullPointerException("applicationProperties may not be null");
+        }    // if
+        for (PropertyKey propertyKey : PropertyKey.values()) {
+            if (!applicationProperties.containsKey(propertyKey.getKeyString())) {
+                throw new IllegalArgumentException("applicationProperties must contain property \"" + propertyKey.getKeyString() + "\"");
+            }    // if
+        }    // for
+
+        // Application info
+        String applicationName = applicationProperties.getProperty(PropertyKey.APPLICATION_NAME.getKeyString());
+        String applicationVersion = applicationProperties.getProperty(PropertyKey.APPLICATION_VERSION.getKeyString());
+        String applicationCopyright = applicationProperties.getProperty(PropertyKey.APPLICATION_COPYRIGHT.getKeyString());
+        ApplicationInfo applicationInfo = new ApplicationInfo(applicationName, applicationVersion, applicationCopyright);
+
+        try {
+            CsvStringParser csvParser = new CsvStringParser();
+
+            String iolayerFactoryClassName = applicationProperties.getProperty(PropertyKey.APPLICATION_IOLAYER_FACTORY.getKeyString());
+            Class iolayerFactoryClass = Class.forName(iolayerFactoryClassName);
+            IOLayerFactory iolayerFactory = (IOLayerFactory) iolayerFactoryClass.getDeclaredConstructor().newInstance();
+
+            // IOLayer: shifts
+            String iolayerClassName = applicationProperties.getProperty(PropertyKey.SHIFTS_IOLAYER_CLASS.getKeyString());
+            Class iolayerClass = Class.forName(iolayerClassName);
+            Class rwClass = Shift.class;
+            String iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.SHIFTS_IOLAYER_ARGUMENTS.getKeyString());
+            Object[] iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<Shift> shiftsIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            // IOLayer: volunteers
+            iolayerClassName = applicationProperties.getProperty(PropertyKey.VOLUNTEERS_IOLAYER_CLASS.getKeyString());
+            iolayerClass = Class.forName(iolayerClassName);
+            rwClass = Volunteer.class;
+            iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.VOLUNTEERS_IOLAYER_ARGUMENTS.getKeyString());
+            iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<Volunteer> volunteersIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            // IOLayer: roles
+            iolayerClassName = applicationProperties.getProperty(PropertyKey.ROLES_IOLAYER_CLASS.getKeyString());
+            iolayerClass = Class.forName(iolayerClassName);
+            rwClass = Role.class;
+            iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.ROLES_IOLAYER_ARGUMENTS.getKeyString());
+            iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<Role> rolesIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            // IOLayer: email template
+            iolayerClassName = applicationProperties.getProperty(PropertyKey.EMAIL_TEMPLATE_IOLAYER_CLASS.getKeyString());
+            iolayerClass = Class.forName(iolayerClassName);
+            rwClass = EmailTemplate.class;
+            iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.EMAIL_TEMPLATE_IOLAYER_ARGUMENTS.getKeyString());
+            iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<EmailTemplate> emailTemplateIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            // IOLayer: email server properties
+            iolayerClassName = applicationProperties.getProperty(PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS.getKeyString());
+            iolayerClass = Class.forName(iolayerClassName);
+            rwClass = EmailServerProperties.class;
+            iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString());
+            iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            // IOLayer: event properties
+            iolayerClassName = applicationProperties.getProperty(PropertyKey.EVENT_PROPERTIES_IOLAYER_CLASS.getKeyString());
+            iolayerClass = Class.forName(iolayerClassName);
+            rwClass = EventProperty.class;
+            iolayerArgumentsString = applicationProperties.getProperty(PropertyKey.EVENT_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString());
+            iolayerArguments = csvParser.parse(iolayerArgumentsString);
+            IOLayer<EventProperty> eventPropertiesIOLayer = iolayerFactory.createIOLayer(iolayerClass, rwClass, iolayerArguments);
+
+            String helpDisplayFactoryClassName = applicationProperties.getProperty(PropertyKey.APPLICATION_HELP_DISPLAY_FACTORY.getKeyString());
+            Class helpDisplayFactoryClass = Class.forName(helpDisplayFactoryClassName);
+            HelpDisplayFactory helpDisplayFactory = (HelpDisplayFactory)helpDisplayFactoryClass.getDeclaredConstructor().newInstance();
+
+            // Help display
+            String helpDisplayClassName = applicationProperties.getProperty(PropertyKey.HELP_DISPLAY_CLASS.getKeyString());
+            Class helpDisplayClass = Class.forName(helpDisplayClassName);
+            String helpDisplayArgumentsString = applicationProperties.getProperty(PropertyKey.HELP_DISPLAY_ARGUMENTS.getKeyString());
+            Object[] helpDisplayArguments = csvParser.parse(helpDisplayArgumentsString);
+            HelpDisplay helpDisplay = helpDisplayFactory.createHelpDisplay(helpDisplayClass, helpDisplayArguments);
+
+            return new Application(applicationInfo,
+                    shiftsIOLayer,
+                    volunteersIOLayer,
+                    rolesIOLayer,
+                    emailTemplateIOLayer,
+                    emailServerPropertiesIOLayer,
+                    eventPropertiesIOLayer,
+                    helpDisplay);
+        } catch (Exception e) {    // try
+            throw new ApplicationInitializationException(e);
+        }    // catch
     }    // createApplication()
 
     /*

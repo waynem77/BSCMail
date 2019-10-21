@@ -20,6 +20,7 @@
 package io.github.waynem77.bscmail;
 
 import io.github.waynem77.bscmail.help.HelpDisplay;
+import io.github.waynem77.bscmail.help.TestHelpDisplay;
 import io.github.waynem77.bscmail.iolayer.IOLayer;
 import io.github.waynem77.bscmail.persistent.EmailServerProperties;
 import io.github.waynem77.bscmail.persistent.EmailServerPropertiesObserver;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -75,16 +77,55 @@ public class ApplicationTest {
     }    // ApplicationObserver
 
     /**
-     * Help displayer used in tests.
+     * Returns properties usable in tests of
+     * {@link Application#createApplication(Properties)}. The properties returned have
+     * the following properties:
+     * <ul>
+     * <li>The {@link IOLayerFactory} specified is a
+     * {@link TestIOLayerFactory}.</li>
+     * <li>The {@link IOLayer} specified for each read-writable is a
+     * {@link TestIOLayer}.</li>
+     * <li>The arguments specified for each IOLayer consists of a
+     * comma-separated list of three values, one plain, one containing a comma,
+     * and one containing double-quotes.</li>
+     * </ul>
+     *
+     * @return properties usable in createApplication tests
      */
-    private class TestHelpDisplay implements HelpDisplay {
-        @Override public void displayHelp() { }
-    }    // TestHelpDisplay
+    private Properties getTestApplicationProperties() {
+        Properties applicationProperties = new Properties();
+
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_NAME.getKeyString(), "foo");
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_VERSION.getKeyString(), "bar");
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_COPYRIGHT.getKeyString(), "baz");
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_IOLAYER_FACTORY.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayerFactory");
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_HELP_DISPLAY_FACTORY.getKeyString(), "io.github.waynem77.bscmail.help.TestHelpDisplayFactory");
+        applicationProperties.setProperty(Application.PropertyKey.SHIFTS_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.SHIFTS_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.VOLUNTEERS_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.VOLUNTEERS_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.ROLES_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.ROLES_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.EMAIL_TEMPLATE_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.EMAIL_TEMPLATE_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.EVENT_PROPERTIES_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
+        applicationProperties.setProperty(Application.PropertyKey.EVENT_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+        applicationProperties.setProperty(Application.PropertyKey.HELP_DISPLAY_CLASS.getKeyString(), "io.github.waynem77.bscmail.help.TestHelpDisplay");
+        applicationProperties.setProperty(Application.PropertyKey.HELP_DISPLAY_ARGUMENTS.getKeyString(), "aaa,\"bb,b\",\"c\"\"c\"\"c\"");
+
+        return applicationProperties;
+    }    // getTestApplicationProperties()
 
     /**
-     * Returns an application that can be used in tests.
+     * Returns applications that can be used in tests.
+     *
+     * @return applications that can be used in tests
      */
-    private Application getTestApplication()  {
+    private List<Application> getTestApplications() {
+        List<Application> applications = new ArrayList<>();
+
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -93,22 +134,27 @@ public class ApplicationTest {
         IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
         IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
         HelpDisplay helpDisplay = new TestHelpDisplay();
-        return Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // getTestApplication()
+        applications.add(Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay));
+
+        Properties applicationProperties = getTestApplicationProperties();
+        applications.add(Application.createApplication(applicationProperties));
+
+        return applications;
+    }    // getTestApplications()
 
     /*
      * Unit tests
      */
 
-    /* constructor */
+    /* createApplication(multi-argument) */
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when applicationInfo is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenApplicationInfoIsNull() {
+    public void createApplicationThrowsExceptionWhenApplicationInfoIsNull() {
         ApplicationInfo applicationInfo = null;
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -119,15 +165,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenApplicationInfoIsNull()
+    }    // createApplicationThrowsExceptionWhenApplicationInfoIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when shiftsIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenShiftsIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenShiftsIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = null;
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -138,15 +184,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenShiftsIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenShiftsIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when volunteersIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenVolunteersIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenVolunteersIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = null;
@@ -157,15 +203,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenVolunteersIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenVolunteersIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when rolesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenRolesIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenRolesIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -176,15 +222,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenRolesIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenRolesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when emailTemplateIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenEmailTemplateIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenEmailTemplateIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -195,16 +241,16 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenEmailTemplateIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenEmailTemplateIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when emailServerPropertiesIOLayer
      * is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -215,15 +261,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when eventPropertiesIOLayer is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenEventPropertiesIoLayerIsNull() {
+    public void createApplicationThrowsExceptionWhenEventPropertiesIoLayerIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -234,15 +280,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenEventPropertiesIoLayerIsNull()
+    }    // createApplicationThrowsExceptionWhenEventPropertiesIoLayerIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * throws a {@link NullPointerException} when helpDisplay is null.
      */
     @Test(expected = NullPointerException.class)
-    public void constructorThrowsExceptionWhenHelpDisplayIsNull() {
+    public void createApplicationThrowsExceptionWhenHelpDisplayIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -253,15 +299,15 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = null;
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorThrowsExceptionWhenHelpDisplayIsNull()
+    }    // createApplicationThrowsExceptionWhenHelpDisplayIsNull()
 
     /**
      * Tests that
-     * {@link Application#Application(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
+     * {@link Application#createApplication(bscmail.ApplicationInfo, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, iolayer.IOLayer, bscmail.help.HelpDisplay)
      * does not throw an exception when no parameter is null.
      */
     @Test
-    public void constructorDoesNotThrowExceptionWhenNoparameterIsNull() {
+    public void createApplicationDoesNotThrowExceptionWhenNoparameterIsNull() {
         ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
@@ -272,7 +318,278 @@ public class ApplicationTest {
         HelpDisplay helpDisplay = new TestHelpDisplay();
 
         Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
-    }    // constructorDoesNotThrowExceptionWhenNoparameterIsNull()
+    }    // createApplicationDoesNotThrowExceptionWhenNoparameterIsNull()
+
+    /* createApplication(Properties) */
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link NullPointerException} when applicationProperties is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesIsNull() {
+        Properties applicationProperties = null;
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesIsNull()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "application.name".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationName() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.APPLICATION_NAME.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationName()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "application.version".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationVersion() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.APPLICATION_VERSION.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationVersion()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "application.copyright".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationCopyright() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.APPLICATION_COPYRIGHT.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationCopyright()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "application.iolayerFactory".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationIolayerFactory() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.APPLICATION_IOLAYER_FACTORY.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationIolayerFactory()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "application.helpDisplayFactory".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationHelpDisplayFactory() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.APPLICATION_HELP_DISPLAY_FACTORY.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainApplicationHelpDisplayFactory()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "shifts.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainShiftsIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.SHIFTS_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainShiftsIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "shifts.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainShiftsIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.SHIFTS_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainShiftsIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "volunteers.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainVolunteersIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.VOLUNTEERS_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainVolunteersIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "volunteers.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainVolunteersIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.VOLUNTEERS_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainVolunteersIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "roles.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainRolesIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.ROLES_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainRolesIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "roles.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainRolesIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.ROLES_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainRolesIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "emailTemplate.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailTemplateIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EMAIL_TEMPLATE_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailTemplateIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "emailTemplate.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailTemplateIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EMAIL_TEMPLATE_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailTemplateIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "emailServerProperties.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailServerPropertiesIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailServerPropertiesIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "emailServerProperties.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailServerPropertiesIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EMAIL_SERVER_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEmailServerPropertiesIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "eventProperties.iolayer.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEventPropertiesIolayerClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EVENT_PROPERTIES_IOLAYER_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEventPropertiesIolayerClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "eventProperties.iolayer.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEventPropertiesIolayerArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.EVENT_PROPERTIES_IOLAYER_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainEventPropertiesIolayerArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "helpDisplay.class".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainHelpDisplayClass() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.HELP_DISPLAY_CLASS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainHelpDisplayClass()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} throws a
+     * {@link IllegalArgumentException} when applicationProperties does not
+     * contain the property "helpDisplay.arguments".
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainHelpDisplayArguments() {
+        Properties applicationProperties = getTestApplicationProperties();
+        applicationProperties.remove(Application.PropertyKey.HELP_DISPLAY_ARGUMENTS.getKeyString());
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationThrowsExceptionWhenApplicationPropertiesDoesNotContainHelpDisplayArguments()
+
+    /**
+     * Tests that {@link Application#createApplication(Properties)} does not throw an
+     * exception when applicationProperties meets the specification.
+     */
+    @Test
+    public void propertiesCreateApplicationDoesNotThrowExceptionWhenApplicationPropertiesMeetsSpecification() {
+        Properties applicationProperties = getTestApplicationProperties();
+
+        Application application = Application.createApplication(applicationProperties);
+    }    // propertiesCreateApplicationDoesNotThrowExceptionWhenApplicationPropertiesMeetsSpecification()
 
     /* getApplicationName */
 
@@ -282,9 +599,9 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationNameDoesNotThrowException() {
-        Application application = getTestApplication();
-
-        application.getApplicationName();
+        for (Application application: getTestApplications()) {
+            application.getApplicationName();
+        }    // for
     }    // getApplicationNameDoesNotThrowException()
 
     /**
@@ -292,10 +609,10 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationNameDoesNotReturnNull() {
-        Application application = getTestApplication();
-
-        String received = application.getApplicationName();
-        assertNotNull(received);
+        for (Application application: getTestApplications()) {
+            String received = application.getApplicationName();
+            assertNotNull(received);
+        }    // for
     }    // getApplicationNameDoesNotReturnNull()
 
     /**
@@ -318,6 +635,14 @@ public class ApplicationTest {
 
         String expected = applicationInfo.getName();
         assertEquals(expected, received);
+
+        Properties applicationProperties = getTestApplicationProperties();
+        application = Application.createApplication(applicationProperties);
+
+        received = application.getApplicationName();
+
+        expected = applicationProperties.getProperty(Application.PropertyKey.APPLICATION_NAME.getKeyString());
+        assertEquals(expected, received);
     }    // getApplicationNameReturnsCorrectValue()
 
     /* getVersion */
@@ -327,9 +652,9 @@ public class ApplicationTest {
      */
     @Test
     public void getVersionDoesNotThrowException() {
-        Application application = getTestApplication();
-
-        application.getVersion();
+        for (Application application: getTestApplications()) {
+            application.getVersion();
+        }    // for
     }    // getVersionDoesNotThrowException()
 
     /**
@@ -337,11 +662,11 @@ public class ApplicationTest {
      */
     @Test
     public void getVersionDoesNotReturnNull() {
-        Application application = getTestApplication();
+        for (Application application: getTestApplications()) {
+            String received = application.getVersion();
 
-        String received = application.getVersion();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getVersionDoesNotReturnNull()
 
     /**
@@ -364,6 +689,14 @@ public class ApplicationTest {
 
         String expected = applicationInfo.getVersion();
         assertEquals(expected, received);
+
+        Properties applicationProperties = getTestApplicationProperties();
+        application = Application.createApplication(applicationProperties);
+
+        received = application.getVersion();
+
+        expected = applicationProperties.getProperty(Application.PropertyKey.APPLICATION_VERSION.getKeyString());
+        assertEquals(expected, received);
     }    // getApplicationVersionReturnsCorrectValue()
 
     /* getCopyright */
@@ -374,9 +707,9 @@ public class ApplicationTest {
      */
     @Test
     public void getCopyrightDoesNotThrowException() {
-        Application application = getTestApplication();
-
-        application.getCopyright();
+        for (Application application: getTestApplications()) {
+            application.getCopyright();
+        }    // for
     }    // getCopyrightDoesNotThrowException()
 
     /**
@@ -384,11 +717,11 @@ public class ApplicationTest {
      */
     @Test
     public void getCopyrightDoesNotReturnNull() {
-        Application application = getTestApplication();
+        for (Application application: getTestApplications()) {
+            String received = application.getCopyright();
 
-        String received = application.getCopyright();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getCopyrightDoesNotReturnNull()
 
     /**
@@ -411,6 +744,14 @@ public class ApplicationTest {
 
         String expected = applicationInfo.getCopyright();
         assertEquals(expected, received);
+
+        Properties applicationProperties = getTestApplicationProperties();
+        application = Application.createApplication(applicationProperties);
+
+        received = application.getCopyright();
+
+        expected = applicationProperties.getProperty(Application.PropertyKey.APPLICATION_COPYRIGHT.getKeyString());
+        assertEquals(expected, received);
     }    // getApplicationCopyrightReturnsCorrectValue()
 
     /* displayHelp */
@@ -420,9 +761,9 @@ public class ApplicationTest {
      */
     @Test
     public void displayHelpDoesNotThrowException() {
-        Application application = getTestApplication();
-
-        application.displayHelp();
+        for (Application application: getTestApplications()) {
+            application.displayHelp();
+        }    // for
     }    // displayHelpDoesNotThrowException()
 
     /* getShifts / setShifts */
@@ -432,9 +773,9 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowException() {
-        Application application = getTestApplication();
-
-        application.getShifts();
+        for (Application application: getTestApplications()) {
+            application.getShifts();
+        }    // for
     }    // getShiftsDoesNotThrowException()
 
     /**
@@ -442,11 +783,12 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNull() {
-        Application application = getTestApplication();
+        for (Application application: getTestApplications()) {
 
-        List<Shift> received = application.getShifts();
+            List<Shift> received = application.getShifts();
 
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getShiftsDoesNotReturnNull()
 
     /**
@@ -455,10 +797,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setShiftsThrowsExceptionWhenShiftsIsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = null;
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = null;
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
+        }    // for
     }    // setShiftsThrowsExceptionWhenShiftsIsNull()
 
     /**
@@ -467,10 +810,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setShiftsThrowsExceptionWhenShiftsContainsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false), null);
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
+        }    // for
     }    // setShiftsThrowsExceptionWhenShiftsContainsNull()
 
     /**
@@ -479,11 +823,12 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotThrowExceptionWithGoodArgument() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
+        }    // for
     }    // setShiftsDoesNotThrowExceptionWithGoodArgument()
 
     /**
@@ -492,20 +837,21 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotAlterArgument() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
-                new Shift("Bar", Arrays.asList(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
-        List<Shift> clonedShifts = new LinkedList<>();
-        for (Shift shift : shifts) {
-            clonedShifts.add(shift.clone());
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
+                    new Shift("Bar", Arrays.asList(), false, false, false));
+            shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
+            List<Shift> clonedShifts = new LinkedList<>();
+            for (Shift shift : shifts) {
+                clonedShifts.add(shift.clone());
+            }    // for
+
+            application.setShifts(shifts);
+
+            List<Shift> expected = clonedShifts;
+            List<Shift> received = shifts;
+            assertEquals(expected, received);
         }    // for
-
-        application.setShifts(shifts);
-
-        List<Shift> expected = clonedShifts;
-        List<Shift> received = shifts;
-        assertEquals(expected, received);
     }    // setShiftsDoesNotAlterArgument()
 
     /**
@@ -514,9 +860,9 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowExceptionWhenThereAreNoShifts() throws IOException {
-        Application application = getTestApplication();
-
-        application.getShifts();
+        for (Application application : getTestApplications()) {
+            application.getShifts();
+        }    // for
     }    // getShiftsDoesNotThrowExceptionWhenThereAreNoShifts()
 
     /**
@@ -525,11 +871,11 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNullWhenThereAreNoShifts() throws IOException {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            List<Shift> received = application.getShifts();
 
-        List<Shift> received = application.getShifts();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getShiftsDoesNotReturnNullWhenThereAreNoShifts()
 
     /**
@@ -538,13 +884,14 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotThrowExceptionWhenThereAreShifts() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
-                new Shift("Bar", Arrays.asList(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
-        application.setShifts(shifts);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
+                    new Shift("Bar", Arrays.asList(), false, false, false));
+            shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
+            application.setShifts(shifts);
 
-        application.getShifts();
+            application.getShifts();
+        }    // for
     }    // getShiftsDoesNotThrowExceptionWhenThereAreShifts()
 
     /**
@@ -553,15 +900,16 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnNullWhenThereAreShifts() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
-                new Shift("Bar", Arrays.asList(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
-        application.setShifts(shifts);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
+                    new Shift("Bar", Arrays.asList(), false, false, false));
+            shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
+            application.setShifts(shifts);
 
-        List<Shift> received = application.getShifts();
+            List<Shift> received = application.getShifts();
 
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getShiftsDoesNotThrowExceptionWhenThereAreShifts()
 
     /**
@@ -570,22 +918,23 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsReturnsCorrectValue() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
-                new Shift("Bar", Arrays.asList(), false, false, false));
-        shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
-        List<Shift> clonedShiftsMinusVolunteers = new LinkedList<>();
-        for (Shift shift : shifts) {
-            Shift newShift = shift.clone();
-            newShift.setVolunteer(null);
-            clonedShiftsMinusVolunteers.add(newShift);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", Arrays.asList(), false, false, false),
+                    new Shift("Bar", Arrays.asList(), false, false, false));
+            shifts.get(0).setVolunteer(new Volunteer("foo", "bar", "", "", true, Arrays.asList()));
+            List<Shift> clonedShiftsMinusVolunteers = new LinkedList<>();
+            for (Shift shift : shifts) {
+                Shift newShift = shift.clone();
+                newShift.setVolunteer(null);
+                clonedShiftsMinusVolunteers.add(newShift);
+            }    // for
+            application.setShifts(shifts);
+
+            List<Shift> received = application.getShifts();
+
+            List<Shift> expected = clonedShiftsMinusVolunteers;
+            assertEquals(expected, received);
         }    // for
-        application.setShifts(shifts);
-
-        List<Shift> received = application.getShifts();
-
-        List<Shift> expected = clonedShiftsMinusVolunteers;
-        assertEquals(expected, received);
     }    // getShiftsReturnsCorrectValue()
 
     /**
@@ -594,15 +943,16 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsDoesNotReturnTheIdenticalListThatWasPassedToSetShifts() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        application.setShifts(shifts);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
+            application.setShifts(shifts);
 
-        List<Shift> received = application.getShifts();
+            List<Shift> received = application.getShifts();
 
-        List<Shift> notExpected = shifts;
-        assertFalse(notExpected == received);
+            List<Shift> notExpected = shifts;
+            assertFalse(notExpected == received);
+        }    // for
     }    // getShiftsDoesNotReturnTheIdenticalListThatWasPassedToSetShifts()
 
     /**
@@ -612,16 +962,17 @@ public class ApplicationTest {
      */
     @Test
     public void getShiftsReturnsAListWhoseElementsAreNotIdenticalToThosePassedToSetShifts() throws IOException {
-        Application application = getTestApplication();
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
-        application.setShifts(shifts);
+        for (Application application : getTestApplications()) {
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
+            application.setShifts(shifts);
 
-        List<Shift> received = application.getShifts();
+            List<Shift> received = application.getShifts();
 
-        List<Shift> notExpected = shifts;
-        for (int i = 0; i < shifts.size(); ++i) {
-            assertFalse(notExpected.get(i) == received.get(i));
+            List<Shift> notExpected = shifts;
+            for (int i = 0; i < shifts.size(); ++i) {
+                assertFalse(notExpected.get(i) == received.get(i));
+            }    // for
         }    // for
     }    // testGetShiftsSetShiftsNoElementIdentity()
 
@@ -633,9 +984,9 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers() {
-        Application application = getTestApplication();
-
-        application.getVolunteers();
+        for (Application application : getTestApplications()) {
+            application.getVolunteers();
+        }    // for
     }    // getVolunteersDoesNotThrowExceptionWhenThereAreNoVolunteers()
 
     /**
@@ -644,11 +995,11 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotReturnNullWhenThereAreNoVolunteers() {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            List<Volunteer> received = application.getVolunteers();
 
-        List<Volunteer> received = application.getVolunteers();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getVolunteersDoesNotReturnNullWhenThereAreNoVolunteers()
 
     /**
@@ -657,13 +1008,14 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
-        application.setVolunteers(volunteers);
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+            application.setVolunteers(volunteers);
 
-        application.getVolunteers();
+            application.getVolunteers();
+        }    // for
     }    // getVolunteersDoesNotThrowExceptionWhenThereAreVolunteers()
 
     /**
@@ -672,15 +1024,16 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersDoesNotReturnNullWhenThereAreVolunteers() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
-        application.setVolunteers(volunteers);
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+            application.setVolunteers(volunteers);
 
-        List<Volunteer> received = application.getVolunteers();
+            List<Volunteer> received = application.getVolunteers();
 
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getVolunteersDoesNotReturnNullWhenThereAreVolunteers()
 
     /**
@@ -689,10 +1042,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setVolunteersThrowsExceptionWhenVolunteersIsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = null;
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = null;
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
+        }    // for
     }    // setVolunteersThrowsExceptionWhenVolunteersIsNull()
 
     /**
@@ -701,12 +1055,13 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setVolunteersThrowsExceptionWhenVolunteersContainsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                null);    // volunteers
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    null);    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
+        }    // for
     }    // setVolunteersThrowsExceptionWhenVolunteersContainsNull()
 
     /**
@@ -715,12 +1070,13 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotThrowExceptionNormally() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
+        }    // for
     }    // setVolunteersDoesNotThrowExceptionNormally()
 
     /**
@@ -729,16 +1085,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotAlterArgument() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
-        List<Volunteer> expected = new ArrayList<>(volunteers);
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+            List<Volunteer> expected = new ArrayList<>(volunteers);
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        List<Volunteer> received = volunteers;
-        assertEquals(expected, received);
+            List<Volunteer> received = volunteers;
+            assertEquals(expected, received);
+        }    // for
     }    // setVolunteersDoesNotAlterArgument()
 
     /**
@@ -747,16 +1104,17 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersSetVolunteersListsAreEqual() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
-        application.setVolunteers(volunteers);
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+            application.setVolunteers(volunteers);
 
-        List<Volunteer> received = application.getVolunteers();
+            List<Volunteer> received = application.getVolunteers();
 
-        List<Volunteer> expected = volunteers;
-        assertEquals(expected, received);
+            List<Volunteer> expected = volunteers;
+            assertEquals(expected, received);
+        }    // for
     }    // getVolunteersSetVolunteersListsAreEqual()
 
     /**
@@ -765,16 +1123,17 @@ public class ApplicationTest {
      */
     @Test
     public void getVolunteersSetVolunteersListsAreNotIdentical() throws IOException {
-        Application application = getTestApplication();
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
-        application.setVolunteers(volunteers);
+        for (Application application : getTestApplications()) {
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+            application.setVolunteers(volunteers);
 
-        List<Volunteer> received = application.getVolunteers();
+            List<Volunteer> received = application.getVolunteers();
 
-        List<Volunteer> notExpected = volunteers;
-        assertFalse(notExpected == received);
+            List<Volunteer> notExpected = volunteers;
+            assertFalse(notExpected == received);
+        }    // for
     }    // getVolunteersSetVolunteersListsAreNotIdentical()
 
     /* getRoles / setRoles */
@@ -785,9 +1144,9 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotThrowExceptionWhenThereAreNoRoles() {
-        Application application = getTestApplication();
-
-        application.getRoles();
+        for (Application application : getTestApplications()) {
+            application.getRoles();
+        }    // for
     }    // getRolesDoesNotThrowExceptionWhenThereAreNoRoles()
 
     /**
@@ -796,11 +1155,11 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotReturnNullWhenThereAreNoRoles() {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            List<Role> received = application.getRoles();
 
-        List<Role> received = application.getRoles();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getRolesDoesNotReturnNullWhenThereAreNoRoles()
 
     /**
@@ -809,11 +1168,12 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotThrowExceptionWhenThereAreRoles() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
-        application.setRoles(roles);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+            application.setRoles(roles);
 
-        application.getRoles();
+            application.getRoles();
+        }    // for
     }    // getRolesDoesNotThrowExceptionWhenThereAreRoles()
 
     /**
@@ -822,13 +1182,14 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesDoesNotReturnNullWhenThereAreRoles() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
-        application.setRoles(roles);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+            application.setRoles(roles);
 
-        List<Role> received = application.getRoles();
+            List<Role> received = application.getRoles();
 
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getRolesDoesNotReturnNullWhenThereAreRoles()
 
     /**
@@ -837,10 +1198,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setRolesThrowsExceptionWhenRolesIsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = null;
+        for (Application application : getTestApplications()) {
+            List<Role> roles = null;
 
-        application.setRoles(roles);
+            application.setRoles(roles);
+        }    // for
     }    // setRolesThrowsExceptionWhenRolesIsNull()
 
     /**
@@ -849,10 +1211,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setRolesThrowsExceptionWhenRolesContainsNull() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), null);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), null);
 
-        application.setRoles(roles);
+            application.setRoles(roles);
+        }    // for
     }    // setRolesThrowsExceptionWhenRolesContainsNull()
 
     /**
@@ -861,10 +1224,11 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotThrowExceptionNormally() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
+        }    // for
     }    // setRolesDoesNotThrowExceptionNormally()
 
     /**
@@ -873,14 +1237,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotAlterArgument() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
-        List<Role> expected = new ArrayList<>(roles);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+            List<Role> expected = new ArrayList<>(roles);
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        List<Role> received = roles;
-        assertEquals(expected, received);
+            List<Role> received = roles;
+            assertEquals(expected, received);
+        }    // for
     }    // setRolesDoesNotAlterArgument()
 
     /**
@@ -889,14 +1254,15 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesSetRolesListsAreEqual() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
-        application.setRoles(roles);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+            application.setRoles(roles);
 
-        List<Role> received = application.getRoles();
+            List<Role> received = application.getRoles();
 
-        List<Role> expected = roles;
-        assertEquals(expected, received);
+            List<Role> expected = roles;
+            assertEquals(expected, received);
+        }    // for
     }    // getRolesSetRolesListsAreEqual()
 
     /**
@@ -905,14 +1271,15 @@ public class ApplicationTest {
      */
     @Test
     public void getRolesSetRolesListsAreNotIdentical() throws IOException {
-        Application application = getTestApplication();
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
-        application.setRoles(roles);
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+            application.setRoles(roles);
 
-        List<Role> received = application.getRoles();
+            List<Role> received = application.getRoles();
 
-        List<Role> notExpected = roles;
-        assertFalse(notExpected == received);
+            List<Role> notExpected = roles;
+            assertFalse(notExpected == received);
+        }    // for
     }    // getRolesSetRolesListsAreNotIdentical()
 
     /* getEmailTemplate / setEmailTemplate */
@@ -923,9 +1290,9 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateDoesNotThrowException() throws IOException {
-        Application application = getTestApplication();
-
-        application.getEmailTemplate();
+        for (Application application : getTestApplications()) {
+            application.getEmailTemplate();
+        }    // for
     }    // getEmailTemplateDoesNotThrowException()
 
     /**
@@ -933,11 +1300,11 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateDoesNotReturnNull() throws IOException {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            EmailTemplate received = application.getEmailTemplate();
 
-        EmailTemplate received = application.getEmailTemplate();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getEmailTemplateDoesNotReturnNull()
 
     /**
@@ -946,10 +1313,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEmailTemplateThrowsExceptionWhenEmailTemplateIsNull() throws IOException {
-        Application application = getTestApplication();
-        EmailTemplate emailTemplate = null;
+        for (Application application : getTestApplications()) {
+            EmailTemplate emailTemplate = null;
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
+        }    // for
     }    // setEmailTemplateThrowsExceptionWhenEmailTemplateIsNull()
 
     /**
@@ -958,10 +1326,11 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull() throws IOException {
-        Application application = getTestApplication();
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "", "", "", "");
+        for (Application application : getTestApplications()) {
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "", "", "", "");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
+        }    // for
     }    // setEmailTemplateDoesNotThrowExceptionWhenEmailTemplateIsNotNull()
 
     /**
@@ -971,14 +1340,15 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailTemplateReturnsArgumentPassedToSetEmailTemplate() throws IOException {
-        Application application = getTestApplication();
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "foo", "bar", "baz", "'smurf'");
-        application.setEmailTemplate(emailTemplate);
+        for (Application application : getTestApplications()) {
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "foo", "bar", "baz", "'smurf'");
+            application.setEmailTemplate(emailTemplate);
 
-        EmailTemplate received = application.getEmailTemplate();
+            EmailTemplate received = application.getEmailTemplate();
 
-        EmailTemplate expected = emailTemplate;
-        assertEquals(expected, received);
+            EmailTemplate expected = emailTemplate;
+            assertEquals(expected, received);
+        }    // for
     }    // getEmailTemplateReturnsArgumentPassedToSetEmailTemplate()
 
     /* getEmailServerProperties / setEmailServerProperties */
@@ -989,9 +1359,9 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailServerPropertiesDoesNotThrowException() throws IOException {
-        Application application = getTestApplication();
-
-        application.getEmailServerProperties();
+        for (Application application : getTestApplications()) {
+            application.getEmailServerProperties();
+        }    // for
     }    // getEmailServerPropertiesDoesNotThrowException()
 
     /**
@@ -1000,11 +1370,11 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailServerPropertiesDoesNotReturnNull() throws IOException {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            EmailServerProperties received = application.getEmailServerProperties();
 
-        EmailServerProperties received = application.getEmailServerProperties();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getEmailServerPropertiesDoesNotReturnNull()
 
     /**
@@ -1014,10 +1384,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEmailServerPropertiesThrowsExceptionWhenEmailServerPropertiesIsNull() throws IOException {
-        Application application = getTestApplication();
-        EmailServerProperties emailServerProperties = null;
+        for (Application application : getTestApplications()) {
+            EmailServerProperties emailServerProperties = null;
 
-        application.setEmailServerProperties(emailServerProperties);
+            application.setEmailServerProperties(emailServerProperties);
+        }    // for
     }    // setEmailServerPropertiesThrowsExceptionWhenEmailServerPropertiesIsNull()
 
     /**
@@ -1027,10 +1398,11 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull() throws IOException {
-        Application application = getTestApplication();
-        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
+        for (Application application : getTestApplications()) {
+            EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
 
-        application.setEmailServerProperties(emailServerProperties);
+            application.setEmailServerProperties(emailServerProperties);
+        }    // for
     }    // setEmailServerPropertiesDoesNotThrowExceptionWhenEmailServerPropertiesIsNotNull()
 
     /**
@@ -1041,14 +1413,15 @@ public class ApplicationTest {
      */
     @Test
     public void getEmailServerPropertiesReturnsArgumentPassedToSetEmailServerProperties() throws IOException {
-        Application application = getTestApplication();
-        EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
-        application.setEmailServerProperties(emailServerProperties);
+        for (Application application : getTestApplications()) {
+            EmailServerProperties emailServerProperties = new EmailServerProperties("foo", "bar", "baz", false);
+            application.setEmailServerProperties(emailServerProperties);
 
-        EmailServerProperties received = application.getEmailServerProperties();
+            EmailServerProperties received = application.getEmailServerProperties();
 
-        EmailServerProperties expected = emailServerProperties;
-        assertEquals(expected, received);
+            EmailServerProperties expected = emailServerProperties;
+            assertEquals(expected, received);
+        }    // for
     }    // getEmailServerPropertiesReturnsArgumentPassedToSetEmailServerProperties()
 
     /* getEventProperties / setEventProperties */
@@ -1059,9 +1432,9 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties() {
-        Application application = getTestApplication();
-
-        application.getEventProperties();
+        for (Application application : getTestApplications()) {
+            application.getEventProperties();
+        }    // for
     }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreNoEventProperties()
 
     /**
@@ -1070,11 +1443,11 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotReturnNullWhenThereAreNoEventProperties() {
-        Application application = getTestApplication();
+        for (Application application : getTestApplications()) {
+            List<EventProperty> received = application.getEventProperties();
 
-        List<EventProperty> received = application.getEventProperties();
-
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getEventPropertiesDoesNotReturnNullWhenThereAreNoEventProperties()
 
     /**
@@ -1083,11 +1456,12 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
-        application.setEventProperties(eventProperties);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+            application.setEventProperties(eventProperties);
 
-        application.getEventProperties();
+            application.getEventProperties();
+        }    // for
     }    // getEventPropertiesDoesNotThrowExceptionWhenThereAreEventProperties()
 
     /**
@@ -1096,13 +1470,14 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesDoesNotReturnNullWhenThereAreEventProperties() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
-        application.setEventProperties(eventProperties);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+            application.setEventProperties(eventProperties);
 
-        List<EventProperty> received = application.getEventProperties();
+            List<EventProperty> received = application.getEventProperties();
 
-        assertNotNull(received);
+            assertNotNull(received);
+        }    // for
     }    // getEventPropertiesDoesNotReturnNullWhenThereAreEventProperties()
 
     /**
@@ -1111,10 +1486,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEventPropertiesThrowsExceptionWhenEventPropertiesIsNull() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = null;
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = null;
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
+        }    // for
     }    // setEventPropertiesThrowsExceptionWhenEventPropertiesIsNull()
 
     /**
@@ -1124,10 +1500,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void setEventPropertiesThrowsExceptionWhenEventPropertiesContainsNull() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), null);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), null);
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
+        }    // for
     }    // setEventPropertiesThrowsExceptionWhenEventPropertiesContainsNull()
 
     /**
@@ -1136,10 +1513,11 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotThrowExceptionNormally() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
+        }    // for
     }    // setEventPropertiesDoesNotThrowExceptionNormally()
 
     /**
@@ -1148,14 +1526,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotAlterArgument() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
-        List<EventProperty> expected = new ArrayList<>(eventProperties);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+            List<EventProperty> expected = new ArrayList<>(eventProperties);
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        List<EventProperty> received = eventProperties;
-        assertEquals(expected, received);
+            List<EventProperty> received = eventProperties;
+            assertEquals(expected, received);
+        }    // for
     }    // setEventPropertiesDoesNotAlterArgument()
 
     /**
@@ -1164,14 +1543,15 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesSetEventPropertiesListsAreEqual() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
-        application.setEventProperties(eventProperties);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+            application.setEventProperties(eventProperties);
 
-        List<EventProperty> received = application.getEventProperties();
+            List<EventProperty> received = application.getEventProperties();
 
-        List<EventProperty> expected = eventProperties;
-        assertEquals(expected, received);
+            List<EventProperty> expected = eventProperties;
+            assertEquals(expected, received);
+        }    // for
     }    // getEventPropertiesSetEventPropertiesListsAreEqual()
 
     /**
@@ -1181,14 +1561,15 @@ public class ApplicationTest {
      */
     @Test
     public void getEventPropertiesSetEventPropertiesListsAreNotIdentical() throws IOException {
-        Application application = getTestApplication();
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
-        application.setEventProperties(eventProperties);
+        for (Application application : getTestApplications()) {
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+            application.setEventProperties(eventProperties);
 
-        List<EventProperty> received = application.getEventProperties();
+            List<EventProperty> received = application.getEventProperties();
 
-        List<EventProperty> notExpected = eventProperties;
-        assertFalse(notExpected == received);
+            List<EventProperty> notExpected = eventProperties;
+            assertFalse(notExpected == received);
+        }    // for
     }    // getEventPropertiesSetEventPropertiesListsAreNotIdentical()
 
     /* registerObserver(ShiftsObserver) */
@@ -1199,10 +1580,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverShiftsObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        ShiftsObserver observer = null;
+        for (Application application : getTestApplications()) {
+            ShiftsObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverShiftsObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1211,10 +1593,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverShiftsObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        ShiftsObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            ShiftsObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverShiftsObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1223,11 +1606,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverShiftsObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (ShiftsObserver observer : observers) {
-            application.registerObserver(observer);
+            for (ShiftsObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverShiftsObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1238,18 +1622,19 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsNotifiesAllShiftsObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (ShiftsObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (ShiftsObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getShiftsChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getShiftsChanged());
+            }    // for
         }    // for
     }    // setShiftsNotifiesAllShiftsObservers()
 
@@ -1260,16 +1645,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyShiftsObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((ShiftsObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((ShiftsObserver) observer);
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        assertFalse(observer.getShiftsChanged());
+            assertFalse(observer.getShiftsChanged());
+        }    // for
     }    // setVolunteersDoesNotNotifyShiftsObservers()
 
     /**
@@ -1279,14 +1665,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyShiftsObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((ShiftsObserver)observer);
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((ShiftsObserver) observer);
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        assertFalse(observer.getShiftsChanged());
+            assertFalse(observer.getShiftsChanged());
+        }    // for
     }    // setRolesDoesNotNotifyShiftsObservers()
 
     /**
@@ -1297,14 +1684,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyShiftObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((ShiftsObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((ShiftsObserver) observer);
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        assertFalse(observer.getShiftsChanged());
+            assertFalse(observer.getShiftsChanged());
+        }    // for
     }    // setEmailTemplateDoesNotNotifyShiftObservers()
 
     /**
@@ -1315,14 +1703,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotNotifyShiftObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((ShiftsObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((ShiftsObserver) observer);
+            EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailTemplate);
+            application.setEmailServerProperties(emailTemplate);
 
-        assertFalse(observer.getShiftsChanged());
+            assertFalse(observer.getShiftsChanged());
+        }    // for
     }    // setEmailServerPropertiesDoesNotNotifyShiftObservers()
 
     /**
@@ -1332,14 +1721,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyShiftsObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((ShiftsObserver)observer);
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((ShiftsObserver) observer);
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        assertFalse(observer.getShiftsChanged());
+            assertFalse(observer.getShiftsChanged());
+        }    // for
     }    // setEventPropertiesDoesNotNotifyShiftsObservers()
 
     /* registerObserver(VolunteersObserver) */
@@ -1350,10 +1740,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverVolunteersObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        VolunteersObserver observer = null;
+        for (Application application : getTestApplications()) {
+            VolunteersObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverVolunteersObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1362,10 +1753,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        VolunteersObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            VolunteersObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverVolunteersObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1374,11 +1766,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverVolunteersObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (VolunteersObserver observer : observers) {
-            application.registerObserver(observer);
+            for (VolunteersObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverVolunteersObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1389,19 +1782,20 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersNotifiesAllVolunteersObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (VolunteersObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (VolunteersObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getVolunteersChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getVolunteersChanged());
+            }    // for
         }    // for
     }    // setVolunteersNotifiesAllVolunteersObservers()
 
@@ -1412,15 +1806,16 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyVolunteersObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((VolunteersObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((VolunteersObserver) observer);
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setShiftsDoesNotNotifyVolunteersObservers()
 
     /**
@@ -1430,14 +1825,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyVolunteersObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((VolunteersObserver)observer);
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((VolunteersObserver) observer);
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setRolesDoesNotNotifyVolunteersObservers()
 
     /**
@@ -1447,14 +1843,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyVolunteerObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((VolunteersObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((VolunteersObserver) observer);
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setEmailTemplateDoesNotNotifyVolunteerObservers()
 
     /**
@@ -1465,14 +1862,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotNotifyVolunteerObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((VolunteersObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((VolunteersObserver) observer);
+            EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailTemplate);
+            application.setEmailServerProperties(emailTemplate);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setEmailServerPropertiesDoesNotNotifyVolunteerObservers()
 
     /**
@@ -1482,14 +1880,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyVolunteersObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((VolunteersObserver)observer);
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((VolunteersObserver) observer);
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setEventPropertiesDoesNotNotifyVolunteersObservers()
 
     /* registerObserver(RolesObserver) */
@@ -1500,10 +1899,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverRolesObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        RolesObserver observer = null;
+        for (Application application : getTestApplications()) {
+            RolesObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverRolesObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1512,10 +1912,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverRolesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        RolesObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            RolesObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverRolesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1524,11 +1925,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverRolesObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (RolesObserver observer : observers) {
-            application.registerObserver(observer);
+            for (RolesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverRolesObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1539,17 +1941,18 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesNotifiesAllRolesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (RolesObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (RolesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getRolesChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getRolesChanged());
+            }    // for
         }    // for
     }    // setRolesNotifiesAllRolesObservers()
 
@@ -1560,15 +1963,16 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyRolesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((RolesObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((RolesObserver) observer);
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        assertFalse(observer.getRolesChanged());
+            assertFalse(observer.getRolesChanged());
+        }    // for
     }    // setShiftsDoesNotNotifyRolesObservers()
 
     /**
@@ -1578,16 +1982,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyRolesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((RolesObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((RolesObserver) observer);
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setVolunteersDoesNotNotifyRolesObservers()
 
     /**
@@ -1597,14 +2002,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyRoleObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((RolesObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((RolesObserver) observer);
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        assertFalse(observer.getRolesChanged());
+            assertFalse(observer.getRolesChanged());
+        }    // for
     }    // setEmailTemplateDoesNotNotifyRoleObservers()
 
     /**
@@ -1615,14 +2021,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotNotifyRoleObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((RolesObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((RolesObserver) observer);
+            EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailTemplate);
+            application.setEmailServerProperties(emailTemplate);
 
-        assertFalse(observer.getRolesChanged());
+            assertFalse(observer.getRolesChanged());
+        }    // for
     }    // setEmailServerPropertiesDoesNotNotifyRoleObservers()
 
     /**
@@ -1632,14 +2039,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyRolesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((RolesObserver)observer);
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((RolesObserver) observer);
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        assertFalse(observer.getRolesChanged());
+            assertFalse(observer.getRolesChanged());
+        }    // for
     }    // setEventPropertiesDoesNotNotifyRolesObservers()
 
     /* registerObserver(EmailTemplateObserver) */
@@ -1650,10 +2058,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverEmailTemplateObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        EmailTemplateObserver observer = null;
+        for (Application application : getTestApplications()) {
+            EmailTemplateObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEmailTemplateObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1662,10 +2071,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        EmailTemplateObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            EmailTemplateObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1674,11 +2084,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (EmailTemplateObserver observer : observers) {
-            application.registerObserver(observer);
+            for (EmailTemplateObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverEmailTemplateObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1689,17 +2100,18 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateNotifiesAllEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (EmailTemplateObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (EmailTemplateObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getEmailTemplateChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getEmailTemplateChanged());
+            }    // for
         }    // for
     }    // setEmailTemplateNotifiesAllEmailTemplateObservers()
 
@@ -1710,15 +2122,16 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailTemplateObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailTemplateObserver) observer);
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        assertFalse(observer.getEmailTemplateChanged());
+            assertFalse(observer.getEmailTemplateChanged());
+        }    // for
     }    // setShiftsDoesNotNotifyEmailTemplateObservers()
 
     /**
@@ -1728,16 +2141,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailTemplateObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailTemplateObserver) observer);
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setVolunteersDoesNotNotifyEmailTemplateObservers()
 
     /**
@@ -1747,14 +2161,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailTemplateObserver)observer);
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailTemplateObserver) observer);
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        assertFalse(observer.getEmailTemplateChanged());
+            assertFalse(observer.getEmailTemplateChanged());
+        }    // for
     }    // setRolesDoesNotNotifyEmailTemplateObservers()
 
     /**
@@ -1765,14 +2180,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotNotifyEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailTemplateObserver)observer);
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailTemplateObserver) observer);
+            EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailTemplate);
+            application.setEmailServerProperties(emailTemplate);
 
-        assertFalse(observer.getEmailTemplateChanged());
+            assertFalse(observer.getEmailTemplateChanged());
+        }    // for
     }    // setEmailServerPropertiesDoesNotNotifyEmailTemplateObservers()
 
     /**
@@ -1782,14 +2198,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyEmailTemplateObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailTemplateObserver)observer);
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailTemplateObserver) observer);
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        assertFalse(observer.getEmailTemplateChanged());
+            assertFalse(observer.getEmailTemplateChanged());
+        }    // for
     }    // setEventPropertiesDoesNotNotifyEmailTemplateObservers()
 
     /* registerObserver(EmailServerPropertiesObserver) */
@@ -1801,10 +2218,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverEmailServerPropertiesObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        EmailServerPropertiesObserver observer = null;
+        for (Application application : getTestApplications()) {
+            EmailServerPropertiesObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEmailServerPropertiesObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1814,10 +2232,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        EmailServerPropertiesObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            EmailServerPropertiesObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1827,11 +2246,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (EmailServerPropertiesObserver observer : observers) {
-            application.registerObserver(observer);
+            for (EmailServerPropertiesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverEmailServerPropertiesObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1842,17 +2262,18 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesNotifiesAllEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (EmailServerPropertiesObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (EmailServerPropertiesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            EmailServerProperties emailTemplate = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailTemplate);
+            application.setEmailServerProperties(emailTemplate);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getEmailServerPropertiesChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getEmailServerPropertiesChanged());
+            }    // for
         }    // for
     }    // setEmailServerPropertiesNotifiesAllEmailServerPropertiesObservers()
 
@@ -1863,15 +2284,16 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailServerPropertiesObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailServerPropertiesObserver) observer);
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        assertFalse(observer.getEmailServerPropertiesChanged());
+            assertFalse(observer.getEmailServerPropertiesChanged());
+        }    // for
     }    // setShiftsDoesNotNotifyEmailServerPropertiesObservers()
 
     /**
@@ -1881,16 +2303,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailServerPropertiesObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailServerPropertiesObserver) observer);
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        assertFalse(observer.getEmailServerPropertiesChanged());
+            assertFalse(observer.getEmailServerPropertiesChanged());
+        }    // for
     }    // setVolunteersDoesNotNotifyEmailServerPropertiesObservers()
 
     /**
@@ -1900,14 +2323,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailServerPropertiesObserver)observer);
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailServerPropertiesObserver) observer);
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        assertFalse(observer.getEmailServerPropertiesChanged());
+            assertFalse(observer.getEmailServerPropertiesChanged());
+        }    // for
     }    // setRolesDoesNotNotifyEmailServerPropertiesObservers()
 
     /**
@@ -1917,14 +2341,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailServerPropertiesObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailServerPropertiesObserver) observer);
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        assertFalse(observer.getEmailServerPropertiesChanged());
+            assertFalse(observer.getEmailServerPropertiesChanged());
+        }    // for
     }    // setEmailTemplateDoesNotNotifyEmailServerPropertiesObservers()
 
     /**
@@ -1934,14 +2359,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesDoesNotNotifyEmailServerPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EmailServerPropertiesObserver)observer);
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EmailServerPropertiesObserver) observer);
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        assertFalse(observer.getEmailServerPropertiesChanged());
+            assertFalse(observer.getEmailServerPropertiesChanged());
+        }    // for
     }    // setEventPropertiesDoesNotNotifyEmailServerPropertiesObservers()
 
     /* registerObserver(EventPropertiesObserver) */
@@ -1952,10 +2378,11 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void registerObserverEventPropertiesObserverThrowsExceptionWhenObserverIsNull() {
-        Application application = getTestApplication();
-        EventPropertiesObserver observer = null;
+        for (Application application : getTestApplications()) {
+            EventPropertiesObserver observer = null;
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEventPropertiesObserverThrowsExceptionWhenObserverIsNull()
 
     /**
@@ -1964,10 +2391,11 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull() {
-        Application application = getTestApplication();
-        EventPropertiesObserver observer = new ApplicationObserver();
+        for (Application application : getTestApplications()) {
+            EventPropertiesObserver observer = new ApplicationObserver();
 
-        application.registerObserver(observer);
+            application.registerObserver(observer);
+        }    // for
     }    // registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenObserverIsNotNull()
 
     /**
@@ -1976,11 +2404,12 @@ public class ApplicationTest {
      */
     @Test
     public void registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenCalledTwice() {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
 
-        for (EventPropertiesObserver observer : observers) {
-            application.registerObserver(observer);
+            for (EventPropertiesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
         }    // for
     }    // registerObserverEventPropertiesObserverDoesNotThrowExceptionWhenCalledTwice()
 
@@ -1991,17 +2420,18 @@ public class ApplicationTest {
      */
     @Test
     public void setEventPropertiesNotifiesAllEventPropertyObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver[] observers = { new ApplicationObserver(), new ApplicationObserver() };
-        for (EventPropertiesObserver observer : observers) {
-            application.registerObserver(observer);
-        }    // for
-        List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver[] observers = {new ApplicationObserver(), new ApplicationObserver()};
+            for (EventPropertiesObserver observer : observers) {
+                application.registerObserver(observer);
+            }    // for
+            List<EventProperty> eventProperties = Arrays.asList(new EventProperty("Foo", "foo"), new EventProperty("Bar", "bar"));
 
-        application.setEventProperties(eventProperties);
+            application.setEventProperties(eventProperties);
 
-        for (ApplicationObserver observer : observers) {
-            assertTrue(observer.getEventPropertiesChanged());
+            for (ApplicationObserver observer : observers) {
+                assertTrue(observer.getEventPropertiesChanged());
+            }    // for
         }    // for
     }    // setEventPropertiesNotifiesAllEventPropertyObservers()
 
@@ -2012,15 +2442,16 @@ public class ApplicationTest {
      */
     @Test
     public void setShiftsDoesNotNotifyEventPropertyObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertiesObserver)observer);
-        List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
-                new Shift("Bar", new LinkedList<Role>(), false, false, false));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EventPropertiesObserver) observer);
+            List<Shift> shifts = Arrays.asList(new Shift("Foo", new LinkedList<Role>(), false, false, false),
+                    new Shift("Bar", new LinkedList<Role>(), false, false, false));
 
-        application.setShifts(shifts);
+            application.setShifts(shifts);
 
-        assertFalse(observer.getEventPropertiesChanged());
+            assertFalse(observer.getEventPropertiesChanged());
+        }    // for
     }    // setShiftsDoesNotNotifyEventPropertyObservers()
 
     /**
@@ -2030,16 +2461,17 @@ public class ApplicationTest {
      */
     @Test
     public void setVolunteersDoesNotNotifyEventPropertyObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertiesObserver)observer);
-        List<Volunteer> volunteers = Arrays.asList(
-                new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
-                new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EventPropertiesObserver) observer);
+            List<Volunteer> volunteers = Arrays.asList(
+                    new Volunteer("Foo", "foo", "", "", true, Arrays.asList()),
+                    new Volunteer("Bar", "bar", "", "", true, Arrays.asList()));    // volunteers
 
-        application.setVolunteers(volunteers);
+            application.setVolunteers(volunteers);
 
-        assertFalse(observer.getVolunteersChanged());
+            assertFalse(observer.getVolunteersChanged());
+        }    // for
     }    // setVolunteersDoesNotNotifyEventPropertyObservers()
 
     /**
@@ -2049,14 +2481,15 @@ public class ApplicationTest {
      */
     @Test
     public void setRolesDoesNotNotifyEventPropertyObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertiesObserver)observer);
-        List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EventPropertiesObserver) observer);
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"));
 
-        application.setRoles(roles);
+            application.setRoles(roles);
 
-        assertFalse(observer.getRolesChanged());
+            assertFalse(observer.getRolesChanged());
+        }    // for
     }    // setRolesDoesNotNotifyEventPropertyObservers()
 
     /**
@@ -2066,14 +2499,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailTemplateDoesNotNotifyEventPropertyObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertiesObserver)observer);
-        EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EventPropertiesObserver) observer);
+            EmailTemplate emailTemplate = new EmailTemplate(EmailTemplate.SendType.TO, "Foo", "Bar", "Baz", "'Smurf'");
 
-        application.setEmailTemplate(emailTemplate);
+            application.setEmailTemplate(emailTemplate);
 
-        assertFalse(observer.getEventPropertiesChanged());
+            assertFalse(observer.getEventPropertiesChanged());
+        }    // for
     }    // setEmailTemplateDoesNotNotifyEventPropertyObservers()
 
     /**
@@ -2084,14 +2518,15 @@ public class ApplicationTest {
      */
     @Test
     public void setEmailServerPropertiesDoesNotNotifyEventPropertiesObservers() throws IOException {
-        Application application = getTestApplication();
-        ApplicationObserver observer = new ApplicationObserver();
-        application.registerObserver((EventPropertiesObserver)observer);
-        EmailServerProperties emailServerProperties = new EmailServerProperties("Foo", "Bar", "Baz", false);
+        for (Application application : getTestApplications()) {
+            ApplicationObserver observer = new ApplicationObserver();
+            application.registerObserver((EventPropertiesObserver) observer);
+            EmailServerProperties emailServerProperties = new EmailServerProperties("Foo", "Bar", "Baz", false);
 
-        application.setEmailServerProperties(emailServerProperties);
+            application.setEmailServerProperties(emailServerProperties);
 
-        assertFalse(observer.getEventPropertiesChanged());
+            assertFalse(observer.getEventPropertiesChanged());
+        }    // for
     }    // setEmailServerPropertiesDoesNotNotifyEventPropertiesObservers()
 
 }    // ApplicationTest
