@@ -359,16 +359,10 @@ public class MainFrame extends JFrame {
         assertInvariant();
         String versionString = application.getApplicationName() + " v" + application.getVersion();
         String aboutText = application.getCopyright() + "\n\n";
-        aboutText += application.getApplicationName() + " is free software: you can redistribute it and/or modify\n";
-        aboutText += "it under the terms of the GNU General Public License as published by\n";
-        aboutText += "the Free Software Foundation, either version 3 of the License, or\n";
-        aboutText += "(at your option) any later version.\n\n";
-        aboutText += application.getApplicationName() + " is distributed in the hope that it will be useful,\n";
-        aboutText += "but WITHOUT ANY WARRANTY; without even the implied warranty of\n";
-        aboutText += "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n";
-        aboutText += "GNU General Public License for more details.\n\n";
-        aboutText += "You should have received a copy of the GNU General Public License\n";
-        aboutText += "along with " + application.getApplicationName() + ".  If not, see <http://www.gnu.org/licenses/>.";
+        aboutText += application.getAboutMessage();
+
+        final int TEXT_AREA_WIDTH = 450;
+        final int TEXT_AREA_HEIGHT = 1;    // The pack() command will size the height appropriately.
 
         JFrame frame = new JFrame();
         frame.setTitle(application.getApplicationName() + " - About");
@@ -382,6 +376,9 @@ public class MainFrame extends JFrame {
         panel = new JPanel();
         JTextArea aboutTextArea = new JTextArea(aboutText);
         aboutTextArea.setEditable(false);
+        aboutTextArea.setLineWrap(true);
+        aboutTextArea.setWrapStyleWord(true);
+        aboutTextArea.setSize(TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
         panel.add(aboutTextArea);
         frame.add(panel);
         frame.pack();

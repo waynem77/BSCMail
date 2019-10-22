@@ -84,6 +84,11 @@ public class Application {
         APPLICATION_COPYRIGHT ("application.copyright"),
 
         /**
+         * "application.aboutMessage", the application about message.
+         */
+        APPLICATION_ABOUT_MESSAGE ("application.aboutMessage"),
+
+        /**
          * "application.iolayerFactory", the class of the {@link IOLayerFactory}
          * implementation for the application.
          */
@@ -261,6 +266,7 @@ public class Application {
      * <tr><th>application.name</th><td>the application name</td></tr>
      * <tr><th>application.version</th><td>the application version</td></tr>
      * <tr><th>application.copyright</th><td>the application copyright string</td></tr>
+     * <tr><th>application.aboutMessage</th><td>the application about message</td></tr>
      * <tr><th>application.iolayerFactory</th><td>the class of the {@link IOLayerFactory} implementation for the application</td></tr>
      * <tr><th>application.helpDisplayFactory</th><td>the class of the {@link HelpDisplayFactory} implementation for the application</td></tr>
      * <tr><th>shifts.iolayer.class</th><td>the class of the {@link IOLayer} implementation for shifts</td></tr>
@@ -304,7 +310,8 @@ public class Application {
         String applicationName = applicationProperties.getProperty(PropertyKey.APPLICATION_NAME.getKeyString());
         String applicationVersion = applicationProperties.getProperty(PropertyKey.APPLICATION_VERSION.getKeyString());
         String applicationCopyright = applicationProperties.getProperty(PropertyKey.APPLICATION_COPYRIGHT.getKeyString());
-        ApplicationInfo applicationInfo = new ApplicationInfo(applicationName, applicationVersion, applicationCopyright);
+        String applicationAboutMessage = applicationProperties.getProperty(PropertyKey.APPLICATION_ABOUT_MESSAGE.getKeyString());
+        ApplicationInfo applicationInfo = new ApplicationInfo(applicationName, applicationVersion, applicationCopyright, applicationAboutMessage);
 
         try {
             CsvStringParser csvParser = new CsvStringParser();
@@ -632,6 +639,15 @@ public class Application {
         assertInvariant();
         return applicationInfo.getCopyright();
     }    // getCopyright()
+
+    /**
+     * Returns an about message for the application.
+     * @return an about message for the application
+     */
+    public String getAboutMessage() {
+        assertInvariant();
+        return applicationInfo.getAboutMessage();
+    }    // getAboutMessage()
 
     /**
      * Displays application help

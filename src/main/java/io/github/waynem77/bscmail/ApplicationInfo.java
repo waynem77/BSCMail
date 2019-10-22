@@ -29,6 +29,7 @@ package io.github.waynem77.bscmail;
  * <li>application name</li>
  * <li>application version</li>
  * <li>copyright information</li>
+ * <li>an about message</li>
  * </ul>
  *
  * @author Wayne Miller
@@ -52,14 +53,20 @@ public class ApplicationInfo {
     private final String copyright;
 
     /**
+     * The application about message.
+     */
+    private final String aboutMessage;
+
+    /**
      * Creates a new application info object from the given strings.
-     * 
+     *
      * @param name the name of the application; may not be null
      * @param version the version of the application; may not be null
      * @param copyright the copyright string of the application; may not be null
+     * @param aboutMessage the about message of the application; may not be null
      * @throws NullPointerException if any parameter is null
      */
-    public ApplicationInfo(String name, String version, String copyright) {
+    public ApplicationInfo(String name, String version, String copyright, String aboutMessage) {
         if (name == null) {
             throw new NullPointerException("name may not be null");
         }    // if
@@ -69,10 +76,14 @@ public class ApplicationInfo {
         if (copyright == null) {
             throw new NullPointerException("copyright may not be null");
         }    // if
+        if (aboutMessage == null) {
+            throw new NullPointerException("aboutMessage");
+        }
 
         this.name = name;
         this.version = version;
         this.copyright = copyright;
+        this.aboutMessage = aboutMessage;
 
         assertInvariant();
     }    // ApplicationInfo()
@@ -105,12 +116,22 @@ public class ApplicationInfo {
     }    // getCopyright()
 
     /**
+     * Returns the application about messages.
+     * @return the application about messages
+     */
+    public String getAboutMessage() {
+        assertInvariant();
+        return aboutMessage;
+    }    // getAboutMessage()
+
+    /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
         assert (name != null);
         assert (version != null);
         assert (copyright != null);
+        assert (aboutMessage != null);
     }    // assertInvariant()
 
 }    // ApplicationInfo

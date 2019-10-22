@@ -30,7 +30,7 @@ import io.github.waynem77.bscmail.iolayer.TestIOLayer;
 public class TestApplication extends Application {
 
     public TestApplication() {
-        super(new ApplicationInfo("foo", "bar", "baz"),    // applicationInfo
+        super(new ApplicationInfo("foo", "bar", "baz", "smurf"),    // applicationInfo
                 new TestIOLayer<>(),    // shiftsIOLayer
                 new TestIOLayer<>(),    // volunteersIOLayer
                 new TestIOLayer<>(),    // rolesIOLayer

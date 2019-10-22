@@ -98,6 +98,7 @@ public class ApplicationTest {
         applicationProperties.setProperty(Application.PropertyKey.APPLICATION_NAME.getKeyString(), "foo");
         applicationProperties.setProperty(Application.PropertyKey.APPLICATION_VERSION.getKeyString(), "bar");
         applicationProperties.setProperty(Application.PropertyKey.APPLICATION_COPYRIGHT.getKeyString(), "baz");
+        applicationProperties.setProperty(Application.PropertyKey.APPLICATION_ABOUT_MESSAGE.getKeyString(), "smurf");
         applicationProperties.setProperty(Application.PropertyKey.APPLICATION_IOLAYER_FACTORY.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayerFactory");
         applicationProperties.setProperty(Application.PropertyKey.APPLICATION_HELP_DISPLAY_FACTORY.getKeyString(), "io.github.waynem77.bscmail.help.TestHelpDisplayFactory");
         applicationProperties.setProperty(Application.PropertyKey.SHIFTS_IOLAYER_CLASS.getKeyString(), "io.github.waynem77.bscmail.iolayer.TestIOLayer");
@@ -126,7 +127,7 @@ public class ApplicationTest {
     private List<Application> getTestApplications() {
         List<Application> applications = new ArrayList<>();
 
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -174,7 +175,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenShiftsIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = null;
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -193,7 +194,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenVolunteersIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = null;
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -212,7 +213,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenRolesIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = null;
@@ -231,7 +232,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenEmailTemplateIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -251,7 +252,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenEmailServerPropertiesIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -270,7 +271,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenEventPropertiesIoLayerIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -289,7 +290,7 @@ public class ApplicationTest {
      */
     @Test(expected = NullPointerException.class)
     public void createApplicationThrowsExceptionWhenHelpDisplayIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -308,7 +309,7 @@ public class ApplicationTest {
      */
     @Test
     public void createApplicationDoesNotThrowExceptionWhenNoparameterIsNull() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -621,7 +622,7 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationNameReturnsCorrectValue() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -675,7 +676,7 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationVersionReturnsCorrectValue() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -730,7 +731,7 @@ public class ApplicationTest {
      */
     @Test
     public void getApplicationCopyrightReturnsCorrectValue() {
-        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz");
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
         IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
         IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
         IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
@@ -753,6 +754,61 @@ public class ApplicationTest {
         expected = applicationProperties.getProperty(Application.PropertyKey.APPLICATION_COPYRIGHT.getKeyString());
         assertEquals(expected, received);
     }    // getApplicationCopyrightReturnsCorrectValue()
+
+    /* getAboutMessage */
+
+    /**
+     * Tests that {@link Application#getAboutMessage()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getAboutMessageDoesNotThrowException() {
+        for (Application application: getTestApplications()) {
+            application.getAboutMessage();
+        }    // for
+    }    // getAboutMessageDoesNotThrowException()
+
+    /**
+     * Tests that {@link Application#getAboutMessage()} does not return null.
+     */
+    @Test
+    public void getAboutMessageDoesNotReturnNull() {
+        for (Application application: getTestApplications()) {
+            String received = application.getAboutMessage();
+
+            assertNotNull(received);
+        }    // for
+    }    // getAboutMessageDoesNotReturnNull()
+
+    /**
+     * Tests that {@link Application#getApplicationAboutMessage()} returns the
+     * correct value.
+     */
+    @Test
+    public void getApplicationAboutMessageReturnsCorrectValue() {
+        ApplicationInfo applicationInfo = new ApplicationInfo("foo", "bar", "baz", "smurf");
+        IOLayer<Shift> shiftsIOLayer = new TestIOLayer<>();
+        IOLayer<Volunteer> volunteersIOLayer = new TestIOLayer<>();
+        IOLayer<Role> rolesIOLayer = new TestIOLayer<>();
+        IOLayer<EmailTemplate> emailTemplateIOLayer = new TestIOLayer<>();
+        IOLayer<EmailServerProperties> emailServerPropertiesIOLayer = new TestIOLayer<>();
+        IOLayer<EventProperty> eventPropertiesIOLayer = new TestIOLayer<>();
+        HelpDisplay helpDisplay = new TestHelpDisplay();
+        Application application = Application.createApplication(applicationInfo, shiftsIOLayer, volunteersIOLayer, rolesIOLayer, emailTemplateIOLayer, emailServerPropertiesIOLayer, eventPropertiesIOLayer, helpDisplay);
+
+        String received = application.getAboutMessage();
+
+        String expected = applicationInfo.getAboutMessage();
+        assertEquals(expected, received);
+
+        Properties applicationProperties = getTestApplicationProperties();
+        application = Application.createApplication(applicationProperties);
+
+        received = application.getAboutMessage();
+
+        expected = applicationProperties.getProperty(Application.PropertyKey.APPLICATION_ABOUT_MESSAGE.getKeyString());
+        assertEquals(expected, received);
+    }    // getApplicationAboutMessageReturnsCorrectValue()
 
     /* displayHelp */
 

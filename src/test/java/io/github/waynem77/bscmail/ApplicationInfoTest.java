@@ -33,7 +33,7 @@ public class ApplicationInfoTest {
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * throws a {@link NullPointerException} when name is null.
      */
     @Test(expected = NullPointerException.class)
@@ -41,13 +41,14 @@ public class ApplicationInfoTest {
         String name = null;
         String version = "bar";
         String copyright = "baz";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorThrowsExceptionWhenNameIsNull()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * does not throw an exception when name is empty.
      */
     @Test
@@ -55,13 +56,14 @@ public class ApplicationInfoTest {
         String name = "";
         String version = "bar";
         String copyright = "baz";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorDoesNotThrowAnExceptionWhenNameIsEmpty()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * throws a {@link NullPointerException} when version is null.
      */
     @Test(expected = NullPointerException.class)
@@ -69,13 +71,14 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = null;
         String copyright = "baz";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorThrowsExceptionWhenVersionIsNull()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * does not throw an exception when version is empty.
      */
     @Test
@@ -83,13 +86,14 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "";
         String copyright = "baz";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorDoesNotThrowAnExceptionWhenVersionIsEmpty()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * throws a {@link NullPointerException} when copyright is null.
      */
     @Test(expected = NullPointerException.class)
@@ -97,13 +101,14 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = null;
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorThrowsExceptionWhenCopyrightIsNull()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * does not throw an exception when copyright is empty.
      */
     @Test
@@ -111,13 +116,44 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorDoesNotThrowAnExceptionWhenCopyrightIsEmpty()
 
     /**
      * Tests that
-     * {@link ApplicationInfo#ApplicationInfo(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
+     * throws a {@link NullPointerException} when aboutMessage is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void constructorThrowsExceptionWhenAboutMessageIsNull() {
+        String name = "foo";
+        String version = "bar";
+        String copyright = "baz";
+        String aboutMessage = null;
+
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
+    }    // constructorThrowsExceptionWhenAboutMessageIsNull()
+
+    /**
+     * Tests that
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
+     * does not throw an exception when aboutMessage is empty.
+     */
+    @Test
+    public void constructorDoesNotThrowAnExceptionWhenAboutMessageIsEmpty() {
+        String name = "foo";
+        String version = "bar";
+        String copyright = "baz";
+        String aboutMessage = "";
+
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
+    }    // constructorDoesNotThrowAnExceptionWhenAboutMessageIsEmpty()
+
+    /**
+     * Tests that
+     * {@link ApplicationInfo#ApplicationInfo(String, String, String, String)}
      * does not throw an exception when no parameter is null nor empty.
      */
     @Test
@@ -125,8 +161,9 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
+        String aboutMessage = "smurf";
 
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
     }    // constructorDoesNotThrowAnExceptionWhenNoParameterIsNullNorEmpty()
 
     /* getName */
@@ -139,7 +176,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         applicationInfo.getName();
     }    // getNameDoesNotThrowException()
@@ -152,7 +190,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getName();
 
@@ -168,7 +207,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getName();
 
@@ -187,7 +227,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         applicationInfo.getVersion();
     }    // getVersionDoesNotThrowException()
@@ -200,7 +241,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getVersion();
 
@@ -216,7 +258,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getVersion();
 
@@ -235,7 +278,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         applicationInfo.getCopyright();
     }    // getCopyrightDoesNotThrowException()
@@ -248,7 +292,8 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getCopyright();
 
@@ -264,11 +309,64 @@ public class ApplicationInfoTest {
         String name = "foo";
         String version = "bar";
         String copyright = "baz";
-        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright);
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
 
         String received = applicationInfo.getCopyright();
 
         String expected = copyright;
         assertEquals(expected, received);
-    }    // getCopyrightDoesNotReturnNull()
+    }    // getCopyrightReturnsCorrectValue()
+
+    /* getAboutMessage */
+
+    /**
+     * Tests that {@link ApplicationInfo#getAboutMessage()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getAboutMessageDoesNotThrowException() {
+        String name = "foo";
+        String version = "bar";
+        String copyright = "baz";
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
+
+        applicationInfo.getAboutMessage();
+    }    // getAboutMessageDoesNotThrowException()
+
+    /**
+     * Tests that {@link ApplicationInfo#getAboutMessage()} does not return null.
+     */
+    @Test
+    public void getAboutMessageDoesNotReturnNull() {
+        String name = "foo";
+        String version = "bar";
+        String copyright = "baz";
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
+
+        String received = applicationInfo.getAboutMessage();
+
+        assertNotNull(received);
+    }    // getAboutMessageDoesNotReturnNull()
+
+    /**
+     * Tests that {@link ApplicationInfo#getAboutMessage()} returns the copyright
+     * string passed to the constructor.
+     */
+    @Test
+    public void getAboutMessageReturnsCorrectValue() {
+        String name = "foo";
+        String version = "bar";
+        String copyright = "baz";
+        String aboutMessage = "smurf";
+        ApplicationInfo applicationInfo = new ApplicationInfo(name, version, copyright, aboutMessage);
+
+        String received = applicationInfo.getAboutMessage();
+
+        String expected = aboutMessage;
+        assertEquals(expected, received);
+    }    // getAboutMessageReturnsCorrectValue()
+
 }    // ApplicationInfoTest
