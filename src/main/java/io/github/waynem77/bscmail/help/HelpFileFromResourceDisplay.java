@@ -19,11 +19,11 @@
 
 package io.github.waynem77.bscmail.help;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Displays application help by opening and displaying a file contained within
@@ -72,19 +72,13 @@ public class HelpFileFromResourceDisplay implements HelpDisplay {
     @Override
     public void displayHelp() throws IOException {
         final String TEMP_FILE_PREFIX = "bscmail";
-        final int BUFFER_SIZE = 100 * 1024;
 
-        File tempFile = File.createTempFile(TEMP_FILE_PREFIX, fileSuffix);
-        try (InputStream helpFileInputStream = ClassLoader.getSystemResourceAsStream(resource);
-                OutputStream tempFileOutputStream = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesWritten;
-            while ((bytesWritten = helpFileInputStream.read(buffer)) > 0) {
-                tempFileOutputStream.write(buffer, 0, bytesWritten);
-            }    // while
+        Path tempFile = Files.createTempFile(TEMP_FILE_PREFIX, fileSuffix);
+        try (InputStream helpFileInputStream = ClassLoader.getSystemResourceAsStream(resource)) {
+            Files.copy(helpFileInputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
         }    // try
 
-        HelpDisplay helpDisplay = new HelpFileDisplay(tempFile.getCanonicalPath());
+        HelpDisplay helpDisplay = new HelpFileDisplay(tempFile.toString());
         helpDisplay.displayHelp();
     }    // displayHelp()
 
