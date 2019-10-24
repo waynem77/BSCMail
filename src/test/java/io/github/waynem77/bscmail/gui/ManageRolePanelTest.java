@@ -22,13 +22,14 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.TestApplication;
+import io.github.waynem77.bscmail.persistent.Role;
 import org.junit.*;
 
 /**
  *
  * @author Wayne Miller
  */
-public class ManageRolePanelTest {
+public class ManageRolePanelTest extends ManageElementPanelTest<Role> {
 
     /**
      * Returns an application that can be used in tests.
@@ -36,6 +37,37 @@ public class ManageRolePanelTest {
     private Application getTestApplication()  {
         return new TestApplication();
     }    // getTestApplication()
+
+    /**
+     * Returns the manage role panel to be tested.
+     *
+     * @return the manage role panel to be tested
+     */
+    @Override
+    protected ManageRolePanel getPanel() {
+        Application application = getTestApplication();
+        return new ManageRolePanel(application);
+    }    // getPanel()
+
+    /**
+     * Returns an invalid role to use in testing.
+     *
+     * @return an invalid role to use in testing
+     */
+    @Override
+    protected Role getInvalidElement() {
+        return null;
+    }    // gerInvalidElement()
+
+    /**
+     * Returns a valid role to use in testing.
+     *
+     * @return a valid role to use in testing
+     */
+    @Override
+    protected Role getElement() {
+        return new Role("foo");
+    }    // getElement()
 
     /**
      * Tests that
