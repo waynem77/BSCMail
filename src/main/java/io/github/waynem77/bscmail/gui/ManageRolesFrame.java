@@ -49,7 +49,8 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
                         assert (role2 != null);
                         return role1.toString().compareTo(role2.toString());
                     }    // compare()
-                }    // Comparator
+                },    // Comparator
+                "Role"
         );
         application.registerObserver(this);
 

@@ -52,7 +52,8 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
             assert (EventProperty2 != null);
             return EventProperty1.toString().compareTo(EventProperty2.toString());
           }    // compare()
-        }    // Comparator
+        },    // Comparator
+        "Event Property"
     );
 
     setTitle(application.getApplicationName() + " - Manage Event Properties");

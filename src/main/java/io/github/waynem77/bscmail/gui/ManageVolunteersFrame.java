@@ -55,7 +55,8 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
                         assert (volunteer2 != null);
                         return volunteer1.toString().compareTo(volunteer2.toString());
                     }    // compare()
-                }    // Comparator
+                },    // Comparator
+                "Volunteer"
         );
         application.registerObserver((RolesObserver)this);
         application.registerObserver((VolunteersObserver)this);

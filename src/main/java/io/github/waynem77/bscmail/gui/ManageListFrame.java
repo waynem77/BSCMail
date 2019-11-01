@@ -34,8 +34,10 @@ import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -87,7 +89,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     /**
      * A button that overwrites a shift with new values.
      */
-    private final JButton saveButton;
+    private final JButton editButton;
 
     /**
      * A button that deletes a shift.
@@ -110,15 +112,21 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     private final Comparator<E> elementComparator;
 
     /**
+     * The name of the elementType.
+     */
+    private final String elementName;
+
+    /**
      * Constructs a new manage list frame.
      *
      * @param application the calling application; may not be null
      * @param managerPanel the panel used to manipulate individual elements; may not be null
      * @param initialData the initial data for the list control; may not be null
      * @param elementComparator an element comparator
+     * @param elementName the name of the element type
      * @throws NullPointerException if any parameter is null
      */
-    public ManageListFrame(Application application, ManageElementPanel<E> managerPanel, java.util.List<E> initialData, Comparator<E> elementComparator) {
+    public ManageListFrame(Application application, ManageElementPanel<E> managerPanel, java.util.List<E> initialData, Comparator<E> elementComparator, String elementName) {
         if (application == null) {
             throw new NullPointerException("application may not be null");
         }    // if
@@ -131,6 +139,9 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         if (elementComparator == null) {
             throw new NullPointerException("elementComparator may not be null");
         }    // if
+        if (elementName == null) {
+            throw new NullPointerException("elementName may not be null");
+        }    // if
 
         /*
          * Set private variables
@@ -141,6 +152,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         this.managerPanel = managerPanel;
         managerPanel.addObserver(this);
         this.elementComparator = elementComparator;
+        this.elementName = elementName;
 
         /*
          * Create GUI controls
@@ -152,7 +164,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         upButton = new JButton("▲");
         downButton = new JButton("▼");
         sortButton = new JButton("Sort");
-        saveButton = new JButton("Save");
+        editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         addButton = new JButton("Add");
 
@@ -180,9 +192,9 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
                 sortButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
-        saveButton.addActionListener(new ActionListener(){
+        editButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
-                saveButtonClicked(e);
+                editButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
         deleteButton.addActionListener(new ActionListener(){
@@ -268,6 +280,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         constraints.weightx = 1.0;
         constraints.weighty = 0.0;
 
+        managerPanel.setEditable(false);
         actionPanel.add(managerPanel, constraints);
         constraints.gridy++;
 
@@ -296,7 +309,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         constraints.weightx = 0.0;
         constraints.weighty = 1.0;
 
-        commandPanel.add(saveButton, constraints);
+        commandPanel.add(editButton, constraints);
 
         constraints.gridx++;
         commandPanel.add(deleteButton);
@@ -383,7 +396,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
 
         upButton.setEnabled(hasSelection && !isAtTop);
         downButton.setEnabled(hasSelection && !isAtBottom);
-        saveButton.setEnabled(hasSelection && elementIsValid);
+        editButton.setEnabled(hasSelection && elementIsValid);
         addButton.setEnabled(elementIsValid);
         deleteButton.setEnabled(hasSelection);
     }    // setButtonStates()
@@ -469,20 +482,29 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      *
      * @param event the event data
      */
-    private void saveButtonClicked(ActionEvent event) {
-        int index = list.getSelectedIndex();
+    private void editButtonClicked(ActionEvent event) {
         assertInvariant();
-        E element = managerPanel.createElement();
-        assert ((index >= 0) && (index < listData.size()));
-        if (element != null)
-            listData.set(index, element);
-        try {
-            setListData(listData);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+
+        ManageElementPanel<E> editPanel = managerPanel.createCopy();
+        editPanel.loadElement(managerPanel.createElement());
+        boolean elementWasEdited = showEditDialog(editPanel, "Edit");
+        if (elementWasEdited) {
+            E element = editPanel.createElement();
+            int index = list.getSelectedIndex();
+            assert ((index >= 0) && (index < listData.size()));
+            if (element != null) {
+                listData.set(index, element);
+            }
+            try {
+                setListData(listData);
+                list.setSelectedIndex(index);
+            } catch (IOException e) {    // try
+                unableToSave(e);
+            }    // catch
+        }    // if
+
         assertInvariant();
-    }    // saveButtonClicked()
+    }    // editButtonClicked()
 
     /**
      * Event that fires when the delete button is clicked.
@@ -509,16 +531,46 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void addButtonClicked(ActionEvent event) {
         assertInvariant();
-        E element = managerPanel.createElement();
-        if (element != null)
-            listData.add(element);
-        try {
-            setListData(listData);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+
+        ManageElementPanel<E> editPanel = managerPanel.createCopy();
+        boolean elementWasEdited = showEditDialog(editPanel, "Add");
+        if (elementWasEdited) {
+            E element = editPanel.createElement();
+            if (element != null) {
+                listData.add(element);
+            }
+            try {
+                setListData(listData);
+                list.setSelectedIndex(listData.size() - 1);
+            } catch (IOException e) {    // try
+                unableToSave(e);
+            }    // catch
+        }    // if
+
         assertInvariant();
     }    // addButtonClicked()
+
+    /**
+     * Creates and shows a modal {@link JDialog} containing the given manage
+     * element panel, with OK and Cancel buttons. This method waits for the
+     * dialog to be dismissed and returns true if the OK button was pressed.
+     *
+     * @param editPanel the manage element panel; may not be null
+     * @param action a string describing the dialog's action, used in the window
+     * title; may not be null
+     * @return true if the OK button was pressed; false otherwise
+     * @since 4.0
+     */
+    private boolean showEditDialog(ManageElementPanel<E> editPanel, String action) {
+        assert (editPanel != null);
+        assert (action != null);
+        editPanel.setEditable(true);
+        JOptionPane pane = new JOptionPane(editPanel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+        JDialog dialog = pane.createDialog(this, application.getApplicationName() + " - " + action + " " + elementName);
+        dialog.show();
+        Object selectedValue = pane.getValue();
+        return (selectedValue != null) && selectedValue.equals(JOptionPane.OK_OPTION);
+    }    // createEditDialog()
 
     /**
      * Displays a message box indicating that the frame is unable to save data.
@@ -542,8 +594,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (this.isAncestorOf(downButton));
         assert (managerPanel != null);
         assert (this.isAncestorOf(managerPanel));
-        assert (saveButton != null);
-        assert (this.isAncestorOf(saveButton));
+        assert (editButton != null);
+        assert (this.isAncestorOf(editButton));
         assert (deleteButton != null);
         assert (this.isAncestorOf(deleteButton));
         assert (addButton != null);
@@ -551,6 +603,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (listData != null);
         assert (listDataEquals(list, listData));
         assert (elementComparator != null);
+        assert (elementName != null);
     }    // assertInvariant()
 
     /**

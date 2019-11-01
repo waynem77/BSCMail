@@ -122,6 +122,22 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setEditable(boolean enabled) {
+        nameTextField.setEditable(enabled);
+    }    // setEditable()
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ManageRolePanel createCopy() {
+        return new ManageRolePanel(application);
+    }    // createCopy()
+
+    /**
      * Event that fires when the text in {@link #nameTextField} changes.
      */
     private void nameTextFieldChanged() {

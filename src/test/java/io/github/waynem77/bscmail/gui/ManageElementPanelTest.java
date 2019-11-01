@@ -227,6 +227,32 @@ public abstract class ManageElementPanelTest<E> {
         assertEquals(expected, received);
     }    // elementIsValidReturnsTrueWhenLoadedElementIsValid()
 
+    /* setEditable */
+
+    /**
+     * Tests that {@link ManageElementPanel#setEditable(boolean)} does
+     * not throw an exception when enabled is true.
+     */
+    @Test
+    public void setControlsEnabledDoesNotThrowExceptionWhenEnabledIsTrue() {
+        ManageElementPanel<E> panel = getPanel();
+        boolean enabled = true;
+
+        panel.setEditable(true);
+    }    // setControlsEnabledDoesNotThrowExceptionWhenEnabledIsTrue()
+
+    /**
+     * Tests that {@link ManageElementPanel#setEditable(boolean)} does
+     * not throw an exception when enabled is false.
+     */
+    @Test
+    public void setControlsEnabledDoesNotThrowExceptionWhenEnabledIsFalse() {
+        ManageElementPanel<E> panel = getPanel();
+        boolean enabled = false;
+
+        panel.setEditable(false);
+    }    // setControlsEnabledDoesNotThrowExceptionWhenEnabledIsFalse()
+
     /* addObserver */
 
     /**
@@ -351,5 +377,44 @@ public abstract class ManageElementPanelTest<E> {
             assertTrue(observer.panelChanged());
         }    // for
     }    // notifyObserversIsCalledWhenObjectChangesFromValidToInvalid()
+
+    /* createCopy */
+
+    /**
+     * Tests that {@link ManageElementPanel#createCopy()} does not throw an
+     * exception.
+     */
+    @Test
+    public void createCopyDoesNotThrowException() {
+        ManageElementPanel<E> panel = getPanel();
+
+        panel.createCopy();
+    }    // createCopyDoesNotThrowException()
+
+    /**
+     * Tests that {@link ManageElementPanel#createCopy()} does not return null.
+     */
+    @Test
+    public void createCopyDoesNotReturnNull() {
+        ManageElementPanel<E> panel = getPanel();
+
+        ManageElementPanel<E> received = panel.createCopy();
+
+        assertNotNull(received);
+    }    // createCopyDoesNotReturnNull()
+
+    /**
+     * Tests that {@link ManageElementPanel#createCopy()} returns an object not
+     * identical to the original.
+     */
+    @Test
+    public void createCopyReturnsObjectDistinctFromOriginal() {
+        ManageElementPanel<E> panel = getPanel();
+
+        ManageElementPanel<E> received = panel.createCopy();
+
+        ManageElementPanel<E> expected = panel;
+        assertNotSame(expected, received);
+    }    // createCopyReturnsObjectDistinctFromOriginal()
 
 }    // ManageElementPanelTest

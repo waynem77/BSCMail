@@ -106,6 +106,23 @@ class ManageEventPropertiesPanel extends ManageElementPanel<EventProperty> {
   }    // elementIsValid()
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void setEditable(boolean enabled) {
+    nameTextField.setEditable(enabled);
+    valueTextField.setEditable(enabled);
+  }    // setEditable()
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ManageEventPropertiesPanel createCopy() {
+    return new ManageEventPropertiesPanel();
+  }    // createCopy()
+
+  /**
    * Event that fires when the text in {@link #nameTextField} changes.
    */
   private void nameTextFieldChanged() {

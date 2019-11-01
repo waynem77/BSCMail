@@ -31,12 +31,12 @@ import java.util.Vector;
 /**
  * A graphical interface to manage the defined list of shifts in
  * {@link Application}.
- * 
+ *
  * @since 2.0
  * @author Wayne Miller
  */
 public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesObserver {
-    
+
     /**
      * Constructs a new manage shifts frame.
      *
@@ -54,17 +54,18 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
                         assert (shift2 != null);
                         return shift1.toString().compareTo(shift2.toString());
                     }    // compare()
-                }    // Comparator
+                },    // Comparator
+                "Shift"
         );
-        
+
         setTitle(application.getApplicationName() + " - Manage Shifts");
 
         application.registerObserver(this);
     }    // ManageShiftsFrame()
-    
+
     /**
      * Saves the given list as the defined list of shifts.
-     * 
+     *
      * @param shifts the shifts to save; may not be null
      * @throws IOException if an I/O error occurs
      */

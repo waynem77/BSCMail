@@ -21,17 +21,15 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.gui.util.LabeledGrid;
 import io.github.waynem77.bscmail.Application;
+import io.github.waynem77.bscmail.gui.util.DisplayableListControl;
 import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.RolesObserver;
 import io.github.waynem77.bscmail.persistent.Shift;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
@@ -58,7 +56,7 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
     /**
      * The selection panel for displaying a shift's roles
      */
-    private final JList rolesSelectList;
+    private final DisplayableListControl rolesSelectList;
 
     /**
      * The check box displaying whether the volunteer's email address should be
@@ -91,7 +89,6 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
      */
     public ManageShiftPanel(Application application) {
         final int TEXT_COLS = 15;
-        final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
 
         if (application == null) {
             throw new NullPointerException("application may not be null");
@@ -119,14 +116,13 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
                 descriptionTextFieldChanged();
             }
         });
-        rolesSelectList = new JList();
+        rolesSelectList = new DisplayableListControl();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        rolesSelectList.setListData(new Vector<>(application.getRoles()));
+        rolesSelectList.setListData(application.getRoles());
 
         labeledGrid.addLabelAndComponent("Description: ", descriptionTextField);
 
         labeledGrid.addLabelAndComponent("Roles Required: ", rolesSelectList);
-        labeledGrid.addLabelAndComponent("", new JLabel(ROLE_INSTRUCTIONS));
 
         displayVolunteerEmailCheckBox = new JCheckBox();
         labeledGrid.addLabelAndComponent("Display volunteer email: ", displayVolunteerEmailCheckBox);
@@ -191,12 +187,32 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setEditable(boolean enabled) {
+        descriptionTextField.setEditable(enabled);
+        rolesSelectList.setDisplayOnly(!enabled);
+        displayVolunteerEmailCheckBox.setEnabled(enabled);
+        displayVolunteerPhoneCheckBox.setEnabled(enabled);
+        displayVolunteerNotesCheckBox.setEnabled(enabled);
+    }    // setEditable()
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ManageShiftPanel createCopy() {
+        return new ManageShiftPanel(application);
+    }    // createCopy()
+
+    /**
      * This method is called whenever the list of defined volunteer roles
      * changes.
      */
     @Override
     public void rolesChanged() {
-        rolesSelectList.setListData(new Vector<>(application.getRoles()));
+        rolesSelectList.setListData(application.getRoles());
         notifyObservers();
     }    // rolesChanged()
 

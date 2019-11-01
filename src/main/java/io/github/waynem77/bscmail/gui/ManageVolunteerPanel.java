@@ -20,6 +20,7 @@
 package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.Application;
+import io.github.waynem77.bscmail.gui.util.DisplayableListControl;
 import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.RolesObserver;
 import io.github.waynem77.bscmail.persistent.Volunteer;
@@ -27,12 +28,9 @@ import io.github.waynem77.bscmail.gui.util.LabeledGrid;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -82,7 +80,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     /**
      * The selection panel for displaying a volunteer's roles
      */
-    private final JList rolesSelectList;
+    private final DisplayableListControl rolesSelectList;
 
     /**
      * Indicates whether the implicit volunteer is valid.
@@ -110,7 +108,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     public ManageVolunteerPanel(Application application) {
         final int NOTES_ROWS = 4;
         final int NOTES_COLS = 20;
-        final String ROLE_INSTRUCTIONS = "(Control-click to select/deselect roles)";
         final int VERTICAL_SPACE_AFTER_CONTROLS = 10;
 
         if (application == null) {
@@ -153,11 +150,10 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         activeCheckBox = new JCheckBox();
         activeCheckBox.setSelected(true);
         labeledGrid.addLabelAndComponent("Active: ", activeCheckBox);
-        rolesSelectList = new JList();
+        rolesSelectList = new DisplayableListControl();
         rolesSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        rolesSelectList.setListData(new Vector<>(application.getRoles()));
+        rolesSelectList.setListData(application.getRoles());
         labeledGrid.addLabelAndComponent("Roles: ", rolesSelectList);
-        labeledGrid.addLabelAndComponent("", new JLabel(ROLE_INSTRUCTIONS));
         labeledGrid.addLabelAndComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
         volunteerIsValid = elementIsValid();
         currentVolunteer = null;
@@ -218,12 +214,33 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setEditable(boolean enabled) {
+        nameTextField.setEditable(enabled);
+        emailTextField.setEditable(enabled);
+        phoneTextField.setEditable(enabled);
+        notesTextArea.setEditable(enabled);
+        activeCheckBox.setEnabled(enabled);
+        rolesSelectList.setDisplayOnly(!enabled);
+    }    // setEditable()
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ManageVolunteerPanel createCopy() {
+        return new ManageVolunteerPanel(application);
+    }    // createCopy()
+
+    /**
      * This method is called whenever the list of defined volunteer roles
      * changes.
      */
     @Override
     public void rolesChanged() {
-        rolesSelectList.setListData(new Vector<>(application.getRoles()));
+        rolesSelectList.setListData(application.getRoles());
         notifyObservers();
     }    // rolesChanged()
 
