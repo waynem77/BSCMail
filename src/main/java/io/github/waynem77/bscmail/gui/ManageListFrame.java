@@ -102,11 +102,6 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     private final JButton addButton;
 
     /**
-     * A copy of the data in {@link #list}.
-     */
-    private Vector<E> listData;
-
-    /**
      * An element comparator.
      */
     private final Comparator<E> elementComparator;
@@ -148,7 +143,6 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
          */
 
         this.application = application;
-        listData = new Vector<>(initialData);
         this.managerPanel = managerPanel;
         managerPanel.addObserver(this);
         this.elementComparator = elementComparator;
@@ -158,7 +152,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
          * Create GUI controls
          */
 
-        list = new JList<>(listData);
+        list = new JList<>(new Vector<>(initialData));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         upButton = new JButton("▲");
@@ -353,6 +347,19 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     }    // setListDataHook()
 
     /**
+     * Retrieves the list data in {@link #list} as a vector.
+     * @return the list data in {@link #list}
+     */
+    private Vector<E> getListData() {
+        ListModel<E> listModel = list.getModel();
+        Vector<E> listData = new Vector<>();
+        for (int i = 0; i < listModel.getSize(); ++i) {
+            listData.add(listModel.getElementAt(i));
+        }    // for
+        return listData;
+    }    // getListData()
+
+    /**
      * Sets the list data in {@link #list} to the given data.  This method also
      * enables or disables buttons (by calling {@link #setButtonStates()} and
      * runs any hook defined with {@link #setListDataHook(java.util.List)}.
@@ -381,7 +388,6 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     protected void updateListData(Vector<E> data) throws IOException {
         assert (data != null);
         list.setListData(data);
-        listData = data;
         setButtonStates();
     }
 
@@ -448,6 +454,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     private void moveSelectedItem(int offset) {
         assert (offset != 0);
         int index = list.getSelectedIndex();
+        Vector<E> listData = getListData();
         assert ((index >= 0) && (index < listData.size() - 1));
         int swapIndex = index + offset;
         assert ((swapIndex >= 0) && (swapIndex < listData.size() - 1));
@@ -468,6 +475,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void sortButtonClicked(ActionEvent event) {
         assertInvariant();
+        Vector<E> listData = getListData();
         Collections.sort(listData, elementComparator);
         try {
             setListData(listData);
@@ -491,6 +499,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         if (elementWasEdited) {
             E element = editPanel.createElement();
             int index = list.getSelectedIndex();
+            Vector<E> listData = getListData();
             assert ((index >= 0) && (index < listData.size()));
             if (element != null) {
                 listData.set(index, element);
@@ -515,6 +524,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assertInvariant();
         int index = list.getSelectedIndex();
         assert (index > -1);
+        Vector<E> listData = getListData();
         listData.remove(index);
         try {
             setListData(listData);
@@ -536,6 +546,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         boolean elementWasEdited = showEditDialog(editPanel, "Add");
         if (elementWasEdited) {
             E element = editPanel.createElement();
+            Vector<E> listData = getListData();
             if (element != null) {
                 listData.add(element);
             }
@@ -600,8 +611,6 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (this.isAncestorOf(deleteButton));
         assert (addButton != null);
         assert (this.isAncestorOf(addButton));
-        assert (listData != null);
-        assert (listDataEquals(list, listData));
         assert (elementComparator != null);
         assert (elementName != null);
     }    // assertInvariant()
