@@ -106,19 +106,7 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public final boolean elementIsValid() {
-        // check empty
-        if (nameTextField.getText().isEmpty()) {
-            return false;
-        }
-
-        // check for uniqueness
-        List<Role> myRoles = application.getRoles();
-        for (Role role : myRoles) {
-            if (role.getName().equals(nameTextField.getText())) {
-                return false;
-            }
-        }
-        return true;
+        return !nameTextField.getText().isEmpty();
     }
 
     /**

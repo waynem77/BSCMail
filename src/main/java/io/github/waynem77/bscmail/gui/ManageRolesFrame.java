@@ -66,7 +66,11 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
     @Override
     protected void setListDataHook(List<Role> roles) throws IOException {
         assert (roles != null);
-        getApplication().setRoles(roles);
+        try {
+            getApplication().setRoles(roles);
+        } catch (IllegalArgumentException e) {    // try
+            throw new IllegalArgumentException("Roles must be unique.", e);
+        }    // catch
     }    // saveListData()
 
     public void rolesChanged(){

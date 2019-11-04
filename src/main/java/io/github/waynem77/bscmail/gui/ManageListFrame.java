@@ -368,11 +368,15 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * @throws IOException if an I/O error occurs
      * @see #updateListData(java.util.Vector)
      */
-    private void setListData(Vector<E> data) throws IOException {
+    private void setListData(Vector<E> data) {
         assert (data != null);
-        list.setListData(data);
-        setButtonStates();
-        setListDataHook(data);
+        try {
+            setListDataHook(data);
+            list.setListData(data);
+            setButtonStates();
+        } catch (Exception e) {    // try
+            unableToSave(e);
+        }    // catch
     }    // setListData()
 
     /**
@@ -459,11 +463,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         int swapIndex = index + offset;
         assert ((swapIndex >= 0) && (swapIndex < listData.size() - 1));
         Collections.swap(listData, swapIndex, index);
-        try {
-            setListData(listData);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+        setListData(listData);
         list.setSelectedIndex(swapIndex);
         list.ensureIndexIsVisible(swapIndex);
     }    // swapItems
@@ -477,11 +477,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assertInvariant();
         Vector<E> listData = getListData();
         Collections.sort(listData, elementComparator);
-        try {
-            setListData(listData);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+        setListData(listData);
         assertInvariant();
     }    // sortButtonClicked()
 
@@ -504,12 +500,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
             if (element != null) {
                 listData.set(index, element);
             }
-            try {
-                setListData(listData);
-                list.setSelectedIndex(index);
-            } catch (IOException e) {    // try
-                unableToSave(e);
-            }    // catch
+            setListData(listData);
+            list.setSelectedIndex(index);
         }    // if
 
         assertInvariant();
@@ -526,11 +518,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (index > -1);
         Vector<E> listData = getListData();
         listData.remove(index);
-        try {
-            setListData(listData);
-        } catch (IOException e) {    // try
-            unableToSave(e);
-        }    // catch
+        setListData(listData);
         assertInvariant();
     }    // deleteButtonClicked()
 
@@ -550,12 +538,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
             if (element != null) {
                 listData.add(element);
             }
-            try {
-                setListData(listData);
-                list.setSelectedIndex(listData.size() - 1);
-            } catch (IOException e) {    // try
-                unableToSave(e);
-            }    // catch
+            setListData(listData);
+           list.setSelectedIndex(listData.size() - 1);
         }    // if
 
         assertInvariant();
@@ -589,7 +573,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * @param e the exception
      */
     private void unableToSave(Exception e) {
-        application.showErrorDialog(this, "Unable to save data", e);
+        application.showErrorDialog(this, "Unable to save data: " + e.getMessage(), e);
     }    // unableToSave()
 
     /**

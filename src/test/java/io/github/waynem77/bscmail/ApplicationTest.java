@@ -1275,8 +1275,21 @@ public class ApplicationTest {
     }    // setRolesThrowsExceptionWhenRolesContainsNull()
 
     /**
-     * Tests that {@link Application#setRoles(List)} does not throw an
-     * exception when roles is not null and contains no nulls.
+     * Tests that {@link Application#setRoles(List)} throws an
+     * {@link IllegalArgumentException} when roles contains duplicate elements.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setRolesThrowsExceptionWhenRolesContainsDuplicates() throws IOException {
+        for (Application application : getTestApplications()) {
+            List<Role> roles = Arrays.asList(new Role("Foo"), new Role("Bar"), new Role("Foo"));
+
+            application.setRoles(roles);
+        }    // for
+    }    // setRolesThrowsExceptionWhenRolesContainsDuplicates()
+
+    /**
+     * Tests that {@link Application#setRoles(List)} does not throw an exception
+     * when roles is not null, contains no nulls, and contains no duplicates.
      */
     @Test
     public void setRolesDoesNotThrowExceptionNormally() throws IOException {

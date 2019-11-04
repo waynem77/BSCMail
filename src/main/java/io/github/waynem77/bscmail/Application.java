@@ -40,6 +40,7 @@ import io.github.waynem77.bscmail.util.parser.CsvStringParser;
 import java.awt.Frame;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -773,14 +774,16 @@ public class Application {
     }    // getRoles()
 
     /**
-     * Sets the list of defined roles. The argument is copied to the
-     * master, so that changes to the master do not affect the original list and
+     * Sets the list of defined roles. The argument is copied to the master, so
+     * that changes to the master do not affect the original list and
      * vice-versa.
      *
-     * @param roles the new list of roles; may not be null, nor
-     * contain any null elements
-     * @throws NullPointerException if {@code roles} is null or contains a
-     * null element
+     * @param roles the new list of roles; may not be null, contain any null
+     * elements, nor contain any duplicate elements
+     * @throws NullPointerException if {@code roles} is null or contains a null
+     * element
+     * @throws IllegalArgumentException if {@code roles} contains duplicate
+     * elements
      * @throws IOException if an I/O error occurs
      */
     public void setRoles(List<Role> roles) throws IOException {
@@ -790,6 +793,9 @@ public class Application {
         }    // if
         if (roles.contains(null)) {
             throw new NullPointerException("roles may not contain null");
+        }    // if
+        if (roles.size() != (new HashSet<Role>(roles).size())) {
+            throw new IllegalArgumentException("roles may not contain duplicates");
         }    // if
         this.roles = new LinkedList<>();
         for (Role role : roles) {
