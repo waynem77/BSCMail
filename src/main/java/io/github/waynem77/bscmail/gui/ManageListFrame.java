@@ -404,11 +404,11 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         boolean isAtTop = (list.getSelectedIndex() == 0);
         boolean isAtBottom = (list.getSelectedIndex() == (list.getModel().getSize() - 1));
 
-        upButton.setEnabled(hasSelection && !isAtTop);
-        downButton.setEnabled(hasSelection && !isAtBottom);
-        editButton.setEnabled(hasSelection && elementIsValid);
-        addButton.setEnabled(elementIsValid);
-        deleteButton.setEnabled(hasSelection);
+        upButton.setEnabled(hasSelection && !isAtTop);         // a non-topmost element is selected
+        downButton.setEnabled(hasSelection && !isAtBottom);    // a non-bottommost element is selected
+        editButton.setEnabled(hasSelection);                   // an element is selected
+        addButton.setEnabled(true);                            // always
+        deleteButton.setEnabled(hasSelection);                 // an element is selected
     }    // setButtonStates()
 
     /**
