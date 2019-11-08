@@ -21,6 +21,7 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
+import io.github.waynem77.bscmail.gui.util.ManagedListControl;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -42,7 +43,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -64,7 +64,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     /**
      * The list box used to display elements.
      */
-    private final JList<E> list;
+    private final ManagedListControl<E> listControl;
 
     /**
      * A button that moves the selected item up in the list.
@@ -152,8 +152,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
          * Create GUI controls
          */
 
-        list = new JList<>(new Vector<>(initialData));
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listControl = new ManagedListControl<>(new Vector<>(initialData));
 
         upButton = new JButton("▲");
         downButton = new JButton("▼");
@@ -166,7 +165,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
          * Set event handlers for controls
          */
 
-        list.addListSelectionListener(new ListSelectionListener() {
+        listControl.addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 listSelectionValueChanged(e);
             }    // valueChanged()
@@ -217,7 +216,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         final int STRUT_WIDTH = 10;
         final int HALF_STRUT_WIDTH = STRUT_WIDTH / 2;
 
-        JScrollPane scrollPane = new JScrollPane(list);
+        JScrollPane scrollPane = new JScrollPane(listControl);
         scrollPane.setBorder(ComponentFactory.getStandardBorder());
         add(scrollPane, constraints);
 
@@ -347,19 +346,6 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     }    // setListDataHook()
 
     /**
-     * Retrieves the list data in {@link #list} as a vector.
-     * @return the list data in {@link #list}
-     */
-    private Vector<E> getListData() {
-        ListModel<E> listModel = list.getModel();
-        Vector<E> listData = new Vector<>();
-        for (int i = 0; i < listModel.getSize(); ++i) {
-            listData.add(listModel.getElementAt(i));
-        }    // for
-        return listData;
-    }    // getListData()
-
-    /**
      * Sets the list data in {@link #list} to the given data.  This method also
      * enables or disables buttons (by calling {@link #setButtonStates()} and
      * runs any hook defined with {@link #setListDataHook(java.util.List)}.
@@ -372,15 +358,14 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (data != null);
         try {
             setListDataHook(data);
-            list.setListData(data);
-            setButtonStates();
+            updateListData(data);
         } catch (Exception e) {    // try
             unableToSave(e);
         }    // catch
     }    // setListData()
 
     /**
-     * Sets the list data in {@link #list} to the given data. This method also
+     * Sets the listControl data in {@link #listControl} to the given data. This method also
      * enables or disables buttons (by calling {@link #setButtonStates()}, but
      * does not run any hook defined with
      * {@link #setListDataHook(java.util.List)}.
@@ -391,7 +376,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     protected void updateListData(Vector<E> data) throws IOException {
         assert (data != null);
-        list.setListData(data);
+        listControl.setListData(data);
         setButtonStates();
     }
 
@@ -399,10 +384,9 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * Enables or disables buttons depending on the state of the list box.
      */
     private void setButtonStates() {
-        boolean hasSelection = (list.getSelectedIndex() != -1);
-        boolean elementIsValid = managerPanel.elementIsValid();
-        boolean isAtTop = (list.getSelectedIndex() == 0);
-        boolean isAtBottom = (list.getSelectedIndex() == (list.getModel().getSize() - 1));
+        boolean hasSelection = (listControl.getSelectedIndex() != -1);
+        boolean isAtTop = (listControl.getSelectedIndex() == 0);
+        boolean isAtBottom = (listControl.getSelectedIndex() == (listControl.getModel().getSize() - 1));
 
         upButton.setEnabled(hasSelection && !isAtTop);         // a non-topmost element is selected
         downButton.setEnabled(hasSelection && !isAtBottom);    // a non-bottommost element is selected
@@ -417,7 +401,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * @param event the event data
      */
     private void listSelectionValueChanged(ListSelectionEvent event) {
-        E element = list.getSelectedValue();
+        E element = listControl.getSelectedValue();
         managerPanel.loadElement(element);
         setButtonStates();
         pack();
@@ -457,15 +441,15 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void moveSelectedItem(int offset) {
         assert (offset != 0);
-        int index = list.getSelectedIndex();
-        Vector<E> listData = getListData();
+        int index = listControl.getSelectedIndex();
+        Vector<E> listData = listControl.getListData();
         assert ((index >= 0) && (index < listData.size() - 1));
         int swapIndex = index + offset;
         assert ((swapIndex >= 0) && (swapIndex < listData.size() - 1));
         Collections.swap(listData, swapIndex, index);
         setListData(listData);
-        list.setSelectedIndex(swapIndex);
-        list.ensureIndexIsVisible(swapIndex);
+        listControl.setSelectedIndex(swapIndex);
+        listControl.ensureIndexIsVisible(swapIndex);
     }    // swapItems
 
     /**
@@ -475,7 +459,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void sortButtonClicked(ActionEvent event) {
         assertInvariant();
-        Vector<E> listData = getListData();
+        Vector<E> listData = listControl.getListData();
         Collections.sort(listData, elementComparator);
         setListData(listData);
         assertInvariant();
@@ -494,14 +478,14 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         boolean elementWasEdited = showEditDialog(editPanel, "Edit");
         if (elementWasEdited) {
             E element = editPanel.createElement();
-            int index = list.getSelectedIndex();
-            Vector<E> listData = getListData();
+            int index = listControl.getSelectedIndex();
+            Vector<E> listData = listControl.getListData();
             assert ((index >= 0) && (index < listData.size()));
             if (element != null) {
                 listData.set(index, element);
             }
             setListData(listData);
-            list.setSelectedIndex(index);
+            listControl.setSelectedIndex(index);
         }    // if
 
         assertInvariant();
@@ -514,9 +498,9 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void deleteButtonClicked(ActionEvent event) {
         assertInvariant();
-        int index = list.getSelectedIndex();
+        int index = listControl.getSelectedIndex();
         assert (index > -1);
-        Vector<E> listData = getListData();
+        Vector<E> listData = listControl.getListData();
         listData.remove(index);
         setListData(listData);
         assertInvariant();
@@ -534,12 +518,12 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         boolean elementWasEdited = showEditDialog(editPanel, "Add");
         if (elementWasEdited) {
             E element = editPanel.createElement();
-            Vector<E> listData = getListData();
+            Vector<E> listData = listControl.getListData();
             if (element != null) {
                 listData.add(element);
             }
             setListData(listData);
-           list.setSelectedIndex(listData.size() - 1);
+           listControl.setSelectedIndex(listData.size() - 1);
         }    // if
 
         assertInvariant();
@@ -581,8 +565,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      */
     private void assertInvariant() {
         assert (application != null);
-        assert (list != null);
-        assert (this.isAncestorOf(list));
+        assert (listControl != null);
+        assert (this.isAncestorOf(listControl));
         assert (upButton != null);
         assert (this.isAncestorOf(upButton));
         assert (downButton != null);
