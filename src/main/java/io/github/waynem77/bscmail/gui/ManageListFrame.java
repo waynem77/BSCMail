@@ -21,6 +21,7 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
+import io.github.waynem77.bscmail.gui.util.DragAndDropListener;
 import io.github.waynem77.bscmail.gui.util.ManagedListControl;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -168,6 +169,11 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         listControl.addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 listSelectionValueChanged(e);
+            }    // valueChanged()
+        });    // addListSelectionListener()
+        listControl.addDragAndDropListener(new DragAndDropListener() {
+            @Override public void dragAndDropPerformed(Component c) {
+                listDataChanged(c);
             }    // valueChanged()
         });    // addListSelectionListener()
         upButton.addActionListener(new ActionListener(){
@@ -365,10 +371,13 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     }    // setListData()
 
     /**
-     * Sets the listControl data in {@link #listControl} to the given data. This method also
-     * enables or disables buttons (by calling {@link #setButtonStates()}, but
-     * does not run any hook defined with
+     * Sets the listControl data in {@link #listControl} to the given data. This
+     * method also enables or disables buttons (by calling
+     * {@link #setButtonStates()}, but does not run any hook defined with
      * {@link #setListDataHook(java.util.List)}.
+     * <p>
+     * This method is typically used to update the list control after data has
+     * been changed in the application.
      *
      * @param data the new list data; may not be null
      * @throws IOException if an I/O error occurs
@@ -406,6 +415,17 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         setButtonStates();
         pack();
     }    // listSelectionValueChanged(ListSelectionEvent e)
+
+    /**
+     * Event that fires when the list data has changed via drag and drop.
+     *
+     * @param c the list component
+     * @since 4.0
+     */
+    private void listDataChanged(Component c) {
+        Vector<E> listData = listControl.getListData();
+        setListData(listData);
+    }    // listDataChanged()
 
     /**
      * Event that fires when the up button is clicked.
