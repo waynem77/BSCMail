@@ -365,7 +365,7 @@ public class MainFrame extends JFrame {
         final int TEXT_AREA_HEIGHT = 1;    // The pack() command will size the height appropriately.
 
         JFrame frame = new JFrame();
-        frame.setTitle(application.getApplicationName() + " - About");
+        frame.setTitle(application.createWindowTitle("About"));
         Box contentPane = Box.createVerticalBox();
         contentPane.setBorder(ComponentFactory.getStandardBorder());
         frame.setContentPane(contentPane);

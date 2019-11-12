@@ -120,7 +120,7 @@ public class DisplayEmailFrame extends JFrame {
 
         this.application = application;
 
-        setTitle(application.getApplicationName() + " - Event Email Text");
+        setTitle(application.createWindowTitle("Event Email Text"));
 
         final int MIN_TEXT_AREA_COLS = 10;
         final int MIN_TEXT_AREA_ROWS = 2;
@@ -314,18 +314,8 @@ public class DisplayEmailFrame extends JFrame {
      * Event fired when the send email button is clicked.
      */
     private void sendEmailButtonClicked() {
-
-//        try {
-//            mailTo(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
-//        } catch (IOException err) {
-//            //insert error handling
-//
-//        } catch (URISyntaxException err) {
-//            //insert error handling
-//        }
-
         JPasswordField passwordField = new JPasswordField();
-        int selection = JOptionPane.showConfirmDialog(this, passwordField, application.getApplicationName() + " - Enter Password", JOptionPane.OK_CANCEL_OPTION);
+        int selection = JOptionPane.showConfirmDialog(this, passwordField, application.createWindowTitle("Enter Password"), JOptionPane.OK_CANCEL_OPTION);
 
         if (selection == JOptionPane.OK_OPTION) {
             Mailer mailer = new Mailer(application);
@@ -335,7 +325,6 @@ public class DisplayEmailFrame extends JFrame {
 
             EmailServerProperties serverProperties = application.getEmailServerProperties();
             MailMessage message = new MailMessage(toRecipientLine.getText(), ccRecipientLine.getText(), bccRecipientLine.getText(), subjectLine.getText(), textArea.getText());
-//            mailer.send(message, new String(passwordField.getPassword()));
 
             Thread mailerThread = new Thread(){
                 public void run() {

@@ -78,7 +78,7 @@ public class ManageEmailServerPropertiesFrame extends JFrame {
             throw new NullPointerException("application may not be null");
         }    // if
         this.application = application;
-        setTitle(application.getApplicationName() + " - Manage Email Server");
+        setTitle(application.createWindowTitle("Manage Email Server"));
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         LabeledGrid labeledGrid = new LabeledGrid();

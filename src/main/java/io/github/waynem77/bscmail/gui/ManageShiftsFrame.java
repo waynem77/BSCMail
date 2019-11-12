@@ -58,7 +58,7 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
                 "Shift"
         );
 
-        setTitle(application.getApplicationName() + " - Manage Shifts");
+        setTitle(application.createWindowTitle("Manage Shifts"));
 
         application.registerObserver(this);
     }    // ManageShiftsFrame()

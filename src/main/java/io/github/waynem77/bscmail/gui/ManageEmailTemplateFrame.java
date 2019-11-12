@@ -88,7 +88,7 @@ public class ManageEmailTemplateFrame extends JFrame {
         final int TEXT_AREA_ROWS = 12;
 
         this.application = application;
-        setTitle(application.getApplicationName() + " - Manage Email Template");
+        setTitle(application.createWindowTitle("Manage Email Template"));
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         LabeledGrid labeledGrid = new LabeledGrid();

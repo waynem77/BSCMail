@@ -565,7 +565,7 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (action != null);
         editPanel.setEditable(true);
         JOptionPane pane = new JOptionPane(editPanel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-        JDialog dialog = pane.createDialog(this, application.getApplicationName() + " - " + action + " " + elementName);
+        JDialog dialog = pane.createDialog(this, application.createWindowTitle(action + " " + elementName));
         dialog.show();
         Object selectedValue = pane.getValue();
         return (selectedValue != null) && selectedValue.equals(JOptionPane.OK_OPTION);

@@ -56,7 +56,7 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
         "Event Property"
     );
 
-    setTitle(application.getApplicationName() + " - Manage Event Properties");
+    setTitle(application.createWindowTitle("Manage Event Properties"));
   }    // ManageVolunteersFrame()
 
   /**

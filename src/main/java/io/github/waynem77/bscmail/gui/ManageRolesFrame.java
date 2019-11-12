@@ -54,7 +54,7 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
         );
         application.registerObserver(this);
 
-        setTitle(application.getApplicationName() + " - Manage Roles");
+        setTitle(application.createWindowTitle("Manage Roles"));
     }    // ManageRolesFrame()
 
     /**

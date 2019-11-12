@@ -77,7 +77,7 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         List<EventProperty> eventProperties = application.getEventProperties();
         List<Shift> shifts = application.getShifts();
 
-        setTitle(application.getApplicationName() + " - Event Setup");
+        setTitle(application.createWindowTitle("Event Setup"));
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         eventFrameGrid = new EventFrameGrid();

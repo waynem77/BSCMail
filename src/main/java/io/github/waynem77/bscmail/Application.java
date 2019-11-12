@@ -651,6 +651,25 @@ public class Application {
     }    // getAboutMessage()
 
     /**
+     * Returns a string usable as the title of a GUI window with the given
+     * subtitile. This method is used to create consistent window titles across
+     * the application.
+     *
+     * @param subtitle the window subtitle; may not be null
+     * @return the window title string
+     * @throws NullPointerException if subtitle is null
+     * @since 4.0
+     */
+    public String createWindowTitle(String subtitle) {
+        assertInvariant();
+        if (subtitle == null) {
+            throw new NullPointerException("subtitle may not be null");
+        }    // if
+
+        return applicationInfo.getName() + " - " + subtitle;
+    }    // createWindowTitle()
+
+    /**
      * Displays application help
      */
     public void displayHelp() {
@@ -1027,7 +1046,7 @@ public class Application {
      */
     public void showErrorDialog(Frame owner, String message, Throwable cause) {
         assertInvariant();
-        ErrorDialog dialog = new ErrorDialog(owner, getApplicationName() + " - Error", message, cause);
+        ErrorDialog dialog = new ErrorDialog(owner, createWindowTitle("Error"), message, cause);
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
     }    // showErrorDialog()

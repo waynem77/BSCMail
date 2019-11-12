@@ -810,6 +810,54 @@ public class ApplicationTest {
         assertEquals(expected, received);
     }    // getApplicationAboutMessageReturnsCorrectValue()
 
+    /* createWindowTitle */
+
+    /**
+     * Tests that {@link Application#createWindowTitle(String)} throws a
+     * NullPointerException when subtitle is null.
+     */
+    @Test
+    public void createWindowTitleThrowsExceptionWhenSubtitleIsNull() {
+        for (Application application: getTestApplications()) {
+            try {
+                String subtitle = null;
+                application.createWindowTitle(subtitle);
+
+                // If the method does not throw, fail the test.
+                fail("Application did not throw NullPointerException.");
+            } catch (NullPointerException e) {
+                // If the method throws a NullPointerException, it is caught
+                // here and the test succeeds. If the method throws a different
+                // exception, it is not caught and the test fails.
+            }
+        }    // for
+    }    // createWindowTitleThrowsExceptionWhenSubtitleIsNull()
+
+    /**
+     * Tests that {@link Application#createWindowTitle(String)} does not throw
+     * an exception when subtitle is not null.
+     */
+    @Test
+    public void createWindowTitleDoesNotThrowExceptionWhenSubtitleIsNotNull() {
+        for (Application application: getTestApplications()) {
+            String subtitle = "foo";
+            application.createWindowTitle(subtitle);
+        }    // for
+    }    // createWindowTitleDoesNotThrowExceptionWhenSubtitleIsNotNull()
+
+    /**
+     * Tests that {@link Application#createWindowTitle(String)} does not return
+     * null.
+     */
+    @Test
+    public void createWindowTitleDoesNotReturnNull() {
+        for (Application application: getTestApplications()) {
+            String subtitle = "foo";
+            String received = application.createWindowTitle(subtitle);
+            assertNotNull(received);
+        }    // for
+    }    // createWindowTitleDoesNotReturnNull()
+
     /* displayHelp */
 
     /**

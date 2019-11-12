@@ -74,7 +74,7 @@ public class MailerFrame extends JFrame implements MailerObserver {
             throw new NullPointerException("mailer may not be null");
         }    // if
 
-        setTitle(application.getApplicationName() + " - Mail Status");
+        setTitle(application.createWindowTitle("Mail Status"));
         setContentPane(Box.createVerticalBox());
 
         final int MIN_TEXT_AREA_COLS = 40;

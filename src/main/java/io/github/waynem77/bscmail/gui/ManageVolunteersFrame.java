@@ -61,7 +61,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
         application.registerObserver((RolesObserver)this);
         application.registerObserver((VolunteersObserver)this);
 
-        setTitle(application.getApplicationName() + " - Manage Volunteers");
+        setTitle(application.createWindowTitle("Manage Volunteers"));
     }    // ManageVolunteersFrame()
 
     /**
