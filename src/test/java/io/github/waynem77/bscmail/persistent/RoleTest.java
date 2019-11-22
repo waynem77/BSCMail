@@ -132,6 +132,97 @@ public class RoleTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // Test()
 
+    /* matches */
+
+    /**
+     * Tests that {@link Role#matches(String)} throws a NullPointerException
+     * when criterion is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void matchesThrowsExceptionWhenCriterionIsNull() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = null;
+
+        role.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNull()
+
+    /**
+     * Tests that {@link Role#matches(String)} does not throws an exception when
+     * criterion is not null.
+     */
+    @Test
+    public void matchesThrowsExceptionWhenCriterionIsNotNull() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = "oba";
+
+        role.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNotNull()
+
+    /**
+     * Tests that {@link Role#matches(String)} return true when criterion is
+     * empty.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsEmpty() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = "";
+
+        boolean received = role.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsEmpty()
+
+    /**
+     * Tests that {@link Role#matches(String)} returns true when criterion is a
+     * subset of the name.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfName() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = "oba";
+
+        boolean received = role.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfName()
+
+    /**
+     * Tests that {@link Role#matches(String)} returns false when criterion is
+     * not a subset of the name.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionIsNotSubsetOfName() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = "xxx";
+
+        boolean received = role.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionIsNotSubsetOfName()
+
+    /**
+     * Tests that {@link Role#matches(String)} is case-insensitive.
+     */
+    @Test
+    public void matchesIsCaseInsensitive() {
+        String name = "Foobar Baz";
+        Role role = new Role(name);
+        String criterion = "ObA";
+
+        boolean received = role.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitive()
+
     /* equals */
 
     /**

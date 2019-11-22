@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents an event volunteer. Volunteers have the following properties.
@@ -41,7 +42,7 @@ import java.util.Map;
  *
  * @author Wayne Miller, github.com/acadams
  */
-public class Volunteer implements Cloneable, Serializable, ReadWritable {
+public class Volunteer implements Cloneable, Matchable<String>, Serializable, ReadWritable {
 
     /*
      * Static class properties and methods.
@@ -478,6 +479,47 @@ public class Volunteer implements Cloneable, Serializable, ReadWritable {
     public Factory getReadWritableFactory() {
         return Volunteer.getVolunteerFactory();
     }    // getReadWritableFactory()
+
+    /**
+     * Indicates whether the volunteer matches the given string. The volunteer
+     * is considered to match the string if <b>any</b> of the following
+     * conditions are met:
+     * <ul>
+     * <li>part of the volunteer's name contains the criterion in a case-insensitive manner,</li>
+     * <li>part of the volunteer's email contains the criterion in a case-insensitive manner,</li>
+     * <li>part of the volunteer's phone contains the criterion in a case-insensitive manner,</li>
+     * <li>part of the volunteer's notes contains the criterion in a case-insensitive manner,</li>
+     * <li>any of the volunteer's assigned roles match the criterion,</li>
+     * <li>the volunteer is active and the criterion is "active", or</li>
+     * <li>the volunteer is inactive and the criterion is "inactive".</li>
+     * </ul>
+     * The volunteer always matches an empty string.
+     *
+     * @param criterion the criterion; may not be null
+     * @return true if the volunteer matches criterion; false otherwise
+     * @throws NullPointerException if criterion is null
+     * @see Role#matches(String)
+     * @since 4.0
+     */
+    @Override
+    public boolean matches(String criterion) {
+        assertInvariant();
+        if (criterion == null) {
+            throw new NullPointerException("criterion may not be null");
+        }    // if
+
+        if (criterion.equals("active")) {
+            return active;
+        }
+        if (criterion.equals("inactive")) {
+            return !active;
+        }
+        return roles.stream().anyMatch(role -> role.matches(criterion))
+                || StringUtils.containsIgnoreCase(name, criterion)
+                || StringUtils.containsIgnoreCase(email, criterion)
+                || StringUtils.containsIgnoreCase(phone, criterion)
+                || StringUtils.containsIgnoreCase(notes, criterion);
+    }    // matches()
 
     /**
      * Indicates whether some other object is "equal to" this one.  An object is

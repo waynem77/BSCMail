@@ -24,13 +24,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents a BSC volunteer shift.
  *
  * @author Wayne Miller, Anthony Adams
  */
-public class Shift implements Cloneable, Serializable, ReadWritable {
+public class Shift implements Cloneable, Matchable<String>, Serializable, ReadWritable {
 
     /*
      * Static class properties and methods.
@@ -403,6 +404,29 @@ public class Shift implements Cloneable, Serializable, ReadWritable {
     public Factory getReadWritableFactory() {
         return Shift.getShiftFactory();
     }    // getReadWritableFactory()
+
+    /**
+     * Indicates whether the shift matches the given string. The shift is
+     * considered to match the string if part of the shift's description equals
+     * the criterion in a case-insensitive manner, <b>or</b> if any of the
+     * shift's role match the string. The shift always matches an empty string.
+     *
+     * @param criterion the criterion; may not be null
+     * @return true if the shift matches criterion; false otherwise
+     * @throws NullPointerException if criterion is null
+     * @see Role#matches(String)
+     * @since 4.0
+     */
+    @Override
+    public boolean matches(String criterion) {
+        assertInvariant();
+        if (criterion == null) {
+            throw new NullPointerException("criterion may not be null");
+        }    // if
+
+        return roles.stream().anyMatch(role -> role.matches(criterion))
+                || StringUtils.containsIgnoreCase(description, criterion);
+    }    // matches()
 
     /**
      * Indicates whether some other object is "equal to" this one.  An object is

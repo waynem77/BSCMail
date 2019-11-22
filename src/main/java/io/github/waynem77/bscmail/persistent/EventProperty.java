@@ -22,6 +22,7 @@ package io.github.waynem77.bscmail.persistent;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents an Event Property.
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Chaitra Mayya
  * @since 3.0
  */
-public class EventProperty implements Cloneable, Serializable, ReadWritable {
+public class EventProperty implements Cloneable, Matchable<String>, Serializable, ReadWritable {
 
     /*
      * Static class properties and methods.
@@ -249,6 +250,28 @@ public class EventProperty implements Cloneable, Serializable, ReadWritable {
         assertInvariant();
         return EventProperty.getEventPropertyFactory();
     }    // getReadWritableFactory()
+
+    /**
+     * Indicates whether the event property matches the given string. The event
+     * property is considered to match the string if either the event property's
+     * name or default value contain the criterion in a case-insensitive manner.
+     * The event property always matches an empty string.
+     *
+     * @param criterion the criterion; may not be null
+     * @return true if the event property matches criterion; false otherwise
+     * @throws NullPointerException if criterion is null
+     * @since 4.0
+     */
+    @Override
+    public boolean matches(String criterion) {
+        assertInvariant();
+        if (criterion == null) {
+            throw new NullPointerException("criterion may not be null");
+        }    // if
+
+        return StringUtils.containsIgnoreCase(name, criterion)
+                || StringUtils.containsIgnoreCase(defaultValue, criterion);
+    }    // matches()
 
     /**
      * Indicates whether some other object is "equal to" this one. An object is

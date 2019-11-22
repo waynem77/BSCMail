@@ -1143,6 +1143,358 @@ public class VolunteerTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
+    /* matches */
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} throws a
+     * NullPointerException when criterion is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void matchesThrowsExceptionWhenCriterionIsNull() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = null;
+
+        volunteer.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNull()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} does not throws an exception
+     * when criterion is not null.
+     */
+    @Test
+    public void matchesThrowsExceptionWhenCriterionIsNotNull() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "oba";
+
+        volunteer.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNotNull()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} return true when criterion
+     * is empty.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsEmpty() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsEmpty()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is a subset of the name.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfName() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "oba";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfName()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} is case-insensitive with
+     * regards to the name.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnName() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "ObA";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnName()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is a subset of the email.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfEmail() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "oo@b";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfEmail()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} is case-insensitive with
+     * regards to the email.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnEmail() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "Oo@B";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnEmail()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is a subset of the phone.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfPhone() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "5-F";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfPhone()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} is case-insensitive with
+     * regards to the phone.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnPhone() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "5-f";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnPhone()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is a subset of the notes.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfNotes() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "zba";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfNotes()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} is case-insensitive with
+     * regards to the notes.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnNotes() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "ZbA";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnNotes()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * matches a role.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionMatchesARole() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "mur";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionMatchesARole()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is "active" and volunteer is active.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsActiveAndVolunteerIsActive() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "active";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsActiveAndVolunteerIsActive()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns false when criterion
+     * is "active" and volunteer is inactive.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionIsActiveAndVolunteerIsInactive() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = false;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "active";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionIsActiveAndVolunteerIsInactive()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns false when criterion
+     * is "inactive" and volunteer is active.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionIsInactiveAndVolunteerIsActive() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "inactive";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionIsInactiveAndVolunteerIsActive()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns true when criterion
+     * is "inactive" and volunteer is inactive.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionIsInactiveAndVolunteerIsInactive() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = false;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "inactive";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionIsInactiveAndVolunteerIsInactive()
+
+    /**
+     * Tests that {@link Volunteer#matches(String)} returns false when criterion
+     * does not match the name, email, phone, notes, nor any roles.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionMatchesNothing() {
+        String name = "Foobar";
+        String email = "foo@bar";
+        String phone = "555-FOO";
+        String notes = "bazbaz";
+        boolean active = true;
+        List<Role> roles = Arrays.asList(new Role("smurf"), new Role("smorf"));
+        Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
+        String criterion = "xxx";
+
+        boolean received = volunteer.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionMatchesNothing()
 
     /* equals */
 

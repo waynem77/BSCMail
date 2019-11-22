@@ -720,6 +720,142 @@ public class ShiftTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // getReadWritablePropertiesReturnsMapWithCorrectIterationOrderForShiftWithNoVolunteer()
 
+    /* matches */
+
+    /**
+     * Tests that {@link Shift#matches(String)} throws a NullPointerException
+     * when criterion is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void matchesThrowsExceptionWhenCriterionIsNull() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = null;
+
+        shift.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNull()
+
+    /**
+     * Tests that {@link Shift#matches(String)} does not throws an exception when
+     * criterion is not null.
+     */
+    @Test
+    public void matchesThrowsExceptionWhenCriterionIsNotNull() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "oba";
+
+        shift.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNotNull()
+
+    /**
+     * Tests that {@link Shift#matches(String)} return true when criterion is
+     * empty.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsEmpty() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "";
+
+        boolean received = shift.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsEmpty()
+
+    /**
+     * Tests that {@link Shift#matches(String)} returns true when criterion is a
+     * subset of the description.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfDescription() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "oba";
+
+        boolean received = shift.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfDescription()
+
+    /**
+     * Tests that {@link Shift#matches(String)} is case-insensitive with regards
+     * to the description.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnDescription() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "ObA";
+
+        boolean received = shift.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnDescription()
+
+    /**
+     * Tests that {@link Shift#matches(String)} returns true when criterion
+     * matches a role.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionMatchesARole() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "mur";
+
+        boolean received = shift.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionMatchesARole()
+
+    /**
+     * Tests that {@link Shift#matches(String)} returns false when criterion
+     * does not match the description nor any roles.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionDoesNotMatchDescriptionNorRoles() {
+        String description = "Foobar";
+        List<Role> roles = Arrays.asList(new Role("baz"), new Role("smurf"));
+        boolean displayVolunteerEmail = true;
+        boolean displayVolunteerPhone = true;
+        boolean displayVolunteerNotes = true;
+        Shift shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
+        String criterion = "xxx";
+
+        boolean received = shift.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionDoesNotMatchDescriptionNorRoles()
+
     /* equals */
 
     /**

@@ -41,7 +41,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
     /**
      * Returns the event property to be tested.
-     * 
+     *
      * @return the event property to be tested
      */
     @Override
@@ -274,7 +274,7 @@ public class EventPropertyTest extends ReadWritableTest {
     }    // getValueReturnsValuePassedToSetValue()
 
     /* getReadWritableProperties */
-    
+
     /**
      * Tests that {@link EventProperty#getReadWritableProperties()} returns the
      * correct value.
@@ -295,7 +295,7 @@ public class EventPropertyTest extends ReadWritableTest {
         expected.put("value", value);
         assertEquals(expected, received);
     }    // Test()
-    
+
     /**
      * Tests that the return value of
      * {@link EventProperty#getReadWritableProperties()} has the correct
@@ -319,6 +319,174 @@ public class EventPropertyTest extends ReadWritableTest {
         assertEquals(expected, received);
     }    // getReadWritablePropertiesHasTheCorrectIterationOrder()
 
+    /* matches */
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} throws a
+     * NullPointerException when criterion is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void matchesThrowsExceptionWhenCriterionIsNull() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = null;
+
+        eventProperty.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNull()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} does not throws an
+     * exception when criterion is not null.
+     */
+    @Test
+    public void matchesThrowsExceptionWhenCriterionIsNotNull() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "oba";
+
+        eventProperty.matches(criterion);
+    }    // matchesThrowsExceptionWhenCriterionIsNotNull()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} return true when
+     * criterion is empty.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsEmpty() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsEmpty()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} returns true when
+     * criterion is a subset of the name.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfName() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "oba";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfName()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} is case-insensitive with
+     * regards to the name.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnName() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "ObA";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnName()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} returns true when
+     * criterion is a subset of the default value.
+     */
+    @Test
+    public void matchesReturnsTrueWhenCriterionIsSubsetOfDefaultValue() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "zsm";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesReturnsTrueWhenCriterionIsSubsetOfDefaultValue()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} is case-insensitive with
+     * regards to the defualt value.
+     */
+    @Test
+    public void matchesIsCaseInsensitiveOnDefaultValue() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "ZsM";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = true;
+        assertEquals(expected, received);
+    }    // matchesIsCaseInsensitiveOnDefaultValue()
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} does not return true
+     * when criterion is a subset of the value but does not match anything else.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionIsSubsetOfValueButDoesNotMatchAnythingElse() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "alu";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionIsSubsetOfValueButDoesNotMatchAnythingElse()
+
+
+    /**
+     * Tests that {@link EventProperty#matches(String)} returns false when
+     * criterion does not match the name, default value, or value.
+     */
+    @Test
+    public void matchesReturnsFalseWhenCriterionMatchesNothing() {
+        String name = "Foobar";
+        String defaultValue = "Bazsmurf";
+        EventProperty eventProperty = new EventProperty(name, defaultValue);
+        String value = "value";
+        eventProperty.setValue(value);
+        String criterion = "xxx";
+
+        boolean received = eventProperty.matches(criterion);
+
+        boolean expected = false;
+        assertEquals(expected, received);
+    }    // matchesReturnsFalseWhenCriterionMatchesNothing()
+
     /* equals */
 
     /**
@@ -336,7 +504,7 @@ public class EventPropertyTest extends ReadWritableTest {
         Object obj = null;
         eventProperty.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link EventProperty#equals(Object)} returns false when the
      * argument is null.
@@ -354,7 +522,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNull()
-    
+
     /**
      * Tests that {@link EventProperty#equals(Object)} does not throw an
      * exception when the argument is not a event property.
@@ -370,7 +538,7 @@ public class EventPropertyTest extends ReadWritableTest {
         Object obj = 1;
         eventProperty.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsNotEventProperty()
-    
+
     /**
      * Tests that {@link EventProperty#equals(Object)} returns false when the
      * argument is not a event property.
@@ -388,7 +556,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
         assertFalse(received);
     }    // equalsReturnsFalseWhenArgumentIsNotEventProperty()
-    
+
     /**
      * Tests that {@link EventProperty#equals(Object)} does not throw an
      * exception when the argument is a event property.
@@ -404,7 +572,7 @@ public class EventPropertyTest extends ReadWritableTest {
         Object obj = new EventProperty(name, defaultValue);
         eventProperty.equals(obj);
     }    // equalsDoesNotThrowExceptionWhenArgumentIsEventProperty()
-    
+
     /**
      * Tests that {@link EventProperty#equals(Object)} returns false when the
      * argument has a different name than the caller.
@@ -503,7 +671,7 @@ public class EventPropertyTest extends ReadWritableTest {
     }    // equalsReturnsTrueWhenArgumentIsIdentical()
 
     /* hashCode */
-    
+
     /**
      * Tests that {@link EventProperty#hashCode()} does not throw an exception.
      */
@@ -538,7 +706,7 @@ public class EventPropertyTest extends ReadWritableTest {
     }    // hashCodeReturnsEqualValuesForEquivalentVolunteers()
 
     /* clone */
-    
+
     /**
      * Tests that {@link EventProperty#clone()} does not throw an exception.
      */
@@ -552,7 +720,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
         eventProperty.clone();
     }    // cloneDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of {@link EventProperty#clone()} is not null.
      */
@@ -568,7 +736,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // testCloneNcloneDoesNotReturnNullotNull()
-    
+
     /**
      * Tests that the return value of {@link EventProperty#clone()} is equal to the
      * argument.
@@ -586,7 +754,7 @@ public class EventPropertyTest extends ReadWritableTest {
         EventProperty expected = eventProperty;
         assertEquals(expected, received);
     }    // returnValueOfCloneIsEqualToOriginal()
-    
+
     /**
      * Tests that the return value of {@link EventProperty#clone()} is not identical
      * to the argument.
@@ -605,7 +773,7 @@ public class EventPropertyTest extends ReadWritableTest {
     }    // returnValueOfCloneIsNotIdenticalToOriginal()
 
     /* toString */
-    
+
     /**
      * Tests that {@link EventProperty#toString()} does not throw an exception.
      */
@@ -636,7 +804,7 @@ public class EventPropertyTest extends ReadWritableTest {
 
         assertNotNull(received);
     }    // toStringDoesNotReturnNull()
-    
+
     /**
      * Tests that {@link EventProperty#toString()} returns the eventProperty's
      * name.
@@ -656,7 +824,7 @@ public class EventPropertyTest extends ReadWritableTest {
     }    // toStringReturnsName()
 
     /* getVolunteerFactory */
-    
+
     /**
      * Tests that {@link EventProperty#getEventPropertyFactory()} does not throw
      * an exception.
@@ -665,7 +833,7 @@ public class EventPropertyTest extends ReadWritableTest {
     public void volunteerFactoryDoesNotThrowException() {
         EventProperty.getEventPropertyFactory();
     }    // volunteerFactoryDoesNotThrowException()
-    
+
     /**
      * Tests that the return value of
      * {@link EventProperty#getVolunteerFactory()} is not null.

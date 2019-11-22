@@ -22,6 +22,7 @@ package io.github.waynem77.bscmail.persistent;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents a BSC Role.
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Nathan Cordner
  * @since 3.0
  */
-public class Role implements Cloneable, Serializable, ReadWritable {
+public class Role implements Cloneable, Matchable<String>, Serializable, ReadWritable {
 
     /*
      * Static class properties and methods.
@@ -169,6 +170,27 @@ public class Role implements Cloneable, Serializable, ReadWritable {
      */
     @Override
     public Factory getReadWritableFactory() {return Role.getRoleFactory();}    // getReadWritableFactory()
+
+    /**
+     * Indicates whether the role matches the given string. The role is
+     * considered to match the string if part of the role's name equals the
+     * criterion in a case-insensitive manner. The role always matches an empty
+     * string.
+     *
+     * @param criterion the criterion; may not be null
+     * @return true if the role matches criterion; false otherwise
+     * @throws NullPointerException if criterion is null
+     * @since 4.0
+     */
+    @Override
+    public boolean matches(String criterion) {
+        assertInvariant();
+        if (criterion == null) {
+            throw new NullPointerException("criterion may not be null");
+        }    // if
+
+        return StringUtils.containsIgnoreCase(name, criterion);
+    }    // matches()
 
     /**
      * Indicates whether some other object is "equal to" this one.  An object is
