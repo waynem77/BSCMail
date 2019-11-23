@@ -19,6 +19,7 @@
 
 package io.github.waynem77.bscmail.gui.util;
 
+import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +45,26 @@ public class ManagedListControlTest {
 
     }    // TestListener
 
+    /**
+     * Matchable usable in tests.
+     */
+    public static class StringMatchable implements Matchable<String> {
+
+        private final String value;
+
+        public StringMatchable(String value) { this.value = value; }
+
+        @Override public boolean matches(String criterion) { return value.contains(criterion); }
+
+        public static Vector asVector(String... elements) {
+            Vector<StringMatchable> vector = new Vector<>();
+            for (String element : elements) {
+                vector.add(new StringMatchable(element));
+            }    // for
+            return vector;
+        }    // asVector()
+    }    // StringMatchable
+
     /* constructor */
 
     /**
@@ -63,7 +84,7 @@ public class ManagedListControlTest {
      */
     @Test(expected = NullPointerException.class)
     public void constructorThrowsExceptionWhenListDataContainsNull() {
-        Vector listData = new Vector(Arrays.asList("foo", null, "baz"));
+        Vector listData = new Vector(Arrays.asList(new StringMatchable("foo"), null, new StringMatchable("baz")));
 
         ManagedListControl managedListControl = new ManagedListControl(listData);
     }    // constructorThrowsExceptionWhenListDataContainsNull()
@@ -75,7 +96,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void constructorDoesNotThrowExceptionWhenListDataIsNotNullAndDoesNotContainNull() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = new Vector(Arrays.asList(new StringMatchable("foo"), new StringMatchable("bar"), new StringMatchable("baz")));
 
         ManagedListControl managedListControl = new ManagedListControl(listData);
     }    // constructorDoesNotThrowExceptionWhenListDataIsNotNullAndDoesNotContainNull()
@@ -88,7 +109,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void getListDataDoesNotThrowException() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
 
         managedListControl.getListData();
@@ -100,7 +121,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void getListDataInitiallyReturnsOriginalData() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
 
         Vector received = managedListControl.getListData();
@@ -115,11 +136,11 @@ public class ManagedListControlTest {
      */
     @Test
     public void getListDataReturnsDataFromLastCallToSetListData() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
-        listData = new Vector(Arrays.asList("foo", "bar", "baz", "bazz"));
+        listData = StringMatchable.asVector("foo", "bar", "baz", "bazz");
         managedListControl.setListData(listData);
-        listData = new Vector(Arrays.asList("foo", "bar", "baz", "bazz", "bazzz"));
+        listData = StringMatchable.asVector("foo", "bar", "baz", "bazz", "bazzz");
         managedListControl.setListData(listData);
 
         Vector received = managedListControl.getListData();
@@ -137,7 +158,7 @@ public class ManagedListControlTest {
      */
     @Test(expected = NullPointerException.class)
     public void addDragAndDropListenerThrowsExceptionWhenListenerIsNull() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         TestListener listener = null;
 
@@ -151,7 +172,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void addDragAndDropListenerDoesNotThrowExceptionWhenListenerIsNotNull() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         TestListener listener = new TestListener();
 
@@ -165,7 +186,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void addDragAndDropListenerDoesNotThrowExceptionWhenMultipleListenersAreAdded() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
 
         managedListControl.addDragAndDropListener(new TestListener());
@@ -180,7 +201,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreNoListeners() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
 
         managedListControl.notifyDragAndDropListeners();
@@ -192,7 +213,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereIsOneListener() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         managedListControl.addDragAndDropListener(new TestListener());
 
@@ -205,7 +226,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreMultipleListeners() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         managedListControl.addDragAndDropListener(new TestListener());
         managedListControl.addDragAndDropListener(new TestListener());
@@ -219,7 +240,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void notifyDragAndDropListenersNotifiesAllListeners() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         List<TestListener> listeners = Arrays.asList(new TestListener(), new TestListener());
         for (TestListener listener : listeners) {
@@ -241,7 +262,7 @@ public class ManagedListControlTest {
      */
     @Test
     public void notifyDragAndDropListenersPassesListAsArgument() {
-        Vector listData = new Vector(Arrays.asList("foo", "bar", "baz"));
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
         ManagedListControl managedListControl = new ManagedListControl(listData);
         TestListener listener = new TestListener();
         assertNull("test setup problem", listener.component);
@@ -253,5 +274,47 @@ public class ManagedListControlTest {
         Component received = listener.component;
         assertSame(expected, received);
     }    // notifyDragAndDropListenersPassesListAsArgument()
+
+    /* setFilter */
+
+    /**
+     * Tests that {@link ManagedListControl#setFilter(String)} throw a
+     * NullPointerException when filter is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setFilterThrowsExceptionWhenFilterIsNull() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        String filter = null;
+
+        managedListControl.setFilter(filter);
+    }    // setFilterThrowsExceptionWhenFilterIsNull()
+
+    /**
+     * Tests that {@link ManagedListControl#setFilter(String)} does not throw an
+     * exception when filter is not null.
+     */
+    @Test
+    public void setFilterDoesNotThrowExceptionWhenFilterIsNotNull() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        String filter = "smurf";
+
+        managedListControl.setFilter(filter);
+    }    // setFilterDoesNotThrowExceptionWhenFilterIsNotNull()
+
+    /* getMatches */
+
+    /**
+     * Tests that {@link ManagedListControl#getMatches()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getMatchesDoesNotThrowException() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+
+        managedListControl.getMatches();
+    }    // getMatchesDoesNotThrowException()
 
 }

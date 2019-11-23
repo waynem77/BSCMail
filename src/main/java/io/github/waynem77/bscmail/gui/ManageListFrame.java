@@ -23,7 +23,9 @@ import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
 import io.github.waynem77.bscmail.gui.util.DragAndDropListener;
 import io.github.waynem77.bscmail.gui.util.ManagedListControl;
+import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -31,20 +33,21 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JList;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.ListModel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -55,7 +58,7 @@ import javax.swing.event.ListSelectionListener;
  * @since 2.0
  * @author Wayne Miller
  */
-public abstract class ManageListFrame<E> extends JFrame implements ManageElementPanelObserver<E> {
+public abstract class ManageListFrame<E extends Matchable<String>> extends JFrame implements ManageElementPanelObserver<E> {
 
     /**
      * The calling application.
@@ -81,6 +84,16 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
      * A button that sorts the list.
      */
     private final JButton sortButton;
+
+    /**
+     * A text field that filters the list.
+     */
+    private final JTextField filterTextField;
+
+    /**
+     * A label that displays the number of matching items.
+     */
+    private final JLabel matchesLabel;
 
     /**
      * The panel used to manipulate individual elements.
@@ -158,6 +171,8 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         upButton = new JButton("▲");
         downButton = new JButton("▼");
         sortButton = new JButton("Sort");
+        filterTextField = new JTextField();
+        matchesLabel = new JLabel("Matches: 0");
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         addButton = new JButton("Add");
@@ -191,6 +206,17 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
                 sortButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
+        filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+               filterChanged();
+            }    // insertUpdate()
+            @Override public void removeUpdate(DocumentEvent e) {
+                filterChanged();
+            }    // removeUpdate()
+            @Override public void changedUpdate(DocumentEvent e) {
+                filterChanged();
+            }    // changedUpdate()
+        });    // addDocumentListener()
         editButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 editButtonClicked(e);
@@ -263,6 +289,13 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         movementPanel.add(upButton);
         movementPanel.add(downButton);
         movementPanel.add(sortButton);
+
+        JLabel filterLabel = new JLabel("Filter");
+        filterTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, filterTextField.getPreferredSize().height));
+        movementPanel.add(filterLabel);
+        movementPanel.add(filterTextField);
+
+        movementPanel.add(matchesLabel);
 
         return movementPanel;
     }    // createMovementPanel()
@@ -486,6 +519,16 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
     }    // sortButtonClicked()
 
     /**
+     * Event that fires when the text in the filter text field changes.
+     */
+    private void filterChanged() {
+        assertInvariant();
+        listControl.setFilter(filterTextField.getText());
+        matchesLabel.setText("Matches: " + listControl.getMatches());
+        pack();
+    }    // filterChanged()
+
+    /**
      * Event that fires when the save button is clicked.
      *
      * @param event the event data
@@ -591,6 +634,12 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (this.isAncestorOf(upButton));
         assert (downButton != null);
         assert (this.isAncestorOf(downButton));
+        assert (sortButton != null);
+        assert (this.isAncestorOf(sortButton));
+        assert (filterTextField != null);
+        assert (this.isAncestorOf(filterTextField));
+        assert (matchesLabel != null);
+        assert (this.isAncestorOf(matchesLabel));
         assert (managerPanel != null);
         assert (this.isAncestorOf(managerPanel));
         assert (editButton != null);
@@ -602,25 +651,5 @@ public abstract class ManageListFrame<E> extends JFrame implements ManageElement
         assert (elementComparator != null);
         assert (elementName != null);
     }    // assertInvariant()
-
-    /**
-     * Returns true if the list data in the given list control exactly matches
-     * the given list.
-     *
-     * @param list the list control; may not be null
-     * @param listData the expected list data; may not be null
-     * @return true if the list data in {@code list} exactly matches
-     * {@code listData}
-     */
-    private boolean listDataEquals(JList list, java.util.List listData) {
-        assert (list != null);
-        assert (listData != null);
-        ListModel model = list.getModel();
-        java.util.List actualData = new LinkedList();
-        for (int i = 0; i < model.getSize(); ++i) {
-            actualData.add(model.getElementAt(i));
-        }    // for
-        return actualData.equals(listData);
-    }    // listDataEquals()
 
 }    // ManageListFrame

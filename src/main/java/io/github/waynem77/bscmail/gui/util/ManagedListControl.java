@@ -19,6 +19,10 @@
 
 package io.github.waynem77.bscmail.gui.util;
 
+import io.github.waynem77.bscmail.persistent.Matchable;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -26,6 +30,7 @@ import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -46,7 +51,7 @@ import javax.swing.TransferHandler;
  * @param <E> the type of element contained in the list
  * @since 4.0
  */
-public class ManagedListControl<E> extends JList<E> {
+public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
 
     /**
      * The drag and drop handler for {@link ManagedListControl}. The handler
@@ -185,6 +190,47 @@ public class ManagedListControl<E> extends JList<E> {
     }    // DragDropHandler
 
     /**
+     * Cell renderer for the manged list control.
+     */
+    private class ManagedListControlCellRenderer extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index,
+                boolean isSelected, boolean cellHasFocus) {
+            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            Font defaultFont = list.getFont();
+            Font matchFont = new Font(defaultFont.getName(), Font.BOLD, defaultFont.getSize());
+            Font unmatchFont = new Font(defaultFont.getName(), Font.PLAIN, (int)(defaultFont.getSize() * 0.9));
+
+            Color matchBackgroundColor = Color.YELLOW;
+            Color unmatchBackgroundColor = Color.WHITE;
+
+            assert (value instanceof Matchable);
+            Matchable matchable = (Matchable)value;
+            if (listFilter.isEmpty()) {
+                // No filter. Bold, but do not highlight.
+                setBackground(unmatchBackgroundColor);
+                setFont(matchFont);
+            } else if (matchable.matches(listFilter)) {    // if
+                // Item matches filter. Bold and highlight.
+                setBackground(matchBackgroundColor);
+                setFont(matchFont);
+            } else {    // else if
+                // Item does not match filter. Weaken and do not highlight.
+                setBackground(unmatchBackgroundColor);
+                setFont(unmatchFont);
+            }    // if
+
+            if (isSelected) {
+                setBackground(getBackground().darker());
+            }    // if
+
+            return c;
+        }
+    }    // ManagedListControlCellRenderer
+
+    /**
      * The drag and drop handler for all instances of ManagedListControl.
      */
     private static final DragDropHandler dragDropHandler = new DragDropHandler();
@@ -193,6 +239,11 @@ public class ManagedListControl<E> extends JList<E> {
      * The drag and drop listeners.
      */
     private final List<DragAndDropListener> dragAndDropListeners;
+
+    /**
+     * The list filter string.
+     */
+    private String listFilter;
 
     /**
      * Constructs a new ManagedListControl with the given data.
@@ -211,6 +262,9 @@ public class ManagedListControl<E> extends JList<E> {
         setTransferHandler(dragDropHandler);
 
         dragAndDropListeners = new ArrayList<>();
+
+        listFilter = "";
+        setCellRenderer(new ManagedListControlCellRenderer());
 
         assertInvariant();
     }   // ManagedListControl()
@@ -257,12 +311,47 @@ public class ManagedListControl<E> extends JList<E> {
     }    // notifyDragAndDropListeners()
 
     /**
+     * Sets the filter for the managed list control. The list control will
+     * highlight all elements all elements that match the filter. (Matching is
+     * done by the elements' {@link Matchable#matches(Object)} method. If the
+     * filter is empty (not null), then no elements are highlighted.
+     *
+     * @param filter the filter string; may not be null
+     * @throws NullPointerException if filter is null
+     */
+    public void setFilter(String filter) {
+        assertInvariant();
+        if (filter == null) {
+            throw new NullPointerException("filter may not be null");
+        }    // if
+
+        listFilter = filter;
+        repaint();
+
+        assertInvariant();
+    }    // setFilter()
+
+    /**
+     * Returns the number of items matching the current filter.
+     *
+     * @return the number of items matching the current filter
+     */
+    public long getMatches() {
+        if (listFilter.isEmpty()) {
+            return 0;
+        }    // if
+
+        return getListData().stream().filter(element -> element.matches(listFilter)).count();
+    }    // getMatches()
+
+    /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
         assert (dragDropHandler != null);
         assert (dragAndDropListeners != null);
         assert (!dragAndDropListeners.contains(null));
+        assert (listFilter != null);
     }    // assertInvariant()
 
 }    // ManagedListControl
