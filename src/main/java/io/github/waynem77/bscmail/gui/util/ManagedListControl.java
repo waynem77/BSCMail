@@ -29,7 +29,12 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
@@ -332,16 +337,33 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
     }    // setFilter()
 
     /**
+     * Returns a sorted set consisting of the indices of all list items matching
+     * the current filter. If there are no matches, or if the filter is empty,
+     * this method returns an empty set.
+     *
+     * @return a sorted set consisting of the indices of all list items matching
+     * the current filter
+     */
+    public SortedSet<Integer> getMatchIndices() {
+        if (listFilter.isEmpty()) {
+            return new TreeSet<>();
+        }    // if
+
+        Vector<E> listData = getListData();
+        Set<Integer> indices = IntStream.range(0, listData.size())
+                .filter(i -> listData.get(i).matches(listFilter))
+                .boxed()
+                .collect(Collectors.toSet());
+        return new TreeSet<>(indices);
+    }    // getMatchIndices()
+
+    /**
      * Returns the number of items matching the current filter.
      *
      * @return the number of items matching the current filter
      */
     public long getMatches() {
-        if (listFilter.isEmpty()) {
-            return 0;
-        }    // if
-
-        return getListData().stream().filter(element -> element.matches(listFilter)).count();
+        return getMatchIndices().size();
     }    // getMatches()
 
     /**

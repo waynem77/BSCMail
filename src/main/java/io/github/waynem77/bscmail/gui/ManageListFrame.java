@@ -25,7 +25,6 @@ import io.github.waynem77.bscmail.gui.util.DragAndDropListener;
 import io.github.waynem77.bscmail.gui.util.ManagedListControl;
 import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -33,7 +32,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.SortedSet;
 import java.util.Vector;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -94,6 +95,16 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      * A label that displays the number of matching items.
      */
     private final JLabel matchesLabel;
+
+    /**
+     * A button that navigates to the previous matching item.
+     */
+    private final JButton prevMatchButton;
+
+    /**
+     * A button that navigates to the next matching item.
+     */
+    private final JButton nextMatchButton;
 
     /**
      * The panel used to manipulate individual elements.
@@ -168,11 +179,13 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
 
         listControl = new ManagedListControl<>(new Vector<>(initialData));
 
-        upButton = new JButton("▲");
-        downButton = new JButton("▼");
+        upButton = new JButton("<html><center>▲<br />Move</center></html>");
+        downButton = new JButton("<html><center>▼<br />Move</center></html>");
         sortButton = new JButton("Sort");
         filterTextField = new JTextField();
         matchesLabel = new JLabel("Matches: 0");
+        prevMatchButton = new JButton("<html><center>⯇<br />Match</center></html>");
+        nextMatchButton = new JButton("<html><center>⯈<br />Match</center></html>");
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         addButton = new JButton("Add");
@@ -217,6 +230,16 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
                 filterChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
+        prevMatchButton.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                prevMatchButtonClicked(e);
+            }    // actionPerformed()
+        });    // addActionListener
+        nextMatchButton.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                nextMatchButtonClicked(e);
+            }    // actionPerformed()
+        });    // addActionListener
         editButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 editButtonClicked(e);
@@ -255,8 +278,12 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         constraints.gridx++;
         add(Box.createHorizontalStrut(HALF_STRUT_WIDTH), constraints);
 
-        JPanel movementPanel = createMovementPanel();
+        constraints.gridx++;
+        JPanel movementPanel = new JPanel();
         movementPanel.setBorder(ComponentFactory.getStandardBorder());
+        movementPanel.setLayout(new BoxLayout(movementPanel, BoxLayout.Y_AXIS));
+        movementPanel.add(createSortingPanel());
+        movementPanel.add(this.createFilterPanel());
         constraints.gridx++;
         add(movementPanel, constraints);
 
@@ -283,23 +310,70 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         assertInvariant();
     }    // ManageListFrame()
 
-    private JPanel createMovementPanel() {
-        JPanel movementPanel = new JPanel();
-        movementPanel.setLayout(new BoxLayout(movementPanel, BoxLayout.Y_AXIS));
-        movementPanel.add(upButton);
-        movementPanel.add(downButton);
-        movementPanel.add(sortButton);
+    /**
+     * Creates the sorting panel.
+     *
+     * @return the sorting panel
+     */
+    private JPanel createSortingPanel() {
+        JPanel sortingPanel = new JPanel();
+        sortingPanel.setBorder(BorderFactory.createTitledBorder("Sorting"));
+        sortingPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
 
-        JLabel filterLabel = new JLabel("Filter");
-        filterTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, filterTextField.getPreferredSize().height));
-        movementPanel.add(filterLabel);
-        movementPanel.add(filterTextField);
+        sortingPanel.add(upButton, constraints);
 
-        movementPanel.add(matchesLabel);
+        ++constraints.gridx;
+        sortingPanel.add(downButton, constraints);
 
-        return movementPanel;
-    }    // createMovementPanel()
+        constraints.gridx = 0;
+        ++constraints.gridy;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        sortingPanel.add(sortButton, constraints);
 
+        return sortingPanel;
+    }    // createSortingPanel()
+
+    /**
+     * Creates the filter panel.
+     *
+     * @return the filter panel
+     */
+    private JPanel createFilterPanel() {
+        JPanel filterPanel = new JPanel();
+        filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
+        filterPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        filterPanel.add(filterTextField, constraints);
+
+        ++constraints.gridy;
+        filterPanel.add(matchesLabel, constraints);
+
+        constraints.gridwidth = 1;
+        ++constraints.gridy;
+        filterPanel.add(prevMatchButton, constraints);
+
+        ++constraints.gridx;
+        filterPanel.add(nextMatchButton, constraints);
+
+        return filterPanel;
+    }    // createFilterPanel()
+
+    /**
+     * Creates the action panel.
+     *
+     * @return the action panel
+     */
     private JPanel createActionPanel() {
         JPanel actionPanel = new JPanel();
         actionPanel.setLayout(new GridBagLayout());
@@ -329,6 +403,11 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         return actionPanel;
     }    // createActionPanel()
 
+    /**
+     * Creates the command panel.
+     *
+     * @return the command panel
+     */
     private JPanel createCommandPanel() {
         JPanel commandPanel = new JPanel();
         commandPanel.setLayout(new GridBagLayout());
@@ -429,12 +508,15 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         boolean hasSelection = (listControl.getSelectedIndex() != -1);
         boolean isAtTop = (listControl.getSelectedIndex() == 0);
         boolean isAtBottom = (listControl.getSelectedIndex() == (listControl.getModel().getSize() - 1));
+        boolean hasMatches = (listControl.getMatches() > 0);
 
         upButton.setEnabled(hasSelection && !isAtTop);         // a non-topmost element is selected
         downButton.setEnabled(hasSelection && !isAtBottom);    // a non-bottommost element is selected
         editButton.setEnabled(hasSelection);                   // an element is selected
         addButton.setEnabled(true);                            // always
         deleteButton.setEnabled(hasSelection);                 // an element is selected
+        prevMatchButton.setEnabled(hasMatches);                // there are filter matches
+        nextMatchButton.setEnabled(hasMatches);                // there are filter matches
     }    // setButtonStates()
 
     /**
@@ -525,8 +607,47 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         assertInvariant();
         listControl.setFilter(filterTextField.getText());
         matchesLabel.setText("Matches: " + listControl.getMatches());
+        setButtonStates();
         pack();
     }    // filterChanged()
+
+    /**
+     * Event that fires when the previous match button is clicked.
+     *
+     * @param event the event data
+     */
+    private void prevMatchButtonClicked(ActionEvent event) {
+        assertInvariant();
+
+        int selectedIndex = listControl.getSelectedIndex();
+        SortedSet<Integer> matchingIndices = listControl.getMatchIndices();
+        assert (! matchingIndices.isEmpty());
+        SortedSet<Integer> headMatches = matchingIndices.headSet(selectedIndex);
+        int nextIndex = headMatches.isEmpty() ? matchingIndices.last() : headMatches.last();
+        listControl.setSelectedIndex(nextIndex);
+        listControl.ensureIndexIsVisible(nextIndex);
+
+        assertInvariant();
+    }    // prevMatchButtonClicked()
+
+    /**
+     * Event that fires when the next match button is clicked.
+     *
+     * @param event the event data
+     */
+    private void nextMatchButtonClicked(ActionEvent event) {
+        assertInvariant();
+
+        int selectedIndex = listControl.getSelectedIndex();
+        SortedSet<Integer> matchingIndices = listControl.getMatchIndices();
+        assert (! matchingIndices.isEmpty());
+        SortedSet<Integer> tailMatches = matchingIndices.tailSet(selectedIndex + 1);
+        int nextIndex = tailMatches.isEmpty() ? matchingIndices.first() : tailMatches.first();
+        listControl.setSelectedIndex(nextIndex);
+        listControl.ensureIndexIsVisible(nextIndex);
+
+        assertInvariant();
+    }    // nextMatchButtonClicked()
 
     /**
      * Event that fires when the save button is clicked.
@@ -640,6 +761,10 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         assert (this.isAncestorOf(filterTextField));
         assert (matchesLabel != null);
         assert (this.isAncestorOf(matchesLabel));
+        assert (prevMatchButton != null);
+        assert (this.isAncestorOf(prevMatchButton));
+        assert (nextMatchButton != null);
+        assert (this.isAncestorOf(nextMatchButton));
         assert (managerPanel != null);
         assert (this.isAncestorOf(managerPanel));
         assert (editButton != null);

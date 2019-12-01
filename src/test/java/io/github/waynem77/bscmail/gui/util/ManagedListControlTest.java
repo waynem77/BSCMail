@@ -23,6 +23,8 @@ import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -302,6 +304,69 @@ public class ManagedListControlTest {
 
         managedListControl.setFilter(filter);
     }    // setFilterDoesNotThrowExceptionWhenFilterIsNotNull()
+
+    /* getMatchIndices */
+
+    /**
+     * Tests that {@link ManagedListControl#getMatchIndices()} does not throw an
+     * exception.
+     */
+    @Test
+    public void getMatchIndicesDoesNotThrowException() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz", "smurf", "foobar");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+
+        managedListControl.getMatchIndices();
+    }    // getMatchIndicesDoesNotThrowException()
+
+    /* getMatchIndices */
+
+    /**
+     * Tests that {@link ManagedListControl#getMatchIndices()} returns an empty
+     * set when there is no filter.
+     */
+    @Test
+    public void getMatchIndicesReturnsEmptySetWhenThereIsNoFilter() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz", "smurf", "foobar");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+
+        SortedSet<Integer> received = managedListControl.getMatchIndices();
+
+        assertTrue(received.isEmpty());
+    }    // getMatchIndicesReturnsEmptySetWhenThereIsNoFilter()
+
+    /**
+     * Tests that {@link ManagedListControl#getMatchIndices()} returns an empty
+     * set when there are no matches.
+     */
+    @Test
+    public void getMatchIndicesReturnsEmptySetWhenThereAreNoMatches() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz", "smurf", "foobar");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        String filter = "xxx";
+        managedListControl.setFilter(filter);
+
+        SortedSet<Integer> received = managedListControl.getMatchIndices();
+
+        assertTrue(received.isEmpty());
+    }    // getMatchIndicesReturnsEmptySetWhenThereAreNoMatches()
+
+    /**
+     * Tests that {@link ManagedListControl#getMatchIndices()} returns the
+     * correct value when there are matches.
+     */
+    @Test
+    public void getMatchIndicesReturnsCorrectValueWhenThereAreMatches() {
+        Vector listData = StringMatchable.asVector("foo", "bar", "baz", "smurf", "foobar");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        String filter = "ba";
+        managedListControl.setFilter(filter);
+
+        SortedSet<Integer> received = managedListControl.getMatchIndices();
+
+        SortedSet<Integer> expected = new TreeSet<Integer>(Arrays.asList(1, 2, 4));
+        assertEquals(expected, received);
+    }    // getMatchIndicesReturnsCorrectValueWhenThereAreMatches()
 
     /* getMatches */
 
