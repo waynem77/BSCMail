@@ -112,17 +112,22 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     protected final ManageElementPanel<E> managerPanel;
 
     /**
-     * A button that overwrites a shift with new values.
+     * A button that edits an element.
      */
     private final JButton editButton;
 
     /**
-     * A button that deletes a shift.
+     * A button that creates a copy of an element.
+     */
+    private final JButton copyButton;
+
+    /**
+     * A button that deletes an element.
      */
     private final JButton deleteButton;
 
     /**
-     * A button that adds a shift.
+     * A button that adds an element.
      */
     private final JButton addButton;
 
@@ -187,6 +192,7 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         prevMatchButton = new JButton("<html><center>⯇<br />Match</center></html>");
         nextMatchButton = new JButton("<html><center>⯈<br />Match</center></html>");
         editButton = new JButton("Edit");
+        copyButton = new JButton("Copy");
         deleteButton = new JButton("Delete");
         addButton = new JButton("Add");
 
@@ -243,6 +249,11 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         editButton.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e) {
                 editButtonClicked(e);
+            }    // actionPerformed()
+        });    // addActionListener
+        copyButton.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                copyButtonClicked(e);
             }    // actionPerformed()
         });    // addActionListener
         deleteButton.addActionListener(new ActionListener(){
@@ -423,6 +434,9 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         commandPanel.add(editButton, constraints);
 
         constraints.gridx++;
+        commandPanel.add(copyButton);
+
+        constraints.gridx++;
         commandPanel.add(deleteButton);
 
         constraints.gridx++;
@@ -512,11 +526,12 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
 
         upButton.setEnabled(hasSelection && !isAtTop);         // a non-topmost element is selected
         downButton.setEnabled(hasSelection && !isAtBottom);    // a non-bottommost element is selected
-        editButton.setEnabled(hasSelection);                   // an element is selected
-        addButton.setEnabled(true);                            // always
-        deleteButton.setEnabled(hasSelection);                 // an element is selected
         prevMatchButton.setEnabled(hasMatches);                // there are filter matches
         nextMatchButton.setEnabled(hasMatches);                // there are filter matches
+        editButton.setEnabled(hasSelection);                   // an element is selected
+        copyButton.setEnabled(hasSelection);                   // an element is selected
+        deleteButton.setEnabled(hasSelection);                 // an element is selected
+        addButton.setEnabled(true);                            // always
     }    // setButtonStates()
 
     /**
@@ -650,7 +665,7 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     }    // nextMatchButtonClicked()
 
     /**
-     * Event that fires when the save button is clicked.
+     * Event that fires when the edit button is clicked.
      *
      * @param event the event data
      */
@@ -674,6 +689,29 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
 
         assertInvariant();
     }    // editButtonClicked()
+
+    /**
+     * Event that fires when the copy button is clicked.
+     *
+     * @param event the event data
+     */
+    private void copyButtonClicked(ActionEvent event) {
+        assertInvariant();
+
+        E element = managerPanel.createElement();
+
+        int index = listControl.getSelectedIndex();
+        Vector<E> listData = listControl.getListData();
+        assert ((index >= 0) && (index < listData.size()));
+        int newIndex = index + 1;
+        if (element != null) {
+            listData.add(newIndex, element);
+        }    // if
+        setListData(listData);
+        listControl.setSelectedIndex(newIndex);
+
+        assertInvariant();
+    }    // copyButtonClicked()
 
     /**
      * Event that fires when the delete button is clicked.
@@ -769,6 +807,8 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         assert (this.isAncestorOf(managerPanel));
         assert (editButton != null);
         assert (this.isAncestorOf(editButton));
+        assert (copyButton != null);
+        assert (this.isAncestorOf(copyButton));
         assert (deleteButton != null);
         assert (this.isAncestorOf(deleteButton));
         assert (addButton != null);
