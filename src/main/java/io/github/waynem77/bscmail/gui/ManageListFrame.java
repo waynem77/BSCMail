@@ -720,11 +720,20 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      */
     private void deleteButtonClicked(ActionEvent event) {
         assertInvariant();
-        int index = listControl.getSelectedIndex();
-        assert (index > -1);
-        Vector<E> listData = listControl.getListData();
-        listData.remove(index);
-        setListData(listData);
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Really delete 1 item?",
+                application.createWindowTitle("Delete " + elementName),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+            int index = listControl.getSelectedIndex();
+            assert (index > -1);
+            Vector<E> listData = listControl.getListData();
+            listData.remove(index);
+            setListData(listData);
+        }
+
         assertInvariant();
     }    // deleteButtonClicked()
 
