@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -28,6 +28,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -176,18 +177,11 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
                 return false;
             }
 
-            int dragFromIndex = Integer.parseInt(indexString);
             JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
             int dropToIndex = dl.getIndex();
 
-            Vector listData = dropTarget.getListData();
-            listData.add(dropToIndex, listData.get(dragFromIndex));
-            if (dragFromIndex > dropToIndex) {
-                ++dragFromIndex;
-            }    // if
-            listData.remove(dragFromIndex);
-            dropTarget.setListData(listData);
-            dropTarget.notifyDragAndDropListeners();
+            assert(dragSource != null);
+            dragSource.moveSelectionsTo(dropToIndex);
 
             return true;
         }
@@ -241,11 +235,6 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
     private static final DragDropHandler dragDropHandler = new DragDropHandler();
 
     /**
-     * The drag and drop listeners.
-     */
-    private final List<DragAndDropListener> dragAndDropListeners;
-
-    /**
      * The list filter string.
      */
     private String listFilter;
@@ -261,12 +250,10 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
         }
 
         setListData(listData);
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setDragEnabled(true);
         setDropMode(DropMode.INSERT);
         setTransferHandler(dragDropHandler);
-
-        dragAndDropListeners = new ArrayList<>();
 
         listFilter = "";
         setCellRenderer(new ManagedListControlCellRenderer());
@@ -287,33 +274,6 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
         }    // for
         return listData;
     }    // getListData()
-
-    /**
-     * Adds a drag and drop listener. The listeners will be called whenever the
-     * list experiences a drag and drop event.
-     *
-     * @param listener the new listener; may not be null
-     * @throws NullPointerException when listener is null
-     */
-    public void addDragAndDropListener(DragAndDropListener listener) {
-        assertInvariant();
-        if (listener == null) {
-            throw new NullPointerException("listener may not be null");
-        }    // if
-
-        dragAndDropListeners.add(listener);
-        assertInvariant();
-    }    // addDragAndDropListener()
-
-    /**
-     * Notifies all drag and drop listeners.
-     */
-    public void notifyDragAndDropListeners() {
-        assertInvariant();
-        for (DragAndDropListener listener : dragAndDropListeners) {
-            listener.dragAndDropPerformed(this);
-        }    // for
-    }    // notifyDragAndDropListeners()
 
     /**
      * Sets the filter for the managed list control. The list control will
@@ -367,12 +327,43 @@ public class ManagedListControl<E extends Matchable<String>> extends JList<E> {
     }    // getMatches()
 
     /**
+     * Moves all the selected items, in order, inserting them before the item at the given index. If index is equal to
+     * the number of items, this method moves the selected items to the end.
+     * @param index the index; must be a valid index, >= 0 and <= the total number of items
+     * @throws IndexOutOfBoundsException if index is invalid
+     */
+    public void moveSelectionsTo(int index) {
+        assertInvariant();
+        Vector<E> items = getListData();
+        if ((index < 0) || (index > items.size())) {
+            throw new IndexOutOfBoundsException("invalid index: " + index);
+        }    // if
+
+        int[] selectedIndices = getSelectedIndices();
+        int selectionsBeforeIndex = (int) Arrays.stream(selectedIndices).filter(x -> x < index).count();
+        List<E> selectedElements = new ArrayList<>();
+        for (int i = 0; i < selectedIndices.length; ++i) {
+            // Whenever we remove an item, all the elements to the right shift left. We need to adjust the selected
+            // index accordingly.
+            selectedElements.add(items.remove(selectedIndices[i] - i));
+        }
+        int effectiveIndex = index - selectionsBeforeIndex;
+        for (int i = 0; i < selectedElements.size(); ++i) {
+            items.add(effectiveIndex + i, selectedElements.get(i));
+        }
+        setListData(items);
+
+        int[] newSelectionIndices = IntStream.range(effectiveIndex, effectiveIndex + selectedIndices.length).toArray();
+        setSelectedIndices(newSelectionIndices);
+
+        assertInvariant();
+    }    // moveSelectionsTo()
+
+    /**
      * Asserts the correctness of the object's internal state.
      */
     private void assertInvariant() {
         assert (dragDropHandler != null);
-        assert (dragAndDropListeners != null);
-        assert (!dragAndDropListeners.contains(null));
         assert (listFilter != null);
     }    // assertInvariant()
 

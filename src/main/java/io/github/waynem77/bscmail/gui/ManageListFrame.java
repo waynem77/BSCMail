@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,7 +21,6 @@ package io.github.waynem77.bscmail.gui;
 
 import io.github.waynem77.bscmail.Application;
 import io.github.waynem77.bscmail.gui.util.ComponentFactory;
-import io.github.waynem77.bscmail.gui.util.DragAndDropListener;
 import io.github.waynem77.bscmail.gui.util.ManagedListControl;
 import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
@@ -34,6 +33,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.Vector;
+import java.util.stream.IntStream;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -203,11 +203,6 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         listControl.addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 listSelectionValueChanged(e);
-            }    // valueChanged()
-        });    // addListSelectionListener()
-        listControl.addDragAndDropListener(new DragAndDropListener() {
-            @Override public void dragAndDropPerformed(Component c) {
-                listDataChanged(c);
             }    // valueChanged()
         });    // addListSelectionListener()
         upButton.addActionListener(new ActionListener(){
@@ -519,19 +514,19 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      * Enables or disables buttons depending on the state of the list box.
      */
     private void setButtonStates() {
-        boolean hasSelection = (listControl.getSelectedIndex() != -1);
-        boolean isAtTop = (listControl.getSelectedIndex() == 0);
-        boolean isAtBottom = (listControl.getSelectedIndex() == (listControl.getModel().getSize() - 1));
+        boolean hasSelections = (listControl.getSelectedIndices().length > 0);
+        boolean isAtTop = (listControl.getMinSelectionIndex() == 0);
+        boolean isAtBottom = (listControl.getMaxSelectionIndex() == (listControl.getModel().getSize() - 1));
         boolean hasMatches = (listControl.getMatches() > 0);
 
-        upButton.setEnabled(hasSelection && !isAtTop);         // a non-topmost element is selected
-        downButton.setEnabled(hasSelection && !isAtBottom);    // a non-bottommost element is selected
-        prevMatchButton.setEnabled(hasMatches);                // there are filter matches
-        nextMatchButton.setEnabled(hasMatches);                // there are filter matches
-        editButton.setEnabled(hasSelection);                   // an element is selected
-        copyButton.setEnabled(hasSelection);                   // an element is selected
-        deleteButton.setEnabled(hasSelection);                 // an element is selected
-        addButton.setEnabled(true);                            // always
+        upButton.setEnabled(hasSelections && !isAtTop);         // a non-topmost element is selected
+        downButton.setEnabled(hasSelections && !isAtBottom);    // a non-bottommost element is selected
+        prevMatchButton.setEnabled(hasMatches);                 // there are filter matches
+        nextMatchButton.setEnabled(hasMatches);                 // there are filter matches
+        editButton.setEnabled(hasSelections);                   // an element is selected
+        copyButton.setEnabled(hasSelections);                   // an element is selected
+        deleteButton.setEnabled(hasSelections);                 // an element is selected
+        addButton.setEnabled(true);                             // always
     }    // setButtonStates()
 
     /**
@@ -540,7 +535,11 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      * @param event the event data
      */
     private void listSelectionValueChanged(ListSelectionEvent event) {
-        E element = listControl.getSelectedValue();
+        E element = null;
+        // If there is a single selection, load it.
+        if (listControl.getSelectedIndices().length == 1) {
+            element = listControl.getSelectedValue();
+        }    // if
         managerPanel.loadElement(element);
         setButtonStates();
         pack();
@@ -564,8 +563,8 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      */
     private void upButtonClicked(ActionEvent event) {
         assertInvariant();
-        int offset = -1;
-        moveSelectedItem(offset);
+        int minSelectedIndex = listControl.getMinSelectionIndex();
+        moveSelectedItems(minSelectedIndex - 1);
         assertInvariant();
     }    // upButtonClicked()
 
@@ -576,30 +575,31 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
      */
     private void downButtonClicked(ActionEvent event) {
         assertInvariant();
-        int offset = 1;
-        moveSelectedItem(offset);
+
+        int[] selectedIndices = listControl.getSelectedIndices();
+        // Get the index one past that of the lowest-numbered unselected element higher than the lowest-numbered
+        // selection.
+        int newIndex = IntStream.rangeClosed(listControl.getMinSelectionIndex(), listControl.getMaxSelectionIndex() + 1)
+                .filter(x -> !IntStream.of(selectedIndices).anyMatch(arrayValue -> arrayValue == x))
+                .min()
+                .getAsInt()
+                + 1;
+        moveSelectedItems(newIndex);
         assertInvariant();
     }    // downButtonClicked()
 
     /**
-     * Shifts the selected item up or down according to the offset. The item
+     * Shifts the selected items up or down according to the offset. The item
      * remains selected and visible after the shift.
      *
-     * @param offset the amount to shift; positive values indicate downward
-     * motion, negative values indicate upward motion; must indicate a valid
+     * @param index the new index for the first item; must indicate a valid
      * index
      */
-    private void moveSelectedItem(int offset) {
-        assert (offset != 0);
-        int index = listControl.getSelectedIndex();
+    private void moveSelectedItems(int index) {
         Vector<E> listData = listControl.getListData();
-        assert ((index >= 0) && (index < listData.size() - 1));
-        int swapIndex = index + offset;
-        assert ((swapIndex >= 0) && (swapIndex < listData.size() - 1));
-        Collections.swap(listData, swapIndex, index);
-        setListData(listData);
-        listControl.setSelectedIndex(swapIndex);
-        listControl.ensureIndexIsVisible(swapIndex);
+        assert ((index >= 0) && (index < listData.size()));
+        listControl.moveSelectionsTo(index);
+        listControl.ensureIndexIsVisible(index);
     }    // swapItems
 
     /**
@@ -677,14 +677,15 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         boolean elementWasEdited = showEditDialog(editPanel, "Edit");
         if (elementWasEdited) {
             E element = editPanel.createElement();
-            int index = listControl.getSelectedIndex();
             Vector<E> listData = listControl.getListData();
-            assert ((index >= 0) && (index < listData.size()));
+            int[] indices = listControl.getSelectedIndices();
             if (element != null) {
-                listData.set(index, element);
-            }
+                for (int index : indices) {
+                    listData.set(index, element);
+                }    // for
+            }    // if
             setListData(listData);
-            listControl.setSelectedIndex(index);
+            listControl.setSelectedIndices(indices);
         }    // if
 
         assertInvariant();
@@ -698,17 +699,20 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     private void copyButtonClicked(ActionEvent event) {
         assertInvariant();
 
-        E element = managerPanel.createElement();
-
-        int index = listControl.getSelectedIndex();
         Vector<E> listData = listControl.getListData();
-        assert ((index >= 0) && (index < listData.size()));
-        int newIndex = index + 1;
-        if (element != null) {
-            listData.add(newIndex, element);
-        }    // if
+        int[] selectedIndices = listControl.getSelectedIndices();
+        int newIndex = selectedIndices[selectedIndices.length - 1] + 1;
+        int firstCopyIndex = newIndex;
+        for (int i : listControl.getSelectedIndices()) {
+            listControl.setSelectedIndex(i);
+            E element = managerPanel.createElement();
+            if (element != null) {
+                listData.add(newIndex, element);
+                ++newIndex;
+            }
+        }
         setListData(listData);
-        listControl.setSelectedIndex(newIndex);
+        listControl.setSelectedIndices(IntStream.range(firstCopyIndex, newIndex).toArray());
 
         assertInvariant();
     }    // copyButtonClicked()
@@ -721,16 +725,19 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     private void deleteButtonClicked(ActionEvent event) {
         assertInvariant();
 
+        Vector<E> listData = listControl.getListData();
+        int[] indices = listControl.getSelectedIndices();
+        int numberOfItems = indices.length;
         int result = JOptionPane.showConfirmDialog(
                 this,
-                "Really delete 1 item?",
+                "Really delete " + numberOfItems + " " + ((numberOfItems == 1) ? "item" : "items") + "?",
                 application.createWindowTitle("Delete " + elementName),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            int index = listControl.getSelectedIndex();
-            assert (index > -1);
-            Vector<E> listData = listControl.getListData();
-            listData.remove(index);
+            for (int i = indices.length - 1; i >= 0; --i) {
+                int index = indices[i];
+                listData.remove(index);
+            }
             setListData(listData);
         }
 

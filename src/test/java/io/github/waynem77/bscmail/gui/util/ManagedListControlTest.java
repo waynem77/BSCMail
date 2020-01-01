@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -23,6 +23,7 @@ import io.github.waynem77.bscmail.persistent.Matchable;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -65,6 +66,20 @@ public class ManagedListControlTest {
             }    // for
             return vector;
         }    // asVector()
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof StringMatchable)) {
+                return false;
+            }
+            StringMatchable stringMatchable = (StringMatchable)obj;
+            return Objects.equals(value, stringMatchable.value);
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }    // StringMatchable
 
     /* constructor */
@@ -151,131 +166,6 @@ public class ManagedListControlTest {
         assertEquals(expected, received);
     }    // getListDataReturnsDataFromLastCallToSetListData()
 
-    /* addDragAndDropListener */
-
-    /**
-     * Tests that
-     * {@link ManagedListControl#addDragAndDropListener(DragAndDropListener)}
-     * throws a NullPointerException when listener is null.
-     */
-    @Test(expected = NullPointerException.class)
-    public void addDragAndDropListenerThrowsExceptionWhenListenerIsNull() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        TestListener listener = null;
-
-        managedListControl.addDragAndDropListener(listener);
-    }    // getListDataReturnsDataFromLastCallToSetListData()
-
-    /**
-     * Tests that
-     * {@link ManagedListControl#addDragAndDropListener(DragAndDropListener)}
-     * does not throw an exception when listener is not null.
-     */
-    @Test
-    public void addDragAndDropListenerDoesNotThrowExceptionWhenListenerIsNotNull() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        TestListener listener = new TestListener();
-
-        managedListControl.addDragAndDropListener(listener);
-    }    // addDragAndDropListenerDoesNotThrowExceptionWhenListenerIsNotNull()
-
-    /**
-     * Tests that
-     * {@link ManagedListControl#addDragAndDropListener(DragAndDropListener)}
-     * does not throw an exception when multiple listeners are added.
-     */
-    @Test
-    public void addDragAndDropListenerDoesNotThrowExceptionWhenMultipleListenersAreAdded() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-
-        managedListControl.addDragAndDropListener(new TestListener());
-        managedListControl.addDragAndDropListener(new TestListener());
-    }    // addDragAndDropListenerDoesNotThrowExceptionWhenMultipleListenersAreAdded()
-
-    /* notifyDragAndDropListeners */
-
-    /**
-     * Tests that {@link ManagedListControl#notifyDragAndDropListeners()} does
-     * not throw an exception when there are no listeners.
-     */
-    @Test
-    public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreNoListeners() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-
-        managedListControl.notifyDragAndDropListeners();
-    }    // notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreNoListeners()
-
-    /**
-     * Tests that {@link ManagedListControl#notifyDragAndDropListeners()} does
-     * not throw an exception when there is one listener.
-     */
-    @Test
-    public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereIsOneListener() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        managedListControl.addDragAndDropListener(new TestListener());
-
-        managedListControl.notifyDragAndDropListeners();
-    }    // notifyDragAndDropListenersDoesNotThrowExceptionWhenThereIsOneListener()
-
-    /**
-     * Tests that {@link ManagedListControl#notifyDragAndDropListeners()} does
-     * not throw an exception when there are multiple listeners.
-     */
-    @Test
-    public void notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreMultipleListeners() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        managedListControl.addDragAndDropListener(new TestListener());
-        managedListControl.addDragAndDropListener(new TestListener());
-
-        managedListControl.notifyDragAndDropListeners();
-    }    // notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreMultipleListeners()
-
-    /**
-     * Tests that {@link ManagedListControl#notifyDragAndDropListeners()}
-     * notifies all listeners.
-     */
-    @Test
-    public void notifyDragAndDropListenersNotifiesAllListeners() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        List<TestListener> listeners = Arrays.asList(new TestListener(), new TestListener());
-        for (TestListener listener : listeners) {
-            assertNull("test setup problem", listener.component);
-            managedListControl.addDragAndDropListener(listener);
-        }
-
-        managedListControl.notifyDragAndDropListeners();
-
-        for (TestListener listener : listeners) {
-            assertNotNull(listener.component);
-        }    // for
-    }    // notifyDragAndDropListenersDoesNotThrowExceptionWhenThereAreMultipleListeners()
-
-    /**
-     * Tests that {@link ManagedListControl#notifyDragAndDropListeners()} passes
-     * the ManagedListControl as the argument to
-     * {@link DragAndDropListener#dragAndDropPerformed(Component)}.
-     */
-    @Test
-    public void notifyDragAndDropListenersPassesListAsArgument() {
-        Vector listData = StringMatchable.asVector("foo", "bar", "baz");
-        ManagedListControl managedListControl = new ManagedListControl(listData);
-        TestListener listener = new TestListener();
-        assertNull("test setup problem", listener.component);
-        managedListControl.addDragAndDropListener(listener);
-
-        managedListControl.notifyDragAndDropListeners();
-
-        Component expected = managedListControl;
-        Component received = listener.component;
-        assertSame(expected, received);
-    }    // notifyDragAndDropListenersPassesListAsArgument()
 
     /* setFilter */
 
@@ -381,5 +271,203 @@ public class ManagedListControlTest {
 
         managedListControl.getMatches();
     }    // getMatchesDoesNotThrowException()
+
+    /* moveSelectionsTo */
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} throws an IndexOutOfBoundsException when index is too
+     * low.
+     */
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void moveSelectionsToThrowsExceptionWhenIndexTooLow() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = -1;
+        managedListControl.moveSelectionsTo(index);
+    }    // moveSelectionsToThrowsExceptionWhenIndexTooLow()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} throws an IndexOutOfBoundsException when index is too
+     * high.
+     */
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void moveSelectionsToThrowsExceptionWhenIndexTooHigh() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = listData.size() + 1;
+        managedListControl.moveSelectionsTo(index);
+    }    // moveSelectionsToThrowsExceptionWhenIndexTooHigh()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} does not throw an exception when index is in range.
+     */
+    @Test
+    public void moveSelectionsToDoesNotThrowExceptionWhenIndexInRange() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        for (int index = 0; index <= listData.size(); ++index) {
+            ManagedListControl managedListControl = new ManagedListControl(listData);
+            int[] initialSelectedIndices = {2, 3, 5};
+            managedListControl.setSelectedIndices(initialSelectedIndices);
+
+            managedListControl.moveSelectionsTo(index);
+        }
+    }    // moveSelectionsToDoesNotThrowExceptionWhenIndexInRange()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} moves elements correctly when index is lower than any
+     * selected indices.
+     */
+    @Test
+    public void moveSelectionsToMovesElementsCorrectlyWhenIndexIsLow() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 0;
+        managedListControl.moveSelectionsTo(index);
+
+        Vector received = managedListControl.getListData();
+        Vector expected = StringMatchable.asVector("C", "D", "F", "A", "B", "E", "G");
+        assertEquals(expected, received);
+    }    // moveSelectionsToMovesElementsCorrectlyWhenIndexIsLow()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} retains selections correctly when index is lower than
+     * any selected indices.
+     */
+    @Test
+    public void moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsLow() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 0;
+        managedListControl.moveSelectionsTo(index);
+
+        int[] received = managedListControl.getSelectedIndices();
+        int[] expected = {0, 1, 2};
+        assertArrayEquals(expected, received);
+    }    // moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsLow()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} moves elements correctly when index is within the
+     * selected indices.
+     */
+    @Test
+    public void moveSelectionsToMovesElementsCorrectlyWhenIndexIsWithinSelection() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 3;
+        managedListControl.moveSelectionsTo(index);
+
+        Vector received = managedListControl.getListData();
+        List expected = StringMatchable.asVector("A", "B", "C", "D", "F", "E", "G");
+        assertEquals(expected, received);
+    }    // moveSelectionsToMovesElementsCorrectlyWhenIndexIsWithinSelection()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} retains selections correctly when index is within the
+     * selected indices.
+     */
+    @Test
+    public void moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsWithin() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 3;
+        managedListControl.moveSelectionsTo(index);
+
+        int[] received = managedListControl.getSelectedIndices();
+        int[] expected = {2, 3, 4};
+        assertArrayEquals(expected, received);
+    }    // moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsWithin()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} moves elements correctly when index is higher than
+     * any selected indices.
+     */
+    @Test
+    public void moveSelectionsToMovesElementsCorrectlyWhenIndexIsHigh() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 6;
+        managedListControl.moveSelectionsTo(index);
+
+        Vector received = managedListControl.getListData();
+        List expected = StringMatchable.asVector("A", "B", "E", "C", "D", "F", "G");
+        assertEquals(expected, received);
+    }    // moveSelectionsToMovesElementsCorrectlyWhenIndexIsHigh()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} retains selections correctly when index is higher
+     * than any selected indices.
+     */
+    @Test
+    public void moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsHigh() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 6;
+        managedListControl.moveSelectionsTo(index);
+
+        int[] received = managedListControl.getSelectedIndices();
+        int[] expected = {3, 4, 5};
+        assertArrayEquals(expected, received);
+    }    // moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsHigh()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} moves elements correctly when index is the maximum.
+     */
+    @Test
+    public void moveSelectionsToMovesElementsCorrectlyWhenIndexIsMax() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 7;
+        managedListControl.moveSelectionsTo(index);
+
+        Vector received = managedListControl.getListData();
+        List expected = StringMatchable.asVector("A", "B", "E", "G", "C", "D", "F");
+        assertEquals(expected, received);
+    }    // moveSelectionsToMovesElementsCorrectlyWhenIndexIsMax()
+
+    /**
+     * Tests that {@link ManagedListControl#moveSelectionsTo(int)} retains selections correctly when index is the
+     * maximum.
+     */
+    @Test
+    public void moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsMax() {
+        Vector listData = StringMatchable.asVector("A", "B", "C", "D", "E", "F", "G");
+        ManagedListControl managedListControl = new ManagedListControl(listData);
+        int[] initialSelectedIndices = {2, 3, 5};
+        managedListControl.setSelectedIndices(initialSelectedIndices);
+
+        int index = 7;
+        managedListControl.moveSelectionsTo(index);
+
+        int[] received = managedListControl.getSelectedIndices();
+        int[] expected = {4, 5, 6};
+        assertArrayEquals(expected, received);
+    }    // moveSelectionsToRetainsSelectionsCorrectlyWhenIndexIsMax()
 
 }
