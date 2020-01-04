@@ -6,7 +6,7 @@
 
   <groupId>io.github.waynem77.bscmail</groupId>
   <artifactId>BSCMail</artifactId>
-  <version>4.0-RC1</version>
+  <version>4.0-RC2-SNAPSHOT</version>
 
   <name>BSCMail</name>
   <url>https://github.com/waynem77/BSCMail</url>
