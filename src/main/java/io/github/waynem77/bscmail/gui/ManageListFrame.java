@@ -188,7 +188,7 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         downButton = new JButton("<html><center>▼<br />Move</center></html>");
         sortButton = new JButton("Sort");
         filterTextField = new JTextField();
-        matchesLabel = new JLabel("Matches: 0");
+        matchesLabel = new JLabel();
         prevMatchButton = new JButton("<html><center>⯇<br />Match</center></html>");
         nextMatchButton = new JButton("<html><center>⯈<br />Match</center></html>");
         editButton = new JButton("Edit");
@@ -312,6 +312,7 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
         pack();
         setMinimumSize(getPreferredSize());
 
+        updateMatchesLabel();
         setButtonStates();
         assertInvariant();
     }    // ManageListFrame()
@@ -507,8 +508,9 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     protected void updateListData(Vector<E> data) throws IOException {
         assert (data != null);
         listControl.setListData(data);
+        updateMatchesLabel();
         setButtonStates();
-    }
+    }    // updateListData()
 
     /**
      * Enables or disables buttons depending on the state of the list box.
@@ -621,10 +623,17 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
     private void filterChanged() {
         assertInvariant();
         listControl.setFilter(filterTextField.getText());
-        matchesLabel.setText("Matches: " + listControl.getMatches());
+        updateMatchesLabel();
         setButtonStates();
         pack();
     }    // filterChanged()
+
+    /**
+     * Updates the text of the matches label.
+     */
+    private void updateMatchesLabel() {
+        matchesLabel.setText("Matches: " + listControl.getMatches());
+    }    // updateMatchesLabel()
 
     /**
      * Event that fires when the previous match button is clicked.
