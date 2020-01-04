@@ -37,17 +37,6 @@ import static org.junit.Assert.*;
  */
 public class ManagedListControlTest {
 
-    public class TestListener implements DragAndDropListener {
-
-        public Component component = null;
-
-        @Override
-        public void dragAndDropPerformed(Component component) {
-            this.component = component;
-        }    // dragAndDropPerformed()
-
-    }    // TestListener
-
     /**
      * Matchable usable in tests.
      */
