@@ -137,7 +137,7 @@ public class ManageVolunteerPanelTest extends ManageElementPanelTest<Volunteer> 
 
         Volunteer received = panel.createElement();
 
-        Volunteer expected = new Volunteer("", "", "", "", true, Arrays.asList());
+        Volunteer expected = new Volunteer("", "", "", "", false, Arrays.asList());
         assertEquals(expected, received);
     }    // createElementReturnsEmptyElementWhenPanelHasNotBeenLoaded()
 

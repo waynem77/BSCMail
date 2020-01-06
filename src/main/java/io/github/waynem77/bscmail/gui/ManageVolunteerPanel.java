@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -26,6 +26,7 @@ import io.github.waynem77.bscmail.persistent.RolesObserver;
 import io.github.waynem77.bscmail.persistent.Volunteer;
 import io.github.waynem77.bscmail.gui.util.LabeledGrid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Box;
@@ -86,11 +87,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      * Indicates whether the implicit volunteer is valid.
      */
     private boolean volunteerIsValid;
-
-    /**
-     * Tracks the current volunteer selected.
-     */
-    private Volunteer currentVolunteer;
 
     /**
      * Ensures that only one edit roles window is open at a time.
@@ -156,7 +152,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
         labeledGrid.addLabelAndComponent("Roles: ", rolesSelectList);
         labeledGrid.addLabelAndComponent("", Box.createVerticalStrut(VERTICAL_SPACE_AFTER_CONTROLS));
         volunteerIsValid = elementIsValid();
-        currentVolunteer = null;
         editRolesWindowIsOpen = false;
 
         application.registerObserver(this);
@@ -169,15 +164,16 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      */
     @Override
     public void loadElement(Volunteer volunteer) {
-        currentVolunteer = volunteer;
-        nameTextField.setText((volunteer == null) ? "" : volunteer.getName());
-        emailTextField.setText((volunteer == null) ? "" : volunteer.getEmail());
-        phoneTextField.setText((volunteer == null) ? "" : volunteer.getPhone());
-        notesTextArea.setText((volunteer == null) ? "" : volunteer.getNotes());
-        activeCheckBox.setSelected((volunteer == null) ? true : volunteer.isActive());
-        if (volunteer != null) {
-            loadSelectedRoles(volunteer);
-        }    // if
+        if (volunteer == null) {
+            // Create a blank volunteer.
+            volunteer = new Volunteer("", "", "", "", false, Collections.emptyList());
+        }
+        nameTextField.setText(volunteer.getName());
+        emailTextField.setText(volunteer.getEmail());
+        phoneTextField.setText(volunteer.getPhone());
+        notesTextArea.setText(volunteer.getNotes());
+        activeCheckBox.setSelected(volunteer.isActive());
+        loadSelectedRoles(volunteer);
     }    // loadElement()
 
     /**
@@ -189,7 +185,7 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      */
     @Override
     public Volunteer createElement() {
-        currentVolunteer = new Volunteer(
+        return new Volunteer(
                 nameTextField.getText(),
                 emailTextField.getText(),
                 phoneTextField.getText(),
@@ -197,7 +193,6 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
                 activeCheckBox.isSelected(),
                 getSelectedRoles()
         );
-        return currentVolunteer;
     }    // createElement()
 
     /**

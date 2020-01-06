@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -82,7 +82,10 @@ public class ManageRolePanel extends ManageElementPanel<Role> {
      */
     @Override
     public void loadElement(Role role) {
-        nameTextField.setText((role == null) ? "" : role.getName());
+        if (role == null) {
+            role = new Role("");
+        }
+        nameTextField.setText(role.getName());
     }    // loadElement()
 
     /**

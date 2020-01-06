@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -76,8 +76,11 @@ class ManageEventPropertiesPanel extends ManageElementPanel<EventProperty> {
    */
   @Override
   public void loadElement(EventProperty eventProperty) {
-    nameTextField.setText((eventProperty == null) ? "" : eventProperty.getPropertyName());
-    valueTextField.setText((eventProperty == null) ? "" : eventProperty.getDefaultValue());
+    if (eventProperty == null) {
+      eventProperty = new EventProperty("", "");
+    }
+    nameTextField.setText(eventProperty.getPropertyName());
+    valueTextField.setText(eventProperty.getDefaultValue());
   }    // loadElement()
 
   /**

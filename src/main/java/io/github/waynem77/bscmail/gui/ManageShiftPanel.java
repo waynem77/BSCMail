@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -26,6 +26,7 @@ import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.RolesObserver;
 import io.github.waynem77.bscmail.persistent.Shift;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -145,13 +146,15 @@ class ManageShiftPanel extends ManageElementPanel<Shift> implements RolesObserve
      */
     @Override
     public void loadElement(Shift shift) {
-        descriptionTextField.setText((shift == null) ? "" : shift.getDescription());
-        if (shift != null) {
-            loadSelectedRoles(shift);
-        }    // if
-        displayVolunteerEmailCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerEmail());
-        displayVolunteerPhoneCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerPhone());
-        displayVolunteerNotesCheckBox.setSelected((shift == null) ? false : shift.getDisplayVolunteerNotes());
+        if (shift == null) {
+            // Create a blank shift.
+            shift = new Shift("", Collections.emptyList(), false, false, false);
+        }
+        descriptionTextField.setText(shift.getDescription());
+        loadSelectedRoles(shift);
+        displayVolunteerEmailCheckBox.setSelected(shift.getDisplayVolunteerEmail());
+        displayVolunteerPhoneCheckBox.setSelected(shift.getDisplayVolunteerPhone());
+        displayVolunteerNotesCheckBox.setSelected(shift.getDisplayVolunteerNotes());
     }
 
     /**
