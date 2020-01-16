@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2017-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -134,15 +134,12 @@ public class GroupedGrid extends JPanel {
      * {@link LabeledGrid#getMinimumLabelWidth()} for all panels.
      */
     private void adjustLabelWidths() {
-        int maximumMinimumLabelWidth = 0;    // The greatest value of LabeledGrid.getMinimumLabelWidth for all panels.
-        for (LabeledGrid panel : panels) {
-            if (panel.getMinimumLabelWidth() > maximumMinimumLabelWidth) {
-                maximumMinimumLabelWidth = panel.getMinimumLabelWidth();
-            }    // if
-        }    // for
-        for (LabeledGrid panel : panels) {
-            panel.setLabelWidth(maximumMinimumLabelWidth);
-        }    // for
+        int maximumMinimumLabelWidth = panels.stream()
+                .mapToInt(LabeledGrid::getMinimumLabelWidth)
+                .max()
+                .getAsInt();
+        panels.stream()
+                .forEach(panel -> panel.setLabelWidth(maximumMinimumLabelWidth));
     }    // adjustLabelWidths
 
     /**

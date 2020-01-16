@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -46,13 +46,7 @@ public class ManageEventPropertiesFrame extends ManageListFrame<EventProperty> {
         application,
         new ManageEventPropertiesPanel(),
         new Vector<>(application.getEventProperties()),    // may throw
-        new Comparator<EventProperty>(){
-          @Override public int compare(EventProperty EventProperty1, EventProperty EventProperty2) {
-            assert (EventProperty1 != null);
-            assert (EventProperty2 != null);
-            return EventProperty1.toString().compareTo(EventProperty2.toString());
-          }    // compare()
-        },    // Comparator
+        Comparator.comparing(EventProperty::toString),
         "Event Property"
     );
 

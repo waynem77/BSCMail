@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -132,13 +132,11 @@ public class MainFrame extends JFrame {
          * @return the number of buttons in the largest group
          */
         public int getMaxSizeOfGroups() {
-            int max = 0;
-            for (List<JButton> buttonGroup : buttons.values()) {
-                if (buttonGroup.size() > max) {
-                    max = buttonGroup.size();
-                }    // if
-            }    // for
-            return max;
+            assert (buttons.values().size() > 0);
+            return buttons.values().stream()
+                    .mapToInt(List::size)
+                    .max()
+                    .getAsInt();
         }    // getMaxSizeOfGroups()
 
         /**
@@ -215,16 +213,16 @@ public class MainFrame extends JFrame {
         // These are the buttons we want on the form. Using the ButtonCollection
         // class helps streamline the addition and removal of buttons.
         ButtonCollection buttonCollection = new ButtonCollection();
-        buttonCollection.addButton("Manage", "Shifts", (ActionListener) (ActionEvent e) -> { manageShiftsButtonClicked(); });
-        buttonCollection.addButton("Manage", "Volunteers", (ActionListener) (ActionEvent e) -> { manageVolunteersButtonClicked(); });
-        buttonCollection.addButton("Manage", "Roles", (ActionListener) (ActionEvent e) -> { manageRolesButtonClicked(); });
-        buttonCollection.addButton("Manage", "Email Template", (ActionListener) (ActionEvent e) -> { manageEmailTemplateButtonClicked(); });
-        buttonCollection.addButton("Manage", "Email Server", (ActionListener) (ActionEvent e) -> { manageEmailServerButtonClicked(); });
-        buttonCollection.addButton("Manage", "Event Properties", (ActionListener) (ActionEvent e) -> { manageEventPropertiesButtonClicked(); });
-        buttonCollection.addButton("Create", "Event", (ActionListener) (ActionEvent e) -> { createEventButtonClicked(); });
-        buttonCollection.addButton("Create", "Email", (ActionListener) (ActionEvent e) -> { createEmailButtonClicked(); });
-        buttonCollection.addButton("Help", "Help", (ActionListener) (ActionEvent e) -> { helpHelpButtonClicked(); });
-        buttonCollection.addButton("Help", "About", (ActionListener) (ActionEvent e) -> { helpAboutButtonClicked(); });
+        buttonCollection.addButton("Manage", "Shifts", this::manageShiftsButtonClicked);
+        buttonCollection.addButton("Manage", "Volunteers", this::manageVolunteersButtonClicked);
+        buttonCollection.addButton("Manage", "Roles", this::manageRolesButtonClicked);
+        buttonCollection.addButton("Manage", "Email Template", this::manageEmailTemplateButtonClicked);
+        buttonCollection.addButton("Manage", "Email Server", this::manageEmailServerButtonClicked);
+        buttonCollection.addButton("Manage", "Event Properties", this::manageEventPropertiesButtonClicked);
+        buttonCollection.addButton("Create", "Event", this::createEventButtonClicked);
+        buttonCollection.addButton("Create", "Email", this::createEmailButtonClicked);
+        buttonCollection.addButton("Help", "Help", this::helpHelpButtonClicked);
+        buttonCollection.addButton("Help", "About", this::helpAboutButtonClicked);
 
         final int LAYOUT_COLUMNS = buttonCollection.getNumberOfGroups();
         final int LAYOUT_ROWS = buttonCollection.getMaxSizeOfGroups();
@@ -271,8 +269,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage shifts button is clicked.
+     *
+     * @param e the event
      */
-    private void manageShiftsButtonClicked() {
+    private void manageShiftsButtonClicked(ActionEvent e) {
         assertInvariant();
         manageShiftsFrame.setVisible(true);
         assertInvariant();
@@ -280,8 +280,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage volunteers button is clicked.
+     *
+     * @param e the event
      */
-    private void manageVolunteersButtonClicked() {
+    private void manageVolunteersButtonClicked(ActionEvent e) {
         assertInvariant();
         manageVolunteersFrame.setVisible(true);
         assertInvariant();
@@ -289,8 +291,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage roles button is clicked.
+     *
+     * @param e the event
      */
-    private void manageRolesButtonClicked() {
+    private void manageRolesButtonClicked(ActionEvent e) {
         assertInvariant();
         manageRolesFrame.setVisible(true);
         assertInvariant();
@@ -298,8 +302,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage email template button is clicked.
+     *
+     * @param e the event
      */
-    private void manageEmailTemplateButtonClicked() {
+    private void manageEmailTemplateButtonClicked(ActionEvent e) {
         assertInvariant();
         manageEmailTemplateFrame.setVisible(true);
         assertInvariant();
@@ -307,8 +313,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage email server button is clicked.
+     *
+     * @param e the event
      */
-    private void manageEmailServerButtonClicked() {
+    private void manageEmailServerButtonClicked(ActionEvent e) {
         assertInvariant();
         manageEmailServerPropertiesFrame.setVisible(true);
         assertInvariant();
@@ -316,8 +324,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the manage volunteers button is clicked.
+     *
+     * @param e the event
      */
-    private void manageEventPropertiesButtonClicked() {
+    private void manageEventPropertiesButtonClicked(ActionEvent e) {
         assertInvariant();
         manageEventPropertiesFrame.setVisible(true);
         assertInvariant();
@@ -325,8 +335,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the create event button is clicked.
+     *
+     * @param e the event
      */
-    private void createEventButtonClicked() {
+    private void createEventButtonClicked(ActionEvent e) {
         assertInvariant();
         eventFrame.setVisible(true);
         assertInvariant();
@@ -334,8 +346,10 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the create email button is clicked.
+     *
+     * @param e the event
      */
-    private void createEmailButtonClicked() {
+    private void createEmailButtonClicked(ActionEvent e) {
         assertInvariant();
         Event event = eventFrame.getEvent();
         DisplayEmailFrame displayFrame = new DisplayEmailFrame(application, event);
@@ -346,16 +360,20 @@ public class MainFrame extends JFrame {
 
     /**
      * Event fired when the help help button is clicked.
+     *
+     * @param e the event
      */
-    private void helpHelpButtonClicked() {
+    private void helpHelpButtonClicked(ActionEvent e) {
         assertInvariant();
         application.displayHelp();
     }    // helpHelpButtonClicked()
 
     /**
      * Event fired when the help about button is clicked.
+     *
+     * @param e the event
      */
-    private void helpAboutButtonClicked() {
+    private void helpAboutButtonClicked(ActionEvent e) {
         assertInvariant();
         String versionString = application.getApplicationName() + " v" + application.getVersion();
         String aboutText = application.getCopyright() + "\n\n";

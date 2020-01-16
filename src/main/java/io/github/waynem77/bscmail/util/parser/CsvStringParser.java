@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,6 +21,7 @@ package io.github.waynem77.bscmail.util.parser;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -57,10 +58,7 @@ public class CsvStringParser {
                 throw new IllegalArgumentException("Malformed string.");
             }    // if
             CSVRecord record = records.get(0);
-            Object[] values = new Object[record.size()];
-            for (int i = 0; i < record.size(); ++i) {
-                values[i] = record.get(i);
-            }    // for
+            Object[] values = StreamSupport.stream(record.spliterator(), false).toArray();
             return values;
         } catch (IOException e) {    // try
             throw new IllegalArgumentException("An I/O error occurred.", e);

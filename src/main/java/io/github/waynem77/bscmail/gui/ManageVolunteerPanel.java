@@ -25,10 +25,10 @@ import io.github.waynem77.bscmail.persistent.Role;
 import io.github.waynem77.bscmail.persistent.RolesObserver;
 import io.github.waynem77.bscmail.persistent.Volunteer;
 import io.github.waynem77.bscmail.gui.util.LabeledGrid;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -260,17 +260,11 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
     private void loadSelectedRoles(Volunteer volunteer) {
         List<Role> allRoles = application.getRoles();
         List<Role> volunteerRoles = volunteer.getRoles();
-        List<Integer> selectedIndices = new LinkedList<>();
-        for (int i = 0; i < allRoles.size(); ++i) {
-            if (volunteerRoles.contains(allRoles.get(i))) {
-                selectedIndices.add(i);
-            }    // if
-        }    // for
-        int[] selectedIndicesAsArray = new int[selectedIndices.size()];
-        for (int i = 0; i < selectedIndices.size(); ++i) {
-            selectedIndicesAsArray[i] = selectedIndices.get(i);
-        }    // for
-        rolesSelectList.setSelectedIndices(selectedIndicesAsArray);
+        int[] selectedIndices = allRoles.stream()
+                .filter(volunteerRoles::contains)
+                .mapToInt(allRoles::indexOf)
+                .toArray();
+        rolesSelectList.setSelectedIndices(selectedIndices);
     }
 
     /**
@@ -279,11 +273,10 @@ class ManageVolunteerPanel extends ManageElementPanel<Volunteer> implements Role
      */
     private List<Role> getSelectedRoles() {
         int[] selectedIndices = rolesSelectList.getSelectedIndices();
-        ArrayList<Role> selectedRoles = new ArrayList<>();
         List<Role> allRoles = application.getRoles();
-        for (int ind : selectedIndices) {
-            selectedRoles.add(allRoles.get(ind));
-        }
+        List<Role> selectedRoles = Arrays.stream(selectedIndices)
+                .mapToObj(allRoles::get)
+                .collect(Collectors.toList());
         return selectedRoles;
     }
 

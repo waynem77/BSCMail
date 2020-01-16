@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -114,9 +114,6 @@ public class MailMessage {
      */
     public String getBccAddresses() {
         assertInvariant();
-        if (bccAddresses == null) {
-            return bccAddresses;
-        }
         return bccAddresses;
     }    // getBccAddresses()
 

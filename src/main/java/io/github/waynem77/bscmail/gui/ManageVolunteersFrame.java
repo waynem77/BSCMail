@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -49,13 +49,7 @@ public class ManageVolunteersFrame extends ManageListFrame<Volunteer> implements
                 application,
                 new ManageVolunteerPanel(application),
                 new Vector<>(application.getVolunteers()),
-                new Comparator<Volunteer>(){
-                    @Override public int compare(Volunteer volunteer1, Volunteer volunteer2) {
-                        assert (volunteer1 != null);
-                        assert (volunteer2 != null);
-                        return volunteer1.toString().compareTo(volunteer2.toString());
-                    }    // compare()
-                },    // Comparator
+                Comparator.comparing(Volunteer::toString),
                 "Volunteer"
         );
         application.registerObserver((RolesObserver)this);

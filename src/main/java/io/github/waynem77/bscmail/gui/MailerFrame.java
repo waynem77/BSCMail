@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -25,7 +25,6 @@ import io.github.waynem77.bscmail.mail.MailerStatus;
 import io.github.waynem77.bscmail.Application;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -86,12 +85,7 @@ public class MailerFrame extends JFrame implements MailerObserver {
         add(new JScrollPane(messagesTextArea));
 
         closeButton = new JButton("Close");
-        closeButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                closeButtonClicked();
-            }    // actionPerformed()
-        });    // closeButton.addActionListener()
+        closeButton.addActionListener(this::closeButtonClicked);
         closeButton.setEnabled(false);
         add(closeButton);
 
@@ -127,8 +121,10 @@ public class MailerFrame extends JFrame implements MailerObserver {
 
     /**
      * Event fired when the close button is clicked.
+     *
+     * @param e the event
      */
-    private void closeButtonClicked() {
+    private void closeButtonClicked(ActionEvent e) {
         assertInvariant();
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }    // closeButtonClicked()

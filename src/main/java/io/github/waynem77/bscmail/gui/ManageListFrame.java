@@ -27,7 +27,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,7 +49,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Abstract base class for frames used to manage a list of elements.
@@ -200,26 +198,10 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
          * Set event handlers for controls
          */
 
-        listControl.addListSelectionListener(new ListSelectionListener() {
-            @Override public void valueChanged(ListSelectionEvent e) {
-                listSelectionValueChanged(e);
-            }    // valueChanged()
-        });    // addListSelectionListener()
-        upButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                upButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        downButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                downButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        sortButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                sortButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
+        listControl.addListSelectionListener(this::listSelectionValueChanged);
+        upButton.addActionListener(this::upButtonClicked);
+        downButton.addActionListener(this::downButtonClicked);
+        sortButton.addActionListener(this::sortButtonClicked);
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
                filterChanged();
@@ -231,36 +213,12 @@ public abstract class ManageListFrame<E extends Matchable<String>> extends JFram
                 filterChanged();
             }    // changedUpdate()
         });    // addDocumentListener()
-        prevMatchButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                prevMatchButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        nextMatchButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                nextMatchButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        editButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                editButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        copyButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                copyButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        deleteButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                deleteButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
-        addButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                addButtonClicked(e);
-            }    // actionPerformed()
-        });    // addActionListener
+        prevMatchButton.addActionListener(this::prevMatchButtonClicked);
+        nextMatchButton.addActionListener(this::nextMatchButtonClicked);
+        editButton.addActionListener(this::editButtonClicked);
+        copyButton.addActionListener(this::copyButtonClicked);
+        deleteButton.addActionListener(this::deleteButtonClicked);
+        addButton.addActionListener(this::addButtonClicked);
 
         /*
          * Create GUI

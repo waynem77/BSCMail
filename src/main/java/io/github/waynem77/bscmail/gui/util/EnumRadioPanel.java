@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -22,11 +22,11 @@ package io.github.waynem77.bscmail.gui.util;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
@@ -88,11 +88,9 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
             buttonMap.get(ENUM_CONSTANTS[0]).setSelected(true);
         }    // if
 
-        for (JRadioButton radioButton : buttonMap.values()) {
-            radioButton.addItemListener(new ItemListener(){
-                @Override public void itemStateChanged(ItemEvent e) { radioButtonClicked(e); }
-            });    // radioButton.addItemListener()
-        }    // for
+        buttonMap.values()
+                .stream()
+                .forEach(radioButton -> radioButton.addItemListener(this::radioButtonClicked));
         listeners = new LinkedList<>();
         assertInvariant();
     }    // EnumRadioPanel()
@@ -112,6 +110,7 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
         buttonMap.get(selection).setSelected(true);
         assertInvariant();
     }    // setSelectedEnum()
+
     /**
      * Returns the enum corresponding to the selected button.
      *
@@ -119,15 +118,13 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
      */
     public E getSelection() {
         assertInvariant();
-        E selectedEnum = null;
-        for (E e : buttonMap.keySet()) {
-            if (buttonMap.get(e).isSelected()) {
-                selectedEnum = e;
-                break;
-            }    //
-        }    // for
-        assert (selectedEnum != null);
-        return selectedEnum;
+        Optional<E> selectedEnum = buttonMap.entrySet()
+                .stream()
+                .filter(pair -> pair.getValue().isSelected())
+                .map(Map.Entry::getKey)
+                .findFirst();
+        assert (selectedEnum.isPresent());
+        return selectedEnum.get();
     }    // getSelectedEnum()
 
     /**
@@ -192,13 +189,10 @@ public class EnumRadioPanel<E extends Enum<E>> extends JPanel {
      * @return the number of radio buttons selected
      */
     private int getNumberOfSelectedRadioButtons() {
-        int numberSelected = 0;
-        for (JRadioButton button : buttonMap.values()) {
-            if (button.isSelected()) {
-                ++numberSelected;
-            }    // if
-        }    // for
-        return numberSelected;
+        return (int)buttonMap.values()
+                .stream()
+                .filter(JRadioButton::isSelected)
+                .count();
     }    // getNumberOfSelectedRadioButtons()
 
 }    // EnumRadioPanel

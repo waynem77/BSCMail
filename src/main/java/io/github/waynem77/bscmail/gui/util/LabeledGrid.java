@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2018-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -436,12 +436,8 @@ public class LabeledGrid extends JPanel {
      * {@code labelWidth}; false otherwise
      */
     private boolean allLabelsAreAsWideAsLabelWidth() {
-        for (JLabel label : labels) {
-            if (label.getPreferredSize().width != labelWidth) {
-                return false;
-            }    // if
-        }    // for
-        return true;
+        return labels.stream()
+                .allMatch(label -> label.getPreferredSize().width == labelWidth);
     }    // allLabelsAreAsWideAsLabelWidth()
 
 }    // LabeledGrid

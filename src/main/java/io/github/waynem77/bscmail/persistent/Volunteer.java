@@ -21,10 +21,12 @@ package io.github.waynem77.bscmail.persistent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -164,14 +166,14 @@ public class Volunteer implements Cloneable, Matchable<String>, Serializable, Re
             boolean active = (activeBooleanObject != null) ? activeBooleanObject : true;
 
             Object rolesObject = properties.get(RW_ROLES_KEY);
-            List<Role> roles = new LinkedList<>();
+            String[] roleNames = {};
             if (rolesObject != null) {
-                String rolesStringObject = rolesObject.toString();
-                String[] roleNames = rolesStringObject.split(",");
-                for (String roleName : roleNames) {
-                    roles.add(new Role(roleName));
-                }
+                String rolesString = rolesObject.toString();
+                roleNames = rolesString.split(",");
             }
+            List<Role> roles = Arrays.stream(roleNames)
+                    .map(Role::new)
+                    .collect(Collectors.toList());
             Volunteer volunteer = new Volunteer(name, email, phone, notes, active, roles);
 
             return volunteer;
@@ -460,12 +462,9 @@ public class Volunteer implements Cloneable, Matchable<String>, Serializable, Re
         properties.put(RW_PHONE_KEY, phone);
         properties.put(RW_NOTES_KEY, notes);
         properties.put(RW_ACTIVE_KEY, active);
-        String roleNames = "";
-        for (Role role : roles){
-            roleNames += role.getName() +",";
-        }
-        if (roleNames.length() > 0)
-            roleNames = roleNames.substring(0, roleNames.length() - 1);
+        String roleNames = roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(","));
         properties.put(RW_ROLES_KEY, roleNames);
         return properties;
     }    // getReadWritableProperties()

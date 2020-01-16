@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -94,9 +94,8 @@ public abstract class ManageElementPanel<E> extends JPanel {
      */
     public void notifyObservers() {
         assertInvariant();
-        for (ManageElementPanelObserver<E> observer : observers) {
-            observer.elementValidityChanged();
-        }    // for
+        observers.stream()
+                .forEach(ManageElementPanelObserver::elementValidityChanged);
     }    // notifyObservers()
 
     /**

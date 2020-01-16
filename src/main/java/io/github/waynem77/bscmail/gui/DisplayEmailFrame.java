@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -32,9 +32,8 @@ import io.github.waynem77.bscmail.persistent.Volunteer;
 import io.github.waynem77.bscmail.util.format.EmailFormatter;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -124,11 +123,7 @@ public class DisplayEmailFrame extends JFrame {
         bccRecipientLine = new JTextField(MIN_TEXT_AREA_COLS);
         subjectLine = new JTextField(MIN_TEXT_AREA_COLS);
         sendEmail = new JButton("Generate Email");
-        sendEmail.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                sendEmailButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener()
+        sendEmail.addActionListener(this::sendEmailButtonClicked);
 
         textArea = new JTextArea(MIN_TEXT_AREA_ROWS, MIN_TEXT_AREA_COLS);
         textArea.setLineWrap(true);
@@ -176,24 +171,12 @@ public class DisplayEmailFrame extends JFrame {
         assert (emailTemplate != null);
         assert (event != null);
 
-        List<String> emails = new ArrayList<>();
-        for (Shift shift : event.getShifts()) {
-            Volunteer volunteer = shift.getVolunteer();
-            if (volunteer != null) {
-                String email = volunteer.getEmail();
-                if (! emails.contains(email)) {
-                    emails.add(volunteer.getEmail());
-                }    // if
-            }    // if
-        }    // for
-        String recipients = "";
-        for (String email : emails) {
-            if (recipients.isEmpty()) {
-                recipients = email;
-            } else {    // if
-                recipients += ", " + email;
-            }    // else
-        }    // for
+        String recipients = event.getShifts().stream()
+                .map(Shift::getVolunteer)
+                .filter(Objects::nonNull)
+                .map(Volunteer::getEmail)
+                .distinct()
+                .collect(Collectors.joining(", "));
 
         EmailTemplate.SendType sendType = emailTemplate.getSendType();
         assert (sendType != null);
@@ -284,7 +267,7 @@ public class DisplayEmailFrame extends JFrame {
     /**
      * Event fired when the send email button is clicked.
      */
-    private void sendEmailButtonClicked() {
+    private void sendEmailButtonClicked(ActionEvent e) {
         JPasswordField passwordField = new JPasswordField();
         int selection = JOptionPane.showConfirmDialog(this, passwordField, application.createWindowTitle("Enter Password"), JOptionPane.OK_CANCEL_OPTION);
 

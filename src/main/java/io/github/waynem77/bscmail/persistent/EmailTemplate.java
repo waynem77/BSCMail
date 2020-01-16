@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2016-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -22,8 +22,10 @@ package io.github.waynem77.bscmail.persistent;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents an email template.  Email templates have the following properties:
@@ -115,12 +117,13 @@ public class EmailTemplate implements Cloneable, Serializable, ReadWritable {
                 throw new NullPointerException("rwRepresentation may not be null");
             }    // if
 
-            for (SendType sendType : values()) {
-                if (rwRepresentation.equals(sendType.getRwRepresentation())) {
-                    return sendType;
-                }    // if
-            }    // for
-            throw new IllegalArgumentException("rwRepresentation must equal the value of getRwRepresentation() for a SendType value");
+            Optional<SendType> match = Arrays.<SendType>stream(SendType.values())
+                    .filter(sendType -> rwRepresentation.equals(sendType.getRwRepresentation()))
+                    .findFirst();
+            if (!match.isPresent()) {
+                throw new IllegalArgumentException("rwRepresentation must equal the value of getRwRepresentation() for a SendType value");
+            }    // if
+            return match.get();
         }    // fromRwRepresentation()
     }    // SendType
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2019-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -164,7 +164,7 @@ public class DisplayableListControl<T> extends JPanel {
         return String.join(SEPARATOR, listControl
                 .getSelectedValuesList()
                 .stream()
-                .map(element -> element.toString())
+                .map(Object::toString)
                 .collect(Collectors.toList()));
     }    // getElementListAsText()
 

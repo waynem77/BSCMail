@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,10 +20,14 @@
 package io.github.waynem77.bscmail.persistent;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -136,15 +140,14 @@ public class Shift implements Cloneable, Matchable<String>, Serializable, ReadWr
 
             // roles
             Object roleObject = properties.get("roles");
-            List<Role> roles = new LinkedList<>();
+            String[] roleNames = {};
             if (roleObject != null) {
                 String rolesString = roleObject.toString();
-                String[] roleNames = rolesString.split(",");
-                for (String roleName : roleNames) {
-                    Role role = new Role(roleName);
-                    roles.add(role);
-                }
+                roleNames = rolesString.split(",");
             }
+            List<Role> roles = Arrays.stream(roleNames)
+                    .map(Role::new)
+                    .collect(Collectors.toList());
 
             // Construct shift object
             shift = new Shift(description, roles, displayVolunteerEmail, displayVolunteerPhone, displayVolunteerNotes);
@@ -379,11 +382,9 @@ public class Shift implements Cloneable, Matchable<String>, Serializable, ReadWr
         Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("description", description);
         if (!roles.isEmpty()) {
-            String roleNames = "";
-            for (Role role : roles) {
-                roleNames += role.getName() + ",";
-            }
-            roleNames = roleNames.substring(0, roleNames.length() - 1);
+            String roleNames = roles.stream()
+                    .map(Role::getName)
+                    .collect(Collectors.joining(","));
             properties.put("roles", roleNames);
         }
         properties.put("displayVolunteerEmail", displayVolunteerEmail);
@@ -455,13 +456,12 @@ public class Shift implements Cloneable, Matchable<String>, Serializable, ReadWr
         }
 
         Shift rhs = (Shift) obj;
-        boolean volunteersAreEqual = (volunteer == null) ? (rhs.volunteer == null) : volunteer.equals(rhs.volunteer);
         return description.equals(rhs.description)
                 && roles.equals(rhs.roles)
                 && (displayVolunteerEmail == rhs.displayVolunteerEmail)
                 && (displayVolunteerPhone == rhs.displayVolunteerPhone)
                 && (displayVolunteerNotes == rhs.displayVolunteerNotes)
-                && volunteersAreEqual;
+                && Objects.equals(volunteer, rhs.volunteer);
     }
 
     @Override

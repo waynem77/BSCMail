@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -201,11 +202,10 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             throw new NullPointerException("shifts may not contain null");
         }    // if
 
-        List<String> selections = new LinkedList<>();
-        for (ShiftControl shiftControl : getShiftControls()) {
-            Volunteer volunteer = shiftControl.getVolunteer();
-            selections.add((volunteer == null) ? null : volunteer.getName());
-        }    // for
+        List<String> selections = getShiftControls().stream()
+                .map(ShiftControl::getVolunteer)
+                .map(volunteer -> (volunteer == null) ? null : volunteer.getName())
+                .collect(Collectors.toList());
 
         List<Volunteer> volunteers = application.getVolunteers();
         List<ShiftControl> shiftControls = new LinkedList<>();
@@ -307,14 +307,12 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
         assert (shift != null);
         assert (volunteers != null);
         assert (!volunteers.contains(null));
-        List<Volunteer> filteredList = new ArrayList<>();
-        for (Volunteer volunteer : volunteers) {
-            if (volunteer.isActive() && shift.rolesAreCompatible(volunteer)) {
-                filteredList.add(volunteer);
-            }    // if
-        }    // for
-        return filteredList;
-    }
+        return volunteers.stream()
+                .filter(Volunteer::isActive)
+                .filter(volunteer -> shift.rolesAreCompatible(volunteer))
+                .collect(Collectors.toList());
+    }    // getQualifiedVolunteers()
+
     /**
      * Sets the list of event properties displayed in the frame to the given list.
      * If the new list of event properties is smaller than the
@@ -337,11 +335,9 @@ public class EventFrame extends JFrame implements ShiftsObserver, VolunteersObse
             throw new NullPointerException("event properties may not contain null");
         }    // if
 
-        List<EventPropertyControl> eventPropertyControls = new LinkedList<>();
-        for (EventProperty eventProperty : eventProperties) {
-            EventPropertyControl eventPropertyControl = new EventPropertyControl(eventProperty);
-            eventPropertyControls.add(eventPropertyControl);
-        }    // for
+        List<EventPropertyControl> eventPropertyControls = eventProperties.stream()
+                .map(EventPropertyControl::new)
+                .collect(Collectors.toList());
         eventFrameGrid.setEventPropertyControls(eventPropertyControls);
         pack();
     }    // setEventProperties()

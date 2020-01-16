@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -43,13 +43,7 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
                 application,
                 new ManageRolePanel(application),
                 new Vector<>(application.getRoles()),
-                new Comparator<Role>(){
-                    @Override public int compare(Role role1, Role role2) {
-                        assert (role1 != null);
-                        assert (role2 != null);
-                        return role1.toString().compareTo(role2.toString());
-                    }    // compare()
-                },    // Comparator
+                Comparator.comparing(Role::toString),
                 "Role"
         );
         application.registerObserver(this);
@@ -80,6 +74,5 @@ public class ManageRolesFrame extends ManageListFrame<Role> implements RolesObse
             System.out.println(e);
         }
     }
-
 
 }    // ManageRolesFrame

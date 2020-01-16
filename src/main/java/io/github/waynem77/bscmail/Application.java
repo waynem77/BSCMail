@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import javax.swing.JFrame;
 
 /**
@@ -690,11 +691,9 @@ public class Application {
      */
     public List<Shift> getShifts() {
         assertInvariant();
-        List<Shift> clones = new ArrayList<>();
-        for (Shift shift : shifts) {
-            clones.add(shift.clone());
-        }    // for
-        return clones;
+        return shifts.stream()
+                .map(Shift::clone)
+                .collect(Collectors.toList());
     }    // getShifts()
 
     /**
@@ -717,12 +716,11 @@ public class Application {
         if (shifts.contains(null)) {
             throw new NullPointerException("shifts may not contain null");
         }    // if
-        this.shifts = new LinkedList<>();
-        for (Shift shift : shifts) {
-            Shift clone = shift.clone();
-            clone.setVolunteer(null);
-            this.shifts.add(clone);
-        }    // for
+        this.shifts = shifts.stream()
+                .map(Shift::clone)
+                .collect(Collectors.toList());
+        this.shifts.stream()
+                .forEach(shift -> shift.setVolunteer(null));
         for (ShiftsObserver observer : shiftsObservers) {
             observer.shiftsChanged();
         }    // for
@@ -739,11 +737,9 @@ public class Application {
      */
     public List<Volunteer> getVolunteers() {
         assertInvariant();
-        List<Volunteer> clones = new ArrayList<>();
-        for (Volunteer volunteer : volunteers) {
-            clones.add(volunteer.clone());
-        }    // for
-        return clones;
+        return volunteers.stream()
+                .map(Volunteer::clone)
+                .collect(Collectors.toList());
     }    // getVolunteers()
 
     /**
@@ -765,10 +761,9 @@ public class Application {
         if (volunteers.contains(null)) {
             throw new NullPointerException("volunteers may not contain null");
         }    // if
-        this.volunteers = new LinkedList<>();
-        for (Volunteer volunteer : volunteers) {
-            this.volunteers.add(volunteer.clone());
-        }    // for
+        this.volunteers = volunteers.stream()
+                .map(Volunteer::clone)
+                .collect(Collectors.toList());
         for (VolunteersObserver observer : volunteersObservers) {
             observer.volunteersChanged();
         }    // for
@@ -785,11 +780,9 @@ public class Application {
      */
     public List<Role> getRoles() {
         assertInvariant();
-        List<Role> clones = new ArrayList<>();
-        for (Role role : roles) {
-            clones.add(role.clone());
-        }    // for
-        return clones;
+        return roles.stream()
+                .map(Role::clone)
+                .collect(Collectors.toList());
     }    // getRoles()
 
     /**
@@ -816,10 +809,9 @@ public class Application {
         if (roles.size() != (new HashSet<Role>(roles).size())) {
             throw new IllegalArgumentException("roles may not contain duplicates");
         }    // if
-        this.roles = new LinkedList<>();
-        for (Role role : roles) {
-            this.roles.add(role.clone());
-        }    // for
+        this.roles = roles.stream()
+                .map(Role::clone)
+                .collect(Collectors.toList());
         for (RolesObserver observer : rolesObservers) {
             observer.rolesChanged();
         }    // for
@@ -903,11 +895,9 @@ public class Application {
      */
     public List<EventProperty> getEventProperties() {
         assertInvariant();
-        List<EventProperty> clones = new ArrayList<>();
-        for (EventProperty eventProperty : eventProperties) {
-            clones.add(eventProperty.clone());
-        }    // for
-        return clones;
+        return eventProperties.stream()
+                .map(EventProperty::clone)
+                .collect(Collectors.toList());
     }    // getEventProperties()
 
     /**
@@ -930,11 +920,9 @@ public class Application {
         if (eventProperties.contains(null)) {
             throw new NullPointerException("Event Properties may not contain null");
         }    // if
-        this.eventProperties = new LinkedList<>();
-        for (EventProperty eventProperty : eventProperties) {
-            EventProperty clone = eventProperty.clone();
-            this.eventProperties.add(clone);
-        }    // for
+        this.eventProperties = eventProperties.stream()
+                .map(EventProperty::clone)
+                .collect(Collectors.toList());
         for (EventPropertiesObserver observer : eventPropertiesObservers) {
             observer.eventPropertiesChanged();
         }    // for
@@ -1107,11 +1095,7 @@ public class Application {
      * otherwise
      */
     private boolean shiftsHasNoVolunteers() {
-        for (Shift shift : shifts) {
-            if (! shift.isOpen()) {
-                return false;
-            }    // if
-        }    // for
-        return true;
+        return shifts.stream()
+                .allMatch(Shift::isOpen);
     }    // shiftsHasNoVolunteers()
 }    // Application

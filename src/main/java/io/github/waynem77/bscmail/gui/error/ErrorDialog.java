@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -21,7 +21,6 @@ package io.github.waynem77.bscmail.gui.error;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -79,20 +78,11 @@ public class ErrorDialog extends JDialog {
         panel = new JPanel();
         if (cause != null) {
             JButton moreButton = new JButton("More >>");
-            moreButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    moreButtonClicked(e);
-                }    // actionPerformed()
-            });    // addActionListener
+            moreButton.addActionListener(this::moreButtonClicked);
             panel.add(moreButton);
         }    // if
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e) {
-                okButtonClicked();
-            }    // actionPerformed()
-        });    // addActionListener
+        okButton.addActionListener(this::okButtonClicked);
         panel.add(okButton);
         add(panel);
         
@@ -115,8 +105,9 @@ public class ErrorDialog extends JDialog {
     
     /**
      * Event that fires when the ok button is pressed.
+     * @param e the event
      */
-    private void okButtonClicked() {
+    private void okButtonClicked(ActionEvent e) {
         setVisible(false);
         dispose();
     }    // okButtonClicked()

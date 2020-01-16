@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2014-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -48,13 +48,7 @@ public class ManageShiftsFrame extends ManageListFrame<Shift> implements RolesOb
                 application,
                 new ManageShiftPanel(application),
                 new Vector<>(application.getShifts()),
-                new Comparator<Shift>(){
-                    @Override public int compare(Shift shift1, Shift shift2) {
-                        assert (shift1 != null);
-                        assert (shift2 != null);
-                        return shift1.toString().compareTo(shift2.toString());
-                    }    // compare()
-                },    // Comparator
+                Comparator.comparing(Shift::toString),
                 "Shift"
         );
 
