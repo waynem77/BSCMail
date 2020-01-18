@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018-2019 its authors.  See the file "AUTHORS" for details.
+ * Copyright © 2018-2020 its authors.  See the file "AUTHORS" for details.
  *
  * This file is part of BSCMail.
  *
@@ -20,7 +20,6 @@
 package io.github.waynem77.bscmail.gui.util;
 
 import java.awt.Component;
-import java.awt.GridBagConstraints;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,71 +47,6 @@ public class LabeledGridTest {
     public void constructorDoesNotThrowException() {
         LabeledGrid labeledGrid = new LabeledGrid();
     }    // constructorDoesNotThrowException()
-
-    /* add */
-
-    /**
-     * Tests that {@link LabeledGrid#add(java.awt.Component)} throws an
-     * {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void addComponentThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        Component comp = new JButton();
-
-        labeledGrid.add(comp);
-    }    // addComponentThrowsError()
-
-    /**
-     * Tests that {@link LabeledGrid#add(java.awt.Component, java.lang.Object)}
-     * throws an {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void addComponentObjectThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        Component comp = new JButton();
-        Object constraints = new GridBagConstraints();
-        labeledGrid.add(comp, constraints);
-    }    // addComponentObjectThrowsError()
-
-    /**
-     * Tests that {@link LabeledGrid#add(java.awt.Component, int)} throws an
-     * {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void addComponentIntThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        Component comp = new JButton();
-        int index = 0;
-        labeledGrid.add(comp, index);
-    }    // addComponentIntThrowsError()
-
-    /**
-     * Tests that {@link LabeledGrid#add(java.lang.String, java.awt.Component)}
-     * throws an {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void addStringComponentThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        String name = "Foo";
-        Component comp = new JButton();
-        Object constraints = new GridBagConstraints();
-        labeledGrid.add(name, comp);
-    }    // addStringComponentThrowsError()
-
-    /**
-     * Tests that
-     * {@link LabeledGrid#add(java.awt.Component, java.lang.Object, int)} throws
-     * an {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void addComponentObjectIntThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        Component comp = new JButton();
-        Object constraints = new GridBagConstraints();
-        int index = 0;
-        labeledGrid.add(comp, constraints, index);
-    }    // addComponentObjectIntThrowsError()
 
     /* addLabelAndComponent (2 arguments) */
 
@@ -366,32 +300,6 @@ public class LabeledGridTest {
         Component[] components = labeledGrid.getComponents();
         assertTrue(Arrays.asList(components).contains(component1));
     }    // addLabelAndComponent3ArgsDoesNotRemoveOldComponents()
-
-    /* remove */
-
-    /**
-     * Tests that {@link LabeledGrid#remove(java.awt.Component)} throws an
-     * {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void removeComponentThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        Component comp = new JButton();
-
-        labeledGrid.remove(comp);
-    }    // removeComponentThrowsError()
-
-    /**
-     * Tests that {@link LabeledGrid#remove(int)} throws an
-     * {@link AssertionError} when invoked.
-     */
-    @Test(expected = AssertionError.class)
-    public void removeIntThrowsError() {
-        LabeledGrid labeledGrid = new LabeledGrid();
-        int index = 0;
-
-        labeledGrid.remove(index);
-    }    // removeIntThrowsError()
 
     /* removeAll */
 

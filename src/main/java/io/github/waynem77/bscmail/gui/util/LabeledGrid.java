@@ -27,8 +27,8 @@ import java.awt.Insets;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * A panel that places labels and components in a grid.
@@ -36,7 +36,7 @@ import javax.swing.JPanel;
  * @author Wayne Miller
  * @since 3.3
  */
-public class LabeledGrid extends JPanel {
+public class LabeledGrid extends JComponent {
 
     /**
      * Horizontal padding between labels and components.
@@ -59,13 +59,6 @@ public class LabeledGrid extends JPanel {
     private List<Component> rightSideComponents;
 
     /**
-     * True if the add methods are unlocked. This property exists so that the
-     * base add functions are locked to users, but may be accessed by
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}.
-     */
-    private boolean addMethodsAreUnlocked;
-
-    /**
      * The minimum label column width.
      */
     private int minimumLabelWidth;
@@ -81,7 +74,6 @@ public class LabeledGrid extends JPanel {
     public LabeledGrid() {
         layoutManager = new GridBagLayout();
         setLayout(layoutManager);
-        lockAddMethods();
 
         minimumLabelWidth = 0;
         labelWidth = 0;
@@ -91,92 +83,6 @@ public class LabeledGrid extends JPanel {
 
         assertInvariant();
     }    // LabeledGrid()
-
-    /**
-     * Do not use this method. Use
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
-     * instead.
-     *
-     * @param comp not used
-     * @return not defined
-     * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
-     */
-    @Override
-    @Deprecated
-    public Component add(Component comp) {
-        assert(this.addMethodsAreUnlocked());
-        Component retval = super.add(comp);
-        return retval;
-    }    // add()
-
-    /**
-     * Do not use this method. Use
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
-     * instead.
-     *
-     * @param comp not used
-     * @param constraints not used
-     * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
-     */
-    @Override
-    @Deprecated
-    public void add(Component comp, Object constraints) {
-        assert(this.addMethodsAreUnlocked());
-        super.add(comp, constraints);
-    }    // add()
-
-    /**
-     * Do not use this method. Use
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
-     * instead.
-     *
-     * @param comp not used
-     * @param index not used
-     * @return not defined
-     * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
-     */
-    @Override
-    @Deprecated
-    public Component add(Component comp, int index) {
-        assert(this.addMethodsAreUnlocked());
-        Component retval = super.add(comp, index);
-        return retval;
-    }    // add()
-
-    /**
-     * Do not use this method. Use
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
-     * instead.
-     *
-     * @param name not used
-     * @param comp not used
-     * @return not defined
-     * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
-     */
-    @Override
-    @Deprecated
-    public Component add(String name, Component comp) {
-        assert(this.addMethodsAreUnlocked());
-        Component retval = super.add(name, comp);
-        return retval;
-    }    // add()
-
-    /**
-     * Do not use this method. Use
-     * {@link #addLabelAndComponent(java.lang.String, java.awt.Component)}
-     * instead.
-     *
-     * @param comp not used
-     * @param constraints not used
-     * @param index not used
-     * @see #addLabelAndComponent(java.lang.String, java.awt.Component)
-     */
-    @Override
-    @Deprecated
-    public void add(Component comp, Object constraints, int index) {
-        assert(this.addMethodsAreUnlocked());
-        super.add(comp, constraints, index);
-    }    // add()
 
     /**
      * Adds a label and component to the grid. Components added using this
@@ -210,8 +116,6 @@ public class LabeledGrid extends JPanel {
             throw new NullPointerException("component may not be null");
         }    // if
 
-        unlockAddMethods();
-
         JLabel jLabel = new JLabel(label);
         int newLabelWidth = jLabel.getPreferredSize().width;
         int gridx = 0;
@@ -234,8 +138,6 @@ public class LabeledGrid extends JPanel {
         add(component, constraints);
         rightSideComponents.add(component);
 
-        lockAddMethods();
-
         if (newLabelWidth > minimumLabelWidth) {
             minimumLabelWidth = newLabelWidth;
         }  // if
@@ -245,30 +147,6 @@ public class LabeledGrid extends JPanel {
         setWidthOfAllLabelComponents(labelWidth)        ;
         assertInvariant();
     }    // addLabelAndComponent()
-
-    /**
-     * Do not use this method. Use {@link #removeAll()} instead.
-     *
-     * @param comp not used
-     * @see #removeAll()
-     */
-    @Override
-    @Deprecated
-    public void remove(Component comp) {
-        assert(false);
-    }    // remove()
-
-    /**
-     * Do not use this method. Use {@link #removeAll()} instead.
-     *
-     * @param index not used
-     * @see #removeAll()
-     */
-    @Override
-    @Deprecated
-    public void remove(int index) {
-        assert(false);
-    }    // remove()
 
     /**
      * {@inheritDoc}
@@ -400,18 +278,6 @@ public class LabeledGrid extends JPanel {
 
         return constraints;
     }    // makeConstraints()
-
-    private void lockAddMethods() {
-        addMethodsAreUnlocked = false;
-    }    // lockAddMethods()
-
-    private void unlockAddMethods() {
-        addMethodsAreUnlocked = true;
-    }    // unlockAddMethods()
-
-    private boolean addMethodsAreUnlocked() {
-        return addMethodsAreUnlocked;
-    }    // addMethodsAreUnlocked()
 
     /**
      * Confirms the internal state of the object is correct.
